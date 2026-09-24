@@ -1,31 +1,59 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar.tsx';
 import { Hero } from './components/Hero.tsx';
 import { HomeIntro } from './components/HomeIntro.tsx';
 import { CategoryCards } from './components/CategoryCards.tsx';
 import { CatalogueView } from './components/CatalogueView.tsx';
+import { CollectionView } from './components/CollectionView.tsx';
 import { AboutSection } from './components/AboutSection.tsx';
 import { ReachUsView } from './components/ReachUsView.tsx';
 import { Footer } from './components/Footer.tsx';
-import { Chatbot } from './components/Chatbot.tsx';
 import { ProductDetailModal } from './components/ProductDetailModal.tsx';
 import { EnquiryModal } from './components/EnquiryModal.tsx';
-import { Product, ProductCategory } from './types.ts';
+import { Product, ProductCategory, CollectionItem } from './types.ts';
 import { products } from './data/products.ts';
 import { ProductCard } from './components/ProductCard.tsx';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ShoppingBag } from 'lucide-react';
+
+const COLLECTION_STORAGE_KEY = 'cf_dealer_collection_v1';
 
 export default function App() {
-  const [currentTab, setCurrentTab] = useState<'home' | 'about' | 'catalogue' | 'reach-us'>('home');
+  const [currentTab, setCurrentTab] = useState<'home' | 'about' | 'catalogue' | 'collection' | 'reach-us'>('home');
   const [catalogueCategory, setCatalogueCategory] = useState<ProductCategory | 'all'>('all');
-  
+
+  // Collection State (Stored in localStorage for dealer convenience)
+  const [collection, setCollection] = useState<CollectionItem[]>(() => {
+    try {
+      const saved = localStorage.getItem(COLLECTION_STORAGE_KEY);
+      if (saved) {
+        return JSON.parse(saved);
+      }
+    } catch {
+      // Fallback if localStorage unavailable
+    }
+    return [];
+  });
+
+  // Sync collection to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem(COLLECTION_STORAGE_KEY, JSON.stringify(collection));
+    } catch {
+      // Ignore storage errors
+    }
+  }, [collection]);
+
   // Modal states
   const [detailProduct, setDetailProduct] = useState<Product | null>(null);
   const [enquiryProduct, setEnquiryProduct] = useState<Product | null>(null);
   const [isEnquiryOpen, setIsEnquiryOpen] = useState(false);
+  const [isCollectionEnquiry, setIsCollectionEnquiry] = useState(false);
 
   // Navigation handler
-  const handleNavigate = (tab: 'home' | 'about' | 'catalogue' | 'reach-us', category?: ProductCategory) => {
+  const handleNavigate = (
+    tab: 'home' | 'about' | 'catalogue' | 'collection' | 'reach-us',
+    category?: ProductCategory
+  ) => {
     setCurrentTab(tab);
     if (category) {
       setCatalogueCategory(category);
@@ -45,18 +73,91 @@ export default function App() {
     setDetailProduct(product);
   };
 
-  const handleOpenEnquiry = (product: Product) => {
+  // Direct single product enquiry
+  const handleOpenSingleEnquiry = (product: Product) => {
     setEnquiryProduct(product);
+    setIsCollectionEnquiry(false);
     setIsEnquiryOpen(true);
   };
 
+  // Collection Enquiry Generation
+  const handleGenerateCollectionEnquiry = () => {
+    setEnquiryProduct(null);
+    setIsCollectionEnquiry(true);
+    setIsEnquiryOpen(true);
+  };
+
+  // Collection Management Methods
+  const handleAddToCollection = (
+    product: Product,
+    quantity = 1,
+    selectedColour?: string,
+    selectedSize?: string
+  ) => {
+    setCollection((prev) => {
+      const existingIndex = prev.findIndex((item) => item.product.id === product.id);
+      if (existingIndex >= 0) {
+        // Update existing item
+        const updated = [...prev];
+        updated[existingIndex] = {
+          ...updated[existingIndex],
+          quantity: quantity > 1 ? quantity : updated[existingIndex].quantity + 1,
+          selectedColour: selectedColour || updated[existingIndex].selectedColour,
+          selectedSize: selectedSize || updated[existingIndex].selectedSize,
+        };
+        return updated;
+      } else {
+        // Add new item to collection
+        return [
+          ...prev,
+          {
+            product,
+            quantity: Math.max(1, quantity),
+            selectedColour: selectedColour || product.colours[0],
+            selectedSize: selectedSize || product.sizes[0],
+            addedAt: Date.now(),
+          },
+        ];
+      }
+    });
+  };
+
+  const handleUpdateCollectionQuantity = (productId: string, quantity: number) => {
+    if (quantity <= 0) {
+      handleRemoveFromCollection(productId);
+      return;
+    }
+    setCollection((prev) =>
+      prev.map((item) =>
+        item.product.id === productId ? { ...item, quantity: Math.max(1, quantity) } : item
+      )
+    );
+  };
+
+  const handleRemoveFromCollection = (productId: string) => {
+    setCollection((prev) => prev.filter((item) => item.product.id !== productId));
+  };
+
+  const handleClearCollection = () => {
+    setCollection([]);
+  };
+
+  // Helper to check if item is in collection
+  const getCollectionItem = (productId: string) => {
+    return collection.find((item) => item.product.id === productId);
+  };
+
   // Featured sample items for Home Page preview
-  const featuredProducts = products.filter(p => p.featured).slice(0, 4);
+  const featuredProducts = products.filter((p) => p.featured).slice(0, 4);
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FBFBFA] text-[#181715] font-sans antialiased selection:bg-[#181715] selection:text-white">
       {/* Sticky Header */}
-      <Navbar currentTab={currentTab} onNavigate={handleNavigate} />
+      <Navbar
+        currentTab={currentTab}
+        onNavigate={handleNavigate}
+        collectionCount={collection.length}
+      />
 
       {/* Main Content Areas based on currentTab */}
       <main className="flex-1">
@@ -83,29 +184,46 @@ export default function App() {
                       Featured Wholesale Materials
                     </h2>
                   </div>
-                  <button
-                    onClick={() => handleNavigate('catalogue')}
-                    className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#181715] hover:text-[#82553E] transition-colors"
-                  >
-                    <span>View All {products.length} Products</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
+                  <div className="flex items-center gap-4">
+                    {collection.length > 0 && (
+                      <button
+                        onClick={() => handleNavigate('collection')}
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#82553E] hover:text-[#181715] transition-colors"
+                      >
+                        <ShoppingBag className="w-4 h-4" />
+                        <span>View Collection ({collection.length})</span>
+                      </button>
+                    )}
+                    <button
+                      onClick={() => handleNavigate('catalogue')}
+                      className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#181715] hover:text-[#82553E] transition-colors"
+                    >
+                      <span>View All {products.length} Products</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                  {featuredProducts.map((product) => (
-                    <ProductCard
-                      key={product.id}
-                      product={product}
-                      onViewDetails={handleOpenDetails}
-                      onEnquire={handleOpenEnquiry}
-                    />
-                  ))}
+                  {featuredProducts.map((product) => {
+                    const itemInCollection = getCollectionItem(product.id);
+                    return (
+                      <ProductCard
+                        key={product.id}
+                        product={product}
+                        onViewDetails={handleOpenDetails}
+                        onEnquire={handleOpenSingleEnquiry}
+                        onAddToCollection={handleAddToCollection}
+                        isInCollection={Boolean(itemInCollection)}
+                        collectionQuantity={itemInCollection?.quantity || 0}
+                      />
+                    );
+                  })}
                 </div>
               </div>
             </section>
 
-            {/* 4. Business Introduction, 5. Why Classic Fashions & 18. Visit Classic Fashions */}
+            {/* 4. Business Introduction, Why Classic Fashions & Visit Section */}
             <HomeIntro
               onExploreCatalogue={() => handleNavigate('catalogue')}
               onReachUs={() => handleNavigate('reach-us')}
@@ -130,6 +248,15 @@ export default function App() {
                   >
                     Explore Digital Catalogue
                   </button>
+                  {collection.length > 0 && (
+                    <button
+                      onClick={() => handleNavigate('collection')}
+                      className="w-full sm:w-auto px-8 py-3.5 text-xs font-semibold uppercase tracking-wider bg-[#82553E] text-white hover:bg-[#6e4632] rounded transition-colors flex items-center justify-center gap-2"
+                    >
+                      <ShoppingBag className="w-4 h-4" />
+                      <span>Review Collection ({collection.length})</span>
+                    </button>
+                  )}
                   <button
                     onClick={() => handleNavigate('reach-us')}
                     className="w-full sm:w-auto px-8 py-3.5 text-xs font-semibold uppercase tracking-wider bg-transparent border border-[#59554F] text-white hover:bg-[#2B2824] rounded transition-colors"
@@ -153,20 +280,30 @@ export default function App() {
           <CatalogueView
             initialCategory={catalogueCategory}
             onViewDetails={handleOpenDetails}
-            onEnquire={handleOpenEnquiry}
+            onEnquire={handleOpenSingleEnquiry}
+            onAddToCollection={handleAddToCollection}
+            collection={collection}
+            onViewCollection={() => handleNavigate('collection')}
           />
         )}
 
-        {currentTab === 'reach-us' && (
-          <ReachUsView />
+        {currentTab === 'collection' && (
+          <CollectionView
+            collection={collection}
+            onUpdateQuantity={handleUpdateCollectionQuantity}
+            onRemoveItem={handleRemoveFromCollection}
+            onClearCollection={handleClearCollection}
+            onGenerateEnquiry={handleGenerateCollectionEnquiry}
+            onExploreCatalogue={() => handleNavigate('catalogue')}
+            onViewDetails={handleOpenDetails}
+          />
         )}
+
+        {currentTab === 'reach-us' && <ReachUsView />}
       </main>
 
       {/* Footer */}
       <Footer onNavigate={handleNavigate} />
-
-      {/* Floating Chatbot Assistant */}
-      <Chatbot onNavigate={handleNavigate} />
 
       {/* Product Detail Modal */}
       <ProductDetailModal
@@ -174,17 +311,24 @@ export default function App() {
         onClose={() => setDetailProduct(null)}
         onEnquire={(p) => {
           setDetailProduct(null);
-          handleOpenEnquiry(p);
+          handleOpenSingleEnquiry(p);
         }}
+        onAddToCollection={handleAddToCollection}
+        isInCollection={detailProduct ? Boolean(getCollectionItem(detailProduct.id)) : false}
+        currentQuantityInCollection={
+          detailProduct ? getCollectionItem(detailProduct.id)?.quantity || 0 : 0
+        }
       />
 
-      {/* Product Enquiry Modal */}
+      {/* Product / Collection Enquiry Modal */}
       <EnquiryModal
-        product={enquiryProduct}
+        product={isCollectionEnquiry ? null : enquiryProduct}
+        collection={isCollectionEnquiry ? collection : []}
         isOpen={isEnquiryOpen}
         onClose={() => {
           setIsEnquiryOpen(false);
           setEnquiryProduct(null);
+          setIsCollectionEnquiry(false);
         }}
       />
     </div>

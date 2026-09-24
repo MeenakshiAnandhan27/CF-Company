@@ -4,11 +4,17 @@ import { ProductCategory } from '../types.ts';
 import { Phone, Mail, MapPin, Clock } from 'lucide-react';
 
 interface FooterProps {
-  onNavigate: (tab: 'home' | 'about' | 'catalogue' | 'reach-us', category?: ProductCategory) => void;
+  onNavigate: (
+    tab: 'home' | 'about' | 'catalogue' | 'collection' | 'reach-us',
+    category?: ProductCategory
+  ) => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
-  const handleNav = (tab: 'home' | 'about' | 'catalogue' | 'reach-us', cat?: ProductCategory) => {
+  const handleNav = (
+    tab: 'home' | 'about' | 'catalogue' | 'collection' | 'reach-us',
+    cat?: ProductCategory
+  ) => {
     onNavigate(tab, cat);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -68,6 +74,14 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   className="hover:text-white transition-colors"
                 >
                   Catalogue
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => handleNav('collection')}
+                  className="hover:text-white transition-colors flex items-center gap-1.5"
+                >
+                  <span>Dealer Collection</span>
                 </button>
               </li>
               <li>

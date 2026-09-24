@@ -6,15 +6,30 @@ export type ProductCategory =
   | 'accessories'
   | 'processing';
 
+export type AvailabilityStatus = 
+  | 'In Stock' 
+  | 'Made to Order' 
+  | 'Available on Order' 
+  | 'Sampling Available';
+
 export interface Product {
   id: string;
+  productCode: string;
   name: string;
   category: ProductCategory;
   categoryLabel: string;
   subcategory?: string;
+  description: string;
   shortDescription: string;
   fullDescription: string;
+  images: string[];
   imageAlt: string;
+  colours: string[];
+  sizes: string[];
+  fabric: string;
+  price: string;
+  availability: AvailabilityStatus;
+  active: boolean;
   patternType: 
     | 'embroidery-lace'
     | 'cotton-lace'
@@ -48,6 +63,15 @@ export interface Product {
   enquiryEnabled: boolean;
   isService?: boolean;
   featured?: boolean;
+}
+
+export interface CollectionItem {
+  product: Product;
+  quantity: number;
+  selectedColour?: string;
+  selectedSize?: string;
+  customNote?: string;
+  addedAt: number;
 }
 
 export interface CategoryInfo {
@@ -84,9 +108,17 @@ export interface EnquiryFormState {
   companyName: string;
   phone: string;
   email: string;
+  address: string;
   productName: string;
   quantity: string;
   message: string;
+  items?: {
+    productCode: string;
+    productName: string;
+    quantity: number;
+    colour?: string;
+    size?: string;
+  }[];
 }
 
 export interface ContactFormState {
@@ -94,17 +126,19 @@ export interface ContactFormState {
   companyName: string;
   phone: string;
   email: string;
+  address?: string;
   interestedCategory: string;
   product: string;
   quantity: string;
   message: string;
 }
 
-export interface ChatMessage {
-  id: string;
-  sender: 'user' | 'bot';
-  text: string;
-  actionType?: 'call' | 'enquire' | 'catalogue' | 'category' | 'reach-us';
-  actionPayload?: string;
-  timestamp: string;
+export interface ProductFilters {
+  category: ProductCategory | 'all';
+  subcategory: string | 'all';
+  search: string;
+  colour: string | 'all';
+  size: string | 'all';
+  availability: AvailabilityStatus | 'all';
+  sortBy?: 'featured' | 'name-asc' | 'name-desc' | 'code';
 }

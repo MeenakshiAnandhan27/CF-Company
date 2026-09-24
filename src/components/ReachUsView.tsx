@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { businessConfig } from '../data/businessConfig.ts';
 import { ContactFormState } from '../types.ts';
 import { Phone, MessageSquare, Mail, MapPin, Clock, Send, CheckCircle2, Map, ExternalLink } from 'lucide-react';
+import { BrandLogo } from './BrandLogo.tsx';
 
 export const ReachUsView: React.FC = () => {
   const [formState, setFormState] = useState<ContactFormState>({
@@ -51,16 +52,21 @@ export const ReachUsView: React.FC = () => {
           <div className="lg:col-span-5 space-y-6">
             
             <div className="bg-white p-6 sm:p-8 rounded-xl border border-[#E8E6E0] shadow-sm space-y-6">
-              <div>
-                <span className="text-xs font-mono uppercase tracking-wider text-[#82553E] font-semibold block">
-                  Official Details
-                </span>
-                <h2 className="font-serif text-2xl font-bold text-[#181715] mt-1">
-                  CLASSIC FASHIONS
-                </h2>
-                <p className="text-xs text-[#736F68] mt-1">
-                  Supplier of Garment Accessories &amp; Fabrics
-                </p>
+              <div className="flex items-center gap-3.5">
+                <div className="w-12 h-12 rounded-lg bg-[#181715] flex items-center justify-center p-2 shrink-0 border border-[#302D29] shadow-xs">
+                  <BrandLogo variant="white" size="sm" className="w-full h-auto" />
+                </div>
+                <div>
+                  <span className="text-xs font-mono uppercase tracking-wider text-[#82553E] font-semibold block">
+                    Official Details
+                  </span>
+                  <h2 className="font-serif text-2xl font-bold text-[#181715] mt-0.5">
+                    CLASSIC FASHIONS
+                  </h2>
+                  <p className="text-xs text-[#736F68]">
+                    Garment Accessories &amp; Fabric Manufacturing
+                  </p>
+                </div>
               </div>
 
               <div className="space-y-4 text-sm">

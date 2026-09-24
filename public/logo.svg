@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" width="240" height="160" fill="none">
+  <!-- CLASSIC FASHIONS (CF) Enhanced Vector Logo -->
+  <g fill="#181715">
+    <!-- C Monogram with Extended Top Bar -->
+    <path d="
+      M 74 24
+      L 218 24
+      L 194 52
+      L 88 52
+      C 66 52 52 64 52 80
+      C 52 96 66 108 88 108
+      L 108 108
+      L 108 136
+      L 74 136
+      C 38 136 18 112 18 80
+      C 18 48 38 24 74 24
+      Z
+    " />
+
+    <!-- F Monogram (Middle Crossbar and Vertical Stem) -->
+    <path d="
+      M 118 66
+      L 208 66
+      L 184 94
+      L 152 94
+      L 152 136
+      L 118 136
+      Z
+    " />
+  </g>
+</svg>

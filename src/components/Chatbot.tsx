@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { MessageSquare, X, Send, Phone, MapPin, ArrowRight, CornerDownLeft, Sparkles } from 'lucide-react';
 import { businessConfig } from '../data/businessConfig.ts';
 import { ProductCategory, NavigationTab } from '../types.ts';
+import { BrandLogo } from './BrandLogo.tsx';
 
 interface Message {
   id: string;
@@ -385,8 +386,8 @@ export const Chatbot: React.FC<ChatbotProps> = ({ onNavigate }) => {
           {/* Header */}
           <div className="bg-[#181715] text-white px-4 py-3.5 flex items-center justify-between border-b border-[#2C2926]">
             <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded bg-[#2D2A26] flex items-center justify-center text-xs font-bold font-serif text-[#E5D7CC] border border-[#444038]">
-                CF
+              <div className="w-8 h-8 rounded bg-[#2D2A26] flex items-center justify-center p-1 border border-[#444038] shrink-0">
+                <BrandLogo variant="white" size="xs" className="w-full h-auto" />
               </div>
               <div>
                 <h3 className="font-serif text-sm font-semibold tracking-wide text-white leading-tight">

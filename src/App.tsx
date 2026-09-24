@@ -294,7 +294,7 @@ export default function App() {
 
         {currentTab === 'about' && (
           <AboutSection
-            onExploreCatalogue={() => handleNavigate('catalogue')}
+            onExploreCatalogue={(cat?: any) => handleNavigate('catalogue', cat)}
             onRequestMaterial={() => handleRequestMaterial()}
             onReachUs={() => handleNavigate('reach-us')}
           />

@@ -37,9 +37,9 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             </div>
             
             <p className="text-xs sm:text-sm text-[#A8A29A] leading-relaxed max-w-sm">
-              Garment Accessories &amp; Fabric Manufacturing / Wholesale &amp; Retail Supply
+              Supplier of Garment Accessories &amp; Fabrics
               <br />
-              {businessConfig.addressLine2}, {businessConfig.city}, {businessConfig.state} – {businessConfig.pincode}
+              Tiruppur, Tamil Nadu, India
             </p>
 
             <div className="pt-2 text-[11px] text-[#78736B] font-mono">
@@ -170,7 +170,14 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <div className="flex items-start gap-2">
                 <MapPin className="w-3.5 h-3.5 text-[#C4B7AA] shrink-0 mt-0.5" />
                 <span>
-                  {businessConfig.addressLine1}, {businessConfig.addressLine2}, {businessConfig.city} – {businessConfig.pincode}
+                  Tiruppur, Tamil Nadu (View address on{' '}
+                  <button
+                    onClick={() => handleNav('reach-us')}
+                    className="text-[#E0D5C7] underline hover:text-white"
+                  >
+                    Reach Us
+                  </button>
+                  )
                 </span>
               </div>
               <div className="flex items-start gap-2 font-mono">

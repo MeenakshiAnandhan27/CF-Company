@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { businessConfig } from '../data/businessConfig.ts';
-import { ProductCategory } from '../types.ts';
-import { Menu, X, ArrowRight, Phone, ShoppingBag } from 'lucide-react';
+import { ProductCategory, NavigationTab } from '../types.ts';
+import { Menu, X, ArrowRight, Phone, ShoppingBag, Sparkles } from 'lucide-react';
 
 interface NavbarProps {
-  currentTab: 'home' | 'about' | 'catalogue' | 'collection' | 'reach-us';
+  currentTab: NavigationTab;
   onNavigate: (
-    tab: 'home' | 'about' | 'catalogue' | 'collection' | 'reach-us',
+    tab: NavigationTab,
     category?: ProductCategory
   ) => void;
   collectionCount?: number;
@@ -28,7 +28,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleNavClick = (tab: 'home' | 'about' | 'catalogue' | 'collection' | 'reach-us') => {
+  const handleNavClick = (tab: NavigationTab) => {
     onNavigate(tab);
     setMobileMenuOpen(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -63,7 +63,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </button>
 
         {/* Zone 2: Navigation Links (Clean, non-wrapping, perfectly aligned) */}
-        <nav className="hidden md:flex items-center gap-5 lg:gap-7 xl:gap-8 text-xs font-semibold uppercase tracking-wider text-[#585550]">
+        <nav className="hidden md:flex items-center gap-4 lg:gap-6 xl:gap-7 text-xs font-semibold uppercase tracking-wider text-[#585550]">
           <button
             onClick={() => handleNavClick('home')}
             className={`whitespace-nowrap transition-colors hover:text-[#181715] relative py-2 ${
@@ -95,6 +95,16 @@ export const Navbar: React.FC<NavbarProps> = ({
             CATALOGUE
           </button>
           <button
+            onClick={() => handleNavClick('material-request')}
+            className={`whitespace-nowrap transition-colors hover:text-[#181715] relative py-2 flex items-center gap-1 ${
+              currentTab === 'material-request'
+                ? 'text-[#181715] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#181715]'
+                : 'text-[#82553E]'
+            }`}
+          >
+            <span>REQUEST MATERIAL</span>
+          </button>
+          <button
             onClick={() => handleNavClick('reach-us')}
             className={`whitespace-nowrap transition-colors hover:text-[#181715] relative py-2 ${
               currentTab === 'reach-us'
@@ -107,11 +117,11 @@ export const Navbar: React.FC<NavbarProps> = ({
         </nav>
 
         {/* Zone 3: Primary Actions (Collection Utility + Quick CTA) */}
-        <div className="hidden sm:flex items-center gap-3 shrink-0">
-          {/* Collection Shortcut Pill */}
+        <div className="hidden sm:flex items-center gap-2.5 shrink-0">
+          {/* Collection Shortcut */}
           <button
             onClick={() => handleNavClick('collection')}
-            className={`whitespace-nowrap inline-flex items-center gap-2 px-3.5 py-2 text-xs font-semibold uppercase tracking-wider rounded border transition-all ${
+            className={`whitespace-nowrap inline-flex items-center gap-2 px-3 py-2 text-xs font-semibold uppercase tracking-wider rounded border transition-all ${
               currentTab === 'collection'
                 ? 'bg-[#181715] text-white border-[#181715]'
                 : collectionCount > 0
@@ -137,7 +147,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           <button
             onClick={() => handleNavClick('catalogue')}
-            className="whitespace-nowrap inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-[#FFFFFF] bg-[#181715] rounded hover:bg-[#302D29] transition-all duration-200 shadow-sm active:scale-[0.98]"
+            className="whitespace-nowrap inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold uppercase tracking-wider text-[#FFFFFF] bg-[#181715] rounded hover:bg-[#302D29] transition-all duration-200 shadow-sm active:scale-[0.98]"
           >
             <span>Catalogue</span>
             <ArrowRight className="w-3.5 h-3.5 shrink-0" />
@@ -193,6 +203,16 @@ export const Navbar: React.FC<NavbarProps> = ({
             }`}
           >
             CATALOGUE
+          </button>
+          <button
+            onClick={() => handleNavClick('material-request')}
+            className={`w-full text-left py-2.5 px-3 rounded text-sm font-medium ${
+              currentTab === 'material-request'
+                ? 'bg-[#EFECE6] text-[#181715] font-semibold'
+                : 'text-[#82553E]'
+            }`}
+          >
+            REQUEST A MATERIAL
           </button>
           <button
             onClick={() => handleNavClick('collection')}

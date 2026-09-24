@@ -25,6 +25,7 @@ interface ProductDetailModalProps {
   onAddToCollection?: (product: Product, quantity: number, colour?: string, size?: string) => void;
   isInCollection?: boolean;
   currentQuantityInCollection?: number;
+  onRequestSimilar?: (product: Product) => void;
 }
 
 export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
@@ -34,6 +35,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
   onAddToCollection,
   isInCollection = false,
   currentQuantityInCollection = 0,
+  onRequestSimilar,
 }) => {
   const [selectedColour, setSelectedColour] = useState<string>('');
   const [selectedSize, setSelectedSize] = useState<string>('');
@@ -357,6 +359,26 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                     <span>Direct Enquiry</span>
                   </button>
                 </div>
+
+                {/* Sourcing Alternative / Request Similar Material */}
+                {onRequestSimilar && (
+                  <div className="pt-2 border-t border-[#EAE6DF] flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
+                    <span className="text-[#736F68] text-[11px]">
+                      Need a different GSM, custom width, or weave variation?
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onClose();
+                        onRequestSimilar(product);
+                      }}
+                      className="text-[#82553E] hover:text-[#181715] font-semibold uppercase tracking-wider text-[11px] underline flex items-center gap-1 shrink-0"
+                    >
+                      <Sparkles className="w-3 h-3 text-[#82553E]" />
+                      <span>Request Similar Material</span>
+                    </button>
+                  </div>
+                )}
 
                 <p className="text-[11px] text-center text-[#8C877E]">
                   Add multiple materials to your collection to generate a unified dealer quotation.

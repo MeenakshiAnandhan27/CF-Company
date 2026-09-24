@@ -1,18 +1,18 @@
 import React from 'react';
 import { businessConfig } from '../data/businessConfig.ts';
-import { ProductCategory } from '../types.ts';
-import { Phone, Mail, MapPin, Clock } from 'lucide-react';
+import { ProductCategory, NavigationTab } from '../types.ts';
+import { Phone, Mail, MapPin, Clock, Sparkles } from 'lucide-react';
 
 interface FooterProps {
   onNavigate: (
-    tab: 'home' | 'about' | 'catalogue' | 'collection' | 'reach-us',
+    tab: NavigationTab,
     category?: ProductCategory
   ) => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   const handleNav = (
-    tab: 'home' | 'about' | 'catalogue' | 'collection' | 'reach-us',
+    tab: NavigationTab,
     cat?: ProductCategory
   ) => {
     onNavigate(tab, cat);
@@ -74,6 +74,14 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   className="hover:text-white transition-colors"
                 >
                   Catalogue
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => handleNav('material-request')}
+                  className="hover:text-white transition-colors flex items-center gap-1 text-[#C4B7AA]"
+                >
+                  <span>Request a Material</span>
                 </button>
               </li>
               <li>

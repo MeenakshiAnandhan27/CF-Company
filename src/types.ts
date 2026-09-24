@@ -12,6 +12,64 @@ export type AvailabilityStatus =
   | 'Available on Order' 
   | 'Sampling Available';
 
+export type NavigationTab = 
+  | 'home' 
+  | 'about' 
+  | 'catalogue' 
+  | 'collection' 
+  | 'material-request' 
+  | 'reach-us';
+
+export type MaterialRequestCategory = 
+  | 'fabric' 
+  | 'lace' 
+  | 'denim' 
+  | 'mesh' 
+  | 'accessories' 
+  | 'processing' 
+  | 'other';
+
+export interface MaterialRequestData {
+  category: MaterialRequestCategory;
+  materialName: string;
+  similarToProductCode?: string;
+  similarToProductName?: string;
+  specifications: {
+    typeVariant?: string;
+    composition?: string;
+    gsmOrWeight?: string;
+    widthOrSize?: string;
+    colourPreference?: string;
+    elasticity?: string;
+    patternOrFinish?: string;
+    customDetails?: string;
+  };
+  referenceImage?: {
+    name: string;
+    dataUrl?: string;
+    sizeKb?: number;
+  };
+  hasPhysicalSample: boolean;
+  sampleCourierNotes?: string;
+  quantity: string;
+  unit: string;
+  purpose: string;
+  targetTimeline?: string;
+  testingRequirements?: string;
+  contactName: string;
+  companyName: string;
+  phone: string;
+  email: string;
+  cityState: string;
+  additionalNotes?: string;
+}
+
+export interface MaterialRequestSubmission extends MaterialRequestData {
+  id: string;
+  referenceCode: string;
+  submittedAt: number;
+}
+
 export interface Product {
   id: string;
   productCode: string;

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageSquare, X, Send, Phone, MapPin, ArrowRight, CornerDownLeft, Sparkles } from 'lucide-react';
 import { businessConfig } from '../data/businessConfig.ts';
-import { ProductCategory } from '../types.ts';
+import { ProductCategory, NavigationTab } from '../types.ts';
 
 interface Message {
   id: string;
@@ -10,14 +10,14 @@ interface Message {
   action?: {
     type: 'navigate' | 'call' | 'whatsapp';
     label: string;
-    tab?: 'home' | 'about' | 'catalogue' | 'reach-us';
+    tab?: NavigationTab;
     category?: ProductCategory;
     href?: string;
   };
 }
 
 interface ChatbotProps {
-  onNavigate: (tab: 'home' | 'about' | 'catalogue' | 'reach-us', category?: ProductCategory) => void;
+  onNavigate: (tab: NavigationTab, category?: ProductCategory) => void;
 }
 
 export const Chatbot: React.FC<ChatbotProps> = ({ onNavigate }) => {
@@ -27,7 +27,7 @@ export const Chatbot: React.FC<ChatbotProps> = ({ onNavigate }) => {
     {
       id: 'welcome-1',
       sender: 'bot',
-      text: `Hi! 👋 How can I help you?\nChoose an option or type your question:\n• View Catalogue\n• Laces\n• Fabrics\n• Denim\n• Mesh\n• Accessories\n• Reach Us\n• Talk to Us`,
+      text: `Hi! 👋 Welcome to Classic Fashions.\nChoose an option or type your question:\n• View Catalogue\n• Can't Find Material?\n• Laces\n• Fabrics\n• Denim\n• Mesh\n• Accessories\n• Reach Us\n• Talk to Us`,
     },
   ]);
 
@@ -47,6 +47,7 @@ export const Chatbot: React.FC<ChatbotProps> = ({ onNavigate }) => {
 
   const quickOptions = [
     { label: 'View Catalogue', query: 'View Catalogue' },
+    { label: "Can't Find Material?", query: "Can't find material" },
     { label: 'Laces', query: 'Laces' },
     { label: 'Fabrics', query: 'Fabrics' },
     { label: 'Denim', query: 'Denim' },
@@ -209,6 +210,33 @@ export const Chatbot: React.FC<ChatbotProps> = ({ onNavigate }) => {
           type: 'navigate',
           label: 'Visit Reach Us Page',
           tab: 'reach-us',
+        },
+      };
+    }
+
+    // Sourcing / Can't find material intent
+    if (
+      q.includes("can't find") ||
+      q.includes('cant find') ||
+      q.includes('cannot find') ||
+      q.includes('not listed') ||
+      q.includes('not in catalogue') ||
+      q.includes('not found') ||
+      q.includes('custom material') ||
+      q.includes('custom fabric') ||
+      q.includes('source material') ||
+      q.includes('request material') ||
+      q.includes('special order') ||
+      q.includes('new material')
+    ) {
+      return {
+        id: Date.now().toString(),
+        sender: 'bot',
+        text: "Looking for a fabric, lace, denim, mesh or garment material that isn't listed in our catalogue? Tell us what you need and our team in Boyampalayam will review your requirement.",
+        action: {
+          type: 'navigate',
+          label: 'REQUEST A MATERIAL',
+          tab: 'material-request',
         },
       };
     }

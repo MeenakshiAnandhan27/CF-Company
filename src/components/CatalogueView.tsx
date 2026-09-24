@@ -24,6 +24,7 @@ interface CatalogueViewProps {
   onAddToCollection?: (product: Product) => void;
   collection?: CollectionItem[];
   onViewCollection?: () => void;
+  onRequestMaterial?: (category?: ProductCategory) => void;
 }
 
 export const CatalogueView: React.FC<CatalogueViewProps> = ({
@@ -33,6 +34,7 @@ export const CatalogueView: React.FC<CatalogueViewProps> = ({
   onAddToCollection,
   collection = [],
   onViewCollection,
+  onRequestMaterial,
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<ProductCategory | 'all'>(initialCategory);
   const [selectedSubcategory, setSelectedSubcategory] = useState<string | 'all'>('all');
@@ -454,13 +456,21 @@ export const CatalogueView: React.FC<CatalogueViewProps> = ({
             <p className="text-xs sm:text-sm text-[#585550] leading-relaxed">
               No product items matched your active search query and filter criteria. Try clearing some filters or searching for terms like "cotton", "denim", "lace", or product codes like "CF-LAC-101".
             </p>
-            <div className="pt-2">
+            <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-2">
               <button
                 onClick={handleResetFilters}
                 className="px-5 py-2.5 text-xs font-semibold uppercase tracking-wider text-white bg-[#181715] rounded hover:bg-[#302D29] transition-colors"
               >
                 Reset Filters &amp; View All
               </button>
+              {onRequestMaterial && (
+                <button
+                  onClick={() => onRequestMaterial(selectedCategory === 'all' ? undefined : selectedCategory)}
+                  className="px-5 py-2.5 text-xs font-semibold uppercase tracking-wider text-[#82553E] bg-[#F2EDE6] hover:bg-[#EAE2D6] rounded transition-colors"
+                >
+                  Request A Material
+                </button>
+              )}
             </div>
           </div>
         ) : (
@@ -478,6 +488,36 @@ export const CatalogueView: React.FC<CatalogueViewProps> = ({
             ))}
           </div>
         )}
+
+        {/* 5. Can't Find Your Material? Prominent Sourcing CTA Section */}
+        <section className="mt-16 bg-[#F5F2EB] border border-[#DDD6C8] rounded-xl p-8 sm:p-12 text-center max-w-4xl mx-auto shadow-xs">
+          <div className="space-y-4 max-w-2xl mx-auto">
+            <span className="text-xs font-mono font-semibold uppercase tracking-[0.2em] text-[#82553E] bg-[#EAE2D6] px-3 py-1 rounded inline-block">
+              CUSTOM B2B SOURCING
+            </span>
+            <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#181715]">
+              CAN'T FIND YOUR MATERIAL?
+            </h3>
+            <p className="text-sm sm:text-base text-[#585550] leading-relaxed">
+              Looking for a fabric, lace, denim, mesh or garment material that isn't listed in our catalogue? Tell us what you need and our team will review your requirement.
+            </p>
+            <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+              <button
+                onClick={() => onRequestMaterial && onRequestMaterial(selectedCategory === 'all' ? undefined : selectedCategory)}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-[#181715] hover:bg-[#302D29] text-white text-xs font-semibold uppercase tracking-wider rounded transition-all shadow-sm"
+              >
+                <Sparkles className="w-4 h-4 text-[#E5D7CC]" />
+                <span>REQUEST A MATERIAL</span>
+              </button>
+              <button
+                onClick={() => onRequestMaterial && onRequestMaterial()}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-white border border-[#D5D0C6] hover:bg-[#FAF9F6] text-[#181715] text-xs font-semibold uppercase tracking-wider rounded transition-colors"
+              >
+                <span>Can't Find What You Need?</span>
+              </button>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );

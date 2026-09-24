@@ -7,10 +7,12 @@ import { CatalogueView } from './components/CatalogueView.tsx';
 import { CollectionView } from './components/CollectionView.tsx';
 import { AboutSection } from './components/AboutSection.tsx';
 import { ReachUsView } from './components/ReachUsView.tsx';
+import { MaterialRequestForm } from './components/MaterialRequestForm.tsx';
+import { Chatbot } from './components/Chatbot.tsx';
 import { Footer } from './components/Footer.tsx';
 import { ProductDetailModal } from './components/ProductDetailModal.tsx';
 import { EnquiryModal } from './components/EnquiryModal.tsx';
-import { Product, ProductCategory, CollectionItem } from './types.ts';
+import { Product, ProductCategory, CollectionItem, NavigationTab, MaterialRequestCategory } from './types.ts';
 import { products } from './data/products.ts';
 import { ProductCard } from './components/ProductCard.tsx';
 import { ArrowRight, ShoppingBag } from 'lucide-react';
@@ -18,8 +20,10 @@ import { ArrowRight, ShoppingBag } from 'lucide-react';
 const COLLECTION_STORAGE_KEY = 'cf_dealer_collection_v1';
 
 export default function App() {
-  const [currentTab, setCurrentTab] = useState<'home' | 'about' | 'catalogue' | 'collection' | 'reach-us'>('home');
+  const [currentTab, setCurrentTab] = useState<NavigationTab>('home');
   const [catalogueCategory, setCatalogueCategory] = useState<ProductCategory | 'all'>('all');
+  const [similarProductForRequest, setSimilarProductForRequest] = useState<Product | null>(null);
+  const [initialRequestCategory, setInitialRequestCategory] = useState<MaterialRequestCategory | undefined>(undefined);
 
   // Collection State (Stored in localStorage for dealer convenience)
   const [collection, setCollection] = useState<CollectionItem[]>(() => {
@@ -51,7 +55,7 @@ export default function App() {
 
   // Navigation handler
   const handleNavigate = (
-    tab: 'home' | 'about' | 'catalogue' | 'collection' | 'reach-us',
+    tab: NavigationTab,
     category?: ProductCategory
   ) => {
     setCurrentTab(tab);
@@ -66,6 +70,35 @@ export default function App() {
   const handleCategorySelect = (category: ProductCategory) => {
     setCatalogueCategory(category);
     setCurrentTab('catalogue');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleRequestMaterial = (category?: ProductCategory, similarProduct?: Product) => {
+    if (similarProduct) {
+      setSimilarProductForRequest(similarProduct);
+    } else {
+      setSimilarProductForRequest(null);
+    }
+
+    if (category) {
+      const mapped: MaterialRequestCategory =
+        category === 'laces'
+          ? 'lace'
+          : category === 'denim'
+          ? 'denim'
+          : category === 'mesh'
+          ? 'mesh'
+          : category === 'accessories'
+          ? 'accessories'
+          : category === 'processing'
+          ? 'processing'
+          : 'fabric';
+      setInitialRequestCategory(mapped);
+    } else {
+      setInitialRequestCategory(undefined);
+    }
+
+    setCurrentTab('material-request');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -284,6 +317,16 @@ export default function App() {
             onAddToCollection={handleAddToCollection}
             collection={collection}
             onViewCollection={() => handleNavigate('collection')}
+            onRequestMaterial={(cat) => handleRequestMaterial(cat)}
+          />
+        )}
+
+        {currentTab === 'material-request' && (
+          <MaterialRequestForm
+            similarProduct={similarProductForRequest}
+            initialData={initialRequestCategory ? { category: initialRequestCategory } : undefined}
+            onExploreCatalogue={() => handleNavigate('catalogue')}
+            onReachUs={() => handleNavigate('reach-us')}
           />
         )}
 
@@ -318,6 +361,10 @@ export default function App() {
         currentQuantityInCollection={
           detailProduct ? getCollectionItem(detailProduct.id)?.quantity || 0 : 0
         }
+        onRequestSimilar={(p) => {
+          setDetailProduct(null);
+          handleRequestMaterial(undefined, p);
+        }}
       />
 
       {/* Product / Collection Enquiry Modal */}
@@ -331,6 +378,9 @@ export default function App() {
           setIsCollectionEnquiry(false);
         }}
       />
+
+      {/* Assistant & Quick Navigation Chatbot */}
+      <Chatbot onNavigate={handleNavigate} />
     </div>
   );
 }

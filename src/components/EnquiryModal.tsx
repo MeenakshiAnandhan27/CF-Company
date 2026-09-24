@@ -541,7 +541,7 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
                   </div>
                 </div>
                 <span className="text-[10px] uppercase font-semibold text-[#82553E] bg-[#F2EDE6] px-2 py-0.5 rounded">
-                  Boyampalayam
+                  Direct Line
                 </span>
               </div>
 
@@ -563,7 +563,7 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
               </div>
             </div>
             <p className="text-[11px] text-[#8C877E] mt-2 font-mono text-center">
-              Classic Fashions • Boyampalayam, Tiruppur, Tamil Nadu
+              Classic Fashions • Garment Materials &amp; Fabrics Supply
             </p>
           </div>
         </div>

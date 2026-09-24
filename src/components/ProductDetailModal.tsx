@@ -149,7 +149,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 <span className="font-semibold text-[#181715] block mb-0.5">
                   Physical Swatches &amp; Mill Bolts:
                 </span>
-                Inspection swatches, roll bolts, and physical shade cards can be requested for your cutting room sampling in Boyampalayam, Tiruppur.
+                Inspection swatches, roll bolts, and physical shade cards can be requested for your cutting room sampling.
               </div>
 
               {/* Pricing & Commercial Terms Highlight */}
@@ -282,107 +282,43 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 </div>
               )}
 
-              {/* Collection & Enquiry Action Area */}
-              <div className="p-4 bg-[#FAF9F6] rounded-lg border border-[#E8E6E0] space-y-3 pt-4">
-                <div className="flex items-center justify-between gap-3">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-[#181715]">
-                    Select Order / Sample Quantity:
-                  </span>
+              {/* Sourcing & Enquiry Action Area */}
+              <div className="p-4 bg-[#FAF9F6] rounded-lg border border-[#E8E6E0] space-y-4">
+                {/* Primary Action Button: Direct Enquiry */}
+                <button
+                  onClick={() => {
+                    onClose();
+                    onEnquire(product);
+                  }}
+                  className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 text-xs font-semibold uppercase tracking-wider text-white bg-[#181715] hover:bg-[#302D29] rounded transition-all shadow-sm active:scale-[0.99]"
+                >
+                  <Mail className="w-4 h-4 text-[#D8C7B8]" />
+                  <span>Enquire About This Material</span>
+                </button>
 
-                  {/* Quantity Stepper */}
-                  <div className="flex items-center border border-[#D5D0C6] rounded bg-white overflow-hidden">
-                    <button
-                      type="button"
-                      onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
-                      className="p-2 text-[#585550] hover:bg-[#F2EFEA] hover:text-[#181715] transition-colors"
-                      aria-label="Decrease quantity"
-                    >
-                      <Minus className="w-3.5 h-3.5" />
-                    </button>
-                    <input
-                      type="number"
-                      min={1}
-                      value={quantity}
-                      onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                      className="w-14 text-center font-mono font-semibold text-xs text-[#181715] focus:outline-none"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setQuantity((prev) => prev + 1)}
-                      className="p-2 text-[#585550] hover:bg-[#F2EFEA] hover:text-[#181715] transition-colors"
-                      aria-label="Increase quantity"
-                    >
-                      <Plus className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                </div>
-
-                {/* Primary Button: Add to Collection */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
-                  <button
-                    onClick={handleAddCollection}
-                    className={`inline-flex items-center justify-center gap-2 px-5 py-3.5 text-xs font-semibold uppercase tracking-wider rounded transition-all shadow-sm ${
-                      addedJustNow
-                        ? 'bg-emerald-700 text-white'
-                        : isInCollection
-                        ? 'bg-[#EAE4DC] text-[#40281E] hover:bg-[#E0D7CC] border border-[#D0C2B5]'
-                        : 'bg-[#181715] text-white hover:bg-[#302D29]'
-                    }`}
-                  >
-                    {addedJustNow ? (
-                      <>
-                        <Check className="w-4 h-4 text-white" />
-                        <span>Added To Collection!</span>
-                      </>
-                    ) : isInCollection ? (
-                      <>
-                        <Check className="w-4 h-4 text-[#82553E]" />
-                        <span>Update In Collection ({quantity})</span>
-                      </>
-                    ) : (
-                      <>
-                        <BookmarkPlus className="w-4 h-4 text-[#D8C7B8]" />
-                        <span>Add To Collection</span>
-                      </>
-                    )}
-                  </button>
-
-                  {/* Direct Enquiry Button */}
-                  <button
-                    onClick={() => {
-                      onClose();
-                      onEnquire(product);
-                    }}
-                    className="inline-flex items-center justify-center gap-2 px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-[#181715] bg-white border border-[#D0CBC0] hover:bg-[#F5F3ED] rounded transition-colors"
-                  >
-                    <Mail className="w-4 h-4 text-[#82553E]" />
-                    <span>Direct Enquiry</span>
-                  </button>
-                </div>
-
-                {/* Sourcing Alternative / Request Similar Material */}
+                {/* Sourcing Alternative / Request Similar Material (Instruction 17) */}
                 {onRequestSimilar && (
-                  <div className="pt-2 border-t border-[#EAE6DF] flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
-                    <span className="text-[#736F68] text-[11px]">
-                      Need a different GSM, custom width, or weave variation?
-                    </span>
+                  <div className="p-4 bg-[#FAF8F5] border border-[#E5DFD4] rounded-lg space-y-2.5">
+                    <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#82553E]">
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>Looking for something similar?</span>
+                    </div>
+                    <p className="text-xs text-[#585550] leading-relaxed">
+                      Need a different colour, specification, quality or variation? Tell us what you need and we will explore suitable sourcing options.
+                    </p>
                     <button
                       type="button"
                       onClick={() => {
                         onClose();
                         onRequestSimilar(product);
                       }}
-                      className="text-[#82553E] hover:text-[#181715] font-semibold uppercase tracking-wider text-[11px] underline flex items-center gap-1 shrink-0"
+                      className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-[#82553E] bg-white border border-[#D5C6B5] hover:bg-[#F2ECE4] rounded transition-colors"
                     >
-                      <Sparkles className="w-3 h-3 text-[#82553E]" />
+                      <Sparkles className="w-3.5 h-3.5 text-[#82553E]" />
                       <span>Request Similar Material</span>
                     </button>
                   </div>
                 )}
-
-                <p className="text-[11px] text-center text-[#8C877E]">
-                  Add multiple materials to your collection to generate a unified dealer quotation.
-                </p>
               </div>
 
             </div>
@@ -391,7 +327,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
 
         {/* Modal Footer Bar */}
         <div className="px-6 py-3 bg-[#FAF9F6] border-t border-[#E8E6E0] flex items-center justify-between text-xs text-[#78746C]">
-          <span>Classic Fashions • Boyampalayam, Tiruppur</span>
+          <span>Classic Fashions • Garment Materials &amp; Fabrics</span>
           <button
             onClick={onClose}
             className="hover:text-[#181715] underline font-medium"

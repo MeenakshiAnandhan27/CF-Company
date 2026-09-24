@@ -287,12 +287,12 @@ export const CollectionView: React.FC<CollectionViewProps> = ({
                   <span className="font-mono font-semibold text-[#181715]">{totalUnits} units</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-[#585550]">Supply Hub:</span>
-                  <span className="font-medium text-[#181715]">Boyampalayam, Tiruppur</span>
+                  <span className="text-[#585550]">Fulfillment:</span>
+                  <span className="font-medium text-[#181715]">Direct Supply &amp; Sourcing</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-[#585550]">Dispatch Capability:</span>
-                  <span className="font-medium text-emerald-700">Factory Direct Dispatch</span>
+                  <span className="font-medium text-emerald-700">Tiruppur Supply Desk Dispatch</span>
                 </div>
               </div>
 

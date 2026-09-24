@@ -72,7 +72,7 @@ export const Chatbot: React.FC<ChatbotProps> = ({ onNavigate }) => {
       return {
         id: Date.now().toString(),
         sender: 'bot',
-        text: 'Welcome to CLASSIC FASHIONS. We supply garment accessories, fabrics, laces, denim, mesh, and offer edge cutting services in Boyampalayam, Tiruppur. How can I assist you?',
+        text: 'Welcome to CLASSIC FASHIONS. We are a supplier and sourcing partner for garment accessories and fabrics. How can I assist you today?',
       };
     }
 
@@ -113,7 +113,7 @@ export const Chatbot: React.FC<ChatbotProps> = ({ onNavigate }) => {
       return {
         id: Date.now().toString(),
         sender: 'bot',
-        text: 'We offer Woven Fabric, Chambray, Poplin Gada, Twill Gada, Drill Gada, Dyed Fabric, Fur Fabric and other varieties for garment manufacturing.',
+        text: 'We offer Woven Fabric, Chambray, Poplin Gada, Twill Gada, Drill Gada, Dyed Fabric, Fur Fabric and other varieties for garment businesses and designers.',
         action: {
           type: 'navigate',
           label: 'View Fabrics in Catalogue',
@@ -205,7 +205,7 @@ export const Chatbot: React.FC<ChatbotProps> = ({ onNavigate }) => {
       return {
         id: Date.now().toString(),
         sender: 'bot',
-        text: `Classic Fashions is located at:\n5/1475, 5th Street, Palanisamy Nagar,\nBoyampalayam, Tiruppur,\nTamil Nadu – 641602, India.`,
+        text: 'You can find our full physical address, location map, and visiting directions inside the Reach Us section.',
         action: {
           type: 'navigate',
           label: 'Visit Reach Us Page',
@@ -214,7 +214,7 @@ export const Chatbot: React.FC<ChatbotProps> = ({ onNavigate }) => {
       };
     }
 
-    // Sourcing / Can't find material intent
+    // Sourcing / Can't find material / Custom requirement intent
     if (
       q.includes("can't find") ||
       q.includes('cant find') ||
@@ -222,6 +222,10 @@ export const Chatbot: React.FC<ChatbotProps> = ({ onNavigate }) => {
       q.includes('not listed') ||
       q.includes('not in catalogue') ||
       q.includes('not found') ||
+      q.includes('source another') ||
+      q.includes('something similar') ||
+      q.includes('specific fabric') ||
+      q.includes('specific material') ||
       q.includes('custom material') ||
       q.includes('custom fabric') ||
       q.includes('source material') ||
@@ -232,7 +236,27 @@ export const Chatbot: React.FC<ChatbotProps> = ({ onNavigate }) => {
       return {
         id: Date.now().toString(),
         sender: 'bot',
-        text: "Looking for a fabric, lace, denim, mesh or garment material that isn't listed in our catalogue? Tell us what you need and our team in Boyampalayam will review your requirement.",
+        text: "Sure. If the exact material isn't listed in our catalogue, you can share your requirement with us. We'll review suitable sourcing options.",
+        action: {
+          type: 'navigate',
+          label: 'REQUEST A MATERIAL',
+          tab: 'material-request',
+        },
+      };
+    }
+
+    // Manufacturer question intent
+    if (
+      q.includes('manufacture') ||
+      q.includes('manufacturer') ||
+      q.includes('factory') ||
+      q.includes('do you make') ||
+      q.includes('do you produce')
+    ) {
+      return {
+        id: Date.now().toString(),
+        sender: 'bot',
+        text: 'Classic Fashions is a supplier and sourcing partner. We source materials from suitable manufacturing and supply sources based on customer requirements.',
         action: {
           type: 'navigate',
           label: 'REQUEST A MATERIAL',
@@ -369,7 +393,7 @@ export const Chatbot: React.FC<ChatbotProps> = ({ onNavigate }) => {
                   Classic Fashions Assistant
                 </h3>
                 <span className="text-[10px] text-[#A8A29A] block font-mono">
-                  Boyampalayam, Tiruppur
+                  Direct Wholesale Support
                 </span>
               </div>
             </div>

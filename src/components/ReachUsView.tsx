@@ -59,7 +59,7 @@ export const ReachUsView: React.FC = () => {
                   CLASSIC FASHIONS
                 </h2>
                 <p className="text-xs text-[#736F68] mt-1">
-                  Garment Accessories &amp; Fabric Manufacturing
+                  Supplier of Garment Accessories &amp; Fabrics
                 </p>
               </div>
 

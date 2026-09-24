@@ -2,10 +2,10 @@ import { BusinessConfig } from '../types.ts';
 
 export const businessConfig: BusinessConfig = {
   businessName: 'CLASSIC FASHIONS',
-  subtitle: 'GARMENT ACCESSORIES & FABRIC MANUFACTURING',
-  businessType: 'Garment Accessories & Fabric Manufacturing / Wholesale & Retail Supply',
-  tagline: 'Garment Materials for Every Creation',
-  subheadline: 'Explore garment accessories, fabrics, laces and specialized materials for manufacturers, designers and retail buyers.',
+  subtitle: 'SUPPLIER OF GARMENT ACCESSORIES & FABRICS',
+  businessType: 'Supplier of Garment Accessories & Fabrics / Material Sourcing Partner',
+  tagline: 'Garment Materials for Every Requirement',
+  subheadline: 'Classic Fashions supplies garment accessories and fabrics, sourcing materials to match your specific requirements from suitable manufacturing and supply sources.',
   locationName: 'Boyampalayam, Tiruppur',
   addressLine1: '5/1475, 5th Street',
   addressLine2: 'Palanisamy Nagar, Boyampalayam',

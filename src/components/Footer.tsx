@@ -1,7 +1,7 @@
 import React from 'react';
 import { businessConfig } from '../data/businessConfig.ts';
 import { ProductCategory, NavigationTab } from '../types.ts';
-import { Phone, Mail, MapPin, Clock, Sparkles } from 'lucide-react';
+import { Phone, Mail, Clock, Compass, ArrowRight } from 'lucide-react';
 
 interface FooterProps {
   onNavigate: (
@@ -36,13 +36,11 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             </div>
             
             <p className="text-xs sm:text-sm text-[#A8A29A] leading-relaxed max-w-sm">
-              Garment Accessories &amp; Fabric Manufacturing / Wholesale &amp; Retail Supply
-              <br />
-              {businessConfig.addressLine2}, {businessConfig.city}, {businessConfig.state} – {businessConfig.pincode}
+              Supplier of Garment Accessories &amp; Fabrics. Sourcing materials to match your specific requirements from suitable manufacturing and supply sources.
             </p>
 
-            <div className="pt-2 text-[11px] text-[#78736B] font-mono">
-              <span>{businessConfig.businessType}</span>
+            <div className="pt-2 text-[11px] text-[#A8A29A] font-mono">
+              <span>{businessConfig.subtitle}</span>
             </div>
           </div>
 
@@ -79,17 +77,10 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li>
                 <button
                   onClick={() => handleNav('material-request')}
-                  className="hover:text-white transition-colors flex items-center gap-1 text-[#C4B7AA]"
+                  className="hover:text-white transition-colors flex items-center gap-1 text-[#D8C7B8] font-medium"
                 >
+                  <Compass className="w-3 h-3" />
                   <span>Request a Material</span>
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => handleNav('collection')}
-                  className="hover:text-white transition-colors flex items-center gap-1.5"
-                >
-                  <span>Dealer Collection</span>
                 </button>
               </li>
               <li>
@@ -160,18 +151,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             </ul>
           </div>
 
-          {/* Contact (Col 10-12) */}
+          {/* Contact (Col 10-12) — Address is ONLY displayed in Reach Us */}
           <div className="lg:col-span-3 space-y-3">
             <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#C4B7AA]">
-              Contact Details
+              Contact Desk
             </h4>
             <div className="space-y-2.5 text-xs text-[#A8A29A]">
-              <div className="flex items-start gap-2">
-                <MapPin className="w-3.5 h-3.5 text-[#C4B7AA] shrink-0 mt-0.5" />
-                <span>
-                  {businessConfig.addressLine1}, {businessConfig.addressLine2}, {businessConfig.city} – {businessConfig.pincode}
-                </span>
-              </div>
               <div className="flex items-start gap-2 font-mono">
                 <Phone className="w-3.5 h-3.5 text-[#C4B7AA] shrink-0 mt-0.5" />
                 <span>{businessConfig.phonePlaceholder}</span>
@@ -184,6 +169,15 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 <Clock className="w-3.5 h-3.5 text-[#C4B7AA] shrink-0 mt-0.5" />
                 <span>{businessConfig.workingHoursPlaceholder}</span>
               </div>
+              <div className="pt-2">
+                <button
+                  onClick={() => handleNav('reach-us')}
+                  className="text-xs text-[#D8C7B8] hover:text-white inline-flex items-center gap-1 underline underline-offset-2"
+                >
+                  <span>Visit Reach Us for Address &amp; Directions</span>
+                  <ArrowRight className="w-3 h-3" />
+                </button>
+              </div>
             </div>
           </div>
 
@@ -193,7 +187,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         <div className="mt-12 pt-8 border-t border-[#292622] flex flex-col sm:flex-row items-center justify-between text-xs text-[#78736B] gap-4">
           <p>© 2026 {businessConfig.businessName}. All rights reserved.</p>
           <p className="text-[11px] font-mono">
-            Boyampalayam, Tiruppur • Tamil Nadu, India
+            Supplier of Garment Accessories &amp; Fabrics • Tiruppur, India
           </p>
         </div>
       </div>

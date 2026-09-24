@@ -1226,7 +1226,7 @@ _Request submitted via Classic Fashions Digital Platform. Please review sourcing
                     </p>
                     {formData.hasPhysicalSample && (
                       <p className="text-[#82553E] font-medium">
-                        ✓ Physical swatch ready to courier to Tiruppur mill.
+                        ✓ Physical swatch ready to courier to Classic Fashions, Tiruppur.
                       </p>
                     )}
                   </div>
@@ -1270,20 +1270,20 @@ _Request submitted via Classic Fashions Digital Platform. Please review sourcing
                   className="inline-flex items-center gap-2 px-7 py-3 text-xs font-semibold uppercase tracking-wider bg-[#82553E] text-white hover:bg-[#6D432E] rounded transition-colors shadow-sm"
                 >
                   <Send className="w-4 h-4" />
-                  <span>Submit Requirement to Mill</span>
+                  <span>Submit Sourcing Requirement</span>
                 </button>
               )}
             </div>
           </form>
         </div>
 
-        {/* Footer Guarantee / Note */}
+        {/* Footer Note */}
         <div className="p-4 bg-[#F7F5F0] rounded-lg border border-[#E8E6E0] text-center text-xs text-[#736F68] leading-relaxed">
           <p>
-            <strong>Classic Fashions Wholesale Sourcing Desk</strong> • 5/1475, 5th Street, Palanisamy Nagar, Boyampalayam, Tiruppur – 641602.
+            <strong>Classic Fashions Material Sourcing Desk</strong> • Boyampalayam, Tiruppur.
           </p>
           <p className="text-[11px] text-[#8C877E] mt-0.5">
-            Every submission is individually appraised by our textile technologists. Commercial quotes depend on yarn grade, MOQ, and dyeing lot runs.
+            Every submission is reviewed by our sourcing team to identify suitable manufacturing and supply sources matching your exact requirements.
           </p>
         </div>
       </div>

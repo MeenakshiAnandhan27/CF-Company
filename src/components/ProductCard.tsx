@@ -75,16 +75,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               )}
             </div>
           </div>
-
-          {/* Quick Collection Tag Overlay if already added */}
-          {isInCollection && (
-            <div className="absolute bottom-2.5 right-2.5 z-20">
-              <span className="inline-flex items-center gap-1 text-[10px] font-semibold bg-[#181715] text-white px-2 py-0.5 rounded shadow">
-                <Check className="w-3 h-3 text-[#A6D8B0]" />
-                In Collection ({collectionQuantity})
-              </span>
-            </div>
-          )}
         </div>
 
         {/* Product Details Body */}
@@ -167,50 +157,31 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
       {/* Action Buttons Section */}
       <div className="p-4 sm:p-5 pt-0 space-y-2 mt-1">
-        {/* Primary Action Row: Add to Collection + Details */}
+        {/* Primary Action Row: View Details + Enquire */}
         <div className="grid grid-cols-2 gap-2">
-          {onAddToCollection && (
-            <button
-              onClick={() => onAddToCollection(product)}
-              className={`inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-semibold uppercase tracking-wider rounded transition-all ${
-                isInCollection
-                  ? 'bg-[#EFE8DF] text-[#633F2E] border border-[#DFCFC0] hover:bg-[#E7DDCE]'
-                  : 'bg-[#181715] text-white hover:bg-[#302D29]'
-              }`}
-              title={isInCollection ? 'Already in your collection' : 'Add to Collection'}
-            >
-              {isInCollection ? (
-                <>
-                  <Check className="w-3.5 h-3.5 text-[#82553E]" />
-                  <span>Added</span>
-                </>
-              ) : (
-                <>
-                  <BookmarkPlus className="w-3.5 h-3.5 text-[#D4C4B5]" />
-                  <span>+ Collect</span>
-                </>
-              )}
-            </button>
-          )}
-
           <button
             onClick={() => onViewDetails(product)}
-            className={`inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-semibold uppercase tracking-wider text-[#181715] bg-[#F5F4F0] hover:bg-[#EAE7DF] rounded transition-colors ${
-              !onAddToCollection ? 'col-span-2' : ''
-            }`}
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-semibold uppercase tracking-wider text-[#181715] bg-[#F5F4F0] hover:bg-[#EAE7DF] rounded transition-colors"
           >
             <Eye className="w-3.5 h-3.5 text-[#585550]" />
-            <span>Details</span>
+            <span>View Details</span>
+          </button>
+
+          <button
+            onClick={() => onEnquire(product)}
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-semibold uppercase tracking-wider text-white bg-[#181715] hover:bg-[#302D29] rounded transition-all shadow-xs"
+          >
+            <Mail className="w-3.5 h-3.5 text-[#D8C7B8]" />
+            <span>Enquire</span>
           </button>
         </div>
 
-        {/* Secondary Direct Enquiry Link */}
+        {/* Sourcing note link */}
         <button
-          onClick={() => onEnquire(product)}
-          className="w-full inline-flex items-center justify-center gap-1.5 py-1.5 text-[11px] font-semibold text-[#82553E] hover:text-[#181715] hover:underline transition-colors"
+          onClick={() => onViewDetails(product)}
+          className="w-full inline-flex items-center justify-center gap-1 py-1 text-[11px] font-medium text-[#736F68] hover:text-[#181715] transition-colors"
         >
-          <Mail className="w-3 h-3" />
-          <span>Quick Direct Enquiry</span>
+          <span>Ask About This Material</span>
         </button>
       </div>
     </div>

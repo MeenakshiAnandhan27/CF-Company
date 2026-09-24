@@ -24,7 +24,7 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({ onSelectCategory }
             </h2>
           </div>
           <p className="text-sm text-[#585550] max-w-md">
-            Direct supply of laces, fabrics, denim, mesh, accessories, and processing services from Boyampalayam, Tiruppur.
+            Direct supply and sourcing of laces, fabrics, denim, mesh, accessories, and specialized materials for garment businesses and designers.
           </p>
         </div>
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { businessConfig } from '../data/businessConfig.ts';
 import { ProductCategory, NavigationTab } from '../types.ts';
-import { Menu, X, ArrowRight, Phone, ShoppingBag, Sparkles } from 'lucide-react';
+import { Menu, X, ArrowRight, Compass, Sparkles } from 'lucide-react';
 
 interface NavbarProps {
   currentTab: NavigationTab;
@@ -15,7 +15,6 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({
   currentTab,
   onNavigate,
-  collectionCount = 0,
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -62,8 +61,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </button>
 
-        {/* Zone 2: Navigation Links (Clean, non-wrapping, perfectly aligned) */}
-        <nav className="hidden md:flex items-center gap-4 lg:gap-6 xl:gap-7 text-xs font-semibold uppercase tracking-wider text-[#585550]">
+        {/* Zone 2: Navigation Links (Clean, non-wrapping, aligned) */}
+        <nav className="hidden md:flex items-center gap-5 lg:gap-7 xl:gap-8 text-xs font-semibold uppercase tracking-wider text-[#585550]">
           <button
             onClick={() => handleNavClick('home')}
             className={`whitespace-nowrap transition-colors hover:text-[#181715] relative py-2 ${
@@ -96,12 +95,13 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
           <button
             onClick={() => handleNavClick('material-request')}
-            className={`whitespace-nowrap transition-colors hover:text-[#181715] relative py-2 flex items-center gap-1 ${
+            className={`whitespace-nowrap transition-colors hover:text-[#181715] relative py-2 flex items-center gap-1.5 ${
               currentTab === 'material-request'
                 ? 'text-[#181715] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#181715]'
                 : 'text-[#82553E]'
             }`}
           >
+            <Compass className="w-3.5 h-3.5" />
             <span>REQUEST MATERIAL</span>
           </button>
           <button
@@ -116,53 +116,25 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
         </nav>
 
-        {/* Zone 3: Primary Actions (Collection Utility + Quick CTA) */}
-        <div className="hidden sm:flex items-center gap-2.5 shrink-0">
-          {/* Collection Shortcut */}
+        {/* Zone 3: Primary Sourcing Action CTA (Replaces Collection 0) */}
+        <div className="hidden sm:flex items-center gap-3 shrink-0">
           <button
-            onClick={() => handleNavClick('collection')}
-            className={`whitespace-nowrap inline-flex items-center gap-2 px-3 py-2 text-xs font-semibold uppercase tracking-wider rounded border transition-all ${
-              currentTab === 'collection'
-                ? 'bg-[#181715] text-white border-[#181715]'
-                : collectionCount > 0
-                ? 'bg-[#EFE9E2] text-[#633F2E] border-[#D9C8B9] hover:bg-[#E7DDCE]'
-                : 'bg-white text-[#585550] border-[#D5D0C6] hover:bg-[#F5F4F0]'
-            }`}
-            title="View selected wholesale materials"
+            onClick={() => handleNavClick('material-request')}
+            className="whitespace-nowrap inline-flex items-center gap-2 px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-white bg-[#181715] rounded hover:bg-[#302D29] transition-all duration-200 shadow-sm active:scale-[0.98]"
           >
-            <ShoppingBag className={`w-3.5 h-3.5 shrink-0 ${currentTab === 'collection' ? 'text-white' : 'text-[#82553E]'}`} />
-            <span>Collection</span>
-            <span
-              className={`font-mono text-[11px] px-1.5 py-0.5 rounded leading-none ${
-                currentTab === 'collection'
-                  ? 'bg-white text-[#181715] font-bold'
-                  : collectionCount > 0
-                  ? 'bg-[#181715] text-white font-bold'
-                  : 'bg-[#E8E4DC] text-[#403D38]'
-              }`}
-            >
-              {collectionCount}
-            </span>
-          </button>
-
-          <button
-            onClick={() => handleNavClick('catalogue')}
-            className="whitespace-nowrap inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold uppercase tracking-wider text-[#FFFFFF] bg-[#181715] rounded hover:bg-[#302D29] transition-all duration-200 shadow-sm active:scale-[0.98]"
-          >
-            <span>Catalogue</span>
+            <span>Request Material</span>
             <ArrowRight className="w-3.5 h-3.5 shrink-0" />
           </button>
         </div>
 
-        {/* Mobile Buttons */}
+        {/* Mobile Navigation Toggle */}
         <div className="flex md:hidden items-center gap-2">
-          {/* Mobile Collection shortcut */}
           <button
-            onClick={() => handleNavClick('collection')}
-            className="flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-wider bg-[#FAF7F2] border border-[#D5D0C6] text-[#181715] rounded"
+            onClick={() => handleNavClick('material-request')}
+            className="px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-wider bg-[#F2EDE6] text-[#82553E] border border-[#DFD6CB] rounded flex items-center gap-1"
           >
-            <ShoppingBag className="w-3.5 h-3.5 text-[#82553E]" />
-            <span>{collectionCount}</span>
+            <Compass className="w-3 h-3" />
+            <span>Request</span>
           </button>
 
           <button
@@ -206,29 +178,14 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
           <button
             onClick={() => handleNavClick('material-request')}
-            className={`w-full text-left py-2.5 px-3 rounded text-sm font-medium ${
+            className={`w-full text-left py-2.5 px-3 rounded text-sm font-medium flex items-center gap-2 ${
               currentTab === 'material-request'
                 ? 'bg-[#EFECE6] text-[#181715] font-semibold'
                 : 'text-[#82553E]'
             }`}
           >
-            REQUEST A MATERIAL
-          </button>
-          <button
-            onClick={() => handleNavClick('collection')}
-            className={`w-full text-left py-2.5 px-3 rounded text-sm font-medium flex items-center justify-between ${
-              currentTab === 'collection'
-                ? 'bg-[#EFECE6] text-[#181715] font-semibold'
-                : 'text-[#585550]'
-            }`}
-          >
-            <span className="flex items-center gap-2">
-              <ShoppingBag className="w-4 h-4 text-[#82553E]" />
-              <span>COLLECTION</span>
-            </span>
-            <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-[#181715] text-white">
-              {collectionCount} items
-            </span>
+            <Compass className="w-4 h-4" />
+            <span>REQUEST A MATERIAL</span>
           </button>
           <button
             onClick={() => handleNavClick('reach-us')}
@@ -243,19 +200,12 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           <div className="pt-3 border-t border-[#E8E6E0] flex flex-col gap-2">
             <button
-              onClick={() => handleNavClick('collection')}
+              onClick={() => handleNavClick('material-request')}
               className="w-full flex items-center justify-center gap-2 py-3 text-xs font-semibold uppercase tracking-wider text-white bg-[#181715] rounded hover:bg-[#302D29]"
             >
-              <ShoppingBag className="w-4 h-4 text-[#E5D7CC]" />
-              <span>View Selected Collection ({collectionCount})</span>
+              <Compass className="w-4 h-4 text-[#D8C7B8]" />
+              <span>Submit Custom Sourcing Request</span>
             </button>
-            <div className="flex items-center justify-between text-xs text-[#736F68] pt-2 px-1">
-              <span className="flex items-center gap-1 font-mono text-[11px]">
-                <Phone className="w-3.5 h-3.5 text-[#82553E]" />
-                {businessConfig.phonePlaceholder}
-              </span>
-              <span>Boyampalayam, Tiruppur</span>
-            </div>
           </div>
         </div>
       )}

@@ -15,6 +15,7 @@ import {
   ShoppingBag,
   Sparkles,
   Filter,
+  ArrowRight,
 } from 'lucide-react';
 
 interface CatalogueViewProps {
@@ -132,30 +133,40 @@ export const CatalogueView: React.FC<CatalogueViewProps> = ({
   return (
     <div className="bg-[#FBFBFA] min-h-screen pb-24">
       {/* 1. Header Banner */}
-      <section className="bg-[#F7F5F0] border-b border-[#E8E6E0] pt-12 pb-12">
+      <section className="bg-[#F7F5F0] border-b border-[#E8E6E0] pt-12 pb-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3">
           <span className="text-xs font-semibold uppercase tracking-[0.25em] text-[#82553E] bg-[#EFE8DF] px-3.5 py-1.5 rounded-sm border border-[#DFD6CB] inline-block font-mono">
             DIGITAL CATALOGUE
           </span>
           <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-[#181715] tracking-tight">
-            Explore Classic Fashions Materials
+            Materials We Commonly Supply
           </h1>
           <p className="text-sm sm:text-base text-[#585550] max-w-2xl mx-auto leading-relaxed">
-            Direct wholesale and retail supplier in Boyampalayam, Tiruppur. Search by product name, product code, fabric, size, or shade.
+            A selection of materials we commonly supply across garment laces, fabrics, denim, mesh, and trims.
           </p>
 
-          {/* Collection floating indicator in header */}
-          {collection.length > 0 && onViewCollection && (
-            <div className="pt-2">
-              <button
-                onClick={onViewCollection}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-[#181715] text-white text-xs font-semibold uppercase tracking-wider rounded shadow hover:bg-[#302D29] transition-all"
-              >
-                <ShoppingBag className="w-3.5 h-3.5 text-[#E5D7CC]" />
-                <span>View Selected Collection ({collection.length} items)</span>
-              </button>
+          {/* Sourcing Callout Card on Catalogue */}
+          <div className="pt-3 max-w-2xl mx-auto">
+            <div className="bg-white border border-[#E0D9CE] p-4 sm:p-5 rounded-lg shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4 text-left">
+              <div className="space-y-1">
+                <span className="text-xs font-bold text-[#181715] uppercase tracking-wider block">
+                  Can&apos;t find the exact material you&apos;re looking for?
+                </span>
+                <p className="text-xs text-[#585550] leading-relaxed">
+                  Not every available material is listed in our digital catalogue. If you have a specific requirement, send us the details and we will review suitable sourcing options.
+                </p>
+              </div>
+              {onRequestMaterial && (
+                <button
+                  onClick={() => onRequestMaterial(selectedCategory === 'all' ? undefined : selectedCategory)}
+                  className="shrink-0 inline-flex items-center gap-1.5 px-4 py-2.5 bg-[#181715] text-white text-xs font-semibold uppercase tracking-wider rounded hover:bg-[#302D29] transition-colors"
+                >
+                  <span>Request a Material</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              )}
             </div>
-          )}
+          </div>
         </div>
       </section>
 

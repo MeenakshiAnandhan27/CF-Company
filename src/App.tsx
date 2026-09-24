@@ -199,6 +199,7 @@ export default function App() {
             {/* 1. Hero Section */}
             <Hero
               onExploreCatalogue={() => handleNavigate('catalogue')}
+              onRequestMaterial={() => handleRequestMaterial()}
               onReachUs={() => handleNavigate('reach-us')}
             />
 
@@ -218,15 +219,6 @@ export default function App() {
                     </h2>
                   </div>
                   <div className="flex items-center gap-4">
-                    {collection.length > 0 && (
-                      <button
-                        onClick={() => handleNavigate('collection')}
-                        className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#82553E] hover:text-[#181715] transition-colors"
-                      >
-                        <ShoppingBag className="w-4 h-4" />
-                        <span>View Collection ({collection.length})</span>
-                      </button>
-                    )}
                     <button
                       onClick={() => handleNavigate('catalogue')}
                       className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#181715] hover:text-[#82553E] transition-colors"
@@ -256,40 +248,38 @@ export default function App() {
               </div>
             </section>
 
-            {/* 4. Business Introduction, Why Classic Fashions & Visit Section */}
+            {/* 4. Business Introduction, Why Classic Fashions & Sourcing Workflow */}
             <HomeIntro
               onExploreCatalogue={() => handleNavigate('catalogue')}
+              onRequestMaterial={() => handleRequestMaterial()}
               onReachUs={() => handleNavigate('reach-us')}
             />
 
-            {/* Bottom Direct Wholesale CTA */}
+            {/* Bottom Direct Sourcing CTA */}
             <section className="py-16 bg-[#181715] text-white">
               <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
                 <span className="text-xs font-mono uppercase tracking-widest text-[#C4B7AA]">
-                  Boyampalayam, Tiruppur
+                  Requirement-Based Sourcing &amp; Supply
                 </span>
                 <h3 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight">
-                  Connect Directly With Our Wholesale Sales Desk
+                  Connect Directly With Our Supply Desk
                 </h3>
                 <p className="text-sm sm:text-base text-[#B3ACA3] max-w-2xl mx-auto leading-relaxed">
-                  Whether you need bulk fabric bolts, customized garment buttons, or edge scalping processing, our team provides prompt quotations and dependable delivery.
+                  From everyday garment accessories to specific fabric requirements, we source and supply materials to match your needs with prompt response and dependable delivery.
                 </p>
                 <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
                   <button
                     onClick={() => handleNavigate('catalogue')}
                     className="w-full sm:w-auto px-8 py-3.5 text-xs font-semibold uppercase tracking-wider bg-white text-[#181715] hover:bg-[#EAE6DF] rounded transition-colors"
                   >
-                    Explore Digital Catalogue
+                    Explore Catalogue
                   </button>
-                  {collection.length > 0 && (
-                    <button
-                      onClick={() => handleNavigate('collection')}
-                      className="w-full sm:w-auto px-8 py-3.5 text-xs font-semibold uppercase tracking-wider bg-[#82553E] text-white hover:bg-[#6e4632] rounded transition-colors flex items-center justify-center gap-2"
-                    >
-                      <ShoppingBag className="w-4 h-4" />
-                      <span>Review Collection ({collection.length})</span>
-                    </button>
-                  )}
+                  <button
+                    onClick={() => handleRequestMaterial()}
+                    className="w-full sm:w-auto px-8 py-3.5 text-xs font-semibold uppercase tracking-wider bg-[#82553E] text-white hover:bg-[#6e4632] rounded transition-colors"
+                  >
+                    Request a Material
+                  </button>
                   <button
                     onClick={() => handleNavigate('reach-us')}
                     className="w-full sm:w-auto px-8 py-3.5 text-xs font-semibold uppercase tracking-wider bg-transparent border border-[#59554F] text-white hover:bg-[#2B2824] rounded transition-colors"
@@ -305,6 +295,7 @@ export default function App() {
         {currentTab === 'about' && (
           <AboutSection
             onExploreCatalogue={() => handleNavigate('catalogue')}
+            onRequestMaterial={() => handleRequestMaterial()}
             onReachUs={() => handleNavigate('reach-us')}
           />
         )}

@@ -1,6 +1,6 @@
 {
   "name": "TexCraft Wholesale - Garment Materials, Fabrics & Processing",
-  "description": "Premium wholesale supplier of garment laces, fabrics, accessories, and custom textile edge cutting processing for manufacturers, fashion designers, and retail buyers.",
+  "description": "Supplier of garment accessories and fabrics, sourcing materials to match specific requirements for garment businesses, fashion designers, and retail buyers.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

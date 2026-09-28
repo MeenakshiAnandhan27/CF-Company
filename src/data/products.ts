@@ -8,6 +8,7 @@ export const categories: CategoryInfo[] = [
     description: 'Extensive variety of garment laces including cotton, embroidery, Lycra stretch, Ric Rac, and imported lace for garment makers, exporters, and boutique designers.',
     subcategories: ['Embroidery Lace', 'Cotton Lace', 'Lycra Lace', 'Ric Rac', 'Imported Lace', 'Other Lace Varieties'],
     patternType: 'embroidery-lace',
+    image: '/assets/materials/laces.jpg',
   },
   {
     id: 'fabrics',
@@ -16,6 +17,7 @@ export const categories: CategoryInfo[] = [
     description: 'Fabric supply and sourcing including woven fabrics, chambray, poplin gada, twill gada, drill gada, dyed textiles, and specialty fabrics.',
     subcategories: ['Woven Fabric', 'Chambray', 'Poplin Gada', 'Twill Gada', 'Drill Gada', 'Dyed Fabric', 'Fur Fabric', 'Other Fabrics'],
     patternType: 'woven-fabric',
+    image: '/assets/materials/fabrics.jpg',
   },
   {
     id: 'denim',
@@ -24,6 +26,7 @@ export const categories: CategoryInfo[] = [
     description: 'Dedicated supply of denim textiles for garment sampling, apparel making, and wholesale distribution in Tiruppur and beyond.',
     subcategories: ['Denim Fabric', 'Premium Denim', 'Garment Denim', 'Other Denim Varieties'],
     patternType: 'denim',
+    image: '/assets/materials/denim.jpg',
   },
   {
     id: 'mesh',
@@ -32,6 +35,7 @@ export const categories: CategoryInfo[] = [
     description: 'Specialized open-pore and elastic mesh textiles suited for sportswear linings, activewear inserts, inner pockets, and fashion trims.',
     subcategories: ['Mesh Fabric', 'Lycra Mesh', 'Other Mesh Varieties'],
     patternType: 'mesh',
+    image: '/assets/materials/mesh.jpg',
   },
   {
     id: 'accessories',
@@ -40,6 +44,7 @@ export const categories: CategoryInfo[] = [
     description: 'Complete garment accessories supporting garment finishing: brand tags, garment tapes, custom buttons, and apparel trims.',
     subcategories: ['Brand Tags', 'Custom Buttons', 'Tapes', 'Other Accessories'],
     patternType: 'brand-tags',
+    image: '/assets/materials/accessories.jpg',
   },
   {
     id: 'processing',
@@ -48,6 +53,7 @@ export const categories: CategoryInfo[] = [
     description: 'Edge cutting and scalping services for fabric rolls and trims, delivering precision edges for garment assembly lines.',
     subcategories: ['Edge Cutting / Scalping'],
     patternType: 'edge-cutting',
+    image: '/assets/materials/processing.jpg',
   },
 ];
 

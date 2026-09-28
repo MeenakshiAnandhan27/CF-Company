@@ -139,6 +139,7 @@ export interface CategoryInfo {
   description: string;
   subcategories: string[];
   patternType: string;
+  image?: string;
 }
 
 export interface BusinessConfig {

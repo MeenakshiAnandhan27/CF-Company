@@ -47,6 +47,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         >
           <TextileVisual
             product={product}
+            src={product.images?.[0] || `/assets/materials/${product.category}.jpg`}
             patternType={product.patternType}
             category={product.categoryLabel}
             name={product.name}

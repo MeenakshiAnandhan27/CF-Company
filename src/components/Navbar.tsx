@@ -255,7 +255,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <Phone className="w-3.5 h-3.5 text-[#82553E]" />
                 {businessConfig.phonePlaceholder}
               </span>
-              <span>Boyampalayam, Tiruppur</span>
+              <span>Wholesale &amp; Retail Supply</span>
             </div>
           </div>
         </div>

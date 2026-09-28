@@ -1,0 +1,106 @@
+/**
+ * RAW MATERIAL IMAGERY CONFIGURATION — CLASSIC FASHIONS
+ *
+ * Rules:
+ * - RAW MATERIAL / MATERIAL CLOSE-UP only
+ * - Shows the actual physical material (rolls, swatches, textures, physical trims)
+ * - NO finished garments, NO models, NO fashion photoshoots, NO factories
+ *
+ * When actual in-house Classic Fashions high-resolution photographs are captured,
+ * simply place the image file in /public/assets/materials/ and update the path here.
+ */
+
+export interface RawMaterialImageEntry {
+  category: string;
+  label: string;
+  rawMaterialType: string;
+  imagePath: string;
+  altText: string;
+  objectPosition?: string;
+  description: string;
+}
+
+export const RAW_MATERIAL_IMAGES: Record<string, RawMaterialImageEntry> = {
+  laces: {
+    category: 'laces',
+    label: 'Garment Laces',
+    rawMaterialType: 'Raw lace strip & embroidery needlework texture',
+    imagePath: '/assets/materials/laces.jpg',
+    altText: 'Close-up macro of raw cotton lace material and embroidery needlework',
+    objectPosition: 'center',
+    description: 'Actual raw embroidery lace and cotton lace trim texture',
+  },
+  fabrics: {
+    category: 'fabrics',
+    label: 'Fabrics & Base Textiles',
+    rawMaterialType: 'Folded raw woven fabric & textile rolls',
+    imagePath: '/assets/materials/fabrics.jpg',
+    altText: 'Raw folded cotton twill and woven fabric rolls showing textile weave structure',
+    objectPosition: 'center',
+    description: 'Folded raw fabric bolts with visible thread structure',
+  },
+  denim: {
+    category: 'denim',
+    label: 'Denim Textiles',
+    rawMaterialType: 'Raw indigo denim fabric with diagonal twill weave',
+    imagePath: '/assets/materials/denim.jpg',
+    altText: 'Close-up texture of raw denim textile weave with visible twill cotton threads',
+    objectPosition: 'center',
+    description: 'Pure raw denim fabric showing authentic twill weave structure',
+  },
+  mesh: {
+    category: 'mesh',
+    label: 'Mesh & Knit Structure',
+    rawMaterialType: 'Raw breathable athletic mesh fabric',
+    imagePath: '/assets/materials/mesh.jpg',
+    altText: 'Close-up showing the open-pore structure of raw athletic mesh fabric',
+    objectPosition: 'center',
+    description: 'Raw mesh textile highlighting cell structure and porosity',
+  },
+  accessories: {
+    category: 'accessories',
+    label: 'Garment Accessories',
+    rawMaterialType: 'Raw loose garment buttons, twill tapes & woven brand tags',
+    imagePath: '/assets/materials/accessories.jpg',
+    altText: 'Collection of physical garment accessories: loose buttons, twill tape, and brand tags',
+    objectPosition: 'center',
+    description: 'Physical apparel accessories, loose buttons, and raw trims',
+  },
+  processing: {
+    category: 'processing',
+    label: 'Fabric Edge Finishing & Slitting',
+    rawMaterialType: 'Raw slit fabric rolls and precision cut edge tape reels',
+    imagePath: '/assets/materials/processing.jpg',
+    altText: 'Raw slit fabric tape rolls and edge finishing reels on neutral surface',
+    objectPosition: 'center',
+    description: 'Precision slit fabric rolls and edge-finished ribbon tape',
+  },
+  // Sub-material specific raw imagery (for quick access & specialized views)
+  buttons: {
+    category: 'accessories',
+    label: 'Garment Buttons',
+    rawMaterialType: 'Loose garment buttons collection',
+    imagePath: '/assets/materials/buttons.jpg',
+    altText: 'Collection of loose natural and apparel buttons',
+    objectPosition: 'center',
+    description: 'Physical loose buttons for garment manufacturing',
+  },
+  tapes: {
+    category: 'accessories',
+    label: 'Garment Tapes & Ribbons',
+    rawMaterialType: 'Rolls of woven cotton twill tape',
+    imagePath: '/assets/materials/tapes.jpg',
+    altText: 'Rolls of physical garment twill tape and woven ribbon reels',
+    objectPosition: 'center',
+    description: 'Raw rolls of garment tape and edge binding ribbon',
+  },
+  tags: {
+    category: 'accessories',
+    label: 'Garment Tags & Labels',
+    rawMaterialType: 'Stack of physical brand tags and woven labels',
+    imagePath: '/assets/materials/tags.jpg',
+    altText: 'Physical stack of garment hang tags and woven brand labels',
+    objectPosition: 'center',
+    description: 'Physical garment tags and apparel identification trims',
+  },
+};

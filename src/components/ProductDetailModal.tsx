@@ -133,6 +133,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               <div className="rounded-lg overflow-hidden border border-[#E8E6E0] shadow-sm relative bg-[#F5F4F0]">
                 <TextileVisual
                   product={product}
+                  src={product.images?.[0] || `/assets/materials/${product.category}.jpg`}
                   patternType={product.patternType}
                   category={product.categoryLabel}
                   name={product.name}

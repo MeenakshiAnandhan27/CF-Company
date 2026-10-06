@@ -3,6 +3,10 @@ export type ProductCategory =
   | 'fabrics'
   | 'denim'
   | 'mesh'
+  | 'lycra-mesh'
+  | 'tapes'
+  | 'tags'
+  | 'buttons'
   | 'accessories'
   | 'processing';
 
@@ -70,6 +74,25 @@ export interface MaterialRequestSubmission extends MaterialRequestData {
   submittedAt: number;
 }
 
+export interface FabricQuality {
+  id: string;
+  category: 'fabrics';
+  subcategory: 'PLAIN' | 'TWILL' | 'DRILL' | 'DUCK' | 'SATIN' | 'PLAIN / TWILL' | string;
+  name: string;
+  quality: string;
+  yarnConstruction: string;
+  width: string;
+  gsm: string;
+  weave: string;
+  selvage: string;
+  standard: string;
+  loom: string;
+  image: string;
+  description: string;
+  applications?: string[];
+  colours?: string[];
+}
+
 export interface Product {
   id: string;
   productCode: string;
@@ -77,6 +100,15 @@ export interface Product {
   category: ProductCategory;
   categoryLabel: string;
   subcategory?: string;
+  fabricWeaveType?: 'PLAIN' | 'TWILL' | 'DRILL' | 'DUCK' | 'SATIN' | 'PLAIN / TWILL';
+  quality?: string;
+  yarnConstruction?: string;
+  width?: string;
+  gsm?: string;
+  weave?: string;
+  selvage?: string;
+  standard?: string;
+  loom?: string;
   description: string;
   shortDescription: string;
   fullDescription: string;

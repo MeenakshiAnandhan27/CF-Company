@@ -1,267 +1,353 @@
-import React, { useState } from 'react';
-import { categories } from '../data/products.ts';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { ProductCategory } from '../types.ts';
 import { RAW_MATERIAL_IMAGES } from '../data/materialImages.ts';
-import { ArrowRight, Sparkles, Filter } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
+
+interface ShowcaseCategoryItem {
+  id: string;
+  name: string;
+  shortDescriptor: string;
+  categoryKey: ProductCategory;
+  image: string;
+  altText: string;
+  objectPosition?: string;
+}
+
+const MATERIAL_SHOWCASE_ITEMS: ShowcaseCategoryItem[] = [
+  {
+    id: 'fabrics',
+    name: 'FABRICS',
+    shortDescriptor: 'Woven cotton & gada cloth',
+    categoryKey: 'fabrics',
+    image: RAW_MATERIAL_IMAGES.fabrics?.imagePath || '/assets/materials/fabrics.jpg',
+    altText: 'Raw folded cotton twill and woven fabric rolls showing textile weave structure',
+    objectPosition: 'center',
+  },
+  {
+    id: 'laces',
+    name: 'LACES',
+    shortDescriptor: 'Garment lace varieties',
+    categoryKey: 'laces',
+    image: RAW_MATERIAL_IMAGES.laces?.imagePath || '/assets/materials/laces.jpg',
+    altText: 'Close-up macro of raw cotton lace rolls and embroidery needlework',
+    objectPosition: 'center',
+  },
+  {
+    id: 'denim',
+    name: 'DENIM',
+    shortDescriptor: 'Raw denim materials',
+    categoryKey: 'denim',
+    image: RAW_MATERIAL_IMAGES.denim?.imagePath || '/assets/materials/denim.jpg',
+    altText: 'Close-up texture of raw indigo denim fabric with diagonal twill weave',
+    objectPosition: 'center',
+  },
+  {
+    id: 'mesh',
+    name: 'MESH',
+    shortDescriptor: 'Breathable athletic mesh',
+    categoryKey: 'mesh',
+    image: RAW_MATERIAL_IMAGES.mesh?.imagePath || '/assets/materials/mesh.jpg',
+    altText: 'Close-up showing the open-pore cell structure of raw athletic mesh fabric',
+    objectPosition: 'center',
+  },
+  {
+    id: 'lycra-mesh',
+    name: 'LYCRA / LYCRA MESH',
+    shortDescriptor: '4-way power stretch textiles',
+    categoryKey: 'lycra-mesh',
+    image: RAW_MATERIAL_IMAGES['lycra-mesh']?.imagePath || '/assets/materials/mesh.jpg',
+    altText: 'Close-up of elastic 4-way stretch power lycra mesh fabric',
+    objectPosition: 'center',
+  },
+  {
+    id: 'tapes',
+    name: 'TAPES',
+    shortDescriptor: 'Cotton twill & binding reels',
+    categoryKey: 'tapes',
+    image: RAW_MATERIAL_IMAGES.tapes?.imagePath || '/assets/materials/tapes.jpg',
+    altText: 'Rolls of physical garment twill tape and woven ribbon reels',
+    objectPosition: 'center',
+  },
+  {
+    id: 'zippers',
+    name: 'ZIPPERS',
+    shortDescriptor: 'Continuous coils & metal teeth',
+    categoryKey: 'accessories',
+    image: RAW_MATERIAL_IMAGES.zippers?.imagePath || '/assets/materials/accessories.jpg',
+    altText: 'Close-up of raw zipper components, brass teeth, and continuous zipper tape',
+    objectPosition: 'center 40%',
+  },
+  {
+    id: 'buttons',
+    name: 'BUTTONS',
+    shortDescriptor: 'Loose resin, horn & shank',
+    categoryKey: 'buttons',
+    image: RAW_MATERIAL_IMAGES.buttons?.imagePath || '/assets/materials/buttons.jpg',
+    altText: 'Collection of loose natural and apparel buttons for garment manufacturing',
+    objectPosition: 'center',
+  },
+  {
+    id: 'tags',
+    name: 'BRAND TAGS',
+    shortDescriptor: 'Woven damask & printed tags',
+    categoryKey: 'tags',
+    image: RAW_MATERIAL_IMAGES.tags?.imagePath || '/assets/materials/tags.jpg',
+    altText: 'Physical stack of garment hang tags and woven brand labels',
+    objectPosition: 'center',
+  },
+  {
+    id: 'accessories',
+    name: 'GARMENT ACCESSORIES',
+    shortDescriptor: 'Physical trims, cords & sundries',
+    categoryKey: 'accessories',
+    image: RAW_MATERIAL_IMAGES.accessories?.imagePath || '/assets/materials/accessories.jpg',
+    altText: 'Neat arrangement of physical garment accessories, loose trims, and sundries',
+    objectPosition: 'center',
+  },
+];
 
 interface CategoryCardsProps {
   onSelectCategory: (category: ProductCategory) => void;
+  onExploreCatalogue?: () => void;
 }
 
-export const CategoryCards: React.FC<CategoryCardsProps> = ({ onSelectCategory }) => {
-  const [activeFilter, setActiveFilter] = useState<'all' | 'textiles' | 'trims'>('all');
+export const CategoryCards: React.FC<CategoryCardsProps> = ({
+  onSelectCategory,
+  onExploreCatalogue,
+}) => {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
 
-  // Filter categories based on material family
-  const filteredCategories = categories.filter((cat) => {
-    if (activeFilter === 'textiles') {
-      return ['fabrics', 'denim', 'mesh'].includes(cat.id);
+  // Mouse drag-to-scroll state
+  const [isMouseDown, setIsMouseDown] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeftState, setScrollLeftState] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+
+  // Check scroll position to enable/disable arrow buttons
+  const checkScrollBounds = useCallback(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    const { scrollLeft, scrollWidth, clientWidth } = el;
+    setCanScrollLeft(scrollLeft > 10);
+    setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+  }, []);
+
+  useEffect(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    checkScrollBounds();
+    el.addEventListener('scroll', checkScrollBounds, { passive: true });
+    window.addEventListener('resize', checkScrollBounds);
+    return () => {
+      el.removeEventListener('scroll', checkScrollBounds);
+      window.removeEventListener('resize', checkScrollBounds);
+    };
+  }, [checkScrollBounds]);
+
+  const handleScroll = (direction: 'left' | 'right') => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    const scrollAmount = Math.max(280, Math.floor(el.clientWidth * 0.65));
+    el.scrollBy({
+      left: direction === 'left' ? -scrollAmount : scrollAmount,
+      behavior: 'smooth',
+    });
+  };
+
+  // Drag handlers for desktop mouse interaction
+  const handleMouseDown = (e: React.MouseEvent) => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    setIsMouseDown(true);
+    setIsDragging(false);
+    setStartX(e.pageX - el.offsetLeft);
+    setScrollLeftState(el.scrollLeft);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isMouseDown) return;
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    e.preventDefault();
+    const x = e.pageX - el.offsetLeft;
+    const walk = (x - startX) * 1.4; // Scroll multiplier
+    if (Math.abs(walk) > 5) {
+      setIsDragging(true);
     }
-    if (activeFilter === 'trims') {
-      return ['laces', 'accessories', 'processing'].includes(cat.id);
-    }
-    return true;
-  });
+    el.scrollLeft = scrollLeftState - walk;
+  };
+
+  const handleMouseUp = () => {
+    setIsMouseDown(false);
+    setTimeout(() => setIsDragging(false), 50);
+  };
+
+  const handleItemClick = (cat: ShowcaseCategoryItem) => {
+    if (isDragging) return;
+    onSelectCategory(cat.categoryKey);
+  };
 
   return (
-    <section className="py-16 md:py-24 bg-[#FBFBFA]">
+    <section className="py-16 md:py-24 bg-[#FBFBFA] border-b border-[#E8E4DC] select-none">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 border-b border-[#E8E4DC] pb-6 gap-6">
+        {/* ======================================================== */}
+        {/* SECTION HEADER — PRECISE B2B POSITIONING */}
+        {/* ======================================================== */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 pb-6 border-b border-[#E8E4DC] gap-6">
           <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#82553E] font-mono">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Raw Material Supply &amp; Sourcing</span>
-            </div>
+            <span className="font-mono text-xs uppercase tracking-[0.25em] text-[#82553E] font-semibold block">
+              Raw Material Library • B2B Sourcing Partner
+            </span>
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-[#181715] tracking-tight">
-              Explore Our Categories
+              MATERIALS FOR EVERY CREATION
             </h2>
-            <p className="text-sm text-[#585550] max-w-xl font-normal leading-relaxed pt-1">
-              Direct wholesale supply of authentic raw materials—laces, woven fabrics, denim textiles, mesh, tapes, buttons, and apparel accessories. No finished garments; we supply the physical materials for your production lines.
+            <p className="text-sm sm:text-base text-[#585550] max-w-2xl font-normal leading-relaxed pt-1">
+              Explore fabrics, laces and garment accessories sourced and supplied for your requirements.
             </p>
           </div>
 
-          {/* Interactive Material Filter Tabs (Anti-pill segmented control) */}
-          <div className="inline-flex items-center p-1 bg-[#F0ECE4] rounded-xl border border-[#E0D9CE] self-start md:self-end">
+          {/* Desktop Shelf Navigation Controls (Prev / Next Arrows) */}
+          <div className="flex items-center gap-2 self-start md:self-end">
+            <span className="text-[11px] font-mono text-[#8C877E] uppercase tracking-wider hidden sm:inline mr-2">
+              Browse Materials
+            </span>
             <button
-              onClick={() => setActiveFilter('all')}
-              className={`px-4 py-2 text-xs font-semibold uppercase tracking-wider rounded-lg transition-all duration-200 cursor-pointer ${
-                activeFilter === 'all'
-                  ? 'bg-white text-[#181715] shadow-sm'
-                  : 'text-[#6B665E] hover:text-[#181715]'
-              }`}
+              onClick={() => handleScroll('left')}
+              disabled={!canScrollLeft}
+              className="w-10 h-10 rounded-full border border-[#D5D0C6] bg-white text-[#181715] hover:bg-[#F2ECE3] hover:border-[#82553E] flex items-center justify-center transition-all disabled:opacity-30 disabled:pointer-events-none shadow-xs"
+              aria-label="Previous material category"
+              title="Scroll left"
             >
-              All Materials ({categories.length})
+              <ChevronLeft className="w-5 h-5" />
             </button>
             <button
-              onClick={() => setActiveFilter('textiles')}
-              className={`px-4 py-2 text-xs font-semibold uppercase tracking-wider rounded-lg transition-all duration-200 cursor-pointer ${
-                activeFilter === 'textiles'
-                  ? 'bg-white text-[#181715] shadow-sm'
-                  : 'text-[#6B665E] hover:text-[#181715]'
-              }`}
+              onClick={() => handleScroll('right')}
+              disabled={!canScrollRight}
+              className="w-10 h-10 rounded-full border border-[#D5D0C6] bg-white text-[#181715] hover:bg-[#F2ECE3] hover:border-[#82553E] flex items-center justify-center transition-all disabled:opacity-30 disabled:pointer-events-none shadow-xs"
+              aria-label="Next material category"
+              title="Scroll right"
             >
-              Base Fabrics &amp; Denim
-            </button>
-            <button
-              onClick={() => setActiveFilter('trims')}
-              className={`px-4 py-2 text-xs font-semibold uppercase tracking-wider rounded-lg transition-all duration-200 cursor-pointer ${
-                activeFilter === 'trims'
-                  ? 'bg-white text-[#181715] shadow-sm'
-                  : 'text-[#6B665E] hover:text-[#181715]'
-              }`}
-            >
-              Laces &amp; Accessories
+              <ChevronRight className="w-5 h-5" />
             </button>
           </div>
         </div>
 
-        {/* 6 Category Cards Grid — PURE RAW MATERIAL IMAGERY ONLY */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
-          {filteredCategories.map((cat) => {
-            const rawConfig = RAW_MATERIAL_IMAGES[cat.id];
-            const imageSrc = rawConfig?.imagePath || cat.image || `/assets/materials/${cat.id}.jpg`;
-            const altText = rawConfig?.altText || `Raw material close-up of ${cat.name}`;
+        {/* ======================================================== */}
+        {/* HORIZONTAL MATERIAL SHOWCASE SHELF */}
+        {/* Circular / softly rounded raw material visuals */}
+        {/* ======================================================== */}
+        <div className="relative">
+          {/* Subtle gradient indicators for overflow scroll */}
+          {canScrollLeft && (
+            <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-16 bg-gradient-to-r from-[#FBFBFA] to-transparent z-10 pointer-events-none hidden sm:block" />
+          )}
+          {canScrollRight && (
+            <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-16 bg-gradient-to-l from-[#FBFBFA] to-transparent z-10 pointer-events-none hidden sm:block" />
+          )}
 
-            return (
+          <div
+            ref={scrollContainerRef}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
+            className={`flex items-start gap-6 sm:gap-8 md:gap-10 overflow-x-auto pb-6 pt-2 px-1 scroll-smooth scrollbar-none no-scrollbar ${
+              isMouseDown ? 'cursor-grabbing' : 'cursor-grab'
+            }`}
+            style={{ WebkitOverflowScrolling: 'touch' }}
+          >
+            {MATERIAL_SHOWCASE_ITEMS.map((item) => (
               <div
-                key={cat.id}
-                className="group bg-white rounded-xl border border-[#E8E4DC] overflow-hidden flex flex-col justify-between hover:border-[#82553E]/60 shadow-[0_2px_8px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_28px_rgba(0,0,0,0.08)] transition-all duration-300 transform hover:-translate-y-1"
+                key={item.id}
+                onClick={() => handleItemClick(item)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onSelectCategory(item.categoryKey);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                className="group flex flex-col items-center text-center flex-shrink-0 w-36 sm:w-44 md:w-48 cursor-pointer focus:outline-none"
+                title={`Open raw ${item.name} in Digital Catalogue`}
               >
-                <div>
-                  {/* Visual Container: Material fills most of frame, texture clearly visible, object-fit cover */}
-                  <div
-                    className="relative overflow-hidden cursor-pointer aspect-[4/3] bg-[#EBE7E0]"
-                    onClick={() => onSelectCategory(cat.id)}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        onSelectCategory(cat.id);
-                      }
-                    }}
-                    title={`View raw ${cat.name} material range`}
-                  >
+                {/* ================================================== */}
+                {/* 1. LARGE CIRCULAR RAW MATERIAL CONTAINER */}
+                {/* ================================================== */}
+                <div className="relative w-32 h-32 sm:w-40 sm:h-40 md:w-44 md:h-44 rounded-full p-1 bg-white border border-[#E0D9CE] group-hover:border-[#82553E] shadow-[0_4px_16px_rgba(0,0,0,0.04)] group-hover:shadow-[0_12px_28px_rgba(130,85,62,0.18)] group-hover:ring-4 group-hover:ring-[#82553E]/15 transition-all duration-500 ease-out mb-4">
+                  <div className="w-full h-full rounded-full overflow-hidden bg-[#ECE8E1] relative">
                     <img
-                      src={imageSrc}
-                      alt={altText}
+                      src={item.image}
+                      alt={item.altText}
                       referrerPolicy="no-referrer"
-                      className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                      style={{ objectPosition: item.objectPosition || 'center' }}
                       loading="lazy"
                     />
 
-                    {/* Subtle hairline gradient at bottom to ground the material title */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
-                    
-                    {/* Material Specifier Tag over bottom of image */}
-                    <div className="absolute bottom-3 left-4 right-4 flex items-end justify-between text-white pointer-events-none">
-                      <div>
-                        <span className="block text-[11px] font-mono uppercase tracking-widest text-[#E8DCCF]">
-                          Raw Material
-                        </span>
-                        <span className="font-serif text-xl font-bold tracking-wide drop-shadow-sm">
-                          {cat.name}
-                        </span>
-                      </div>
-                      <span className="text-[10px] font-semibold uppercase tracking-wider text-white/90 bg-black/40 backdrop-blur-sm px-2.5 py-1 rounded-full border border-white/20">
-                        View Samples
-                      </span>
-                    </div>
-                  </div>
+                    {/* Subtle internal ring gradient for tangible depth */}
+                    <div className="absolute inset-0 rounded-full ring-1 ring-inset ring-black/10 pointer-events-none" />
 
-                  {/* Card Body */}
-                  <div className="p-6">
-                    <span className="text-[10px] tracking-wider uppercase text-[#82553E] font-semibold block mb-1 font-mono">
-                      {cat.tagline}
-                    </span>
-                    <h3
-                      onClick={() => onSelectCategory(cat.id)}
-                      className="font-serif text-xl sm:text-2xl font-bold text-[#181715] mb-2 group-hover:text-[#82553E] transition-colors cursor-pointer"
-                    >
-                      {cat.name}
-                    </h3>
-                    
-                    {/* Subcategories list */}
-                    <div className="text-xs text-[#736F68] mb-3 leading-relaxed">
-                      <span className="font-semibold text-[#302D29]">Material Types: </span>
-                      <span>{cat.subcategories.join(', ')}</span>
-                    </div>
-
-                    <p className="text-xs sm:text-sm text-[#585550] leading-relaxed line-clamp-3">
-                      {cat.description}
-                    </p>
+                    {/* Soft hover illumination sheen */}
+                    <div className="absolute inset-0 bg-stone-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                   </div>
                 </div>
 
-                {/* Card Footer CTA */}
-                <div className="p-6 pt-0">
-                  <button
-                    onClick={() => onSelectCategory(cat.id)}
-                    className="w-full inline-flex items-center justify-between px-4 py-3 text-xs font-semibold uppercase tracking-wider text-[#181715] bg-[#FAF8F5] hover:bg-[#181715] hover:text-white rounded-lg transition-all duration-200 border border-[#E8E4DC] hover:border-[#181715] group/btn cursor-pointer"
-                  >
-                    <span>Explore {cat.name} Sourcing</span>
-                    <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover/btn:translate-x-1" />
-                  </button>
+                {/* ================================================== */}
+                {/* 2. CATEGORY NAME UNDERNEATH */}
+                {/* ================================================== */}
+                <h3 className="font-serif font-bold text-sm sm:text-base text-[#181715] tracking-tight group-hover:text-[#82553E] transition-colors leading-snug">
+                  {item.name}
+                </h3>
+
+                {/* ================================================== */}
+                {/* 3. VERY SHORT DESCRIPTOR */}
+                {/* ================================================== */}
+                <p className="text-[11px] sm:text-xs text-[#736F68] mt-0.5 line-clamp-1 max-w-[160px]">
+                  {item.shortDescriptor}
+                </p>
+
+                {/* ================================================== */}
+                {/* 4. HOVER INTERACTIVE CUE ("VIEW →") */}
+                {/* ================================================== */}
+                <div className="mt-1.5 flex items-center gap-1 font-mono text-[10px] sm:text-[11px] font-semibold text-[#82553E] opacity-0 group-hover:opacity-100 transform translate-y-1 group-hover:translate-y-0 transition-all duration-300">
+                  <span>VIEW SPEC</span>
+                  <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
                 </div>
               </div>
-            );
-          })}
+            ))}
+          </div>
         </div>
 
-        {/* Specialized Sub-Material Strip (Tapes, Buttons, Tags, Lycra) */}
-        <div className="mt-12 p-6 rounded-2xl bg-[#F7F5F0] border border-[#E8E4DC]">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4 pb-4 border-b border-[#E8E4DC]">
-            <div>
-              <span className="text-xs font-mono uppercase tracking-widest text-[#82553E] font-semibold">
-                Specialized Garment Accessories
-              </span>
-              <h3 className="font-serif text-lg font-bold text-[#181715]">
-                Physical Trims, Tapes &amp; Apparel Hardware
-              </h3>
-            </div>
-            <p className="text-xs text-[#585550] max-w-md">
-              Order loose buttons, twill tapes, woven labels, and specialized trims by specifications, count, or sample match.
-            </p>
+        {/* ======================================================== */}
+        {/* BOTTOM CALL TO ACTION & B2B SOURCING PILLARS */}
+        {/* ======================================================== */}
+        <div className="mt-12 pt-8 border-t border-[#E8E4DC] flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="text-xs text-[#736F68] font-mono text-center sm:text-left space-y-1">
+            <span className="text-[#181715] font-semibold block uppercase tracking-wider">
+              Everything You Need to Build a Garment
+            </span>
+            <span>
+              Direct wholesale supply • Swatch cuts dispatched across India • Tiruppur Textile Hub
+            </span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {/* Buttons Raw Material Card */}
-            <div
-              onClick={() => onSelectCategory('accessories')}
-              className="cursor-pointer group/sub flex items-center gap-3.5 p-3.5 bg-white rounded-xl border border-[#E5E0D6] hover:border-[#82553E] transition-all"
-            >
-              <img
-                src={RAW_MATERIAL_IMAGES.buttons.imagePath}
-                alt={RAW_MATERIAL_IMAGES.buttons.altText}
-                referrerPolicy="no-referrer"
-                className="w-16 h-16 rounded-lg object-cover object-center shrink-0 border border-[#E8E4DC] group-hover/sub:scale-105 transition-transform"
-              />
-              <div className="min-w-0 flex-1">
-                <span className="text-[10px] font-mono uppercase tracking-wider text-[#82553E] font-semibold block">
-                  Raw Trim
-                </span>
-                <span className="font-serif text-sm font-bold text-[#181715] group-hover/sub:text-[#82553E] transition-colors block truncate">
-                  Garment Buttons
-                </span>
-                <span className="text-[11px] text-[#736F68] block truncate">
-                  Corozo, resin, wood &amp; metal
-                </span>
-              </div>
-              <ArrowRight className="w-3.5 h-3.5 text-[#82553E] opacity-60 group-hover/sub:opacity-100 group-hover/sub:translate-x-0.5 transition-all shrink-0" />
-            </div>
-
-            {/* Tapes Raw Material Card */}
-            <div
-              onClick={() => onSelectCategory('accessories')}
-              className="cursor-pointer group/sub flex items-center gap-3.5 p-3.5 bg-white rounded-xl border border-[#E5E0D6] hover:border-[#82553E] transition-all"
-            >
-              <img
-                src={RAW_MATERIAL_IMAGES.tapes.imagePath}
-                alt={RAW_MATERIAL_IMAGES.tapes.altText}
-                referrerPolicy="no-referrer"
-                className="w-16 h-16 rounded-lg object-cover object-center shrink-0 border border-[#E8E4DC] group-hover/sub:scale-105 transition-transform"
-              />
-              <div className="min-w-0 flex-1">
-                <span className="text-[10px] font-mono uppercase tracking-wider text-[#82553E] font-semibold block">
-                  Raw Trim
-                </span>
-                <span className="font-serif text-sm font-bold text-[#181715] group-hover/sub:text-[#82553E] transition-colors block truncate">
-                  Garment Tapes
-                </span>
-                <span className="text-[11px] text-[#736F68] block truncate">
-                  Cotton twill rolls &amp; bias tape
-                </span>
-              </div>
-              <ArrowRight className="w-3.5 h-3.5 text-[#82553E] opacity-60 group-hover/sub:opacity-100 group-hover/sub:translate-x-0.5 transition-all shrink-0" />
-            </div>
-
-            {/* Tags Raw Material Card */}
-            <div
-              onClick={() => onSelectCategory('accessories')}
-              className="cursor-pointer group/sub flex items-center gap-3.5 p-3.5 bg-white rounded-xl border border-[#E5E0D6] hover:border-[#82553E] transition-all"
-            >
-              <img
-                src={RAW_MATERIAL_IMAGES.tags.imagePath}
-                alt={RAW_MATERIAL_IMAGES.tags.altText}
-                referrerPolicy="no-referrer"
-                className="w-16 h-16 rounded-lg object-cover object-center shrink-0 border border-[#E8E4DC] group-hover/sub:scale-105 transition-transform"
-              />
-              <div className="min-w-0 flex-1">
-                <span className="text-[10px] font-mono uppercase tracking-wider text-[#82553E] font-semibold block">
-                  Raw Trim
-                </span>
-                <span className="font-serif text-sm font-bold text-[#181715] group-hover/sub:text-[#82553E] transition-colors block truncate">
-                  Tags &amp; Labels
-                </span>
-                <span className="text-[11px] text-[#736F68] block truncate">
-                  Woven brand labels &amp; hang tags
-                </span>
-              </div>
-              <ArrowRight className="w-3.5 h-3.5 text-[#82553E] opacity-60 group-hover/sub:opacity-100 group-hover/sub:translate-x-0.5 transition-all shrink-0" />
-            </div>
-
-          </div>
+          <button
+            onClick={() => {
+              if (onExploreCatalogue) {
+                onExploreCatalogue();
+              } else {
+                onSelectCategory('fabrics');
+              }
+            }}
+            className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-[#181715] hover:bg-[#82553E] text-white font-mono text-xs font-semibold uppercase tracking-widest rounded-lg shadow-sm hover:shadow-md transition-all duration-300"
+          >
+            <span>VIEW DIGITAL CATALOGUE</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
         </div>
 
       </div>

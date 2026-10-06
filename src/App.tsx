@@ -86,9 +86,9 @@ export default function App() {
           ? 'lace'
           : category === 'denim'
           ? 'denim'
-          : category === 'mesh'
+          : category === 'mesh' || category === 'lycra-mesh'
           ? 'mesh'
-          : category === 'accessories'
+          : category === 'accessories' || category === 'tapes' || category === 'tags' || category === 'buttons'
           ? 'accessories'
           : category === 'processing'
           ? 'processing'
@@ -204,7 +204,10 @@ export default function App() {
             />
 
             {/* 2. Product Categories Section */}
-            <CategoryCards onSelectCategory={handleCategorySelect} />
+            <CategoryCards
+              onSelectCategory={handleCategorySelect}
+              onExploreCatalogue={() => handleNavigate('catalogue')}
+            />
 
             {/* 3. Featured Materials Spotlight */}
             <section className="py-16 md:py-20 bg-[#F7F5F0] border-t border-b border-[#E8E6E0]">
@@ -356,6 +359,8 @@ export default function App() {
           setDetailProduct(null);
           handleRequestMaterial(undefined, p);
         }}
+        allProducts={products}
+        onSelectProduct={(p) => setDetailProduct(p)}
       />
 
       {/* Product / Collection Enquiry Modal */}

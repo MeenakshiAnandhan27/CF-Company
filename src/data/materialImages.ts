@@ -57,6 +57,15 @@ export const RAW_MATERIAL_IMAGES: Record<string, RawMaterialImageEntry> = {
     objectPosition: 'center',
     description: 'Raw mesh textile highlighting cell structure and porosity',
   },
+  'lycra-mesh': {
+    category: 'lycra-mesh',
+    label: 'Lycra / Lycra Mesh',
+    rawMaterialType: 'High elasticity 4-way stretch power mesh',
+    imagePath: '/assets/materials/mesh.jpg',
+    altText: 'Close-up of elastic 4-way stretch power lycra mesh fabric',
+    objectPosition: 'center',
+    description: 'High recovery stretch lycra power mesh textile',
+  },
   accessories: {
     category: 'accessories',
     label: 'Garment Accessories',
@@ -102,5 +111,14 @@ export const RAW_MATERIAL_IMAGES: Record<string, RawMaterialImageEntry> = {
     altText: 'Physical stack of garment hang tags and woven brand labels',
     objectPosition: 'center',
     description: 'Physical garment tags and apparel identification trims',
+  },
+  zippers: {
+    category: 'accessories',
+    label: 'Garment Zippers & Fasteners',
+    rawMaterialType: 'Continuous zipper coils, brass teeth & loose sliders',
+    imagePath: '/assets/materials/accessories.jpg',
+    altText: 'Close-up of raw zipper components, brass teeth, and continuous zipper tape',
+    objectPosition: 'center 40%',
+    description: 'Raw zipper reels, metallic teeth, and apparel sliders',
   },
 };

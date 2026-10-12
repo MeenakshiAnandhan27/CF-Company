@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { ProductCategory } from '../types.ts';
 import { RAW_MATERIAL_IMAGES } from '../data/materialImages.ts';
-import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 interface ShowcaseCategoryItem {
   id: string;
@@ -196,43 +196,13 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({
         {/* ======================================================== */}
         {/* SECTION HEADER — PRECISE B2B POSITIONING */}
         {/* ======================================================== */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 pb-6 border-b border-[#E8E4DC] gap-6">
-          <div className="space-y-2">
-            <span className="font-mono text-xs uppercase tracking-[0.25em] text-[#82553E] font-semibold block">
-              Raw Material Library • B2B Sourcing Partner
-            </span>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-[#181715] tracking-tight">
-              MATERIALS FOR EVERY CREATION
-            </h2>
-            <p className="text-sm sm:text-base text-[#585550] max-w-2xl font-normal leading-relaxed pt-1">
-              Explore fabrics, laces and garment accessories sourced and supplied for your requirements.
-            </p>
-          </div>
-
-          {/* Desktop Shelf Navigation Controls (Prev / Next Arrows) */}
-          <div className="flex items-center gap-2 self-start md:self-end">
-            <span className="text-[11px] font-mono text-[#8C877E] uppercase tracking-wider hidden sm:inline mr-2">
-              Browse Materials
-            </span>
-            <button
-              onClick={() => handleScroll('left')}
-              disabled={!canScrollLeft}
-              className="w-10 h-10 rounded-full border border-[#D5D0C6] bg-white text-[#181715] hover:bg-[#F2ECE3] hover:border-[#82553E] flex items-center justify-center transition-all disabled:opacity-30 disabled:pointer-events-none shadow-xs"
-              aria-label="Previous material category"
-              title="Scroll left"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <button
-              onClick={() => handleScroll('right')}
-              disabled={!canScrollRight}
-              className="w-10 h-10 rounded-full border border-[#D5D0C6] bg-white text-[#181715] hover:bg-[#F2ECE3] hover:border-[#82553E] flex items-center justify-center transition-all disabled:opacity-30 disabled:pointer-events-none shadow-xs"
-              aria-label="Next material category"
-              title="Scroll right"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
-          </div>
+        <div className="mb-10 pb-6 border-b border-[#E8E4DC]">
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-[#181715] tracking-tight">
+            MATERIALS FOR EVERY CREATION
+          </h2>
+          <p className="text-sm sm:text-base text-[#585550] max-w-2xl font-normal leading-relaxed pt-2">
+            Explore fabrics, laces and garment accessories sourced and supplied for your requirements.
+          </p>
         </div>
 
         {/* ======================================================== */}

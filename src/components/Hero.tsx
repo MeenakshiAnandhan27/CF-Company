@@ -14,7 +14,7 @@ export const Hero: React.FC<HeroProps> = ({
   onRequestMaterial,
 }) => {
   return (
-    <section className="relative overflow-hidden bg-[#FBF9F5] border-b border-[#E8E4DC] pt-12 pb-16 md:pt-20 md:pb-24">
+    <section id="materials-hero" className="relative overflow-hidden bg-[#FBF9F5] border-b border-[#E8E4DC] pt-12 pb-16 md:pt-20 md:pb-24 scroll-mt-20">
       {/* Subtle organic textile warp and weft background texture */}
       <div className="absolute inset-0 pointer-events-none opacity-30">
         <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">

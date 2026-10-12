@@ -107,4 +107,41 @@ body {
   animation: page-flip-backward 0.45s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
+/* Subtle Brand Typography Glow Animation */
+@keyframes brand-glow {
+  0%, 100% {
+    text-shadow: 0 0 16px rgba(130, 85, 62, 0.12), 0 0 32px rgba(201, 169, 110, 0.08);
+    filter: drop-shadow(0 2px 8px rgba(24, 23, 21, 0.03));
+  }
+  50% {
+    text-shadow: 0 0 32px rgba(130, 85, 62, 0.3), 0 0 54px rgba(201, 169, 110, 0.22), 0 0 80px rgba(130, 85, 62, 0.12);
+    filter: drop-shadow(0 6px 20px rgba(130, 85, 62, 0.1));
+  }
+}
+
+.animate-brand-glow {
+  animation: brand-glow 4.5s ease-in-out infinite;
+}
+
+/* Slow-moving text strip marquee */
+@keyframes marquee-scroll {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee-slow {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 32s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-slow:hover {
+  animation-play-state: paused;
+}
+
 

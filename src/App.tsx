@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar.tsx';
+import { BrandIntroSection } from './components/BrandIntroSection.tsx';
 import { Hero } from './components/Hero.tsx';
 import { HomeIntro } from './components/HomeIntro.tsx';
 import { CategoryCards } from './components/CategoryCards.tsx';
@@ -196,7 +197,17 @@ export default function App() {
       <main className="flex-1">
         {currentTab === 'home' && (
           <div>
-            {/* 1. Hero Section */}
+            {/* Brand Intro Section */}
+            <BrandIntroSection
+              onScrollToDiscover={() => {
+                const el = document.getElementById('materials-hero');
+                if (el) {
+                  el.scrollIntoView({ behavior: 'smooth' });
+                }
+              }}
+            />
+
+            {/* 1. Hero Section: Materials for Every Requirement */}
             <Hero
               onExploreCatalogue={() => handleNavigate('catalogue')}
               onRequestMaterial={() => handleRequestMaterial()}

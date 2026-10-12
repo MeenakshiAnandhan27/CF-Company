@@ -54,7 +54,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <BrandLogo variant="white" size="sm" className="w-full h-auto" />
           </div>
           <div className="flex items-center">
-            <span className="font-display text-lg sm:text-xl font-bold tracking-[0.08em] block leading-snug whitespace-nowrap text-[#181715] group-hover:text-[#82553E] transition-colors">
+            <span className="font-display text-lg sm:text-xl font-bold tracking-[0.10em] block leading-none whitespace-nowrap text-[#181715] group-hover:text-[#82553E] transition-colors">
               {businessConfig.businessName}
             </span>
           </div>

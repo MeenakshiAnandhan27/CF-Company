@@ -292,33 +292,7 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({
           </div>
         </div>
 
-        {/* ======================================================== */}
-        {/* BOTTOM CALL TO ACTION & B2B SOURCING PILLARS */}
-        {/* ======================================================== */}
-        <div className="mt-12 pt-8 border-t border-[#E8E4DC] flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="text-xs text-[#736F68] font-mono text-center sm:text-left space-y-1">
-            <span className="text-[#181715] font-semibold block uppercase tracking-wider">
-              Everything You Need to Build a Garment
-            </span>
-            <span>
-              Direct wholesale supply • Swatch cuts dispatched across India • Tiruppur Textile Hub
-            </span>
-          </div>
 
-          <button
-            onClick={() => {
-              if (onExploreCatalogue) {
-                onExploreCatalogue();
-              } else {
-                onSelectCategory('fabrics');
-              }
-            }}
-            className="inline-flex items-center gap-2.5 px-6 py-3.5 bg-[#181715] hover:bg-[#82553E] text-white font-mono text-xs font-semibold uppercase tracking-widest rounded-lg shadow-sm hover:shadow-md transition-all duration-300"
-          >
-            <span>VIEW DIGITAL CATALOGUE</span>
-            <ArrowRight className="w-4 h-4" />
-          </button>
-        </div>
 
       </div>
     </section>

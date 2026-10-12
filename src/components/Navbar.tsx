@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { businessConfig } from '../data/businessConfig.ts';
 import { ProductCategory, NavigationTab } from '../types.ts';
-import { Menu, X, ArrowRight, Phone, ShoppingBag, Sparkles } from 'lucide-react';
+import { Menu, X, ArrowRight, Phone, ShoppingBag } from 'lucide-react';
 import { BrandLogo } from './BrandLogo.tsx';
 
 interface NavbarProps {
@@ -39,8 +39,8 @@ export const Navbar: React.FC<NavbarProps> = ({
     <header
       className={`sticky top-0 z-40 transition-all duration-300 ${
         isScrolled
-          ? 'bg-[#FBFBFA]/95 backdrop-blur-md shadow-[0_1px_3px_rgba(0,0,0,0.06)] border-b border-[#E8E6E0]'
-          : 'bg-[#FBFBFA] border-b border-[#E8E6E0]'
+          ? 'bg-white/95 backdrop-blur-md shadow-[0_1px_4px_rgba(0,0,0,0.06)] border-b border-[#E8E6E0]'
+          : 'bg-white border-b border-[#E8E6E0]'
       }`}
     >
       {/* Main Top Bar */}
@@ -48,69 +48,69 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* Zone 1: Wordmark / Logo */}
         <button
           onClick={() => handleNavClick('home')}
-          className="flex items-center gap-3 text-left group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2B2824] rounded-sm shrink-0"
+          className="flex items-center gap-3 text-left group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] rounded-md shrink-0 cursor-pointer"
         >
-          <div className="w-11 h-11 rounded-md bg-[#181715] flex items-center justify-center p-2 transition-transform group-hover:scale-105 border border-[#302D29] shrink-0 shadow-xs">
+          <div className="w-11 h-11 rounded-lg flex items-center justify-center p-2 transition-all duration-300 group-hover:scale-105 shrink-0 bg-[#181715] border border-[#302D29] group-hover:border-[#82553E]/60 shadow-xs">
             <BrandLogo variant="white" size="sm" className="w-full h-auto" />
           </div>
           <div className="flex flex-col justify-center">
-            <span className="font-serif text-xl sm:text-2xl font-bold tracking-tight text-[#181715] block leading-snug whitespace-nowrap pt-0.5">
+            <span className="font-display text-lg sm:text-xl font-bold tracking-[0.08em] block leading-snug whitespace-nowrap pt-0.5 text-[#181715] group-hover:text-[#82553E] transition-colors">
               {businessConfig.businessName}
             </span>
-            <span className="text-[9px] sm:text-[10px] tracking-[0.14em] uppercase text-[#736F68] font-semibold block whitespace-nowrap leading-none mt-0.5">
-              {businessConfig.subtitle}
+            <span className="text-[9px] sm:text-[10px] tracking-[0.16em] uppercase font-mono font-semibold block whitespace-nowrap leading-none mt-0.5 text-[#82553E]">
+              SUPPLIER OF GARMENT ACCESSORIES &amp; FABRICS
             </span>
           </div>
         </button>
 
-        {/* Zone 2: Navigation Links (Clean, non-wrapping, perfectly aligned) */}
+        {/* Zone 2: Navigation Links */}
         <nav className="hidden md:flex items-center gap-4 lg:gap-6 xl:gap-7 text-xs font-semibold uppercase tracking-wider text-[#585550]">
           <button
             onClick={() => handleNavClick('home')}
-            className={`whitespace-nowrap transition-colors hover:text-[#181715] relative py-2 ${
+            className={`whitespace-nowrap transition-colors relative py-2 ${
               currentTab === 'home'
                 ? 'text-[#181715] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#181715]'
-                : ''
+                : 'hover:text-[#181715]'
             }`}
           >
             HOME
           </button>
           <button
             onClick={() => handleNavClick('about')}
-            className={`whitespace-nowrap transition-colors hover:text-[#181715] relative py-2 ${
+            className={`whitespace-nowrap transition-colors relative py-2 ${
               currentTab === 'about'
                 ? 'text-[#181715] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#181715]'
-                : ''
+                : 'hover:text-[#181715]'
             }`}
           >
             ABOUT
           </button>
           <button
             onClick={() => handleNavClick('catalogue')}
-            className={`whitespace-nowrap transition-colors hover:text-[#181715] relative py-2 ${
+            className={`whitespace-nowrap transition-colors relative py-2 ${
               currentTab === 'catalogue'
                 ? 'text-[#181715] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#181715]'
-                : ''
+                : 'hover:text-[#181715]'
             }`}
           >
             CATALOGUE
           </button>
           <button
             onClick={() => handleNavClick('material-request')}
-            className={`whitespace-nowrap transition-colors hover:text-[#181715] relative py-2 flex items-center gap-1 ${
+            className={`whitespace-nowrap transition-colors relative py-2 flex items-center gap-1 ${
               currentTab === 'material-request'
                 ? 'text-[#181715] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#181715]'
-                : 'text-[#82553E]'
+                : 'text-[#82553E] hover:text-[#181715]'
             }`}
           >
             <span>REQUEST MATERIAL</span>
           </button>
           <button
             onClick={() => handleNavClick('reach-us')}
-            className={`whitespace-nowrap transition-colors hover:text-[#181715] relative py-2 ${
+            className={`whitespace-nowrap transition-colors relative py-2 ${
               currentTab === 'reach-us'
                 ? 'text-[#181715] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#181715]'
-                : ''
+                : 'hover:text-[#181715]'
             }`}
           >
             REACH US
@@ -131,7 +131,9 @@ export const Navbar: React.FC<NavbarProps> = ({
             }`}
             title="View selected wholesale materials"
           >
-            <ShoppingBag className={`w-3.5 h-3.5 shrink-0 ${currentTab === 'collection' ? 'text-white' : 'text-[#82553E]'}`} />
+            <ShoppingBag className={`w-3.5 h-3.5 shrink-0 ${
+              currentTab === 'collection' ? 'text-white' : 'text-[#82553E]'
+            }`} />
             <span>Collection</span>
             <span
               className={`font-mono text-[11px] px-1.5 py-0.5 rounded leading-none ${
@@ -148,7 +150,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           <button
             onClick={() => handleNavClick('catalogue')}
-            className="whitespace-nowrap inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold uppercase tracking-wider text-[#FFFFFF] bg-[#181715] rounded hover:bg-[#302D29] transition-all duration-200 shadow-sm active:scale-[0.98]"
+            className="whitespace-nowrap inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold uppercase tracking-wider rounded transition-all duration-200 shadow-sm active:scale-[0.98] text-[#FFFFFF] bg-[#181715] hover:bg-[#302D29]"
           >
             <span>Catalogue</span>
             <ArrowRight className="w-3.5 h-3.5 shrink-0" />
@@ -160,7 +162,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Mobile Collection shortcut */}
           <button
             onClick={() => handleNavClick('collection')}
-            className="flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-wider bg-[#FAF7F2] border border-[#D5D0C6] text-[#181715] rounded"
+            className="flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-wider rounded border bg-[#FAF7F2] border-[#D5D0C6] text-[#181715]"
           >
             <ShoppingBag className="w-3.5 h-3.5 text-[#82553E]" />
             <span>{collectionCount}</span>
@@ -168,7 +170,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 text-[#2B2824] hover:bg-[#EFECE6] rounded-md transition-colors"
+            className="p-2 rounded-md transition-colors text-[#2B2824] hover:bg-[#EFECE6]"
             aria-label="Toggle Navigation Menu"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}

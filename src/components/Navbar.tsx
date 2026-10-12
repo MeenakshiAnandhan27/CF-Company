@@ -53,12 +53,9 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="w-11 h-11 rounded-lg flex items-center justify-center p-2 transition-all duration-300 group-hover:scale-105 shrink-0 bg-[#181715] border border-[#302D29] group-hover:border-[#82553E]/60 shadow-xs">
             <BrandLogo variant="white" size="sm" className="w-full h-auto" />
           </div>
-          <div className="flex flex-col justify-center">
-            <span className="font-display text-lg sm:text-xl font-bold tracking-[0.08em] block leading-snug whitespace-nowrap pt-0.5 text-[#181715] group-hover:text-[#82553E] transition-colors">
+          <div className="flex items-center">
+            <span className="font-display text-lg sm:text-xl font-bold tracking-[0.08em] block leading-snug whitespace-nowrap text-[#181715] group-hover:text-[#82553E] transition-colors">
               {businessConfig.businessName}
-            </span>
-            <span className="text-[9px] sm:text-[10px] tracking-[0.16em] uppercase font-mono font-semibold block whitespace-nowrap leading-none mt-0.5 text-[#82553E]">
-              SUPPLIER OF GARMENT ACCESSORIES &amp; FABRICS
             </span>
           </div>
         </button>

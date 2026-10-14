@@ -21,6 +21,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
     {
       title: 'Embroidered Guipure Lace',
       type: 'Garment Trims',
+      image: '/assets/materials/laces.jpg',
       composition: 'Pure Cotton & Silk Blend',
       width: '18 mm – 120 mm',
       finish: 'Matte Soft Wash',
@@ -31,6 +32,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
     {
       title: 'High-Density Poplin Gada',
       type: 'Apparel Fabric',
+      image: '/assets/materials/fabrics/plain.jpg',
       composition: '100% Combed Cotton',
       width: '44” / 58” Width',
       finish: 'Unbleached / Natural Mercerized',
@@ -41,6 +43,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
     {
       title: 'Indigo Selvedge Denim',
       type: 'Twill Weave',
+      image: '/assets/materials/fabrics/denim.jpg',
       composition: 'Ring-Spun Cotton Twill (12.5 oz)',
       width: '32” Shuttle Loom Width',
       finish: 'Rigid Deep Indigo Dye',
@@ -51,6 +54,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
     {
       title: 'Custom Brand Trims & Tags',
       type: 'Finishing Accessories',
+      image: '/assets/materials/tags.jpg',
       composition: 'Damask Woven / Horn / Coconut',
       width: 'Bespoke Dimensions',
       finish: 'Laser Engraved & Hot Cut',
@@ -382,6 +386,16 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
 
                   {/* Dynamic Specimen Details Card */}
                   <div className="bg-[#FBF9F5] rounded-2xl p-5 border border-[#EAE4D8] space-y-4">
+                    {/* Real Physical Textile Swatch Visual */}
+                    <div className="relative aspect-[16/9] w-full rounded-xl overflow-hidden bg-[#ECE6DC] border border-[#DDD5C7] shadow-inner">
+                      <img
+                        src={specimens[activeSpecimen].image}
+                        alt={specimens[activeSpecimen].title}
+                        className="w-full h-full object-cover transition-transform duration-700 ease-out hover:scale-106"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-tr from-black/25 via-transparent to-white/20 pointer-events-none" />
+                    </div>
+
                     <div className="flex items-start justify-between gap-3">
                       <div>
                         <span className="text-[10px] font-mono uppercase tracking-widest text-[#82553E] font-semibold">

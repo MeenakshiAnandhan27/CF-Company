@@ -34,7 +34,7 @@ export const Hero: React.FC<HeroProps> = ({
       num: '02',
       title: 'Fabrics & Gadas',
       subtitle: 'Pure Cotton, Gadas & Knits',
-      image: '/assets/materials/fabrics.jpg',
+      image: '/assets/materials/fabrics/plain.jpg',
       alt: 'Raw woven fabric rolls texture',
     },
     {
@@ -42,7 +42,7 @@ export const Hero: React.FC<HeroProps> = ({
       num: '03',
       title: 'Denim Materials',
       subtitle: 'Raw Indigo Selvedge & Twill',
-      image: '/assets/materials/denim.jpg',
+      image: '/assets/materials/fabrics/denim.jpg',
       alt: 'Raw denim twill fabric texture',
     },
     {

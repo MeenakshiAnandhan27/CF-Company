@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { DiscoveryMaterial } from '../../data/catalogueDiscoveryData.ts';
-import { Eye, ArrowUpRight } from 'lucide-react';
+import { Eye, ArrowUpRight, Sparkles } from 'lucide-react';
 
 interface MaterialItemProps {
   material: DiscoveryMaterial;
@@ -12,18 +12,10 @@ interface MaterialItemProps {
 export const MaterialItem: React.FC<MaterialItemProps> = ({
   material,
   onClick,
-  size = 'normal',
-  showCategoryLabel = false,
+  showCategoryLabel = true,
 }) => {
   const [imageError, setImageError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-
-  // Size dimensions
-  const circleSizeClass = {
-    normal: 'w-32 h-32 sm:w-40 sm:h-40 md:w-44 md:h-44',
-    large: 'w-40 h-40 sm:w-48 sm:h-48 md:w-52 md:h-52',
-    compact: 'w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32',
-  }[size];
 
   const displayImage = imageError && material.fallbackTexture
     ? material.fallbackTexture
@@ -42,68 +34,95 @@ export const MaterialItem: React.FC<MaterialItemProps> = ({
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="group flex flex-col items-center text-center cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[#82553E] focus-visible:ring-offset-4 rounded-2xl p-2 sm:p-3 transition-all duration-300"
+      className="group w-full select-none cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#82553E] focus-visible:ring-offset-4 rounded-2xl"
+      style={{ perspective: '1000px' }}
       aria-label={`View ${material.name} material details`}
     >
-      {/* Circular softly-masked raw material crop */}
-      <div className="relative mb-3.5">
+      {/* 3D Physical Swatch Card Container */}
+      <div
+        className="relative w-full rounded-2xl p-2 bg-[#FAF7F2] border border-[#E6DFD3] ring-1 ring-black/5 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
+        style={{
+          transformStyle: 'preserve-3d',
+          transform: isHovered
+            ? 'translateY(-8px) rotateX(4deg) rotateY(-2deg) translateZ(8px)'
+            : 'translateY(0) rotateX(0deg) rotateY(0deg) translateZ(0px)',
+          boxShadow: isHovered
+            ? '0 22px 42px -10px rgba(24, 23, 21, 0.22), 0 8px 18px -4px rgba(24, 23, 21, 0.1)'
+            : '0 4px 14px rgba(24, 23, 21, 0.05)',
+        }}
+      >
+        {/* Top Metallic Studio Swatch Pin / Clip */}
         <div
-          className={`relative ${circleSizeClass} rounded-full overflow-hidden bg-[#EFECE6] border border-[#DDD5C7] shadow-xs transition-all duration-500 ease-out group-hover:shadow-md group-hover:border-[#82553E]/50 group-hover:scale-[1.03]`}
-        >
-          {/* Authentic Raw Material Image */}
+          aria-hidden="true"
+          className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-8 h-2 rounded-full bg-gradient-to-r from-[#DDD3C4] via-[#F5EFE6] to-[#C9BAA5] border border-[#B8A68F]/50 shadow-xs z-20 pointer-events-none"
+        />
+
+        {/* Authentic Full Clear HD Raw Material Swatch Tile */}
+        <div className="relative aspect-[16/10] w-full rounded-xl overflow-hidden bg-[#ECE6DC] border border-[#DDD5C7] shadow-inner">
           <img
             src={displayImage}
-            alt={`Raw ${material.name} textile material`}
+            alt={`Raw ${material.name} fabric swatch`}
             loading="lazy"
             onError={() => setImageError(true)}
             className={`w-full h-full object-cover transition-transform duration-700 ease-out ${
-              isHovered ? 'scale-110' : 'scale-100'
+              isHovered ? 'scale-108' : 'scale-100'
             }`}
           />
 
-          {/* Soft natural radial vignette to create depth like physical textile lighting */}
+          {/* 3D Lighting & Sheen Reflection Overlay */}
           <div
             aria-hidden="true"
-            className="absolute inset-0 rounded-full pointer-events-none ring-1 ring-inset ring-black/5 bg-gradient-to-b from-transparent via-transparent to-black/10"
+            className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-black/25 via-transparent to-white/30"
           />
 
-          {/* Micro hover indicator: subtle "VIEW MATERIAL" badge */}
+          {/* Subtle Fabric selvage line */}
           <div
             aria-hidden="true"
-            className={`absolute inset-0 rounded-full flex flex-col items-center justify-center bg-[#181715]/40 backdrop-blur-[1.5px] transition-opacity duration-300 ${
+            className="absolute bottom-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-[#82553E]/40 to-transparent"
+          />
+
+          {/* Micro hover indicator: 3D "VIEW SWATCH" badge */}
+          <div
+            aria-hidden="true"
+            className={`absolute inset-0 flex items-center justify-center bg-[#181715]/40 backdrop-blur-[1px] transition-opacity duration-300 ${
               isHovered ? 'opacity-100' : 'opacity-0'
             }`}
           >
-            <span className="text-[10px] tracking-[0.2em] font-medium uppercase text-white/95 flex items-center gap-1 bg-[#181715]/80 px-2.5 py-1 rounded-full border border-white/20 shadow-xs">
-              <Eye className="w-2.5 h-2.5" />
-              <span>VIEW</span>
+            <span className="text-[10px] tracking-[0.2em] font-semibold uppercase text-white flex items-center gap-1.5 bg-[#181715]/90 px-3 py-1.5 rounded-full border border-white/20 shadow-sm">
+              <Eye className="w-3 h-3 text-[#C89D6B]" />
+              <span>3D INSPECT</span>
             </span>
+          </div>
+
+          {/* Floating corner indicator icon */}
+          <div
+            className={`absolute top-2 right-2 w-6 h-6 rounded-full bg-white/90 backdrop-blur-xs border border-[#DDD5C7] text-[#181715] flex items-center justify-center shadow-xs transition-transform duration-300 ${
+              isHovered ? 'scale-110 bg-[#82553E] text-white border-[#82553E]' : 'scale-90 text-[#7D766C]'
+            }`}
+          >
+            <ArrowUpRight className="w-3 h-3" />
           </div>
         </div>
 
-        {/* Small floating action prompt on corner */}
-        <div
-          className={`absolute bottom-0 right-1 w-7 h-7 rounded-full bg-white border border-[#DDD5C7] text-[#181715] flex items-center justify-center shadow-xs transition-all duration-300 ${
-            isHovered ? 'scale-110 bg-[#82553E] text-white border-[#82553E]' : 'scale-90 text-[#8C877E]'
-          }`}
-        >
-          <ArrowUpRight className="w-3.5 h-3.5" />
-        </div>
-      </div>
+        {/* Swatch Details & Typography */}
+        <div className="p-3 text-left space-y-1">
+          {/* Subcategory metadata badge */}
+          {showCategoryLabel && (
+            <span className="block text-[9px] font-mono uppercase tracking-[0.22em] text-[#82553E] font-bold truncate">
+              {material.subcategory}
+            </span>
+          )}
 
-      {/* Material name underneath with premium typography */}
-      <div className="space-y-0.5 max-w-[180px]">
-        {showCategoryLabel && (
-          <span className="block text-[10px] font-mono uppercase tracking-[0.18em] text-[#8C877E]">
-            {material.subcategory}
-          </span>
-        )}
-        <h4 className="font-serif text-base sm:text-lg font-medium text-[#181715] tracking-tight group-hover:text-[#82553E] transition-colors duration-200">
-          {material.name}
-        </h4>
-        <span className="block text-[11px] text-[#78736B] line-clamp-1 font-sans">
-          {material.composition || material.weave || 'Garment Component'}
-        </span>
+          {/* Exact Unique Fabric Name */}
+          <h4 className="font-['Outfit',sans-serif] text-sm sm:text-base font-bold text-[#181715] leading-snug group-hover:text-[#82553E] transition-colors duration-200 truncate">
+            {material.name}
+          </h4>
+
+          {/* Material Composition / Weave info */}
+          <p className="text-[11px] text-[#6E685F] line-clamp-1 font-['Plus_Jakarta_Sans',sans-serif]">
+            {material.composition || material.weave || 'Garment Fabric'}
+          </p>
+        </div>
       </div>
     </div>
   );

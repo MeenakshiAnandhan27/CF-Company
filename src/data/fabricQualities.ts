@@ -500,7 +500,17 @@ export const getFabricQualitiesByWeave = (weaveType: string): FabricQuality[] =>
  * Convert a FabricQuality record into a Product object
  * Ensures full backwards-compatibility with all existing modals, collection items, and inquiry forms
  */
+const getFabricQualityImage = (quality: FabricQuality): string => {
+  const sub = quality.subcategory?.toUpperCase() || '';
+  if (sub === 'PLAIN') return '/assets/materials/fabrics/plain.jpg';
+  if (sub === 'SATIN') return '/assets/materials/fabrics/satin-polyester.jpg';
+  if (sub === 'DRILL' || sub === 'DUCK') return '/assets/materials/fabrics/canvas-gada.jpg';
+  if (sub === 'TWILL') return '/assets/materials/fabrics/stripes.jpg';
+  return '/assets/materials/fabrics/cotton.jpg';
+};
+
 export const fabricQualityToProduct = (quality: FabricQuality): Product => {
+  const resolvedImage = getFabricQualityImage(quality);
   return {
     id: quality.id,
     productCode: `CF-FAB-${quality.id.replace('fab-', '').toUpperCase()}`,
@@ -520,7 +530,7 @@ export const fabricQualityToProduct = (quality: FabricQuality): Product => {
     description: quality.description,
     shortDescription: `${quality.yarnConstruction} | ${quality.quality} | ${quality.width} | ${quality.gsm} | ${quality.weave}`,
     fullDescription: `${quality.description} Built to ${quality.standard} standards on ${quality.loom} with ${quality.selvage}. Quality yarn construction: ${quality.yarnConstruction} (${quality.quality}) in ${quality.width} finished roll width.`,
-    images: [quality.image],
+    images: [resolvedImage],
     imageAlt: `${quality.name} raw fabric swatch texture`,
     colours: quality.colours || ['Loomstate Grey / Kora', 'RFD'],
     sizes: [quality.width, 'Continuous Roll 100m+'],

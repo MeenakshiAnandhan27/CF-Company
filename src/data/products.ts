@@ -18,7 +18,7 @@ export const categories: CategoryInfo[] = [
     description: 'Fabric supply and mill sourcing built from authenticated quality lists: Plain, Twill, Drill, Duck, Satin, and Plain / Twill gada.',
     subcategories: ['PLAIN', 'TWILL', 'DRILL', 'DUCK', 'SATIN', 'PLAIN / TWILL'],
     patternType: 'woven-fabric',
-    image: '/assets/materials/fabrics.jpg',
+    image: '/assets/materials/fabrics/plain.jpg',
   },
   {
     id: 'denim',
@@ -27,7 +27,7 @@ export const categories: CategoryInfo[] = [
     description: 'Dedicated supply of denim textiles for garment sampling, apparel making, and wholesale distribution in Tiruppur and beyond.',
     subcategories: ['Denim Fabric', 'Premium Denim', 'Garment Denim', 'Other Denim Varieties'],
     patternType: 'denim',
-    image: '/assets/materials/denim.jpg',
+    image: '/assets/materials/fabrics/denim.jpg',
   },
   {
     id: 'mesh',

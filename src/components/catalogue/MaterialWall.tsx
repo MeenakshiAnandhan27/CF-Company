@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { MATERIAL_WALL_ITEMS, DiscoveryMaterial } from '../../data/catalogueDiscoveryData.ts';
-import { Sparkles, Eye, Layers } from 'lucide-react';
+import { Sparkles, Eye, Layers, RotateCw } from 'lucide-react';
 
 interface MaterialWallProps {
   onSelectMaterial: (material: DiscoveryMaterial) => void;
+  onOpen360?: (material: DiscoveryMaterial) => void;
 }
 
-export const MaterialWall: React.FC<MaterialWallProps> = ({ onSelectMaterial }) => {
+export const MaterialWall: React.FC<MaterialWallProps> = ({ onSelectMaterial, onOpen360 }) => {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
   return (
@@ -92,8 +93,23 @@ export const MaterialWall: React.FC<MaterialWallProps> = ({ onSelectMaterial }) 
                     </div>
                   </div>
 
+                  {/* Quick 360° launcher button */}
+                  {onOpen360 && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onOpen360(item);
+                      }}
+                      title={`Spin ${item.name} in 360°`}
+                      className="absolute -top-1 -right-1 z-20 w-6 h-6 rounded-full bg-[#181715] hover:bg-[#82553E] text-white flex items-center justify-center border border-white/20 shadow-xs transition-transform hover:scale-110 cursor-pointer"
+                    >
+                      <RotateCw className="w-2.5 h-2.5 text-[#C89D6B]" />
+                    </button>
+                  )}
+
                   {/* Micro Category Pill Indicator */}
-                  {isHeroSwatch && (
+                  {isHeroSwatch && !onOpen360 && (
                     <div className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-[#82553E] rounded-full border-2 border-white shadow-xs" />
                   )}
                 </div>

@@ -11,9 +11,10 @@ import { MaterialDetail } from './MaterialDetail.tsx';
 import { MaterialWall } from './MaterialWall.tsx';
 import { CatalogueNavigation, NavFilter } from './CatalogueNavigation.tsx';
 import { DigitalCatalogue } from './DigitalCatalogue.tsx';
+import { FabricViewer360 } from './FabricViewer360.tsx';
 import { RequestMaterialCallout } from './RequestMaterialCallout.tsx';
 import { Product, CollectionItem } from '../../types.ts';
-import { Sparkles, ArrowRight, Layers, BookOpen } from 'lucide-react';
+import { Sparkles, ArrowRight, Layers, BookOpen, RotateCw } from 'lucide-react';
 
 interface CatalogueLandingProps {
   initialCategory?: string | null;
@@ -47,6 +48,13 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedMaterial, setSelectedMaterial] = useState<DiscoveryMaterial | null>(null);
   const [isDigitalBookOpen, setIsDigitalBookOpen] = useState(false);
+  const [isViewer360Open, setIsViewer360Open] = useState(false);
+  const [viewer360Material, setViewer360Material] = useState<DiscoveryMaterial | null>(null);
+
+  const handleOpen360Viewer = (material?: DiscoveryMaterial) => {
+    setViewer360Material(material || null);
+    setIsViewer360Open(true);
+  };
 
   // Section reference to smoothly scroll when category is selected
   const materialsSectionRef = useRef<HTMLDivElement>(null);
@@ -134,11 +142,20 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
             Explore fabrics, denim, chambray, laces and garment accessories sourced for apparel production.
           </p>
 
-          <div className="pt-2 flex items-center justify-center gap-3">
+          <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
+            <button
+              type="button"
+              onClick={() => handleOpen360Viewer()}
+              className="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-semibold uppercase tracking-wider bg-[#82553E] hover:bg-[#6e4632] text-white rounded-full shadow-sm transition-all hover:scale-[1.02] cursor-pointer"
+            >
+              <RotateCw className="w-3.5 h-3.5" />
+              <span>360° Fabric Studio</span>
+            </button>
+
             <button
               type="button"
               onClick={() => setIsDigitalBookOpen(true)}
-              className="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-semibold uppercase tracking-wider bg-white hover:bg-[#F2ECE1] text-[#181715] border border-[#DDD5C7] rounded-full shadow-xs transition-all hover:scale-[1.02]"
+              className="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-semibold uppercase tracking-wider bg-white hover:bg-[#F2ECE1] text-[#181715] border border-[#DDD5C7] rounded-full shadow-xs transition-all hover:scale-[1.02] cursor-pointer"
             >
               <BookOpen className="w-3.5 h-3.5 text-[#82553E]" />
               <span>Open Digital Lookbook</span>
@@ -159,6 +176,7 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         onOpenDigitalBook={() => setIsDigitalBookOpen(true)}
+        onOpen360={() => handleOpen360Viewer()}
         totalMaterialsCount={filteredMaterials.length}
       />
 
@@ -211,6 +229,7 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
                 subtitle="Browse materials by construction, texture and application."
                 materials={ALL_DISCOVERY_MATERIALS.filter((m) => m.category === 'FABRICS')}
                 onSelectMaterial={setSelectedMaterial}
+                onOpen360={handleOpen360Viewer}
                 subsections={[
                   {
                     title: 'Woven Fabrics',
@@ -242,6 +261,7 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
                   subtitle="Authentic raw indigo twill textiles and lightweight chambray weaves."
                   materials={ALL_DISCOVERY_MATERIALS.filter((m) => m.category === 'DENIM & CHAMBRAY')}
                   onSelectMaterial={setSelectedMaterial}
+                  onOpen360={handleOpen360Viewer}
                 />
               </div>
 
@@ -252,6 +272,7 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
                   subtitle="Fine embroidery needlework, pure cotton crochet, raschel lycra, ric rac and imported lace."
                   materials={ALL_DISCOVERY_MATERIALS.filter((m) => m.category === 'LACES')}
                   onSelectMaterial={setSelectedMaterial}
+                  onOpen360={handleOpen360Viewer}
                 />
               </div>
 
@@ -262,6 +283,7 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
                   subtitle="Precision zippers, apparel buttons and heat-sealed cord tipping components."
                   materials={ALL_DISCOVERY_MATERIALS.filter((m) => m.category === 'GARMENT ACCESSORIES')}
                   onSelectMaterial={setSelectedMaterial}
+                  onOpen360={handleOpen360Viewer}
                   subsections={[
                     {
                       title: 'Zippers',
@@ -289,6 +311,7 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
               subtitle="Browse materials by construction, texture and application."
               materials={filteredMaterials}
               onSelectMaterial={setSelectedMaterial}
+              onOpen360={handleOpen360Viewer}
               subsections={[
                 {
                   title: 'Woven Fabrics',
@@ -319,6 +342,7 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
               subtitle="Precision zippers, buttons and drawcord tipping components for apparel assembly."
               materials={filteredMaterials}
               onSelectMaterial={setSelectedMaterial}
+              onOpen360={handleOpen360Viewer}
               subsections={[
                 {
                   title: 'Zippers',
@@ -348,6 +372,7 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
               }
               materials={filteredMaterials}
               onSelectMaterial={setSelectedMaterial}
+              onOpen360={handleOpen360Viewer}
               showCategoryLabel={true}
             />
           )}
@@ -356,7 +381,10 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
         {/* ========================================================
             5. MATERIAL WALL: The Flowing Circular Swatch Gallery
             ======================================================== */}
-        <MaterialWall onSelectMaterial={setSelectedMaterial} />
+        <MaterialWall
+          onSelectMaterial={setSelectedMaterial}
+          onOpen360={handleOpen360Viewer}
+        />
 
         {/* ========================================================
             6. REQUEST A MATERIAL CALLOUT
@@ -377,6 +405,7 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
         material={selectedMaterial}
         onClose={() => setSelectedMaterial(null)}
         onEnquire={handleEnquireMaterial}
+        onOpen360={handleOpen360Viewer}
         onViewDeepDetails={handleDeepDetailsMaterial}
         onAddToCollection={handleAddToCollectionMaterial}
         isInCollection={isMaterialInCollection(selectedMaterial)}
@@ -396,6 +425,19 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
           setIsDigitalBookOpen(false);
           handleEnquireMaterial(mat);
         }}
+      />
+
+      {/* ========================================================
+          9. 360° FABRIC STUDIO & TURNTABLE INSPECTOR
+          ======================================================== */}
+      <FabricViewer360
+        isOpen={isViewer360Open}
+        initialMaterial={viewer360Material}
+        onClose={() => {
+          setIsViewer360Open(false);
+          setViewer360Material(null);
+        }}
+        onEnquire={handleEnquireMaterial}
       />
     </div>
   );

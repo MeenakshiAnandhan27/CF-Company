@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, X, BookOpen, Sparkles, Filter } from 'lucide-react';
+import { Search, X, BookOpen, Sparkles, Filter, RotateCw } from 'lucide-react';
 
 export type NavFilter = 'ALL' | 'FABRICS' | 'DENIM & CHAMBRAY' | 'LACES' | 'GARMENT ACCESSORIES';
 
@@ -9,6 +9,7 @@ interface CatalogueNavigationProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
   onOpenDigitalBook: () => void;
+  onOpen360?: () => void;
   totalMaterialsCount: number;
 }
 
@@ -18,6 +19,7 @@ export const CatalogueNavigation: React.FC<CatalogueNavigationProps> = ({
   searchQuery,
   onSearchChange,
   onOpenDigitalBook,
+  onOpen360,
   totalMaterialsCount,
 }) => {
   const filterTabs: { id: NavFilter; label: string }[] = [
@@ -80,11 +82,24 @@ export const CatalogueNavigation: React.FC<CatalogueNavigationProps> = ({
               )}
             </div>
 
+            {/* 360° FABRIC STUDIO (Turntable Experience) */}
+            {onOpen360 && (
+              <button
+                type="button"
+                onClick={onOpen360}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider bg-[#181715] text-[#FAF8F5] hover:bg-[#82553E] rounded-full shadow-xs transition-all shrink-0 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+              >
+                <RotateCw className="w-3.5 h-3.5 text-[#C89D6B]" />
+                <span className="hidden sm:inline">360° Studio</span>
+                <span className="sm:hidden">360°</span>
+              </button>
+            )}
+
             {/* OPEN DIGITAL CATALOGUE (Book Experience) */}
             <button
               type="button"
               onClick={onOpenDigitalBook}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider bg-[#82553E] text-white hover:bg-[#6e4632] rounded-full shadow-xs transition-all shrink-0 hover:scale-[1.02] active:scale-[0.98]"
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider bg-[#82553E] text-white hover:bg-[#6e4632] rounded-full shadow-xs transition-all shrink-0 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
             >
               <BookOpen className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Open Digital Catalogue</span>

@@ -7,6 +7,7 @@ interface MaterialGridProps {
   subtitle?: string;
   materials: DiscoveryMaterial[];
   onSelectMaterial: (material: DiscoveryMaterial) => void;
+  onOpen360?: (material: DiscoveryMaterial) => void;
   subsections?: {
     title: string;
     description?: string;
@@ -20,6 +21,7 @@ export const MaterialGrid: React.FC<MaterialGridProps> = ({
   subtitle,
   materials,
   onSelectMaterial,
+  onOpen360,
   subsections,
   showCategoryLabel = false,
 }) => {
@@ -73,12 +75,13 @@ export const MaterialGrid: React.FC<MaterialGridProps> = ({
               {/* Responsive 3D material swatch grid - 4 columns matching master textile deck */}
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-7 items-stretch">
                 {sectionMaterials.map((mat) => (
-                  <MaterialItem
-                    key={mat.id}
-                    material={mat}
-                    onClick={onSelectMaterial}
-                    showCategoryLabel={showCategoryLabel}
-                  />
+                   <MaterialItem
+                     key={mat.id}
+                     material={mat}
+                     onClick={onSelectMaterial}
+                     onOpen360={onOpen360}
+                     showCategoryLabel={showCategoryLabel}
+                   />
                 ))}
               </div>
             </div>
@@ -111,6 +114,7 @@ export const MaterialGrid: React.FC<MaterialGridProps> = ({
             key={mat.id}
             material={mat}
             onClick={onSelectMaterial}
+            onOpen360={onOpen360}
             showCategoryLabel={showCategoryLabel}
           />
         ))}

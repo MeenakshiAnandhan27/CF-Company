@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { DiscoveryMaterial } from '../../data/catalogueDiscoveryData.ts';
-import { Eye, ArrowUpRight, Sparkles } from 'lucide-react';
+import { Eye, ArrowUpRight, Sparkles, RotateCw } from 'lucide-react';
 
 interface MaterialItemProps {
   material: DiscoveryMaterial;
   onClick: (material: DiscoveryMaterial) => void;
+  onOpen360?: (material: DiscoveryMaterial) => void;
   size?: 'normal' | 'large' | 'compact';
   showCategoryLabel?: boolean;
 }
@@ -12,6 +13,7 @@ interface MaterialItemProps {
 export const MaterialItem: React.FC<MaterialItemProps> = ({
   material,
   onClick,
+  onOpen360,
   showCategoryLabel = true,
 }) => {
   const [imageError, setImageError] = useState(false);
@@ -81,6 +83,24 @@ export const MaterialItem: React.FC<MaterialItemProps> = ({
             className="absolute bottom-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-[#82553E]/40 to-transparent"
           />
 
+          {/* Quick 360° Turntable Launcher Button */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (onOpen360) {
+                onOpen360(material);
+              } else {
+                onClick(material);
+              }
+            }}
+            title={`Spin ${material.name} in 360° studio turntable`}
+            className="absolute top-2 left-2 z-20 inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#181715]/90 hover:bg-[#82553E] text-white text-[10px] font-mono tracking-wider backdrop-blur-xs border border-white/20 shadow-xs transition-all hover:scale-105 cursor-pointer"
+          >
+            <RotateCw className="w-2.5 h-2.5 text-[#C89D6B]" />
+            <span>360°</span>
+          </button>
+
           {/* Micro hover indicator: 3D "VIEW SWATCH" badge */}
           <div
             aria-hidden="true"
@@ -89,8 +109,8 @@ export const MaterialItem: React.FC<MaterialItemProps> = ({
             }`}
           >
             <span className="text-[10px] tracking-[0.2em] font-semibold uppercase text-white flex items-center gap-1.5 bg-[#181715]/90 px-3 py-1.5 rounded-full border border-white/20 shadow-sm">
-              <Eye className="w-3 h-3 text-[#C89D6B]" />
-              <span>3D INSPECT</span>
+              <RotateCw className="w-3 h-3 text-[#C89D6B]" />
+              <span>360° TURNTABLE</span>
             </span>
           </div>
 

@@ -10,12 +10,14 @@ import {
   Info,
   Layers,
   ShieldCheck,
+  RotateCw,
 } from 'lucide-react';
 
 interface MaterialDetailProps {
   material: DiscoveryMaterial | null;
   onClose: () => void;
   onEnquire: (material: DiscoveryMaterial) => void;
+  onOpen360?: (material: DiscoveryMaterial) => void;
   onViewDeepDetails?: (material: DiscoveryMaterial) => void;
   onAddToCollection?: (material: DiscoveryMaterial) => void;
   isInCollection?: boolean;
@@ -25,6 +27,7 @@ export const MaterialDetail: React.FC<MaterialDetailProps> = ({
   material,
   onClose,
   onEnquire,
+  onOpen360,
   onViewDeepDetails,
   onAddToCollection,
   isInCollection = false,
@@ -111,6 +114,18 @@ export const MaterialDetail: React.FC<MaterialDetailProps> = ({
                 <span className="w-1.5 h-1.5 rounded-full bg-[#82553E]" />
                 Actual Raw Material Visual
               </span>
+
+              {/* 360° Interactive Turntable View Trigger */}
+              {onOpen360 && (
+                <button
+                  type="button"
+                  onClick={() => onOpen360(material)}
+                  className="mt-3 inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold uppercase tracking-wider bg-[#181715] hover:bg-[#82553E] text-white rounded-full border border-[#DDD5C7]/30 shadow-xs transition-all hover:scale-105 cursor-pointer"
+                >
+                  <RotateCw className="w-3.5 h-3.5 text-[#C89D6B]" />
+                  <span>Interactive 360° Turntable</span>
+                </button>
+              )}
             </div>
 
             {/* Material Heading & 1-line description */}

@@ -15,6 +15,67 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Marcellus&family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
   </head>
   <body class="bg-[#FBFBFA] text-[#191919] font-sans antialiased selection:bg-[#E8DFD8] selection:text-[#191919]">
+    <script>
+      // Auto-detect if user opened index.html directly from local disk (file:/// protocol)
+      if (window.location.protocol === 'file:') {
+        // If Vite local server is already running, immediately redirect to localhost:3000
+        fetch('http://localhost:3000/', { mode: 'no-cors' })
+          .then(function() {
+            window.location.href = 'http://localhost:3000/';
+          })
+          .catch(function() {
+            // If local server is not running, show friendly launch instructions instead of a blank screen
+            window.addEventListener('DOMContentLoaded', function() {
+              var root = document.getElementById('root');
+              if (root && (!root.innerHTML || root.innerHTML.trim() === '')) {
+                root.innerHTML = `
+                  <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #181715; color: #fff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 24px;">
+                    <div style="max-width: 580px; width: 100%; background: #23221F; border: 1px solid #383530; border-radius: 14px; padding: 32px; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
+                      <div style="display: inline-block; padding: 4px 10px; background: #82553E; color: white; border-radius: 4px; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 16px;">
+                        CLASSIC FASHIONS
+                      </div>
+                      <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 12px; color: #fff;">
+                        Website-ஐ run செய்ய எளிய வழி (How to run)
+                      </h2>
+                      <p style="font-size: 14px; line-height: 1.6; color: #C4B7AA; margin-bottom: 20px;">
+                        இது ஒரு <strong>React + Vite</strong> project. அதனால் <code style="background: #2D2B27; padding: 2px 6px; border-radius: 4px; color: #E8DFD8;">index.html</code>-ஐ Browser-ல் நேரடியாக திறந்தால் White Screen வரும். Website-ஐ சரியாக பார்க்க:
+                      </p>
+                      
+                      <div style="background: #181715; border: 1px solid #383530; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+                        <p style="font-size: 13px; font-weight: 700; color: #4ADE80; margin-bottom: 6px;">
+                          முறை 1: Single Click Launcher (மிகவும் சுலபம்)
+                        </p>
+                        <p style="font-size: 13px; color: #D1CBC5; margin: 0; line-height: 1.5;">
+                          ப்ராஜெக்ட் ஃபோல்டரில் உள்ள <strong style="color: #fff; background: #2D2B27; padding: 2px 6px; border-radius: 4px;">run-website.bat</strong> ஃபைலை double-click செய்யுங்கள். அதுவே தானாக சர்வரை ஆன் செய்து பிரவுசரில் Website-ஐ காட்டும்!
+                        </p>
+                      </div>
+
+                      <div style="background: #181715; border: 1px solid #383530; border-radius: 8px; padding: 16px; margin-bottom: 22px;">
+                        <p style="font-size: 13px; font-weight: 700; color: #E8DFD8; margin-bottom: 6px;">
+                          முறை 2: Terminal வழியாக:
+                        </p>
+                        <p style="font-size: 12px; color: #B3ACA3; margin-bottom: 8px;">
+                          VS Code Terminal அல்லது CMD-ல் இந்த command-ஐ டைப் செய்யுங்கள்:
+                        </p>
+                        <code style="display: block; background: #000; color: #4ADE80; padding: 10px 12px; border-radius: 6px; font-family: monospace; font-size: 14px;">
+                          npm run dev
+                        </code>
+                        <p style="font-size: 12px; color: #8F877C; margin-top: 8px; margin-bottom: 0;">
+                          பிறகு browser-ல் <strong>http://localhost:3000</strong> திறக்கவும்.
+                        </p>
+                      </div>
+
+                      <a href="http://localhost:3000" style="display: block; text-align: center; background: #82553E; color: white; text-decoration: none; padding: 12px 20px; border-radius: 6px; font-weight: 600; font-size: 14px;">
+                        Go to http://localhost:3000 &rarr;
+                      </a>
+                    </div>
+                  </div>
+                `;
+              }
+            });
+          });
+      }
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

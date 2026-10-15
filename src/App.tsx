@@ -15,7 +15,7 @@ import { ProductDetailModal } from './components/ProductDetailModal.tsx';
 import { EnquiryModal } from './components/EnquiryModal.tsx';
 import { Product, ProductCategory, CollectionItem, NavigationTab, MaterialRequestCategory } from './types.ts';
 import { products } from './data/products.ts';
-import { ArrowRight, ShoppingBag } from 'lucide-react';
+import { ArrowRight, ShoppingBag, Sparkles, PhoneCall } from 'lucide-react';
 
 const COLLECTION_STORAGE_KEY = 'cf_dealer_collection_v1';
 
@@ -197,7 +197,7 @@ export default function App() {
             {/* Brand Intro Section */}
             <BrandIntroSection
               onScrollToDiscover={() => {
-                const el = document.getElementById('materials-hero');
+                const el = document.getElementById('materials-strip') || document.getElementById('materials-hero');
                 if (el) {
                   el.scrollIntoView({ behavior: 'smooth' });
                 }
@@ -226,36 +226,60 @@ export default function App() {
               onReachUs={() => handleNavigate('reach-us')}
             />
 
-            {/* Bottom Direct Sourcing CTA */}
-            <section className="py-16 bg-[#181715] text-white">
-              <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
-                <span className="text-xs font-mono uppercase tracking-widest text-[#C4B7AA]">
-                  Requirement-Based Sourcing &amp; Supply
-                </span>
-                <h3 className="font-serif text-3xl sm:text-4xl font-bold tracking-tight">
+            {/* Bottom Direct Sourcing CTA — Unified Luxury obsidian tone with Header-identical Glowing Gold Catalogue Button */}
+            <section className="relative py-20 md:py-24 bg-gradient-to-b from-[#1A1816] via-[#151412] to-[#100F0E] text-white border-t border-[#2C2924] overflow-hidden">
+              {/* Subtle luxury radial gold ambient glow */}
+              <div 
+                className="absolute inset-0 pointer-events-none opacity-25"
+                style={{
+                  background: 'radial-gradient(ellipse 65% 50% at 50% 0%, rgba(212,175,55,0.2), transparent 70%)'
+                }}
+              />
+
+              <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+                <h3 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#FAF8F5]">
                   Connect Directly With Our Supply Desk
                 </h3>
-                <p className="text-sm sm:text-base text-[#B3ACA3] max-w-2xl mx-auto leading-relaxed">
-                  From everyday garment accessories to specific fabric requirements, we source and supply materials to match your needs with prompt response and dependable delivery.
+
+                <p className="text-sm sm:text-base text-[#BDB5AB] max-w-2xl mx-auto leading-relaxed">
+                  From everyday garment accessories to specific fabric requirements, we manufacture and supply materials to match your needs with prompt response and dependable delivery.
                 </p>
-                <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
+
+                <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+                  {/* Primary: EXPLORE CATALOGUE — Glowing Gold Catalogue Button */}
                   <button
                     onClick={() => handleNavigate('catalogue')}
-                    className="w-full sm:w-auto px-8 py-3.5 text-xs font-semibold uppercase tracking-wider bg-white text-[#181715] hover:bg-[#EAE6DF] rounded transition-colors"
+                    className="group relative inline-flex items-center justify-center gap-3 pl-6 pr-2 py-2 text-xs font-semibold uppercase tracking-[0.16em] rounded-full transition-all duration-300 text-[#FFF8EC] bg-gradient-to-r from-[#181715] via-[#2A2620] to-[#181715] hover:from-[#24211D] hover:to-[#111110] border border-[#D4AF37] hover:border-[#F2D785] shadow-[0_4px_16px_rgba(212,175,55,0.25)] hover:shadow-[0_6px_28px_rgba(212,175,55,0.45)] active:scale-[0.98] cursor-pointer whitespace-nowrap min-h-[44px]"
                   >
-                    Explore Catalogue
+                    <span className="font-mono text-[11px] tracking-[0.18em] font-bold">Explore Catalogue</span>
+                    <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-[#D4AF37] via-[#F2D785] to-[#B38728] text-[#181715] font-bold flex items-center justify-center transition-all duration-300 shadow-sm group-hover:scale-105 group-hover:translate-x-0.5">
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </div>
                   </button>
+
+                  {/* Secondary: REQUEST A MATERIAL — Unique Terracotta Bronze & Gold Pod Button */}
                   <button
                     onClick={() => handleRequestMaterial()}
-                    className="w-full sm:w-auto px-8 py-3.5 text-xs font-semibold uppercase tracking-wider bg-[#82553E] text-white hover:bg-[#6e4632] rounded transition-colors"
+                    className="group relative inline-flex items-center justify-center gap-3 pl-6 pr-2 py-2 text-xs font-semibold uppercase tracking-[0.16em] rounded-full transition-all duration-300 text-white bg-gradient-to-r from-[#82553E] via-[#966045] to-[#73432C] hover:from-[#966045] hover:to-[#5E3825] border border-[#E2B774] hover:border-[#F5D89F] shadow-[0_4px_18px_rgba(130,85,62,0.35)] hover:shadow-[0_6px_28px_rgba(130,85,62,0.55)] active:scale-[0.98] cursor-pointer whitespace-nowrap min-h-[44px]"
                   >
-                    Request a Material
+                    <span className="font-mono text-[11px] tracking-[0.18em] font-bold">Request a Material</span>
+                    <div className="w-7 h-7 rounded-full bg-white/20 border border-white/30 text-white font-bold flex items-center justify-center transition-all duration-300 shadow-sm group-hover:scale-105 group-hover:bg-white group-hover:text-[#82553E]">
+                      <Sparkles className="w-3.5 h-3.5" />
+                    </div>
                   </button>
+
+                  {/* Tertiary: REACH US DIRECTLY — Unique Frosted Obsidian with Active Pulse & Phone Pod */}
                   <button
                     onClick={() => handleNavigate('reach-us')}
-                    className="w-full sm:w-auto px-8 py-3.5 text-xs font-semibold uppercase tracking-wider bg-transparent border border-[#59554F] text-white hover:bg-[#2B2824] rounded transition-colors"
+                    className="group relative inline-flex items-center justify-center gap-3 pl-5 pr-2 py-2 text-xs font-semibold uppercase tracking-[0.16em] rounded-full transition-all duration-300 text-[#E8E2D8] bg-[#23201C]/80 hover:bg-[#2C2823] border border-[#524B42] hover:border-[#D4AF37]/70 shadow-[0_4px_16px_rgba(0,0,0,0.35)] hover:shadow-[0_6px_24px_rgba(212,175,55,0.2)] active:scale-[0.98] cursor-pointer whitespace-nowrap min-h-[44px]"
                   >
-                    Reach Us Directly
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-[#48CAE4] animate-pulse" />
+                      <span className="font-mono text-[11px] tracking-[0.18em] font-bold">Reach Us Directly</span>
+                    </div>
+                    <div className="w-7 h-7 rounded-full bg-white/10 border border-white/15 text-[#E8E2D8] font-bold flex items-center justify-center transition-all duration-300 shadow-sm group-hover:scale-105 group-hover:bg-[#D4AF37] group-hover:text-[#181715]">
+                      <PhoneCall className="w-3.5 h-3.5" />
+                    </div>
                   </button>
                 </div>
               </div>

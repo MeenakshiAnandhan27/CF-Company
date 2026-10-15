@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { ProductCategory } from '../types.ts';
 import { RAW_MATERIAL_IMAGES } from '../data/materialImages.ts';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface ShowcaseCategoryItem {
   id: string;
@@ -189,42 +189,62 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({
     onSelectCategory(cat.categoryKey);
   };
 
+  const scrollShelf = (direction: 'left' | 'right') => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = direction === 'left' ? -360 : 360;
+      scrollContainerRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
+
   return (
-    <section className="py-16 md:py-24 bg-[#FBFBFA] border-b border-[#E8E4DC] select-none">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-8 sm:py-10 md:py-12 bg-[#FBFBFA] border-b border-[#E8E4DC] select-none scroll-mt-20">
+      <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8">
         
         {/* ======================================================== */}
-        {/* SECTION HEADER — PRECISE B2B POSITIONING */}
+        {/* SECTION HEADER — REFINED COMPACT EDITORIAL */}
         {/* ======================================================== */}
-        <div className="mb-10 pb-6 border-b border-[#E8E4DC]">
-          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-[#181715] tracking-tight">
-            MATERIALS FOR EVERY CREATION
-          </h2>
-          <p className="text-sm sm:text-base text-[#585550] max-w-2xl font-normal leading-relaxed pt-2">
-            Explore fabrics, laces and garment accessories sourced and supplied for your requirements.
-          </p>
+        <div className="mb-6 sm:mb-8 pb-4 border-b border-[#E8E4DC] flex flex-col md:flex-row md:items-end justify-between gap-3">
+          <div>
+            <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-[#181715] tracking-tight">
+              MATERIALS FOR EVERY CREATION
+            </h2>
+            <p className="text-xs sm:text-sm md:text-base text-[#585550] max-w-2xl font-normal leading-relaxed pt-1">
+              Explore fabrics, laces, and garment accessories — sourced and manufactured to match your exact requirements.
+            </p>
+          </div>
+          {/* Shelf Scroll Navigation Buttons */}
+          <div className="hidden sm:flex items-center gap-2 shrink-0">
+            <button
+              onClick={() => scrollShelf('left')}
+              className="w-9 h-9 rounded-full border border-[#D5D0C6] hover:border-[#181715] bg-white hover:bg-[#181715] text-[#181715] hover:text-white flex items-center justify-center transition-all duration-300 shadow-xs hover:shadow-md cursor-pointer disabled:opacity-30 disabled:pointer-events-none"
+              disabled={!canScrollLeft}
+              aria-label="Scroll materials left"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => scrollShelf('right')}
+              className="w-9 h-9 rounded-full border border-[#D5D0C6] hover:border-[#181715] bg-white hover:bg-[#181715] text-[#181715] hover:text-white flex items-center justify-center transition-all duration-300 shadow-xs hover:shadow-md cursor-pointer disabled:opacity-30 disabled:pointer-events-none"
+              disabled={!canScrollRight}
+              aria-label="Scroll materials right"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
         </div>
 
         {/* ======================================================== */}
         {/* HORIZONTAL MATERIAL SHOWCASE SHELF */}
-        {/* Circular / softly rounded raw material visuals */}
+        {/* No white gradient shades — 100% clear edge-to-edge view */}
         {/* ======================================================== */}
-        <div className="relative">
-          {/* Subtle gradient indicators for overflow scroll */}
-          {canScrollLeft && (
-            <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-16 bg-gradient-to-r from-[#FBFBFA] to-transparent z-10 pointer-events-none hidden sm:block" />
-          )}
-          {canScrollRight && (
-            <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-16 bg-gradient-to-l from-[#FBFBFA] to-transparent z-10 pointer-events-none hidden sm:block" />
-          )}
-
+        <div className="relative w-full">
           <div
             ref={scrollContainerRef}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseUp}
-            className={`flex items-start gap-6 sm:gap-8 md:gap-10 overflow-x-auto pb-6 pt-2 px-1 scroll-smooth scrollbar-none no-scrollbar ${
+            className={`flex items-start gap-4 sm:gap-6 md:gap-7 lg:gap-8 overflow-x-auto pb-4 pt-1 px-1 scroll-smooth scrollbar-none no-scrollbar ${
               isMouseDown ? 'cursor-grabbing' : 'cursor-grab'
             }`}
             style={{ WebkitOverflowScrolling: 'touch' }}
@@ -241,13 +261,10 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({
                 }}
                 role="button"
                 tabIndex={0}
-                className="group flex flex-col items-center text-center flex-shrink-0 w-36 sm:w-44 md:w-48 cursor-pointer focus:outline-none"
-                title={`Open raw ${item.name} in Digital Catalogue`}
+                className="group flex flex-col items-center text-center flex-shrink-0 w-32 sm:w-36 md:w-40 lg:w-44 cursor-pointer focus:outline-none"
               >
-                {/* ================================================== */}
-                {/* 1. LARGE CIRCULAR RAW MATERIAL CONTAINER */}
-                {/* ================================================== */}
-                <div className="relative w-32 h-32 sm:w-40 sm:h-40 md:w-44 md:h-44 rounded-full p-1 bg-white border border-[#E0D9CE] group-hover:border-[#82553E] shadow-[0_4px_16px_rgba(0,0,0,0.04)] group-hover:shadow-[0_12px_28px_rgba(130,85,62,0.18)] group-hover:ring-4 group-hover:ring-[#82553E]/15 transition-all duration-500 ease-out mb-4">
+                {/* 1. REFINED CIRCULAR RAW MATERIAL CONTAINER (Compact & Balanced) */}
+                <div className="relative w-28 h-28 sm:w-32 sm:h-32 md:w-36 md:h-36 lg:w-40 lg:h-40 rounded-full p-1 bg-white border border-[#E0D9CE] group-hover:border-[#82553E] shadow-[0_4px_16px_rgba(0,0,0,0.04)] group-hover:shadow-[0_12px_28px_rgba(130,85,62,0.18)] group-hover:ring-4 group-hover:ring-[#82553E]/15 transition-all duration-500 ease-out mb-3">
                   <div className="w-full h-full rounded-full overflow-hidden bg-[#ECE8E1] relative">
                     <img
                       src={item.image}
@@ -266,23 +283,17 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({
                   </div>
                 </div>
 
-                {/* ================================================== */}
                 {/* 2. CATEGORY NAME UNDERNEATH */}
-                {/* ================================================== */}
-                <h3 className="font-serif font-bold text-sm sm:text-base text-[#181715] tracking-tight group-hover:text-[#82553E] transition-colors leading-snug">
+                <h3 className="font-serif font-bold text-xs sm:text-sm md:text-base text-[#181715] tracking-tight group-hover:text-[#82553E] transition-colors leading-snug">
                   {item.name}
                 </h3>
 
-                {/* ================================================== */}
                 {/* 3. VERY SHORT DESCRIPTOR */}
-                {/* ================================================== */}
-                <p className="text-[11px] sm:text-xs text-[#736F68] mt-0.5 line-clamp-1 max-w-[160px]">
+                <p className="text-[10px] sm:text-xs text-[#736F68] mt-0.5 line-clamp-1 max-w-[150px]">
                   {item.shortDescriptor}
                 </p>
 
-                {/* ================================================== */}
-                {/* 4. HOVER INTERACTIVE CUE ("VIEW →") */}
-                {/* ================================================== */}
+                {/* 4. HOVER INTERACTIVE CUE ("VIEW SPEC →") */}
                 <div className="mt-1.5 flex items-center gap-1 font-mono text-[10px] sm:text-[11px] font-semibold text-[#82553E] opacity-0 group-hover:opacity-100 transform translate-y-1 group-hover:translate-y-0 transition-all duration-300">
                   <span>VIEW SPEC</span>
                   <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />

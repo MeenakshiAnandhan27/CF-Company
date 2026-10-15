@@ -21,7 +21,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   };
 
   return (
-    <footer className="bg-[#181715] text-[#E5E0D8] border-t border-[#2B2824]">
+    <footer className="bg-[#100F0E] text-[#E5E0D8] border-t border-[#24211D]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10">
           

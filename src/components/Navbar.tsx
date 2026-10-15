@@ -43,25 +43,25 @@ export const Navbar: React.FC<NavbarProps> = ({
           : 'bg-white border-b border-[#E8E6E0]'
       }`}
     >
-      {/* Main Top Bar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-        {/* Zone 1: Wordmark / Logo */}
+      {/* Main Top Bar - Full Width Edge-to-Edge with Balanced Alignment */}
+      <div className="w-full px-4 sm:px-8 md:px-10 lg:px-12 xl:px-14 h-20 flex items-center justify-between">
+        {/* Zone 1: Wordmark / Logo - Left Edge Aligned (No Subtitle) */}
         <button
           onClick={() => handleNavClick('home')}
-          className="flex items-center gap-3 text-left group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] rounded-md shrink-0 cursor-pointer"
+          className="flex items-center gap-3 text-left group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] rounded-lg shrink-0 cursor-pointer"
         >
-          <div className="w-11 h-11 rounded-lg flex items-center justify-center p-2 transition-all duration-300 group-hover:scale-105 shrink-0 bg-[#181715] border border-[#302D29] group-hover:border-[#82553E]/60 shadow-xs">
+          <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-lg flex items-center justify-center p-2 transition-all duration-300 group-hover:scale-105 shrink-0 bg-[#181715] border border-[#D4AF37]/50 group-hover:border-[#D4AF37] shadow-[0_2px_10px_rgba(212,175,55,0.18)]">
             <BrandLogo variant="white" size="sm" className="w-full h-auto" />
           </div>
           <div className="flex items-center">
-            <span className="font-display text-lg sm:text-xl font-bold tracking-[0.10em] block leading-none whitespace-nowrap text-[#181715] group-hover:text-[#82553E] transition-colors">
+            <span className="font-display text-lg sm:text-xl font-bold tracking-[0.12em] block leading-none whitespace-nowrap text-[#181715] group-hover:text-[#8C6534] transition-colors uppercase">
               {businessConfig.businessName}
             </span>
           </div>
         </button>
 
-        {/* Zone 2: Navigation Links */}
-        <nav className="hidden md:flex items-center gap-4 lg:gap-6 xl:gap-7 text-xs font-semibold uppercase tracking-wider text-[#585550]">
+        {/* Zone 2: Navigation Links - Spaced & Balanced */}
+        <nav className="hidden md:flex items-center gap-6 lg:gap-8 xl:gap-10 text-xs font-semibold uppercase tracking-wider text-[#585550]">
           <button
             onClick={() => handleNavClick('home')}
             className={`whitespace-nowrap transition-colors relative py-2 ${
@@ -114,43 +114,44 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
         </nav>
 
-        {/* Zone 3: Primary Actions (Collection Utility + Quick CTA) */}
-        <div className="hidden sm:flex items-center gap-2.5 shrink-0">
-          {/* Collection Shortcut */}
+        {/* Zone 3: Primary Actions - Right Edge Aligned Unique Magnetic Buttons */}
+        <div className="hidden sm:flex items-center gap-3.5 shrink-0">
+          {/* Unique Collection Capsule */}
           <button
             onClick={() => handleNavClick('collection')}
-            className={`whitespace-nowrap inline-flex items-center gap-2 px-3 py-2 text-xs font-semibold uppercase tracking-wider rounded border transition-all ${
+            className={`group relative inline-flex items-center gap-2 pl-4 pr-2.5 py-2 text-xs font-semibold uppercase tracking-wider rounded-full border transition-all duration-300 cursor-pointer shadow-xs active:scale-[0.98] ${
               currentTab === 'collection'
-                ? 'bg-[#181715] text-white border-[#181715]'
-                : collectionCount > 0
-                ? 'bg-[#EFE9E2] text-[#633F2E] border-[#D9C8B9] hover:bg-[#E7DDCE]'
-                : 'bg-white text-[#585550] border-[#D5D0C6] hover:bg-[#F5F4F0]'
+                ? 'bg-[#181715] text-white border-[#181715] shadow-md'
+                : 'bg-gradient-to-b from-[#FFFFFF] to-[#FAF8F5] hover:bg-white text-[#181715] border-[#D5D0C6] hover:border-[#D4AF37] hover:shadow-[0_4px_16px_rgba(212,175,55,0.18)]'
             }`}
             title="View selected wholesale materials"
           >
-            <ShoppingBag className={`w-3.5 h-3.5 shrink-0 ${
-              currentTab === 'collection' ? 'text-white' : 'text-[#82553E]'
+            <ShoppingBag className={`w-3.5 h-3.5 transition-transform duration-300 group-hover:scale-110 ${
+              currentTab === 'collection' ? 'text-[#D4AF37]' : 'text-[#8C6534]'
             }`} />
-            <span>Collection</span>
+            <span className="font-mono text-[11px] tracking-[0.14em] font-bold">Collection</span>
             <span
-              className={`font-mono text-[11px] px-1.5 py-0.5 rounded leading-none ${
+              className={`font-mono text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-extrabold transition-colors ${
                 currentTab === 'collection'
-                  ? 'bg-white text-[#181715] font-bold'
+                  ? 'bg-[#D4AF37] text-[#181715]'
                   : collectionCount > 0
-                  ? 'bg-[#181715] text-white font-bold'
-                  : 'bg-[#E8E4DC] text-[#403D38]'
+                  ? 'bg-[#181715] text-[#D4AF37] border border-[#D4AF37]/50 shadow-xs'
+                  : 'bg-[#ECE7DC] text-[#736F68]'
               }`}
             >
               {collectionCount}
             </span>
           </button>
 
+          {/* Unique Attractive Catalogue Action Button (Right Edge) */}
           <button
             onClick={() => handleNavClick('catalogue')}
-            className="whitespace-nowrap inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold uppercase tracking-wider rounded transition-all duration-200 shadow-sm active:scale-[0.98] text-[#FFFFFF] bg-[#181715] hover:bg-[#302D29]"
+            className="group relative inline-flex items-center gap-3 pl-5 pr-1.5 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] rounded-full transition-all duration-300 text-[#FFF8EC] bg-gradient-to-r from-[#181715] via-[#2A2620] to-[#181715] hover:from-[#24211D] hover:to-[#111110] border border-[#D4AF37] hover:border-[#F2D785] shadow-[0_4px_16px_rgba(212,175,55,0.25)] hover:shadow-[0_6px_28px_rgba(212,175,55,0.45)] active:scale-[0.98] cursor-pointer"
           >
-            <span>Catalogue</span>
-            <ArrowRight className="w-3.5 h-3.5 shrink-0" />
+            <span className="font-mono text-[11px] tracking-[0.18em] font-bold">Catalogue</span>
+            <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-[#D4AF37] via-[#F2D785] to-[#B38728] text-[#181715] font-bold flex items-center justify-center transition-all duration-300 shadow-sm group-hover:scale-105 group-hover:translate-x-0.5">
+              <ArrowRight className="w-3.5 h-3.5" />
+            </div>
           </button>
         </div>
 

@@ -737,9 +737,12 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
             )}
             <button
               onClick={() => onExploreCatalogue()}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 text-xs font-semibold uppercase tracking-wider text-white border border-[#48443E] hover:bg-[#282622] rounded-full transition-colors active:scale-[0.98] cursor-pointer"
+              className="group relative inline-flex items-center justify-center gap-3 pl-6 pr-2 py-2 text-xs font-semibold uppercase tracking-[0.16em] rounded-full transition-all duration-300 text-[#FFF8EC] bg-gradient-to-r from-[#181715] via-[#2A2620] to-[#181715] hover:from-[#24211D] hover:to-[#111110] border border-[#D4AF37] hover:border-[#F2D785] shadow-[0_4px_16px_rgba(212,175,55,0.25)] hover:shadow-[0_6px_28px_rgba(212,175,55,0.45)] active:scale-[0.98] cursor-pointer whitespace-nowrap"
             >
-              <span>EXPLORE CATALOGUE</span>
+              <span className="font-mono text-[11px] tracking-[0.18em] font-bold">Explore Catalogue</span>
+              <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-[#D4AF37] via-[#F2D785] to-[#B38728] text-[#181715] font-bold flex items-center justify-center transition-all duration-300 shadow-sm group-hover:scale-105 group-hover:translate-x-0.5">
+                <ArrowRight className="w-3.5 h-3.5" />
+              </div>
             </button>
           </div>
         </div>

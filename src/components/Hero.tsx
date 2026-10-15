@@ -60,13 +60,21 @@ export const Hero: React.FC<HeroProps> = ({
       id="materials-hero"
       className="relative overflow-hidden bg-[#FAF9F6] border-b border-[#E8E6E0] min-h-[calc(100vh-8rem)] flex flex-col justify-center py-6 sm:py-8 lg:py-10 scroll-mt-20"
     >
-      {/* Background Ambience: Unified consistent warm luxury canvas matching the site */}
+      {/* Background Ambience: Warm luxury canvas with micro-dot texture */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 pointer-events-none opacity-40"
+        style={{
+          backgroundImage: 'radial-gradient(rgba(212, 175, 55, 0.2) 1px, transparent 1px)',
+          backgroundSize: '28px 28px',
+        }}
+      />
       <div
         aria-hidden="true"
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            'radial-gradient(ellipse 70% 60% at 50% 40%, rgba(248, 246, 240, 0.7) 0%, rgba(255, 255, 255, 1) 100%)',
+            'radial-gradient(ellipse 70% 60% at 50% 40%, rgba(248, 246, 240, 0.7) 0%, rgba(250, 247, 242, 1) 100%)',
         }}
       />
 
@@ -79,6 +87,15 @@ export const Hero: React.FC<HeroProps> = ({
               <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#181715] leading-[1.12] text-balance">
                 Materials for Every Requirement
               </h1>
+
+              {/* Elegant Gold Diamond Motif Divider */}
+              <div className="relative flex items-center justify-start w-full max-w-sm pt-0.5">
+                <div className="h-[1px] w-24 bg-gradient-to-r from-[#D4AF37] to-[#D4AF37]/50" />
+                <div className="relative mx-2.5 flex items-center justify-center">
+                  <div className="w-2 h-2 bg-gradient-to-tr from-[#D4AF37] via-[#F2D785] to-[#B38728] rotate-45 shadow-[0_0_8px_rgba(212,175,55,0.75)]" />
+                </div>
+                <div className="h-[1px] flex-1 bg-gradient-to-r from-[#D4AF37]/50 to-transparent" />
+              </div>
 
               {/* Concise Supporting Text with Professional Grammar & Title Capitalization */}
               <p className="text-base sm:text-lg text-[#55514B] leading-relaxed max-w-2xl text-pretty font-medium">

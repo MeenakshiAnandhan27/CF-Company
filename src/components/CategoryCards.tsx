@@ -197,17 +197,35 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({
   };
 
   return (
-    <section className="py-8 sm:py-10 md:py-12 bg-[#FBFBFA] border-b border-[#E8E4DC] select-none scroll-mt-20">
-      <div className="w-full px-3 sm:px-4 md:px-6 lg:px-8">
+    <section className="relative py-8 sm:py-10 md:py-12 bg-[#FAF7F2] border-b border-[#E6E0D2] select-none scroll-mt-20 overflow-hidden">
+      {/* Subtle Warm Micro-Dot Atmosphere */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 pointer-events-none opacity-35"
+        style={{
+          backgroundImage: 'radial-gradient(rgba(212, 175, 55, 0.2) 1px, transparent 1px)',
+          backgroundSize: '28px 28px',
+        }}
+      />
+
+      <div className="relative w-full px-3 sm:px-4 md:px-6 lg:px-8">
         
         {/* ======================================================== */}
         {/* SECTION HEADER — REFINED COMPACT EDITORIAL */}
         {/* ======================================================== */}
-        <div className="mb-6 sm:mb-8 pb-4 border-b border-[#E8E4DC] flex flex-col md:flex-row md:items-end justify-between gap-3">
+        <div className="mb-6 sm:mb-8 pb-4 border-b border-[#E6E0D2] flex flex-col md:flex-row md:items-end justify-between gap-3">
           <div>
             <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-[#181715] tracking-tight">
               MATERIALS FOR EVERY CREATION
             </h2>
+            {/* Elegant Golden Motif Line */}
+            <div className="relative flex items-center justify-start my-2.5 w-full max-w-sm">
+              <div className="h-[1px] w-24 bg-gradient-to-r from-[#D4AF37] to-[#D4AF37]/50" />
+              <div className="relative mx-2 flex items-center justify-center">
+                <div className="w-1.5 h-1.5 bg-gradient-to-tr from-[#D4AF37] via-[#F2D785] to-[#B38728] rotate-45 shadow-[0_0_8px_rgba(212,175,55,0.75)]" />
+              </div>
+              <div className="h-[1px] flex-1 bg-gradient-to-r from-[#D4AF37]/50 to-transparent" />
+            </div>
             <p className="text-xs sm:text-sm md:text-base text-[#585550] max-w-2xl font-normal leading-relaxed pt-1">
               Explore fabrics, laces, and garment accessories — sourced and manufactured to match your exact requirements.
             </p>

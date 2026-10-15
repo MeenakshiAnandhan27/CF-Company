@@ -18,14 +18,41 @@ export const HomeIntro: React.FC<HomeIntroProps> = ({
       {/* ========================================================================= */}
       {/* 1. SUPPLIER & MANUFACTURING — CLEAN B2B WORKFLOW & ACTION CONTROLS       */}
       {/* ========================================================================= */}
-      <section className="py-16 md:py-20 border-b border-[#E8E4DC] bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative py-16 md:py-24 border-b border-[#E6E0D2] bg-[#FAF7F2] overflow-hidden">
+        {/* Subtle Luxury Golden Micro-Dot Atmosphere Pattern */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 pointer-events-none opacity-45"
+          style={{
+            backgroundImage: 'radial-gradient(rgba(212, 175, 55, 0.22) 1px, transparent 1px)',
+            backgroundSize: '28px 28px',
+          }}
+        />
+        {/* Soft Warm Golden Ambient Light */}
+        <div 
+          aria-hidden="true"
+          className="absolute inset-0 pointer-events-none opacity-30"
+          style={{
+            background: 'radial-gradient(ellipse 65% 50% at 50% 15%, rgba(212,175,55,0.14), transparent 70%)'
+          }}
+        />
+
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Header */}
-          <div className="text-center max-w-3xl mx-auto space-y-4 mb-14">
+          <div className="text-center max-w-3xl mx-auto mb-14">
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-[#181715] tracking-tight">
               Supplier &amp; Manufacturing
             </h2>
+
+            {/* Luxury Gold Diamond Motif Divider */}
+            <div className="relative flex items-center justify-center my-6 w-full max-w-md mx-auto">
+              <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-[#D4AF37]/50 to-[#D4AF37]" />
+              <div className="relative mx-3.5 flex items-center justify-center">
+                <div className="w-2.5 h-2.5 bg-gradient-to-tr from-[#D4AF37] via-[#F2D785] to-[#B38728] rotate-45 shadow-[0_0_12px_rgba(212,175,55,0.75)] ring-2 ring-[#FAF7F2]" />
+              </div>
+              <div className="h-[1px] w-full bg-gradient-to-r from-[#D4AF37] via-[#D4AF37]/50 to-transparent" />
+            </div>
 
             <p className="text-base sm:text-lg text-[#55514B] leading-relaxed font-normal text-pretty">
               From regular catalogue materials to specific manufacturing requirements, we source, manufacture, and supply garment fabrics and accessories suited to your needs.
@@ -152,8 +179,17 @@ export const HomeIntro: React.FC<HomeIntroProps> = ({
       {/* 2. BEYOND THE CATALOGUE / NEED SOMETHING SPECIFIC?                         */}
       {/* Clean, simple & uncluttered (anti-kasakasa)                                */}
       {/* ========================================================================= */}
-      <section className="py-16 md:py-24 border-b border-[#E8E4DC] bg-[#FAF8F4]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative py-16 md:py-24 border-b border-[#E6E0D2] bg-[#F5F1E8] overflow-hidden">
+        {/* Soft Warm Golden Ambient Light */}
+        <div 
+          aria-hidden="true"
+          className="absolute inset-0 pointer-events-none opacity-30"
+          style={{
+            background: 'radial-gradient(ellipse 70% 60% at 20% 40%, rgba(212,175,55,0.14), transparent 70%)'
+          }}
+        />
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
             
@@ -162,6 +198,15 @@ export const HomeIntro: React.FC<HomeIntroProps> = ({
               <h3 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-[#181715] tracking-tight">
                 Not Every Requirement Fits Into a Catalogue.
               </h3>
+
+              {/* Gold Diamond Motif Line */}
+              <div className="relative flex items-center justify-start w-full max-w-sm pt-0.5">
+                <div className="h-[1px] w-28 bg-gradient-to-r from-[#D4AF37] to-[#D4AF37]/50" />
+                <div className="relative mx-2.5 flex items-center justify-center">
+                  <div className="w-2 h-2 bg-gradient-to-tr from-[#D4AF37] via-[#F2D785] to-[#B38728] rotate-45 shadow-[0_0_8px_rgba(212,175,55,0.75)]" />
+                </div>
+                <div className="h-[1px] flex-1 bg-gradient-to-r from-[#D4AF37]/50 to-transparent" />
+              </div>
 
               <p className="text-base sm:text-lg text-[#55514B] leading-relaxed">
                 Dedicated sourcing and manufacturing solutions tailored to your technical specifications, custom weaves, and physical reference samples.
@@ -275,13 +320,40 @@ export const HomeIntro: React.FC<HomeIntroProps> = ({
       {/* ========================================================================= */}
       {/* 3. WHY CLASSIC FASHIONS — VISUALIZED UNIQUE STYLE                          */}
       {/* ========================================================================= */}
-      <section className="py-16 md:py-24 border-b border-[#E8E4DC] bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative py-16 md:py-24 border-b border-[#E6E0D2] bg-[#FAF7F2] overflow-hidden">
+        {/* Subtle Luxury Golden Micro-Dot Atmosphere Pattern */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 pointer-events-none opacity-45"
+          style={{
+            backgroundImage: 'radial-gradient(rgba(212, 175, 55, 0.22) 1px, transparent 1px)',
+            backgroundSize: '28px 28px',
+          }}
+        />
+        {/* Soft Warm Golden Ambient Light */}
+        <div 
+          aria-hidden="true"
+          className="absolute inset-0 pointer-events-none opacity-30"
+          style={{
+            background: 'radial-gradient(ellipse 65% 50% at 50% 20%, rgba(212,175,55,0.14), transparent 70%)'
+          }}
+        />
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
             <h3 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-[#181715] tracking-tight">
               Why Classic Fashions
             </h3>
+
+            {/* Luxury Gold Diamond Motif Divider */}
+            <div className="relative flex items-center justify-center mt-5 w-full max-w-md mx-auto">
+              <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-[#D4AF37]/50 to-[#D4AF37]" />
+              <div className="relative mx-3.5 flex items-center justify-center">
+                <div className="w-2.5 h-2.5 bg-gradient-to-tr from-[#D4AF37] via-[#F2D785] to-[#B38728] rotate-45 shadow-[0_0_12px_rgba(212,175,55,0.75)] ring-2 ring-[#FAF7F2]" />
+              </div>
+              <div className="h-[1px] w-full bg-gradient-to-r from-[#D4AF37] via-[#D4AF37]/50 to-transparent" />
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

@@ -27,7 +27,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           
           {/* Business Bio (Col 1-4) */}
           <div className="lg:col-span-4 space-y-4">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 h-10">
               <div className="w-10 h-10 rounded-md bg-[#25221F] border border-[#3A3632] flex items-center justify-center p-1.5 shrink-0">
                 <BrandLogo variant="white" size="sm" className="w-full h-auto" />
               </div>
@@ -41,17 +41,15 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <br />
               Tiruppur, Tamil Nadu, India
             </p>
-
-            <div className="pt-2 text-[11px] text-[#78736B] font-mono">
-              <span>{businessConfig.businessType}</span>
-            </div>
           </div>
 
           {/* Quick Links (Col 5-6) */}
-          <div className="lg:col-span-2 space-y-3">
-            <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#C4B7AA]">
-              Quick Links
-            </h4>
+          <div className="lg:col-span-2 space-y-4">
+            <div className="h-10 flex items-center">
+              <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#C4B7AA]">
+                Quick Links
+              </h4>
+            </div>
             <ul className="space-y-2 text-xs text-[#A8A29A]">
               <li>
                 <button
@@ -105,10 +103,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           </div>
 
           {/* Categories (Col 7-9) */}
-          <div className="lg:col-span-3 space-y-3">
-            <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#C4B7AA]">
-              Categories
-            </h4>
+          <div className="lg:col-span-3 space-y-4">
+            <div className="h-10 flex items-center">
+              <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#C4B7AA]">
+                Categories
+              </h4>
+            </div>
             <ul className="space-y-2 text-xs text-[#A8A29A]">
               <li>
                 <button
@@ -162,10 +162,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           </div>
 
           {/* Contact (Col 10-12) */}
-          <div className="lg:col-span-3 space-y-3">
-            <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#C4B7AA]">
-              Contact Details
-            </h4>
+          <div className="lg:col-span-3 space-y-4">
+            <div className="h-10 flex items-center">
+              <h4 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#C4B7AA]">
+                Contact Details
+              </h4>
+            </div>
             <div className="space-y-2.5 text-xs text-[#A8A29A]">
               <div className="flex items-start gap-2">
                 <MapPin className="w-3.5 h-3.5 text-[#C4B7AA] shrink-0 mt-0.5" />
@@ -197,12 +199,9 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
         </div>
 
-        {/* Bottom Bar with Copyright */}
-        <div className="mt-12 pt-8 border-t border-[#292622] flex flex-col sm:flex-row items-center justify-between text-xs text-[#78736B] gap-4">
-          <p>© 2026 {businessConfig.businessName}. All rights reserved.</p>
-          <p className="text-[11px] font-mono">
-            Boyampalayam, Tiruppur • Tamil Nadu, India
-          </p>
+        {/* Bottom Bar with Copyright Centered */}
+        <div className="mt-12 pt-8 border-t border-[#292622] flex items-center justify-center text-xs text-[#78736B]">
+          <p className="text-center">© 2026 {businessConfig.businessName}. All rights reserved.</p>
         </div>
       </div>
     </footer>

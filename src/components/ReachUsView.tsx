@@ -53,6 +53,8 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [referenceCode, setReferenceCode] = useState('');
+  // true only when a configured endpoint confirmed receipt (res.ok)
+  const [delivered, setDelivered] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   // 3D Parallax state for Hero Atelier
@@ -113,40 +115,59 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
   };
 
   // Form Submit
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return; // block duplicate submissions
     if (!validateForm()) return;
 
     setIsSubmitting(true);
-    try {
-      const timestamp = Date.now();
-      const code = `CF-ENQ-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
+    setErrors({});
+    const timestamp = Date.now();
+    const code = `CF-ENQ-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
+    const record = {
+      ...formState,
+      id: `enquiry-${timestamp}`,
+      referenceCode: code,
+      attachedFiles, // file names only: files are not uploaded (no storage endpoint)
+      submittedAt: timestamp,
+    };
 
-      const record = {
-        ...formState,
-        id: `enquiry-${timestamp}`,
-        referenceCode: code,
-        attachedFiles,
-        submittedAt: timestamp,
-      };
-
-      // Save locally
+    // INTEGRATION BOUNDARY: set VITE_ENQUIRY_ENDPOINT to a URL that accepts JSON POST.
+    const endpoint = import.meta.env.VITE_ENQUIRY_ENDPOINT as string | undefined;
+    let ok = false;
+    if (endpoint) {
       try {
-        const existing = localStorage.getItem(STORAGE_ENQUIRIES_KEY);
-        const list = existing ? JSON.parse(existing) : [];
-        list.unshift(record);
-        localStorage.setItem(STORAGE_ENQUIRIES_KEY, JSON.stringify(list));
-      } catch (err) {
-        console.warn('LocalStorage error:', err);
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(record),
+        });
+        ok = res.ok;
+      } catch {
+        ok = false;
       }
-
-      setReferenceCode(code);
-      setIsSubmitted(true);
-    } catch (err) {
-      setErrors({ form: 'Failed to process enquiry. Please WhatsApp us directly.' });
-    } finally {
-      setIsSubmitting(false);
+      if (!ok) {
+        // keep the user's values; show error, no success screen
+        setErrors({ form: 'We could not send your enquiry. Please try again, or contact us via WhatsApp / email.' });
+        setIsSubmitting(false);
+        return;
+      }
     }
+
+    // Local copy for reference (device only)
+    try {
+      const existing = localStorage.getItem(STORAGE_ENQUIRIES_KEY);
+      const list = existing ? JSON.parse(existing) : [];
+      list.unshift(record);
+      localStorage.setItem(STORAGE_ENQUIRIES_KEY, JSON.stringify(list));
+    } catch (err) {
+      console.warn('LocalStorage error:', err);
+    }
+
+    setDelivered(ok);
+    setReferenceCode(code);
+    setIsSubmitted(true);
+    setIsSubmitting(false);
   };
 
   const getWhatsAppEnquiryUrl = () => {
@@ -464,14 +485,15 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
 
                   <div className="space-y-1.5">
                     <span className="text-[11px] font-mono text-[#C49A55] uppercase font-bold tracking-wider">
-                      ENQUIRY DISPATCHED
+                      {delivered ? 'ENQUIRY RECEIVED' : 'ENQUIRY PREPARED — NOT YET SENT'}
                     </span>
                     <h4 className="font-serif text-2xl font-bold text-[#F3EBDD]">
                       Thank You, {formState.name}
                     </h4>
                     <p className="text-xs sm:text-sm text-[#A3B8B0] max-w-md mx-auto">
-                      Your enquiry has been logged successfully with our Tiruppur sourcing office.
-                      We will review availability and contact you promptly.
+                      {delivered
+                        ? 'Your enquiry has reached our Tiruppur sourcing office. We will review availability and contact you promptly.'
+                        : 'Your enquiry is saved on this device only. To deliver it to our team, please send it via WhatsApp or email using the buttons below.'}
                     </p>
                   </div>
 
@@ -491,14 +513,24 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                       rel="noopener noreferrer"
                       className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1EBE5D] text-white px-5 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all shadow-xs"
                     >
-                      <span>Connect via WhatsApp</span>
+                      <span>{delivered ? 'Connect via WhatsApp' : 'Send via WhatsApp'}</span>
                       <ExternalLink className="w-3.5 h-3.5" />
                     </a>
+
+                    {!delivered && (
+                      <a
+                        href={`mailto:${VERIFIED_EMAIL}?subject=${encodeURIComponent(`Enquiry ${referenceCode}`)}&body=${encodeURIComponent(`Name: ${formState.name}\nCompany: ${formState.companyName || 'N/A'}\nPhone: ${formState.phone}\nInterested in: ${formState.interestedCategory}\nProduct: ${formState.product || 'N/A'}\nQuantity: ${formState.quantity || 'N/A'}\n\n${formState.message}`)}`}
+                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-[#C49A55]/60 text-[#E6C995] hover:bg-[#C49A55]/10 px-5 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all"
+                      >
+                        Send via Email
+                      </a>
+                    )}
 
                     <button
                       type="button"
                       onClick={() => {
                         setIsSubmitted(false);
+                        setDelivered(false);
                         setFormState({
                           name: '',
                           companyName: '',

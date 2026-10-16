@@ -347,11 +347,16 @@ export default function App() {
           />
         )}
 
-        {currentTab === 'reach-us' && <ReachUsView />}
+        {currentTab === 'reach-us' && (
+          <ReachUsView onExploreCatalogue={() => handleNavigate('catalogue')} />
+        )}
       </main>
 
       {/* Footer */}
-      <Footer onNavigate={handleNavigate} />
+      <Footer
+        onNavigate={handleNavigate}
+        isDarkLuxuryTheme={currentTab === 'reach-us'}
+      />
 
       {/* Product Detail Modal */}
       <ProductDetailModal
@@ -387,7 +392,10 @@ export default function App() {
       />
 
       {/* Assistant & Quick Navigation Chatbot */}
-      <Chatbot onNavigate={handleNavigate} />
+      <Chatbot
+        onNavigate={handleNavigate}
+        isDarkTheme={currentTab === 'reach-us'}
+      />
     </div>
   );
 }

@@ -19,9 +19,10 @@ interface Message {
 
 interface ChatbotProps {
   onNavigate: (tab: NavigationTab, category?: ProductCategory) => void;
+  isDarkTheme?: boolean;
 }
 
-export const Chatbot: React.FC<ChatbotProps> = ({ onNavigate }) => {
+export const Chatbot: React.FC<ChatbotProps> = ({ onNavigate, isDarkTheme }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [inputText, setInputText] = useState('');
   const [messages, setMessages] = useState<Message[]>([
@@ -364,14 +365,18 @@ export const Chatbot: React.FC<ChatbotProps> = ({ onNavigate }) => {
         <button
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Open Classic Fashions Assistant"
-          className="w-14 h-14 rounded-full bg-[#181715] text-white shadow-xl hover:bg-[#302D29] hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center border-2 border-[#E8E6E0]"
+          className={`w-14 h-14 rounded-full transition-all duration-200 flex items-center justify-center cursor-pointer shadow-xl hover:scale-105 active:scale-95 ${
+            isDarkTheme
+              ? 'bg-[#102C22] text-[#F3EBDD] hover:bg-[#071B15] border-2 border-[#C49A55]/70 shadow-[0_4px_25px_rgba(0,0,0,0.6)]'
+              : 'bg-[#181715] text-white hover:bg-[#302D29] border-2 border-[#E8E6E0]'
+          }`}
         >
           {isOpen ? (
             <X className="w-6 h-6 text-white" />
           ) : (
-            <span className="text-2xl select-none" role="img" aria-label="chat">
-              💬
-            </span>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" className={isDarkTheme ? 'text-white' : 'text-white'}>
+              <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+            </svg>
           )}
         </button>
       </div>

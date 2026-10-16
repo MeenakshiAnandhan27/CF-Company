@@ -36,17 +36,23 @@ export const Navbar: React.FC<NavbarProps> = ({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const isReachUs = currentTab === 'reach-us';
+
   return (
     <header
       className={`sticky top-0 z-40 transition-all duration-300 ${
-        isScrolled
+        isReachUs
+          ? isScrolled
+            ? 'bg-[#071B15]/95 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.5)] border-b border-[#1A382C]'
+            : 'bg-[#071B15] border-b border-[#1A382C]'
+          : isScrolled
           ? 'bg-white/95 backdrop-blur-md shadow-[0_1px_4px_rgba(0,0,0,0.06)] border-b border-[#E8E6E0]'
           : 'bg-white border-b border-[#E8E6E0]'
       }`}
     >
       {/* Main Top Bar - Full Width Edge-to-Edge with Balanced Alignment */}
       <div className="w-full px-4 sm:px-8 md:px-10 lg:px-12 xl:px-14 h-20 flex items-center justify-between">
-        {/* Zone 1: Wordmark / Logo - Left Edge Aligned (No Subtitle) */}
+        {/* Zone 1: Wordmark / Logo - Left Edge Aligned */}
         <button
           onClick={() => handleNavClick('home')}
           className="flex items-center gap-3 text-left group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] rounded-lg shrink-0 cursor-pointer"
@@ -54,20 +60,33 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-lg flex items-center justify-center p-2 transition-all duration-300 group-hover:scale-110 shrink-0 bg-[#181715] border border-[#D4AF37]/60 group-hover:border-[#F2D785] shadow-[0_2px_10px_rgba(212,175,55,0.25)] group-hover:shadow-[0_0_25px_rgba(212,175,55,0.85),0_0_50px_rgba(212,175,55,0.45)] group-active:scale-95 group-active:shadow-[0_0_35px_rgba(212,175,55,1),0_0_65px_rgba(212,175,55,0.6)]">
             <BrandLogo variant="white" size="sm" className="w-full h-auto transition-transform duration-300 group-hover:scale-105" />
           </div>
-          <div className="flex items-center">
-            <span className="font-display text-lg sm:text-xl font-bold tracking-[0.12em] block leading-none whitespace-nowrap text-[#181715] group-hover:text-[#8C6534] transition-colors uppercase">
+          <div className="flex flex-col justify-center">
+            <span className={`font-display text-lg sm:text-xl font-bold tracking-[0.12em] block leading-none whitespace-nowrap uppercase transition-colors ${
+              isReachUs ? 'text-[#F3EBDD] group-hover:text-[#E6C995]' : 'text-[#181715] group-hover:text-[#8C6534]'
+            }`}>
               {businessConfig.businessName}
+            </span>
+            <span className={`font-mono text-[8px] sm:text-[9px] tracking-[0.18em] font-semibold uppercase mt-0.5 block ${
+              isReachUs ? 'text-[#C49A55]' : 'text-[#8C6534]/80'
+            }`}>
+              GARMENT ACCESSORIES &amp; FABRIC EXPERTS
             </span>
           </div>
         </button>
 
         {/* Zone 2: Navigation Links - Spaced & Balanced */}
-        <nav className="hidden md:flex items-center gap-6 lg:gap-8 xl:gap-10 text-xs font-semibold uppercase tracking-wider text-[#585550]">
+        <nav className={`hidden md:flex items-center gap-6 lg:gap-8 xl:gap-10 text-xs font-semibold uppercase tracking-wider ${
+          isReachUs ? 'text-[#F3EBDD]/80' : 'text-[#585550]'
+        }`}>
           <button
             onClick={() => handleNavClick('home')}
             className={`whitespace-nowrap transition-colors relative py-2 ${
               currentTab === 'home'
-                ? 'text-[#181715] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#181715]'
+                ? isReachUs
+                  ? 'text-[#F3EBDD] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#C49A55]'
+                  : 'text-[#181715] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#181715]'
+                : isReachUs
+                ? 'hover:text-[#E6C995]'
                 : 'hover:text-[#181715]'
             }`}
           >
@@ -77,7 +96,11 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={() => handleNavClick('about')}
             className={`whitespace-nowrap transition-colors relative py-2 ${
               currentTab === 'about'
-                ? 'text-[#181715] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#181715]'
+                ? isReachUs
+                  ? 'text-[#F3EBDD] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#C49A55]'
+                  : 'text-[#181715] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#181715]'
+                : isReachUs
+                ? 'hover:text-[#E6C995]'
                 : 'hover:text-[#181715]'
             }`}
           >
@@ -87,7 +110,11 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={() => handleNavClick('catalogue')}
             className={`whitespace-nowrap transition-colors relative py-2 ${
               currentTab === 'catalogue'
-                ? 'text-[#181715] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#181715]'
+                ? isReachUs
+                  ? 'text-[#F3EBDD] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#C49A55]'
+                  : 'text-[#181715] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#181715]'
+                : isReachUs
+                ? 'hover:text-[#E6C995]'
                 : 'hover:text-[#181715]'
             }`}
           >
@@ -97,7 +124,11 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={() => handleNavClick('material-request')}
             className={`whitespace-nowrap transition-colors relative py-2 flex items-center gap-1 ${
               currentTab === 'material-request'
-                ? 'text-[#181715] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#181715]'
+                ? isReachUs
+                  ? 'text-[#F3EBDD] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#C49A55]'
+                  : 'text-[#181715] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#181715]'
+                : isReachUs
+                ? 'text-[#C49A55] hover:text-[#E6C995]'
                 : 'text-[#82553E] hover:text-[#181715]'
             }`}
           >
@@ -107,7 +138,9 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={() => handleNavClick('reach-us')}
             className={`whitespace-nowrap transition-colors relative py-2 ${
               currentTab === 'reach-us'
-                ? 'text-[#181715] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#181715]'
+                ? 'text-[#E6C995] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#C49A55]'
+                : isReachUs
+                ? 'hover:text-[#E6C995]'
                 : 'hover:text-[#181715]'
             }`}
           >
@@ -121,19 +154,23 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={() => handleNavClick('collection')}
             className={`group relative inline-flex items-center gap-2 pl-4 pr-2.5 py-2 text-xs font-semibold uppercase tracking-wider rounded-full border transition-all duration-300 cursor-pointer shadow-xs active:scale-[0.98] ${
-              currentTab === 'collection'
+              isReachUs
+                ? 'bg-[#102C22] text-[#F3EBDD] border-[#2A5243] hover:border-[#C49A55]'
+                : currentTab === 'collection'
                 ? 'bg-[#181715] text-white border-[#181715] shadow-md'
                 : 'bg-gradient-to-b from-[#FFFFFF] to-[#FAF8F5] hover:bg-white text-[#181715] border-[#D5D0C6] hover:border-[#D4AF37] hover:shadow-[0_4px_16px_rgba(212,175,55,0.18)]'
             }`}
             title="View selected wholesale materials"
           >
             <ShoppingBag className={`w-3.5 h-3.5 transition-transform duration-300 group-hover:scale-110 ${
-              currentTab === 'collection' ? 'text-[#D4AF37]' : 'text-[#8C6534]'
+              isReachUs ? 'text-[#C49A55]' : currentTab === 'collection' ? 'text-[#D4AF37]' : 'text-[#8C6534]'
             }`} />
             <span className="font-mono text-[11px] tracking-[0.14em] font-bold">Collection</span>
             <span
               className={`font-mono text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-extrabold transition-colors ${
-                currentTab === 'collection'
+                isReachUs
+                  ? 'bg-[#C49A55] text-[#071B15]'
+                  : currentTab === 'collection'
                   ? 'bg-[#D4AF37] text-[#181715]'
                   : collectionCount > 0
                   ? 'bg-[#181715] text-[#D4AF37] border border-[#D4AF37]/50 shadow-xs'
@@ -153,15 +190,19 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Mobile Collection shortcut */}
           <button
             onClick={() => handleNavClick('collection')}
-            className="flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-wider rounded border bg-[#FAF7F2] border-[#D5D0C6] text-[#181715]"
+            className={`flex items-center gap-1 px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-wider rounded border ${
+              isReachUs ? 'bg-[#102C22] border-[#2A5243] text-[#F3EBDD]' : 'bg-[#FAF7F2] border-[#D5D0C6] text-[#181715]'
+            }`}
           >
-            <ShoppingBag className="w-3.5 h-3.5 text-[#82553E]" />
+            <ShoppingBag className={`w-3.5 h-3.5 ${isReachUs ? 'text-[#C49A55]' : 'text-[#82553E]'}`} />
             <span>{collectionCount}</span>
           </button>
 
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 rounded-md transition-colors text-[#2B2824] hover:bg-[#EFECE6]"
+            className={`p-2 rounded-md transition-colors ${
+              isReachUs ? 'text-[#F3EBDD] hover:bg-[#102C22]' : 'text-[#2B2824] hover:bg-[#EFECE6]'
+            }`}
             aria-label="Toggle Navigation Menu"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -171,11 +212,15 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* Mobile Navigation Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-b border-[#E8E6E0] bg-[#FBFBFA] px-4 pt-3 pb-6 space-y-2 shadow-lg animate-in slide-in-from-top-2 duration-200">
+        <div className={`md:hidden border-b px-4 pt-3 pb-6 space-y-2 shadow-lg animate-in slide-in-from-top-2 duration-200 ${
+          isReachUs ? 'border-[#1A382C] bg-[#071B15]' : 'border-[#E8E6E0] bg-[#FBFBFA]'
+        }`}>
           <button
             onClick={() => handleNavClick('home')}
             className={`w-full text-left py-2.5 px-3 rounded text-sm font-medium ${
-              currentTab === 'home' ? 'bg-[#EFECE6] text-[#181715] font-semibold' : 'text-[#585550]'
+              currentTab === 'home'
+                ? isReachUs ? 'bg-[#102C22] text-[#E6C995] font-semibold' : 'bg-[#EFECE6] text-[#181715] font-semibold'
+                : isReachUs ? 'text-[#F3EBDD]/80' : 'text-[#585550]'
             }`}
           >
             HOME
@@ -183,7 +228,9 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={() => handleNavClick('about')}
             className={`w-full text-left py-2.5 px-3 rounded text-sm font-medium ${
-              currentTab === 'about' ? 'bg-[#EFECE6] text-[#181715] font-semibold' : 'text-[#585550]'
+              currentTab === 'about'
+                ? isReachUs ? 'bg-[#102C22] text-[#E6C995] font-semibold' : 'bg-[#EFECE6] text-[#181715] font-semibold'
+                : isReachUs ? 'text-[#F3EBDD]/80' : 'text-[#585550]'
             }`}
           >
             ABOUT
@@ -192,8 +239,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={() => handleNavClick('catalogue')}
             className={`w-full text-left py-2.5 px-3 rounded text-sm font-medium ${
               currentTab === 'catalogue'
-                ? 'bg-[#EFECE6] text-[#181715] font-semibold'
-                : 'text-[#585550]'
+                ? isReachUs ? 'bg-[#102C22] text-[#E6C995] font-semibold' : 'bg-[#EFECE6] text-[#181715] font-semibold'
+                : isReachUs ? 'text-[#F3EBDD]/80' : 'text-[#585550]'
             }`}
           >
             CATALOGUE
@@ -202,8 +249,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={() => handleNavClick('material-request')}
             className={`w-full text-left py-2.5 px-3 rounded text-sm font-medium ${
               currentTab === 'material-request'
-                ? 'bg-[#EFECE6] text-[#181715] font-semibold'
-                : 'text-[#82553E]'
+                ? isReachUs ? 'bg-[#102C22] text-[#E6C995] font-semibold' : 'bg-[#EFECE6] text-[#181715] font-semibold'
+                : isReachUs ? 'text-[#C49A55]' : 'text-[#82553E]'
             }`}
           >
             REQUEST A MATERIAL
@@ -212,15 +259,17 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={() => handleNavClick('collection')}
             className={`w-full text-left py-2.5 px-3 rounded text-sm font-medium flex items-center justify-between ${
               currentTab === 'collection'
-                ? 'bg-[#EFECE6] text-[#181715] font-semibold'
-                : 'text-[#585550]'
+                ? isReachUs ? 'bg-[#102C22] text-[#E6C995] font-semibold' : 'bg-[#EFECE6] text-[#181715] font-semibold'
+                : isReachUs ? 'text-[#F3EBDD]/80' : 'text-[#585550]'
             }`}
           >
             <span className="flex items-center gap-2">
-              <ShoppingBag className="w-4 h-4 text-[#82553E]" />
+              <ShoppingBag className={`w-4 h-4 ${isReachUs ? 'text-[#C49A55]' : 'text-[#82553E]'}`} />
               <span>COLLECTION</span>
             </span>
-            <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-[#181715] text-white">
+            <span className={`font-mono text-xs font-bold px-2 py-0.5 rounded ${
+              isReachUs ? 'bg-[#C49A55] text-[#071B15]' : 'bg-[#181715] text-white'
+            }`}>
               {collectionCount} items
             </span>
           </button>
@@ -228,8 +277,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={() => handleNavClick('reach-us')}
             className={`w-full text-left py-2.5 px-3 rounded text-sm font-medium ${
               currentTab === 'reach-us'
-                ? 'bg-[#EFECE6] text-[#181715] font-semibold'
-                : 'text-[#585550]'
+                ? isReachUs ? 'bg-[#102C22] text-[#E6C995] font-semibold' : 'bg-[#EFECE6] text-[#181715] font-semibold'
+                : isReachUs ? 'text-[#F3EBDD]/80' : 'text-[#585550]'
             }`}
           >
             REACH US

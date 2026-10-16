@@ -9,9 +9,10 @@ interface FooterProps {
     tab: NavigationTab,
     category?: ProductCategory
   ) => void;
+  isDarkLuxuryTheme?: boolean;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
+export const Footer: React.FC<FooterProps> = ({ onNavigate, isDarkLuxuryTheme }) => {
   const handleNav = (
     tab: NavigationTab,
     cat?: ProductCategory
@@ -21,17 +22,25 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   };
 
   return (
-    <footer className="bg-[#100F0E] text-[#E5E0D8] border-t border-[#24211D]">
+    <footer className={`${
+      isDarkLuxuryTheme
+        ? 'bg-[#05130E] text-[#A3B8B0] border-t border-[#102C22]'
+        : 'bg-[#100F0E] text-[#E5E0D8] border-t border-[#24211D]'
+    }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10">
           
           {/* Business Bio (Col 1-4) */}
           <div className="lg:col-span-4 space-y-4">
             <div className="flex items-center gap-3 h-10">
-              <div className="w-10 h-10 rounded-md bg-[#25221F] border border-[#3A3632] flex items-center justify-center p-1.5 shrink-0">
+              <div className={`w-10 h-10 rounded-md flex items-center justify-center p-1.5 shrink-0 ${
+                isDarkLuxuryTheme ? 'bg-[#0E261E] border border-[#214738]' : 'bg-[#25221F] border border-[#3A3632]'
+              }`}>
                 <BrandLogo variant="white" size="sm" className="w-full h-auto" />
               </div>
-              <span className="font-serif text-2xl font-bold text-white tracking-tight">
+              <span className={`font-serif text-2xl font-bold tracking-tight ${
+                isDarkLuxuryTheme ? 'text-[#F3EBDD]' : 'text-white'
+              }`}>
                 {businessConfig.businessName}
               </span>
             </div>
@@ -183,12 +192,16 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 </span>
               </div>
               <div className="flex items-start gap-2 font-mono">
-                <Phone className="w-3.5 h-3.5 text-[#C4B7AA] shrink-0 mt-0.5" />
-                <span>{businessConfig.phonePlaceholder}</span>
+                <Phone className={`w-3.5 h-3.5 shrink-0 mt-0.5 ${isDarkLuxuryTheme ? 'text-[#C49A55]' : 'text-[#C4B7AA]'}`} />
+                <a href="tel:+918826415868" className="hover:text-white transition-colors">
+                  +91 88264 15868
+                </a>
               </div>
               <div className="flex items-start gap-2 font-mono">
-                <Mail className="w-3.5 h-3.5 text-[#C4B7AA] shrink-0 mt-0.5" />
-                <span className="truncate">{businessConfig.emailPlaceholder}</span>
+                <Mail className={`w-3.5 h-3.5 shrink-0 mt-0.5 ${isDarkLuxuryTheme ? 'text-[#C49A55]' : 'text-[#C4B7AA]'}`} />
+                <a href="mailto:material@classicfashions.com" className="truncate hover:text-white transition-colors">
+                  material@classicfashions.com
+                </a>
               </div>
               <div className="flex items-start gap-2 font-mono">
                 <Clock className="w-3.5 h-3.5 text-[#C4B7AA] shrink-0 mt-0.5" />

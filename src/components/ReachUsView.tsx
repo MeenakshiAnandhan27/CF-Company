@@ -27,6 +27,7 @@ interface ReachUsViewProps {
   onExploreCatalogue?: () => void;
 }
 
+const Atelier3D = React.lazy(() => import('./Atelier3D.tsx'));
 const VERIFIED_PHONE = '+91 88264 15868';
 const VERIFIED_PHONE_RAW = '918826415868';
 const VERIFIED_EMAIL = 'material@classicfashions.com';
@@ -275,11 +276,11 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
               >
                 {/* Unique Architectural Textile Scene */}
                 <div className="relative aspect-[16/9] sm:aspect-[2/1] w-full bg-[#071B15] overflow-hidden">
-                  <img
-                    src="/assets/reach-us/hero-atelier-unique.jpg"
-                    alt="Classic Fashions Haute Couture Architectural Textile Installation"
-                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-                  />
+                  <React.Suspense
+                    fallback={<img src="/assets/reach-us/hero-atelier-3d-hd.jpg" alt="Classic Fashions textile atelier" className="w-full h-full object-cover" />}
+                  >
+                    <Atelier3D />
+                  </React.Suspense>
 
                   {/* Soft Subtle Vignette Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-[#071B15]/40 via-transparent to-transparent pointer-events-none" />

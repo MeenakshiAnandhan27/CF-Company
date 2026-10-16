@@ -28,7 +28,7 @@ interface FabricViewer360Props {
   onRequestSample?: (material: DiscoveryMaterial) => void;
 }
 
-// 20 Authentic Studio Fabrics
+// All Studio Fabrics (22) – shown in a 360° ring
 export const STUDIO_360_FABRICS = [
   {
     id: 'mat-seersucker',
@@ -270,7 +270,34 @@ export const STUDIO_360_FABRICS = [
     sheen: 'Antique Tapestry Glow',
     desc: 'Intricate multi-color paisley floral brocade weave suitable for decorative vests, heritage borders, and couture accents.',
   },
+  {
+    id: 'mat-knits',
+    name: 'Knits',
+    type: 'Jersey Knit',
+    composition: 'Cotton / Poly Blend',
+    width: '54" / 60"',
+    gsm: '160 GSM',
+    weave: 'Single Jersey Knit',
+    image: '/assets/materials/fabrics/knits.jpg',
+    sheen: 'Soft Matte Stretch',
+    desc: 'Interlooped knit structure giving natural stretch and recovery for tees, loungewear and base layers.',
+  },
+  {
+    id: 'mat-woven',
+    name: 'Woven',
+    type: 'Classic Woven Cloth',
+    composition: 'Cotton Blend',
+    width: '54" / 58"',
+    gsm: '140 GSM',
+    weave: 'Balanced Woven Structure',
+    image: '/assets/materials/fabrics/woven.jpg',
+    sheen: 'Natural Matte',
+    desc: 'Stable interlaced warp and weft construction for shirting, trousers and everyday garment bases.',
+  },
 ];
+
+const hdSrc = (img: string) => img.replace('/fabrics/', '/fabrics-hd/');
+const uhdSrc = (img: string) => img.replace('/fabrics/', '/fabrics-4k/');
 
 export const FabricViewer360: React.FC<FabricViewer360Props> = ({
   initialMaterial,
@@ -290,6 +317,37 @@ export const FabricViewer360: React.FC<FabricViewer360Props> = ({
   const [dragStart, setDragStart] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const movedRef = useRef<boolean>(false);
+
+  const COUNT = STUDIO_360_FABRICS.length;
+  const STEP = 360 / COUNT;
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
+  const PANEL_W = isMobile ? 300 : 520;
+  const PANEL_H = Math.round((PANEL_W * 9) / 16);
+  const RADIUS = PANEL_W / (2 * Math.tan(Math.PI / COUNT));
+  const PERSPECTIVE = 1400;
+  const CAMERA_DIST = isMobile ? 620 : 900; // camera sits INSIDE the ring
+
+  // Rotate the ring so fabric `idx` faces the viewer (shortest path)
+  const goTo = useCallback(
+    (idx: number) => {
+      const i = ((idx % COUNT) + COUNT) % COUNT;
+      setIsAutoSpinning(false);
+      setRotationY((r) => {
+        const target = -i * STEP;
+        const delta = ((((target - r) % 360) + 540) % 360) - 180;
+        return r + delta;
+      });
+      setSelectedFabricIndex(i);
+    },
+    [COUNT, STEP]
+  );
+
+  // Keep the active fabric in sync with whichever panel faces the viewer
+  useEffect(() => {
+    const idx = Math.round(((((-rotationY) % 360) + 360) % 360) / STEP) % COUNT;
+    setSelectedFabricIndex((prev) => (prev === idx ? prev : idx));
+  }, [rotationY, STEP, COUNT]);
 
   // Set initial fabric if passed
   useEffect(() => {
@@ -302,6 +360,7 @@ export const FabricViewer360: React.FC<FabricViewer360Props> = ({
       );
       if (idx >= 0) {
         setSelectedFabricIndex(idx);
+        setRotationY(-idx * STEP);
       }
     }
   }, [initialMaterial]);
@@ -311,7 +370,7 @@ export const FabricViewer360: React.FC<FabricViewer360Props> = ({
     if (!isOpen || !isAutoSpinning || isDragging) return;
 
     const interval = setInterval(() => {
-      setRotationY((prev) => (prev + 0.6) % 360);
+      setRotationY((prev) => prev - 0.25);
     }, 24);
 
     return () => clearInterval(interval);
@@ -325,9 +384,9 @@ export const FabricViewer360: React.FC<FabricViewer360Props> = ({
       if (e.key === 'Escape') {
         onClose();
       } else if (e.key === 'ArrowRight') {
-        setSelectedFabricIndex((prev) => (prev + 1) % STUDIO_360_FABRICS.length);
+        goTo(selectedFabricIndex + 1);
       } else if (e.key === 'ArrowLeft') {
-        setSelectedFabricIndex((prev) => (prev - 1 + STUDIO_360_FABRICS.length) % STUDIO_360_FABRICS.length);
+        goTo(selectedFabricIndex - 1);
       } else if (e.key === ' ') {
         e.preventDefault();
         setIsAutoSpinning((prev) => !prev);
@@ -336,10 +395,11 @@ export const FabricViewer360: React.FC<FabricViewer360Props> = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, goTo, selectedFabricIndex]);
 
   // Mouse drag handlers for 360 rotation
   const handleMouseDown = (e: React.MouseEvent) => {
+    movedRef.current = false;
     setIsDragging(true);
     setIsAutoSpinning(false);
     setDragStart({ x: e.clientX, y: e.clientY });
@@ -351,9 +411,10 @@ export const FabricViewer360: React.FC<FabricViewer360Props> = ({
 
       const deltaX = e.clientX - dragStart.x;
       const deltaY = e.clientY - dragStart.y;
+      if (Math.abs(deltaX) + Math.abs(deltaY) > 2) movedRef.current = true;
 
-      setRotationY((prev) => (prev + deltaX * 0.7 + 360) % 360);
-      setRotationX((prev) => Math.max(-35, Math.min(35, prev - deltaY * 0.4)));
+      setRotationY((prev) => prev + deltaX * 0.25);
+      setRotationX((prev) => Math.max(-20, Math.min(20, prev - deltaY * 0.2)));
 
       setDragStart({ x: e.clientX, y: e.clientY });
     },
@@ -379,8 +440,8 @@ export const FabricViewer360: React.FC<FabricViewer360Props> = ({
     const deltaX = e.touches[0].clientX - dragStart.x;
     const deltaY = e.touches[0].clientY - dragStart.y;
 
-    setRotationY((prev) => (prev + deltaX * 0.8 + 360) % 360);
-    setRotationX((prev) => Math.max(-35, Math.min(35, prev - deltaY * 0.4)));
+    setRotationY((prev) => prev + deltaX * 0.3);
+    setRotationX((prev) => Math.max(-20, Math.min(20, prev - deltaY * 0.2)));
 
     setDragStart({ x: e.touches[0].clientX, y: e.touches[0].clientY });
   };
@@ -389,14 +450,7 @@ export const FabricViewer360: React.FC<FabricViewer360Props> = ({
 
   const currentFabric = STUDIO_360_FABRICS[selectedFabricIndex];
 
-  // Dynamic specular highlight based on rotation angle (simulates physical light sheen)
-  const normalizedAngle = Math.round(rotationY) % 360;
-  const lightIntensity = Math.abs(Math.sin((normalizedAngle * Math.PI) / 180));
-  const lightPositionX = 50 + Math.cos((normalizedAngle * Math.PI) / 180) * 45;
-  const lightPositionY = 40 + Math.sin((rotationX * Math.PI) / 180) * 20;
-
-  // Check if back face is visible (when Y rotation is between 90° and 270°)
-  const isBackFace = normalizedAngle > 90 && normalizedAngle < 270;
+  const normalizedAngle = ((Math.round(rotationY) % 360) + 360) % 360;
 
   const handleQuickAngle = (degY: number, degX: number) => {
     setIsAutoSpinning(false);
@@ -492,72 +546,61 @@ export const FabricViewer360: React.FC<FabricViewer360Props> = ({
           }}
         />
 
-        {/* ==================== 3D FLOATING SWATCH ==================== */}
+        {/* ==================== 360° FABRIC RING (viewer stands inside) ==================== */}
         <div
-          className="relative transition-transform ease-out"
-          style={{
-            transformStyle: 'preserve-3d',
-            transform: `scale(${zoomLevel}) rotateX(${rotationX}deg) rotateY(${rotationY}deg)`,
-            transitionDuration: isDragging ? '0ms' : '120ms',
-            willChange: 'transform',
-          }}
+          style={{ transformStyle: 'preserve-3d', transform: `rotateX(${rotationX * 0.5}deg)`, willChange: 'transform' }}
+          className="relative"
         >
-          {/* Physical Swatch Chassis */}
           <div
-            className="relative w-[280px] sm:w-[420px] md:w-[480px] aspect-[16/10] rounded-2xl p-2.5 bg-[#FAF7F2] border border-[#DDD5C7] shadow-[0_35px_70px_rgba(0,0,0,0.65)]"
             style={{
               transformStyle: 'preserve-3d',
+              transform: `scale(${zoomLevel}) translateZ(${PERSPECTIVE - CAMERA_DIST + RADIUS}px) rotateY(${rotationY}deg)`,
+              transitionProperty: 'transform',
+              transitionDuration: isDragging ? '0ms' : '450ms',
+              transitionTimingFunction: 'cubic-bezier(.2,.7,.2,1)',
+              width: PANEL_W,
+              height: PANEL_H,
+              willChange: 'transform',
             }}
+            className="relative"
           >
-            {/* Top Swatch Hanger / Brass Tag Clip */}
-            <div
-              aria-hidden="true"
-              className="absolute -top-3 left-1/2 -translate-x-1/2 w-14 h-4 rounded-full bg-gradient-to-r from-[#C2AA76] via-[#F4E8CE] to-[#8C7A52] border border-[#B89F6B] shadow-md z-30 pointer-events-none flex items-center justify-center"
-            >
-              <div className="w-2.5 h-1.5 rounded-full bg-[#181715]/40" />
-            </div>
-
-            {/* Front & Back Faces */}
-            <div className="relative w-full h-full rounded-xl overflow-hidden bg-[#ECE6DC] border border-[#DDD5C7]">
-              {/* Actual HD Swatch Texture */}
-              <img
-                src={currentFabric.image}
-                alt={currentFabric.name}
-                draggable={false}
-                className="w-full h-full object-cover transition-opacity duration-300"
-                style={{
-                  filter: isBackFace ? 'brightness(0.85) contrast(0.95)' : 'brightness(1.02) contrast(1.02)',
-                  transform: isBackFace ? 'scaleX(-1)' : 'none',
-                }}
-              />
-
-              {/* Dynamic Real-Time Specular Lighting Sheen Reflection */}
-              <div
-                aria-hidden="true"
-                className="absolute inset-0 pointer-events-none transition-opacity duration-75"
-                style={{
-                  background: `radial-gradient(circle at ${lightPositionX}% ${lightPositionY}%, rgba(255, 255, 255, ${
-                    0.25 + lightIntensity * 0.35
-                  }) 0%, transparent 65%)`,
-                  mixBlendMode: 'overlay',
-                }}
-              />
-
-              {/* Reverse Face Indicator Label when turned around */}
-              {isBackFace && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[1px] pointer-events-none">
-                  <span className="text-xs font-mono uppercase tracking-[0.25em] text-white/95 px-3 py-1.5 rounded-full bg-black/80 border border-white/20 shadow-md">
-                    REVERSE WEFT FACE (180°)
+            {STUDIO_360_FABRICS.map((fabric, i) => {
+              const active = i === selectedFabricIndex;
+              return (
+                <button
+                  key={fabric.id}
+                  type="button"
+                  onClick={() => {
+                    if (!movedRef.current) goTo(i);
+                  }}
+                  aria-label={`${fabric.name} – view in 360 ring`}
+                  className="absolute inset-0 rounded-xl overflow-hidden cursor-pointer"
+                  style={{
+                    transform: `rotateY(${i * STEP}deg) translateZ(${-RADIUS}px)`,
+                    width: PANEL_W - 6,
+                    height: PANEL_H,
+                    left: 3,
+                    border: active ? '2px solid #C89D6B' : '1px solid rgba(255,255,255,0.15)',
+                    boxShadow: active ? '0 0 60px rgba(200,157,107,0.45)' : '0 20px 40px rgba(0,0,0,0.5)',
+                    opacity: active ? 1 : 0.6,
+                    transition: 'opacity 300ms, box-shadow 300ms',
+                    WebkitBoxReflect: 'below 6px linear-gradient(transparent 70%, rgba(255,255,255,0.18))',
+                    backfaceVisibility: 'hidden',
+                  } as React.CSSProperties}
+                >
+                  <img
+                    src={active && !isAutoSpinning ? uhdSrc(fabric.image) : hdSrc(fabric.image)}
+                    alt={fabric.name}
+                    draggable={false}
+                    decoding="async"
+                    className="w-full h-full object-cover"
+                  />
+                  <span className="absolute left-3 bottom-3 px-2.5 py-1 rounded-full bg-black/70 border border-white/20 text-[10px] font-mono uppercase tracking-[0.2em] text-white">
+                    {String(i + 1).padStart(2, '0')} · {fabric.name}
                   </span>
-                </div>
-              )}
-
-              {/* Tactile Edge Fringe / Selvage indicator */}
-              <div
-                aria-hidden="true"
-                className="absolute right-0 inset-y-0 w-2.5 bg-gradient-to-l from-white/30 to-transparent pointer-events-none border-l border-white/10"
-              />
-            </div>
+                </button>
+              );
+            })}
           </div>
         </div>
 
@@ -576,7 +619,7 @@ export const FabricViewer360: React.FC<FabricViewer360Props> = ({
         <button
           onClick={(e) => {
             e.stopPropagation();
-            setSelectedFabricIndex((prev) => (prev - 1 + STUDIO_360_FABRICS.length) % STUDIO_360_FABRICS.length);
+            goTo(selectedFabricIndex - 1);
           }}
           className="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/60 hover:bg-black/90 text-white border border-white/20 flex items-center justify-center transition-all hover:scale-110 shadow-lg cursor-pointer"
           title="Previous Fabric (Left Arrow)"
@@ -587,7 +630,7 @@ export const FabricViewer360: React.FC<FabricViewer360Props> = ({
         <button
           onClick={(e) => {
             e.stopPropagation();
-            setSelectedFabricIndex((prev) => (prev + 1) % STUDIO_360_FABRICS.length);
+            goTo(selectedFabricIndex + 1);
           }}
           className="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/60 hover:bg-black/90 text-white border border-white/20 flex items-center justify-center transition-all hover:scale-110 shadow-lg cursor-pointer"
           title="Next Fabric (Right Arrow)"
@@ -723,8 +766,7 @@ export const FabricViewer360: React.FC<FabricViewer360Props> = ({
                 <button
                   key={fabric.id}
                   onClick={() => {
-                    setSelectedFabricIndex(idx);
-                    setIsAutoSpinning(true);
+                    goTo(idx);
                   }}
                   className={`group relative shrink-0 w-20 sm:w-24 rounded-lg overflow-hidden border transition-all text-left cursor-pointer ${
                     isSelected

@@ -237,7 +237,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
               </div>
             </div>
 
-            {/* Right Column: 3D Textile Atelier Showcase Vignette */}
+            {/* Right Column: Haute Couture Architectural Textile Installation Showcase */}
             <div className="lg:col-span-6 relative">
               {/* Ambient Glow */}
               <div
@@ -252,22 +252,16 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                   }deg)`,
                 }}
               >
-                {/* 3D Atelier Realistic Scene Crop */}
+                {/* Unique Architectural Textile Scene */}
                 <div className="relative aspect-[16/9] sm:aspect-[2/1] w-full bg-[#071B15] overflow-hidden">
                   <img
-                    src="/assets/reach-us/hero-atelier-3d-hd.jpg"
-                    alt="Classic Fashions 3D Textile Atelier with Vintage Sewing Machine and Fabrics"
+                    src="/assets/reach-us/hero-atelier-unique.jpg"
+                    alt="Classic Fashions Haute Couture Architectural Textile Installation"
                     className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
                   />
 
                   {/* Soft Subtle Vignette Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#071B15]/50 via-transparent to-transparent pointer-events-none" />
-
-                  {/* Interactive Hotspot Badges floating on the scene */}
-                  <div className="absolute bottom-3 left-4 hidden sm:flex items-center gap-2 bg-[#071B15]/85 backdrop-blur-md border border-[#C49A55]/40 px-3 py-1.5 rounded-full text-[11px] font-mono text-[#E6C995] shadow-lg">
-                    <span className="w-2 h-2 rounded-full bg-[#C49A55] animate-pulse" />
-                    <span>3D Textile Atelier • Tiruppur</span>
-                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#071B15]/40 via-transparent to-transparent pointer-events-none" />
                 </div>
               </div>
             </div>
@@ -281,7 +275,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 sm:mt-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
           {/* --------------------------------------------------------------------- */}
-          {/* LEFT COLUMN: "LET'S CONNECT" 3D CONTACT SECTION (~42% WIDTH)          */}
+          {/* LEFT COLUMN: "LET'S CONNECT" CONTACT SECTION (~42% WIDTH)             */}
           {/* --------------------------------------------------------------------- */}
           <div className="lg:col-span-5 space-y-6">
             <div className="bg-gradient-to-b from-[#0B1E17] to-[#071712] border border-[#1A382C] rounded-2xl p-6 sm:p-7 shadow-[0_12px_40px_rgba(0,0,0,0.55)] space-y-6 relative overflow-hidden">
@@ -293,116 +287,126 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                 <div className="w-10 h-0.5 bg-[#C49A55] rounded-full" />
               </div>
 
-              {/* 3 Contact Cards with 3D Models on the Right */}
+              {/* 3 Contact Cards (Clean, Luxury, No Thumbnail Images) */}
               <div className="space-y-4">
                 {/* 1. OUR STUDIO */}
-                <div className="bg-[#0E261E]/80 border border-[#214738] hover:border-[#C49A55]/60 rounded-xl p-4 transition-all duration-300 group flex items-center justify-between gap-3 shadow-md">
-                  <div className="space-y-1.5 flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <div className="w-7 h-7 rounded-full bg-[#16382C] text-[#C49A55] border border-[#2C5E4B] flex items-center justify-center shrink-0">
-                        <MapPin className="w-3.5 h-3.5" />
+                <div className="bg-[#0E261E]/80 border border-[#214738] hover:border-[#C49A55]/60 rounded-xl p-5 transition-all duration-300 group shadow-md hover:shadow-lg">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-lg bg-[#16382C] text-[#C49A55] border border-[#2C5E4B] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                        <MapPin className="w-4 h-4" />
                       </div>
-                      <span className="text-[10px] font-mono uppercase tracking-widest text-[#A3B8B0] font-semibold">
-                        OUR STUDIO
+                      <span className="text-[11px] font-mono uppercase tracking-widest text-[#A3B8B0] font-semibold">
+                        OUR ATELIER &amp; STUDIO
                       </span>
                     </div>
 
-                    <p className="text-xs text-[#F3EBDD] leading-relaxed pl-9">
+                    <a
+                      href={mapsSearchUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-[11px] font-mono font-semibold text-[#C49A55] hover:text-[#E6C995] bg-[#16382C]/70 hover:bg-[#16382C] border border-[#2C5E4B] px-3 py-1 rounded-lg transition-colors shrink-0"
+                    >
+                      <span>Google Maps</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
+
+                  <div className="mt-3 pl-10">
+                    <p className="text-xs sm:text-sm text-[#F3EBDD] leading-relaxed font-medium">
                       {businessConfig.addressLine1},<br />
                       {businessConfig.addressLine2},<br />
                       {businessConfig.city}, {businessConfig.state} – {businessConfig.pincode}
                     </p>
-
-                    <div className="pl-9 pt-0.5">
-                      <a
-                        href={mapsSearchUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-[11px] font-mono text-[#C49A55] hover:text-[#E6C995] transition-colors"
-                      >
-                        <span>Open in Google Maps</span>
-                        <ExternalLink className="w-3 h-3" />
-                      </a>
-                    </div>
-                  </div>
-
-                  {/* 3D Miniature Studio Building on Right */}
-                  <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg overflow-hidden shrink-0 border border-[#214738] bg-black/40 group-hover:scale-105 transition-transform duration-300">
-                    <img
-                      src="/assets/reach-us/card-studio-building.jpg"
-                      alt="Classic Fashions Studio Building in Tiruppur"
-                      className="w-full h-full object-cover"
-                    />
+                    <span className="text-[11px] text-[#A3B8B0] block mt-1.5">
+                      Fabric &amp; Trims Sourcing District • Tiruppur
+                    </span>
                   </div>
                 </div>
 
                 {/* 2. CALL OUR TEAM */}
-                <div className="bg-[#0E261E]/80 border border-[#214738] hover:border-[#C49A55]/60 rounded-xl p-4 transition-all duration-300 group flex items-center justify-between gap-3 shadow-md">
-                  <div className="space-y-1.5 flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <div className="w-7 h-7 rounded-full bg-[#16382C] text-[#C49A55] border border-[#2C5E4B] flex items-center justify-center shrink-0">
-                        <Phone className="w-3.5 h-3.5" />
+                <div className="bg-[#0E261E]/80 border border-[#214738] hover:border-[#C49A55]/60 rounded-xl p-5 transition-all duration-300 group shadow-md hover:shadow-lg">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-lg bg-[#16382C] text-[#C49A55] border border-[#2C5E4B] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                        <Phone className="w-4 h-4" />
                       </div>
-                      <span className="text-[10px] font-mono uppercase tracking-widest text-[#A3B8B0] font-semibold">
+                      <span className="text-[11px] font-mono uppercase tracking-widest text-[#A3B8B0] font-semibold">
                         CALL OUR TEAM
                       </span>
                     </div>
 
-                    <div className="pl-9">
+                    <span className="inline-flex items-center gap-1.5 text-[10px] font-mono font-semibold text-[#E6C995] bg-[#16382C]/70 border border-[#2C5E4B] px-2.5 py-0.5 rounded-full">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#25D366] animate-pulse" />
+                      <span>DIRECT DESK</span>
+                    </span>
+                  </div>
+
+                  <div className="mt-3 pl-10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
                       <a
                         href={`tel:${VERIFIED_PHONE}`}
-                        className="font-mono text-sm sm:text-base font-bold text-[#F3EBDD] hover:text-[#E6C995] transition-colors block leading-tight"
+                        className="font-mono text-base sm:text-lg font-bold text-[#F3EBDD] hover:text-[#E6C995] transition-colors block leading-tight"
                       >
                         {VERIFIED_PHONE}
                       </a>
                       <span className="text-[11px] text-[#A3B8B0] block mt-0.5">
-                        Direct Wholesale Desk
+                        Direct Wholesale &amp; Sampling Desk
                       </span>
                     </div>
-                  </div>
 
-                  {/* 3D Vintage Rotary Telephone on Right */}
-                  <div className="w-20 h-16 sm:w-24 sm:h-18 rounded-lg overflow-hidden shrink-0 border border-[#214738] bg-black/40 group-hover:scale-105 transition-transform duration-300">
-                    <img
-                      src="/assets/reach-us/card-vintage-phone.jpg"
-                      alt="Direct Wholesale Desk Phone"
-                      className="w-full h-full object-cover"
-                    />
+                    <div className="flex items-center gap-2">
+                      <a
+                        href={`tel:${VERIFIED_PHONE}`}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#16382C] hover:bg-[#1f4a3b] border border-[#2C5E4B] text-[11px] font-mono text-[#E6C995] transition-colors"
+                      >
+                        <Phone className="w-3 h-3 text-[#C49A55]" />
+                        <span>Call</span>
+                      </a>
+                      <a
+                        href={`https://wa.me/${VERIFIED_PHONE_RAW}?text=${encodeURIComponent('Hello Classic Fashions, I would like to enquire about your textile sourcing.')}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#25D366]/20 hover:bg-[#25D366]/30 border border-[#25D366]/40 text-[11px] font-mono text-[#25D366] transition-colors"
+                      >
+                        <span>WhatsApp</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    </div>
                   </div>
                 </div>
 
                 {/* 3. BUSINESS ENQUIRIES */}
-                <div className="bg-[#0E261E]/80 border border-[#214738] hover:border-[#C49A55]/60 rounded-xl p-4 transition-all duration-300 group flex items-center justify-between gap-3 shadow-md">
-                  <div className="space-y-1.5 flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <div className="w-7 h-7 rounded-full bg-[#16382C] text-[#C49A55] border border-[#2C5E4B] flex items-center justify-center shrink-0">
-                        <Mail className="w-3.5 h-3.5" />
+                <div className="bg-[#0E261E]/80 border border-[#214738] hover:border-[#C49A55]/60 rounded-xl p-5 transition-all duration-300 group shadow-md hover:shadow-lg">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-lg bg-[#16382C] text-[#C49A55] border border-[#2C5E4B] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                        <Mail className="w-4 h-4" />
                       </div>
-                      <span className="text-[10px] font-mono uppercase tracking-widest text-[#A3B8B0] font-semibold">
+                      <span className="text-[11px] font-mono uppercase tracking-widest text-[#A3B8B0] font-semibold">
                         BUSINESS ENQUIRIES
                       </span>
                     </div>
 
-                    <div className="pl-9">
-                      <a
-                        href={`mailto:${VERIFIED_EMAIL}`}
-                        className="font-mono text-xs sm:text-sm font-bold text-[#F3EBDD] hover:text-[#E6C995] transition-colors block truncate leading-tight"
-                      >
-                        {VERIFIED_EMAIL}
-                      </a>
-                      <span className="text-[11px] text-[#A3B8B0] block mt-0.5">
-                        We reply within 24 hours
-                      </span>
-                    </div>
+                    <a
+                      href={`mailto:${VERIFIED_EMAIL}`}
+                      className="inline-flex items-center gap-1.5 text-[11px] font-mono font-semibold text-[#C49A55] hover:text-[#E6C995] bg-[#16382C]/70 hover:bg-[#16382C] border border-[#2C5E4B] px-3 py-1 rounded-lg transition-colors shrink-0"
+                    >
+                      <Mail className="w-3 h-3" />
+                      <span>Send Mail</span>
+                    </a>
                   </div>
 
-                  {/* 3D Wax-Sealed CF Envelope on Right */}
-                  <div className="w-20 h-16 sm:w-24 sm:h-18 rounded-lg overflow-hidden shrink-0 border border-[#214738] bg-black/40 group-hover:scale-105 transition-transform duration-300">
-                    <img
-                      src="/assets/reach-us/card-wax-envelope.jpg"
-                      alt="Classic Fashions Business Enquiries Wax Sealed Envelope"
-                      className="w-full h-full object-cover"
-                    />
+                  <div className="mt-3 pl-10">
+                    <a
+                      href={`mailto:${VERIFIED_EMAIL}`}
+                      className="font-mono text-sm sm:text-base font-bold text-[#F3EBDD] hover:text-[#E6C995] transition-colors block truncate leading-tight"
+                    >
+                      {VERIFIED_EMAIL}
+                    </a>
+                    <span className="text-[11px] text-[#A3B8B0] block mt-1">
+                      Guaranteed response within 24 business hours
+                    </span>
                   </div>
                 </div>
               </div>

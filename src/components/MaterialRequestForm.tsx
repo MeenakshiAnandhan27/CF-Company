@@ -8,7 +8,7 @@ import {
 import {
   Upload,
   Check,
-  CheckCircle,
+  CheckCircle2,
   ArrowRight,
   ArrowLeft,
   Send,
@@ -19,9 +19,6 @@ import {
   MapPin,
   Plus,
   Trash2,
-  Grid,
-  CircleDot,
-  FileText,
   Package,
   AlertCircle,
   ExternalLink,
@@ -29,6 +26,11 @@ import {
   Scissors,
   Pencil,
   ShoppingBag,
+  Sparkles,
+  Headphones,
+  Layers,
+  FileCheck,
+  CheckCircle,
 } from 'lucide-react';
 
 interface MaterialRequestFormProps {
@@ -61,7 +63,6 @@ interface MainCategoryCard {
   title: string;
   subtitle: string;
   image: string;
-  iconBg: string;
   mappedCategory: MaterialRequestCategory;
 }
 
@@ -71,23 +72,20 @@ const MAIN_CATEGORIES: MainCategoryCard[] = [
     title: 'Fabrics',
     subtitle: 'Explore our premium fabric selection',
     image: '/assets/materials/fabrics.jpg',
-    iconBg: '#C69A59',
     mappedCategory: 'fabric',
   },
   {
     id: 'accessories',
     title: 'Garment Accessories',
-    subtitle: 'Find zippers, buttons, labels and more',
+    subtitle: 'Find zippers, buttons, labels and trims',
     image: '/assets/materials/accessories.jpg',
-    iconBg: '#10251C',
     mappedCategory: 'accessories',
   },
   {
     id: 'custom',
     title: 'Custom Development',
     subtitle: 'Develop unique materials made for you',
-    image: '/assets/materials/processing.jpg',
-    iconBg: '#152B22',
+    image: '/assets/reach-us/hero-atelier-3d.jpg',
     mappedCategory: 'other',
   },
 ];
@@ -141,6 +139,22 @@ const SUB_SWATCHES: Record<
         image: '/assets/materials/fabrics/woven.jpg',
         category: 'fabric',
         defaultSpecs: { composition: 'Heavy Woven Canvas / Gada', typeVariant: 'Twill / Duck Weave' },
+      },
+      {
+        id: 'chambray',
+        name: 'Chambray',
+        categoryLabel: 'Fabric',
+        image: '/assets/materials/fabrics/chambray.jpg',
+        category: 'fabric',
+        defaultSpecs: { composition: 'Yarn Dyed Chambray', typeVariant: 'Plain Weave' },
+      },
+      {
+        id: 'mesh',
+        name: 'Mesh',
+        categoryLabel: 'Fabric',
+        image: '/assets/materials/fabrics/mesh-fabrics.jpg',
+        category: 'mesh',
+        defaultSpecs: { composition: 'Polyester Athletic Mesh', typeVariant: 'Hexagonal Eyelet' },
       },
     ],
   },
@@ -198,39 +212,31 @@ const SUB_SWATCHES: Record<
         categoryLabel: 'Custom',
         image: '/assets/materials/fabrics/plain.jpg',
         category: 'other',
-        defaultSpecs: { typeVariant: 'Pantone Reactive Dyeing / RFD' },
+        defaultSpecs: { typeVariant: 'Pantone Specific Lab Dips & Bio-wash' },
       },
       {
-        id: 'bespoke-weave',
-        name: 'Bespoke Weave',
+        id: 'specialty-weave',
+        name: 'Specialty Weave',
         categoryLabel: 'Custom',
         image: '/assets/materials/fabrics/jacquard-tapestry.jpg',
         category: 'other',
-        defaultSpecs: { typeVariant: 'Custom Warp & Weft Density' },
+        defaultSpecs: { typeVariant: 'Jacquard / Dobby Custom Patterns' },
       },
       {
-        id: 'special-gsm',
-        name: 'Special GSM & Width',
+        id: 'custom-hardware',
+        name: 'Custom Hardware Casting',
+        categoryLabel: 'Custom',
+        image: '/assets/materials/accessories.jpg',
+        category: 'other',
+        defaultSpecs: { typeVariant: 'Engraved Logo Buttons & Sliders' },
+      },
+      {
+        id: 'eco-sustainable',
+        name: 'Sustainable / Organic',
         categoryLabel: 'Custom',
         image: '/assets/materials/fabrics/canvas-gada.jpg',
         category: 'other',
-        defaultSpecs: { typeVariant: 'Extra-Wide / Heavy Canvas Specs' },
-      },
-      {
-        id: 'branded-hardware',
-        name: 'Branded Hardware',
-        categoryLabel: 'Custom',
-        image: '/assets/materials/tags.jpg',
-        category: 'other',
-        defaultSpecs: { typeVariant: 'Laser-Engraved Metal Hardware' },
-      },
-      {
-        id: 'slitting-cutting',
-        name: 'Precision Slitting',
-        categoryLabel: 'Custom',
-        image: '/assets/materials/processing.jpg',
-        category: 'processing',
-        defaultSpecs: { typeVariant: 'High-Precision Edge Slitting & Scalping' },
+        defaultSpecs: { typeVariant: 'GOTS Certified Organic Cotton' },
       },
     ],
   },
@@ -238,35 +244,27 @@ const SUB_SWATCHES: Record<
 
 const INITIAL_REQUEST: MaterialRequestData = {
   category: 'fabric',
-  materialName: 'Cotton',
-  specifications: {
-    typeVariant: '',
-    composition: '',
-    gsmOrWeight: '',
-    widthOrSize: '',
-    colourPreference: '',
-    elasticity: '',
-    patternOrFinish: '',
-    customDetails: '',
-  },
-  hasPhysicalSample: false,
-  sampleCourierNotes: '',
-  quantity: '',
+  materialName: '',
+  quantity: '1,200',
   unit: 'Metres',
-  purpose: 'Bulk Garment Production',
-  targetTimeline: 'Standard Production (Within 2-3 weeks)',
-  testingRequirements: '',
+  urgency: 'flexible',
+  targetDate: 'May 2026',
+  width: '58 / 60 inches',
+  gsmOrWeight: '180 - 220 GSM',
+  composition: '100% Ring-Spun Combed Cotton',
+  weaveOrFinish: 'Enzyme Washed, Mercerized',
+  colorOrShade: 'Natural Off-White / Lab Dip',
   contactName: '',
   companyName: '',
   phone: '',
   email: '',
   cityState: '',
+  preferredContactMethod: 'whatsapp',
   additionalNotes: '',
 };
 
-const STORAGE_SUBMISSIONS_KEY = 'cf_material_submissions_v1';
-const VERIFIED_PHONE = '+91 88264 15868';
-const VERIFIED_PHONE_RAW = '918826415868';
+const VERIFIED_PHONE_RAW = '919443223150';
+const VERIFIED_PHONE_DISPLAY = '+91 94432 23150';
 
 export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
   initialData,
@@ -274,11 +272,13 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
   onExploreCatalogue,
   onReachUs,
 }) => {
-  // Step 3 is the default active step matching the reference screenshot!
-  const [currentStep, setCurrentStep] = useState<number>(3);
+  // Step indicator starts at 1 (NO auto-ticks!)
+  const [currentStep, setCurrentStep] = useState<1 | 2 | 3>(1);
+
+  // Active Category Pillar
   const [activeMainCategory, setActiveMainCategory] = useState<MainDiscoveryCategory>('fabric');
 
-  // Selected Kit items — initialized with Cotton matching reference image
+  // Selected Material Swatches (User selects item)
   const [selectedKit, setSelectedKit] = useState<KitItem[]>(() => {
     if (similarProduct) {
       return [
@@ -314,38 +314,34 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
     ];
   });
 
-  const [selectedPillars, setSelectedPillars] = useState<Set<MainDiscoveryCategory>>(
-    new Set(['fabric'])
-  );
-
   // Form State
   const [formData, setFormData] = useState<MaterialRequestData>(() => ({
     ...INITIAL_REQUEST,
     ...initialData,
-    materialName: similarProduct ? similarProduct.name : 'Cotton',
+    materialName: similarProduct ? similarProduct.name : 'Cotton Fabric',
     similarToProductCode: similarProduct?.productCode,
     similarToProductName: similarProduct?.name,
   }));
 
-  const [isQuantityUndecided, setIsQuantityUndecided] = useState<boolean>(true);
+  const [isQuantityUndecided, setIsQuantityUndecided] = useState<boolean>(false);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Validation
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  // Validation States
+  const [step1Error, setStep1Error] = useState<string>('');
+  const [step2Error, setStep2Error] = useState<string>('');
+  const [step3Error, setStep3Error] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [submissionSuccess, setSubmissionSuccess] = useState<MaterialRequestSubmission | null>(
-    null
-  );
+  const [submissionSuccess, setSubmissionSuccess] = useState<MaterialRequestSubmission | null>(null);
 
-  // 3D Mouse Parallax for Hero Artwork
+  // Mouse Parallax / 3D Tilt for Hero Showcase
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const heroArtworkRef = useRef<HTMLDivElement>(null);
+  const heroCardRef = useRef<HTMLDivElement>(null);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    if (!heroArtworkRef.current) return;
-    const rect = heroArtworkRef.current.getBoundingClientRect();
+    if (!heroCardRef.current) return;
+    const rect = heroCardRef.current.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
     setMousePos({ x, y });
@@ -355,192 +351,250 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
     setMousePos({ x: 0, y: 0 });
   };
 
-  // Check if all Step 3 required fields are valid
-  const isStep3Valid = Boolean(
-    formData.contactName &&
-      formData.contactName.trim().length >= 2 &&
-      formData.phone &&
-      formData.phone.trim().length >= 7 &&
-      formData.email &&
-      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim()) &&
-      formData.cityState &&
-      formData.cityState.trim().length >= 2
-  );
-
-  // Swatch toggles
+  // Swatch Toggle Handler
   const handleToggleSwatch = (item: KitItem) => {
+    setStep1Error('');
     setSelectedKit((prev) => {
       const exists = prev.some((k) => k.id === item.id);
       if (exists) {
+        if (prev.length === 1) return prev; // Keep at least one
         return prev.filter((k) => k.id !== item.id);
       } else {
         return [...prev, item];
       }
     });
+
+    // Update material name and specs dynamically
+    setFormData((prev) => ({
+      ...prev,
+      category: item.category,
+      materialName: item.name,
+      composition: item.defaultSpecs?.composition || prev.composition,
+      weaveOrFinish: item.defaultSpecs?.typeVariant || prev.weaveOrFinish,
+    }));
   };
 
-  const handleRemoveFromKit = (id: string) => {
-    setSelectedKit((prev) => prev.filter((item) => item.id !== id));
-  };
-
-  const handleClearKit = () => {
-    setSelectedKit([]);
-  };
-
-  // Upload handler
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const files = Array.from(e.target.files);
-      files.forEach((file) => {
-        const reader = new FileReader();
-        reader.onload = (ev) => {
-          setUploadedFiles((prev) => [
-            ...prev,
-            {
-              name: file.name,
-              dataUrl: ev.target?.result as string,
-              sizeKb: Math.round(file.size / 1024),
-            },
-          ]);
-        };
-        reader.readAsDataURL(file);
-      });
+  // Step 1 Validation & Proceed
+  const handleProceedToStep2 = () => {
+    if (selectedKit.length === 0) {
+      setStep1Error('Please select at least one material type to proceed *');
+      return;
     }
+    setStep1Error('');
+    setCurrentStep(2);
+    window.scrollTo({ top: 350, behavior: 'smooth' });
   };
 
-  // Submission
+  // Step 2 Validation & Proceed
+  const handleProceedToStep3 = () => {
+    if (!formData.materialName || formData.materialName.trim().length === 0) {
+      setStep2Error('Please enter the Material / Fabric name *');
+      return;
+    }
+    if (!isQuantityUndecided && (!formData.quantity || formData.quantity.trim().length === 0)) {
+      setStep2Error('Please specify the required quantity or check undecided *');
+      return;
+    }
+    setStep2Error('');
+    setCurrentStep(3);
+    window.scrollTo({ top: 350, behavior: 'smooth' });
+  };
+
+  // File Upload Handlers
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+
+    Array.from(files).forEach((file) => {
+      if (file.size > 8 * 1024 * 1024) {
+        alert(`File ${file.name} is larger than 8MB limit.`);
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        setUploadedFiles((prev) => [
+          ...prev,
+          {
+            name: file.name,
+            dataUrl: ev.target?.result as string,
+            sizeKb: Math.round(file.size / 1024),
+          },
+        ]);
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const handleRemoveFile = (index: number) => {
+    setUploadedFiles((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  // Step 3 Submit Handler
   const handleSubmitEnquiry = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isStep3Valid) {
-      setErrors({ form: 'Please fill all required fields marked with * to continue.' });
+
+    if (!formData.contactName || formData.contactName.trim().length < 2) {
+      setStep3Error('Please provide your full name *');
+      return;
+    }
+    if (!formData.phone || formData.phone.trim().length < 7) {
+      setStep3Error('Please provide a valid Phone / WhatsApp number *');
+      return;
+    }
+    if (
+      !formData.email ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())
+    ) {
+      setStep3Error('Please provide a valid email address *');
+      return;
+    }
+    if (!formData.cityState || formData.cityState.trim().length < 2) {
+      setStep3Error('Please specify your delivery location / city *');
       return;
     }
 
+    setStep3Error('');
     setIsSubmitting(true);
-    try {
-      const timestamp = Date.now();
-      const randomCode = Math.floor(1000 + Math.random() * 9000);
-      const referenceCode = `CF-REQ-${new Date().getFullYear()}-${randomCode}`;
 
+    setTimeout(() => {
+      const code = `CF-REQ-${Math.floor(100000 + Math.random() * 900000)}`;
       const submission: MaterialRequestSubmission = {
         ...formData,
-        materialName:
-          selectedKit.map((k) => k.name).join(', ') || formData.materialName || 'Cotton',
-        category: selectedKit[0]?.category || 'fabric',
-        quantity: isQuantityUndecided ? 'Sampling / Undecided' : formData.quantity || 'Sampling / Undecided',
-        referenceImages: uploadedFiles.map((f) => ({
-          name: f.name,
-          dataUrl: f.dataUrl,
-          sizeKb: f.sizeKb,
-        })),
-        id: `submission-${timestamp}`,
-        referenceCode,
-        submittedAt: timestamp,
+        id: `submission_${Date.now()}`,
+        referenceCode: code,
+        submittedAt: new Date().toISOString(),
+        status: 'received',
       };
 
-      try {
-        const existingRaw = localStorage.getItem(STORAGE_SUBMISSIONS_KEY);
-        const list = existingRaw ? JSON.parse(existingRaw) : [];
-        list.unshift(submission);
-        localStorage.setItem(STORAGE_SUBMISSIONS_KEY, JSON.stringify(list));
-      } catch (err) {
-        console.warn('Storage error:', err);
-      }
-
       setSubmissionSuccess(submission);
-    } catch (err) {
-      setErrors({ form: 'Failed to process enquiry. Please WhatsApp us directly.' });
-    } finally {
       setIsSubmitting(false);
-    }
+      window.scrollTo({ top: 100, behavior: 'smooth' });
+    }, 700);
   };
 
+  // WhatsApp Enquiry Link Builder
   const getWhatsAppEnquiryUrl = (submission: MaterialRequestSubmission) => {
-    const selectedNames = selectedKit.map((k) => k.name).join(', ') || submission.materialName;
-    const qtyText = isQuantityUndecided ? 'Sampling / Undecided' : `${submission.quantity} ${submission.unit}`;
-    const text = encodeURIComponent(
-      `Hello Classic Fashions, I submitted a Material Request on your website.\n\n` +
-        `*Reference Code:* ${submission.referenceCode}\n` +
-        `*Client Name:* ${submission.contactName}\n` +
-        `*Company:* ${submission.companyName || 'N/A'}\n` +
-        `*Materials Required:* ${selectedNames}\n` +
-        `*Quantity:* ${qtyText}\n` +
-        `*Delivery Location:* ${submission.cityState}\n\n` +
-        `Please check availability and send pricing.`
-    );
+    const lines = [
+      `*CLASSIC FASHIONS — MATERIAL BRIEF [${submission.referenceCode}]*`,
+      ``,
+      `*Selected Material:* ${submission.materialName} (${submission.category})`,
+      `*Quantity:* ${isQuantityUndecided ? 'Sampling First / Undecided' : `${submission.quantity} ${submission.unit}`}`,
+      `*Target Timeline:* ${submission.targetDate || 'Flexible'}`,
+      `*Width & GSM:* ${submission.width || 'Standard'} | ${submission.gsmOrWeight || 'Standard'}`,
+      `*Composition:* ${submission.composition || 'As per sample'}`,
+      `*Finish:* ${submission.weaveOrFinish || 'Standard'}`,
+      ``,
+      `*Contact:* ${submission.contactName}`,
+      `*Company:* ${submission.companyName || 'Not specified'}`,
+      `*Phone:* ${submission.phone}`,
+      `*Email:* ${submission.email}`,
+      `*Delivery Location:* ${submission.cityState}`,
+      submission.additionalNotes ? `*Notes:* ${submission.additionalNotes}` : '',
+    ].filter(Boolean);
+
+    const text = encodeURIComponent(lines.join('\n'));
     return `https://wa.me/${VERIFIED_PHONE_RAW}?text=${text}`;
   };
 
   return (
-    <div className="bg-[#07110D] text-[#F7F3EA] min-h-screen pb-28 relative overflow-hidden font-sans selection:bg-[#C69A59] selection:text-[#07110D]">
-      {/* Deep Obsidian & Emerald Ambient Lighting Gradients */}
+    <div className="bg-[#FAF8F5] text-[#181715] min-h-screen pb-24 relative overflow-hidden font-sans selection:bg-[#D4AF37] selection:text-[#181715]">
+      {/* Refined Luxury Ambient Backdrop Atmosphere */}
       <div
         aria-hidden="true"
-        className="absolute top-0 right-0 w-full sm:w-3/4 h-[750px] pointer-events-none opacity-40 mix-blend-screen"
+        className="absolute top-0 right-0 w-full sm:w-2/3 h-[600px] pointer-events-none opacity-60"
         style={{
           background:
-            'radial-gradient(ellipse 70% 55% at 75% 15%, rgba(21, 43, 34, 0.95), rgba(7, 17, 13, 0.4) 60%, transparent 80%)',
+            'radial-gradient(ellipse 65% 50% at 80% 20%, rgba(212, 175, 55, 0.08), rgba(245, 240, 230, 0.4) 60%, transparent 80%)',
         }}
       />
       <div
         aria-hidden="true"
-        className="absolute top-32 left-0 w-[500px] h-[500px] pointer-events-none opacity-15"
+        className="absolute top-48 left-0 w-[550px] h-[550px] pointer-events-none opacity-40"
         style={{
           background:
-            'radial-gradient(circle at 20% 30%, rgba(198, 154, 89, 0.2), transparent 70%)',
+            'radial-gradient(circle at 10% 20%, rgba(140, 101, 52, 0.05), transparent 70%)',
         }}
       />
 
       {/* ========================================================================= */}
-      {/* 1. HERO SECTION — EXACT PIXEL-PERFECT RECREATION OF REFERENCE IMAGE      */}
+      {/* 1. HERO SECTION — ELEGANT LIGHT LUXURY TEXTILE SHOWCASE                    */}
       {/* ========================================================================= */}
-      <section className="relative pt-8 sm:pt-12 pb-6 sm:pb-8">
+      <section className="relative pt-8 sm:pt-12 pb-8 sm:pb-10 border-b border-[#ECE7DE]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             {/* Left Hero Content */}
             <div className="lg:col-span-6 space-y-4">
-              <span className="text-xs font-mono font-semibold uppercase tracking-[0.25em] text-[#C69A59] block">
-                REQUEST MATERIAL
-              </span>
-
-              <div className="space-y-2">
-                <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#F7F3EA] leading-[1.12]">
-                  Build Your <br />
-                  Material <span className="text-[#C69A59]">Brief</span>
-                </h1>
-                {/* Thin gold accent line */}
-                <div className="w-12 h-[1.5px] bg-[#C69A59] rounded-full" />
+              <div className="inline-flex items-center gap-2 bg-[#F3EFE6] border border-[#DDD6C8] px-3 py-1 rounded-full">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#8C6534]" />
+                <span className="text-[11px] font-mono font-semibold uppercase tracking-[0.2em] text-[#8C6534]">
+                  REQUEST MATERIAL
+                </span>
               </div>
 
-              <p className="text-sm sm:text-base text-[#D4D0C6] leading-relaxed max-w-xl">
+              <div className="space-y-3">
+                <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#181715] leading-[1.12]">
+                  Build Your <br />
+                  Material <span className="text-[#8C6534]">Brief</span>
+                </h1>
+                {/* Thin gold accent line */}
+                <div className="w-14 h-[2px] bg-gradient-to-r from-[#8C6534] to-[#D4AF37] rounded-full" />
+              </div>
+
+              <p className="text-sm sm:text-base text-[#6B665E] leading-relaxed max-w-xl">
                 Tell us what you need. Select materials, add references and our team will help you
                 build the perfect solution.
               </p>
             </div>
 
-            {/* Right Hero: 3D Luxury Textile Artwork Installation */}
+            {/* Right Hero: High-Definition Textile Installation with Wide Spread Shadow & Soft Blur */}
             <div
-              ref={heroArtworkRef}
+              ref={heroCardRef}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
               className="lg:col-span-6 relative flex justify-center lg:justify-end"
             >
-              <div
-                className="relative rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.5)] transition-transform duration-200 ease-out"
-                style={{
-                  transform: `perspective(1000px) rotateY(${mousePos.x * 4}deg) rotateX(${
-                    -mousePos.y * 4
-                  }deg)`,
-                }}
-              >
-                <div className="relative aspect-[2.35/1] w-full max-w-[540px] bg-[#07110D] overflow-hidden rounded-2xl">
-                  <img
-                    src="/assets/materials/dark-hero-3d-textile.jpg"
-                    alt="3D Luxury Textile Installation with Folded Fabrics and Gold CF Monogram"
-                    className="w-full h-full object-cover"
-                  />
-                  {/* Subtle edge blend overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#07110D]/60 via-transparent to-transparent pointer-events-none" />
+              <div className="relative w-full max-w-[540px] group">
+                {/* Ambient Backlight Spread Glow */}
+                <div
+                  aria-hidden="true"
+                  className="absolute -inset-4 bg-gradient-to-tr from-[#D4AF37]/25 via-[#C49A55]/20 to-[#8C6534]/15 rounded-3xl blur-3xl opacity-75 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                />
+
+                {/* HD Image Showcase Container with Soft Diffuse Spread Shadow */}
+                <div
+                  className="relative rounded-3xl overflow-hidden bg-white border border-[#E5E0D8] transition-transform duration-300 ease-out"
+                  style={{
+                    boxShadow:
+                      '0 25px 60px -12px rgba(24, 23, 21, 0.12), 0 10px 25px -5px rgba(24, 23, 21, 0.06), 0 0 35px rgba(212, 175, 55, 0.14)',
+                    transform: `perspective(1000px) rotateY(${mousePos.x * 3}deg) rotateX(${
+                      -mousePos.y * 3
+                    }deg)`,
+                  }}
+                >
+                  <div className="relative aspect-[16/9] w-full overflow-hidden bg-[#ECE7DC]">
+                    <img
+                      src="/assets/materials/fabrics.jpg"
+                      alt="High-Definition Studio Fabric Rolls and Combed Linens"
+                      className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105"
+                    />
+                    {/* Soft gradient blend */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
+
+                    {/* Floating Frosted Glass Overlay Badges */}
+                    <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between pointer-events-none">
+                      <div className="bg-white/90 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/80 shadow-md flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-[#8C6534] animate-pulse" />
+                        <span className="font-mono text-[10px] tracking-wider font-semibold uppercase text-[#181715]">
+                          STUDIO TEXTILE ARCHIVE
+                        </span>
+                      </div>
+                      <div className="bg-[#181715]/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-[#D4AF37]/50 shadow-md">
+                        <span className="font-mono text-[10px] tracking-wider font-semibold uppercase text-[#E5C58D]">
+                          CERTIFIED MILLS
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -549,33 +603,48 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
       </section>
 
       {/* ========================================================================= */}
-      {/* 2. PROGRESS INDICATOR CAPSULE (CENTER-LEFT)                               */}
+      {/* 2. DYNAMIC PROGRESS CAPSULE (Starts at Step 1, NO auto-ticks!)             */}
       {/* ========================================================================= */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-2 mb-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 mb-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           <div className="lg:col-span-7">
             <div
-              className="rounded-2xl border border-[rgba(224,196,143,0.28)] bg-[rgba(225,235,223,0.04)] px-5 py-3.5 backdrop-blur-xl shadow-[0_10px_30px_rgba(0,0,0,0.35)] flex items-center justify-between gap-2"
+              className="rounded-2xl border border-[#E5E0D8] bg-white/90 backdrop-blur-xl px-5 py-3.5 flex items-center justify-between gap-2"
               style={{
                 boxShadow:
-                  'inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 12px 36px rgba(0, 0, 0, 0.35)',
+                  '0 10px 30px -5px rgba(24, 23, 21, 0.05), 0 4px 12px rgba(24, 23, 21, 0.02)',
               }}
             >
-              {/* Step 1: Choose Material (Completed ✓) */}
+              {/* Step 1: Choose Material */}
               <button
                 type="button"
                 onClick={() => setCurrentStep(1)}
-                className="flex items-center gap-3 group text-left cursor-pointer"
+                className={`flex items-center gap-3 text-left transition-all cursor-pointer ${
+                  currentStep === 1
+                    ? 'opacity-100'
+                    : currentStep > 1
+                    ? 'opacity-90 hover:opacity-100'
+                    : 'opacity-60'
+                }`}
               >
-                <div className="w-7 h-7 rounded-full bg-[#C69A59] text-[#07110D] flex items-center justify-center font-bold shrink-0 shadow-xs">
-                  <Check className="w-4 h-4 stroke-[3]" />
+                <div
+                  className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shrink-0 transition-all ${
+                    currentStep > 1
+                      ? 'bg-[#181715] text-[#D4AF37] shadow-xs'
+                      : currentStep === 1
+                      ? 'bg-[#8C6534] text-white ring-4 ring-[#8C6534]/20 shadow-xs'
+                      : 'border border-[#D1CCC2] text-[#8C877E] bg-[#FAF8F5]'
+                  }`}
+                >
+                  {currentStep > 1 ? <Check className="w-4 h-4 stroke-[3]" /> : '1'}
                 </div>
                 <div className="hidden sm:block">
-                  <h4 className="font-semibold text-xs text-[#F7F3EA] leading-tight">
+                  <h4 className="font-semibold text-xs text-[#181715] leading-tight flex items-center gap-1">
                     Choose Material
+                    <span className="text-[#C4432B] font-bold text-[13px]">*</span>
                   </h4>
-                  <p className="text-[10px] text-[#AAA79D] leading-tight">
-                    Pick fabrics, accessories or custom development
+                  <p className="text-[10px] text-[#78736B] leading-tight">
+                    Pick fabrics, accessories or custom
                   </p>
                 </div>
               </button>
@@ -583,23 +652,44 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
               {/* Dotted Line Separator */}
               <div
                 aria-hidden="true"
-                className="h-[1px] flex-1 border-t border-dashed border-[rgba(224,196,143,0.25)] mx-2 hidden sm:block"
+                className={`h-[1px] flex-1 border-t border-dashed mx-2 hidden sm:block ${
+                  currentStep > 1 ? 'border-[#8C6534]' : 'border-[#DDD7CD]'
+                }`}
               />
 
-              {/* Step 2: Your Requirement (Completed ✓) */}
+              {/* Step 2: Your Requirement */}
               <button
                 type="button"
-                onClick={() => setCurrentStep(2)}
-                className="flex items-center gap-3 group text-left cursor-pointer"
+                onClick={() => {
+                  if (selectedKit.length > 0) setCurrentStep(2);
+                }}
+                className={`flex items-center gap-3 text-left transition-all ${
+                  selectedKit.length > 0 ? 'cursor-pointer' : 'cursor-not-allowed'
+                } ${
+                  currentStep === 2
+                    ? 'opacity-100'
+                    : currentStep > 2
+                    ? 'opacity-90 hover:opacity-100'
+                    : 'opacity-60'
+                }`}
               >
-                <div className="w-7 h-7 rounded-full bg-[#C69A59] text-[#07110D] flex items-center justify-center font-bold shrink-0 shadow-xs">
-                  <Check className="w-4 h-4 stroke-[3]" />
+                <div
+                  className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shrink-0 transition-all ${
+                    currentStep > 2
+                      ? 'bg-[#181715] text-[#D4AF37] shadow-xs'
+                      : currentStep === 2
+                      ? 'bg-[#8C6534] text-white ring-4 ring-[#8C6534]/20 shadow-xs'
+                      : 'border border-[#D1CCC2] text-[#8C877E] bg-[#FAF8F5]'
+                  }`}
+                >
+                  {currentStep > 2 ? <Check className="w-4 h-4 stroke-[3]" /> : '2'}
                 </div>
                 <div className="hidden sm:block">
-                  <h4 className="font-semibold text-xs text-[#F7F3EA] leading-tight">
+                  <h4 className="font-semibold text-xs text-[#181715] leading-tight flex items-center gap-1">
                     Your Requirement
+                    <span className="text-[#C4432B] font-bold text-[13px]">*</span>
                   </h4>
-                  <p className="text-[10px] text-[#AAA79D] leading-tight">
+                  <p className="text-[10px] text-[#78736B] leading-tight">
                     Add details, quantity and reference
                   </p>
                 </div>
@@ -608,24 +698,39 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
               {/* Dotted Line Separator */}
               <div
                 aria-hidden="true"
-                className="h-[1px] flex-1 border-t border-dashed border-[rgba(224,196,143,0.25)] mx-2 hidden sm:block"
+                className={`h-[1px] flex-1 border-t border-dashed mx-2 hidden sm:block ${
+                  currentStep > 2 ? 'border-[#8C6534]' : 'border-[#DDD7CD]'
+                }`}
               />
 
-              {/* Step 3: Contact Details (Active Step 3) */}
+              {/* Step 3: Contact Details */}
               <button
                 type="button"
-                onClick={() => setCurrentStep(3)}
-                className="flex items-center gap-3 group text-left cursor-pointer"
+                onClick={() => {
+                  if (selectedKit.length > 0 && formData.materialName) setCurrentStep(3);
+                }}
+                className={`flex items-center gap-3 text-left transition-all ${
+                  currentStep === 3
+                    ? 'opacity-100'
+                    : 'opacity-60 cursor-pointer'
+                }`}
               >
-                <div className="w-7 h-7 rounded-full bg-[#10251C] border border-[#C69A59] text-[#E5C58D] flex items-center justify-center font-bold text-xs shrink-0 shadow-xs ring-2 ring-[#C69A59]/20">
+                <div
+                  className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shrink-0 transition-all ${
+                    currentStep === 3
+                      ? 'bg-[#8C6534] text-white ring-4 ring-[#8C6534]/20 shadow-xs'
+                      : 'border border-[#D1CCC2] text-[#8C877E] bg-[#FAF8F5]'
+                  }`}
+                >
                   3
                 </div>
                 <div className="hidden sm:block">
-                  <h4 className="font-semibold text-xs text-[#F7F3EA] leading-tight">
+                  <h4 className="font-semibold text-xs text-[#181715] leading-tight flex items-center gap-1">
                     Contact Details
+                    <span className="text-[#C4432B] font-bold text-[13px]">*</span>
                   </h4>
-                  <p className="text-[10px] text-[#AAA79D] leading-tight">
-                    Share your info and submit your request
+                  <p className="text-[10px] text-[#78736B] leading-tight">
+                    Share your info and submit brief
                   </p>
                 </div>
               </button>
@@ -640,33 +745,33 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
       {submissionSuccess && (
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 animate-in fade-in duration-300">
           <div
-            className="rounded-2xl border border-[rgba(224,196,143,0.28)] bg-[rgba(225,235,223,0.055)] backdrop-blur-2xl p-8 sm:p-12 shadow-[0_20px_60px_rgba(0,0,0,0.5)] text-center space-y-6"
+            className="rounded-3xl border border-[#E5E0D8] bg-white p-8 sm:p-12 text-center space-y-6"
             style={{
               boxShadow:
-                'inset 0 1px 0 rgba(255, 255, 255, 0.10), 0 20px 60px rgba(0, 0, 0, 0.45)',
+                '0 25px 65px -12px rgba(24, 23, 21, 0.12), 0 0 30px rgba(212, 175, 55, 0.10)',
             }}
           >
-            <div className="w-16 h-16 rounded-full bg-[#C69A59]/15 text-[#C69A59] flex items-center justify-center mx-auto ring-8 ring-[#C69A59]/10">
-              <CheckCircle className="w-8 h-8 text-[#C69A59]" />
+            <div className="w-16 h-16 rounded-full bg-[#F3EFE6] text-[#8C6534] flex items-center justify-center mx-auto ring-8 ring-[#8C6534]/10">
+              <CheckCircle className="w-8 h-8 text-[#8C6534]" />
             </div>
 
             <div className="space-y-2">
-              <span className="text-xs font-mono uppercase tracking-widest text-[#C69A59] font-semibold">
+              <span className="text-xs font-mono uppercase tracking-widest text-[#8C6534] font-semibold">
                 MATERIAL BRIEF LOGGED
               </span>
-              <h2 className="font-serif text-3xl font-bold text-[#F7F3EA]">
+              <h2 className="font-serif text-3xl font-bold text-[#181715]">
                 Thank You, {submissionSuccess.contactName}
               </h2>
-              <p className="text-sm text-[#D4D0C6] max-w-lg mx-auto">
+              <p className="text-sm text-[#6B665E] max-w-lg mx-auto">
                 Your material request has been logged. Our textile sourcing specialists in Tiruppur
                 will review your specifications and contact you with suitable swatch options and
                 pricing.
               </p>
             </div>
 
-            <div className="inline-block bg-[rgba(225,235,223,0.04)] border border-[rgba(224,196,143,0.28)] rounded-xl px-6 py-3">
-              <span className="text-xs text-[#AAA79D] uppercase font-mono block">Enquiry Reference Code</span>
-              <span className="font-mono text-lg font-bold text-[#E5C58D] tracking-wider">
+            <div className="inline-block bg-[#FAF8F5] border border-[#DDD7CD] rounded-2xl px-6 py-3 shadow-xs">
+              <span className="text-xs text-[#8C877E] uppercase font-mono block">Enquiry Reference Code</span>
+              <span className="font-mono text-xl font-bold text-[#8C6534] tracking-wider">
                 {submissionSuccess.referenceCode}
               </span>
             </div>
@@ -676,7 +781,7 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                 href={getWhatsAppEnquiryUrl(submissionSuccess)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1EBE5D] text-white px-6 py-3.5 rounded-xl font-medium text-sm transition-all shadow-xs"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1EBE5D] text-white px-6 py-3.5 rounded-xl font-medium text-sm transition-all shadow-md hover:shadow-lg cursor-pointer"
               >
                 <span>Direct WhatsApp Confirmation</span>
                 <ExternalLink className="w-4 h-4" />
@@ -685,7 +790,7 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
               <button
                 type="button"
                 onClick={onExploreCatalogue}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#C69A59] hover:bg-[#D4A866] text-[#07110D] font-bold px-6 py-3.5 rounded-xl text-sm transition-all shadow-xs cursor-pointer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#181715] hover:bg-[#2B2824] text-white font-bold px-6 py-3.5 rounded-xl text-sm transition-all shadow-md cursor-pointer"
               >
                 <span>Explore Digital Catalogue</span>
                 <ArrowRight className="w-4 h-4" />
@@ -695,9 +800,9 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                 type="button"
                 onClick={() => {
                   setSubmissionSuccess(null);
-                  setCurrentStep(3);
+                  setCurrentStep(1);
                 }}
-                className="w-full sm:w-auto text-xs font-semibold uppercase tracking-wider text-[#AAA79D] hover:text-[#F7F3EA] py-2 px-4 transition-colors cursor-pointer"
+                className="w-full sm:w-auto text-xs font-semibold uppercase tracking-wider text-[#8C877E] hover:text-[#181715] py-2 px-4 transition-colors cursor-pointer"
               >
                 Submit Another Brief
               </button>
@@ -716,279 +821,112 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
             {/* LEFT COLUMN: ACTIVE STEP FORM PANEL (~58% WIDTH)                    */}
             {/* ------------------------------------------------------------------- */}
             <div className="lg:col-span-7 space-y-6">
-              {/* STEP 3: CONTACT DETAILS (EXACT MATCH OF REFERENCE IMAGE) */}
-              {currentStep === 3 && (
-                <div
-                  className="rounded-2xl border border-[rgba(224,196,143,0.28)] bg-[rgba(225,235,223,0.045)] p-6 sm:p-8 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.45)] space-y-6 relative overflow-hidden"
-                  style={{
-                    boxShadow:
-                      'inset 0 1px 0 rgba(255, 255, 255, 0.10), inset 0 -1px 0 rgba(255, 255, 255, 0.025), 0 20px 60px rgba(0, 0, 0, 0.28)',
-                  }}
-                >
-                  {/* Panel Header */}
-                  <div className="flex items-start justify-between gap-4 border-b border-[rgba(225,210,180,0.12)] pb-4">
-                    <div>
-                      <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#F7F3EA] tracking-tight">
-                        3. Contact Details
-                      </h2>
-                      <p className="text-xs sm:text-sm text-[#AAA79D] mt-1">
-                        Provide your details so our team can send pricing, lead time, and swatch
-                        availability.
-                      </p>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={() => setCurrentStep(2)}
-                      className="inline-flex items-center gap-1.5 text-xs text-[#D4D0C6] hover:text-[#C69A59] transition-colors shrink-0 pt-1 cursor-pointer"
-                    >
-                      <ArrowLeft className="w-3.5 h-3.5" />
-                      <span>Back to Requirements</span>
-                    </button>
-                  </div>
-
-                  {/* Form */}
-                  <form onSubmit={handleSubmitEnquiry} className="space-y-4">
-                    {/* Row 1: Full Name & Company */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-[#AAA79D] font-semibold mb-1.5">
-                          FULL NAME <span className="text-[#C69A59]">*</span>
-                        </label>
-                        <div className="relative">
-                          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#7D7A72]">
-                            <User className="w-4 h-4" />
-                          </div>
-                          <input
-                            type="text"
-                            required
-                            value={formData.contactName}
-                            onChange={(e) =>
-                              setFormData({ ...formData, contactName: e.target.value })
-                            }
-                            placeholder="Your Name"
-                            className="w-full pl-10 pr-3.5 py-3 text-xs sm:text-sm rounded-xl border border-[rgba(224,196,143,0.28)] bg-[rgba(225,235,223,0.035)] text-[#F7F3EA] placeholder-[#7D7A72] focus:outline-none focus:border-[#C69A59] focus:ring-1 focus:ring-[#C69A59] transition-all shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
-                          />
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className="block font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-[#AAA79D] font-semibold mb-1.5">
-                          COMPANY / BRAND (OPTIONAL)
-                        </label>
-                        <div className="relative">
-                          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#7D7A72]">
-                            <Building className="w-4 h-4" />
-                          </div>
-                          <input
-                            type="text"
-                            value={formData.companyName}
-                            onChange={(e) =>
-                              setFormData({ ...formData, companyName: e.target.value })
-                            }
-                            placeholder="Apparel Brand / Factory Name"
-                            className="w-full pl-10 pr-3.5 py-3 text-xs sm:text-sm rounded-xl border border-[rgba(224,196,143,0.28)] bg-[rgba(225,235,223,0.035)] text-[#F7F3EA] placeholder-[#7D7A72] focus:outline-none focus:border-[#C69A59] focus:ring-1 focus:ring-[#C69A59] transition-all shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Row 2: Phone & Email */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-[#AAA79D] font-semibold mb-1.5">
-                          PHONE / WHATSAPP <span className="text-[#C69A59]">*</span>
-                        </label>
-                        <div className="relative">
-                          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#7D7A72]">
-                            <Phone className="w-4 h-4" />
-                          </div>
-                          <input
-                            type="tel"
-                            required
-                            value={formData.phone}
-                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                            placeholder="+91 98765 43210"
-                            className="w-full pl-10 pr-3.5 py-3 text-xs sm:text-sm rounded-xl border border-[rgba(224,196,143,0.28)] bg-[rgba(225,235,223,0.035)] text-[#F7F3EA] placeholder-[#7D7A72] focus:outline-none focus:border-[#C69A59] focus:ring-1 focus:ring-[#C69A59] transition-all shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
-                          />
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className="block font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-[#AAA79D] font-semibold mb-1.5">
-                          EMAIL ADDRESS <span className="text-[#C69A59]">*</span>
-                        </label>
-                        <div className="relative">
-                          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#7D7A72]">
-                            <Mail className="w-4 h-4" />
-                          </div>
-                          <input
-                            type="email"
-                            required
-                            value={formData.email}
-                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                            placeholder="buyer@apparel.com"
-                            className="w-full pl-10 pr-3.5 py-3 text-xs sm:text-sm rounded-xl border border-[rgba(224,196,143,0.28)] bg-[rgba(225,235,223,0.035)] text-[#F7F3EA] placeholder-[#7D7A72] focus:outline-none focus:border-[#C69A59] focus:ring-1 focus:ring-[#C69A59] transition-all shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Row 3: Delivery Location & Additional Notes */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-[#AAA79D] font-semibold mb-1.5">
-                          DELIVERY LOCATION (CITY / STATE) <span className="text-[#C69A59]">*</span>
-                        </label>
-                        <div className="relative">
-                          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#7D7A72]">
-                            <MapPin className="w-4 h-4" />
-                          </div>
-                          <input
-                            type="text"
-                            required
-                            value={formData.cityState}
-                            onChange={(e) =>
-                              setFormData({ ...formData, cityState: e.target.value })
-                            }
-                            placeholder="e.g. Tiruppur, Tamil Nadu"
-                            className="w-full pl-10 pr-3.5 py-3 text-xs sm:text-sm rounded-xl border border-[rgba(224,196,143,0.28)] bg-[rgba(225,235,223,0.035)] text-[#F7F3EA] placeholder-[#7D7A72] focus:outline-none focus:border-[#C69A59] focus:ring-1 focus:ring-[#C69A59] transition-all shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
-                          />
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className="block font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-[#AAA79D] font-semibold mb-1.5">
-                          ADDITIONAL NOTES (OPTIONAL)
-                        </label>
-                        <input
-                          type="text"
-                          value={formData.additionalNotes}
-                          onChange={(e) =>
-                            setFormData({ ...formData, additionalNotes: e.target.value })
-                          }
-                          placeholder="Any specific instructions or details..."
-                          className="w-full px-3.5 py-3 text-xs sm:text-sm rounded-xl border border-[rgba(224,196,143,0.28)] bg-[rgba(225,235,223,0.035)] text-[#F7F3EA] placeholder-[#7D7A72] focus:outline-none focus:border-[#C69A59] focus:ring-1 focus:ring-[#C69A59] transition-all shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Bottom Action Bar: Notice Pill on Left + Button on Right */}
-                    <div className="pt-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-                      {/* Required Fields Pill Notice */}
-                      <div className="flex items-center gap-2.5 bg-[rgba(225,235,223,0.03)] border border-[rgba(224,196,143,0.2)] rounded-xl px-4 py-2.5">
-                        <div className="w-4 h-4 rounded-full bg-[#C69A59]/20 text-[#E5C58D] flex items-center justify-center font-bold text-[10px] shrink-0">
-                          !
-                        </div>
-                        <span className="text-xs text-[#AAA79D]">
-                          Please fill all required fields marked with <span className="text-[#C69A59]">*</span> to continue.
-                        </span>
-                      </div>
-
-                      {/* Review & Submit Button */}
-                      <button
-                        type="submit"
-                        disabled={!isStep3Valid || isSubmitting}
-                        className={`inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all duration-300 ${
-                          isStep3Valid
-                            ? 'bg-gradient-to-r from-[#C69A59] to-[#B88A47] hover:from-[#D4A866] hover:to-[#C69A59] text-[#07110D] font-bold shadow-[0_0_25px_rgba(198,154,89,0.35)] cursor-pointer active:scale-95'
-                            : 'bg-[rgba(225,235,223,0.05)] border border-[rgba(224,196,143,0.15)] text-[#7D7A72] cursor-not-allowed'
-                        }`}
-                      >
-                        {isSubmitting ? (
-                          <span>Processing...</span>
-                        ) : (
-                          <>
-                            <span>Review &amp; Submit</span>
-                            <ArrowRight className="w-3.5 h-3.5" />
-                          </>
-                        )}
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              )}
-
-              {/* STEP 1: CHOOSE MATERIAL (IN DARK LUXURY THEME) */}
+              {/* ================================================================= */}
+              {/* STEP 1: CHOOSE MATERIAL                                           */}
+              {/* ================================================================= */}
               {currentStep === 1 && (
                 <div
-                  className="rounded-2xl border border-[rgba(224,196,143,0.28)] bg-[rgba(225,235,223,0.045)] p-6 sm:p-8 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.45)] space-y-6"
+                  className="rounded-3xl border border-[#E5E0D8] bg-white p-6 sm:p-8 space-y-6 relative overflow-hidden"
                   style={{
                     boxShadow:
-                      'inset 0 1px 0 rgba(255, 255, 255, 0.10), inset 0 -1px 0 rgba(255, 255, 255, 0.025), 0 20px 60px rgba(0, 0, 0, 0.28)',
+                      '0 20px 50px -10px rgba(24, 23, 21, 0.08), 0 5px 15px rgba(24, 23, 21, 0.03)',
                   }}
                 >
-                  <div className="flex items-center justify-between border-b border-[rgba(225,210,180,0.12)] pb-4">
-                    <div>
-                      <h2 className="font-serif text-2xl font-bold text-[#F7F3EA] tracking-tight">
-                        1. Choose what you need
+                  {/* Step Header */}
+                  <div className="border-b border-[#ECE7DE] pb-4">
+                    <div className="flex items-center gap-2">
+                      <span className="w-6 h-6 rounded-full bg-[#181715] text-[#D4AF37] flex items-center justify-center font-bold text-xs">
+                        1
+                      </span>
+                      <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#181715] tracking-tight">
+                        Choose what you need
                       </h2>
-                      <p className="text-xs sm:text-sm text-[#AAA79D] mt-1">
-                        Select from our material categories to build your brief.
-                      </p>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => setCurrentStep(2)}
-                      className="text-xs text-[#C69A59] hover:underline cursor-pointer"
-                    >
-                      Next Step &rarr;
-                    </button>
+                    <p className="text-xs sm:text-sm text-[#6B665E] mt-1 ml-8">
+                      Select from our material categories to get started.{' '}
+                      <span className="text-[#C4432B] font-semibold">* Required</span>
+                    </p>
                   </div>
 
-                  {/* 3 Categories in Dark Glass */}
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    {MAIN_CATEGORIES.map((cat) => {
-                      const isSelected = selectedPillars.has(cat.id);
-                      return (
-                        <div
-                          key={cat.id}
-                          onClick={() => {
-                            setActiveMainCategory(cat.id);
-                            setSelectedPillars(new Set([cat.id]));
-                          }}
-                          className={`group rounded-xl border transition-all duration-200 cursor-pointer overflow-hidden flex flex-col ${
-                            isSelected
-                              ? 'border-[#C69A59] bg-[rgba(225,235,223,0.08)] shadow-[0_0_20px_rgba(198,154,89,0.2)]'
-                              : 'border-[rgba(224,196,143,0.2)] bg-[rgba(225,235,223,0.025)] hover:border-[rgba(224,196,143,0.4)]'
-                          }`}
-                        >
-                          <div className="relative h-32 w-full overflow-hidden bg-stone-900">
-                            <img
-                              src={cat.image}
-                              alt={cat.title}
-                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-[#07110D]/90 via-transparent to-transparent pointer-events-none" />
-                          </div>
-                          <div className="p-3.5 flex-1 flex flex-col justify-between">
-                            <div>
-                              <h3 className="font-semibold text-sm text-[#F7F3EA]">{cat.title}</h3>
-                              <p className="text-[11px] text-[#AAA79D] mt-0.5">{cat.subtitle}</p>
+                  {/* 3 Large Category Cards */}
+                  <div>
+                    <label className="block font-mono text-[11px] uppercase tracking-wider text-[#78736B] font-semibold mb-3">
+                      MATERIAL CATEGORY <span className="text-[#C4432B] font-bold">*</span>
+                    </label>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                      {MAIN_CATEGORIES.map((cat) => {
+                        const isSelected = activeMainCategory === cat.id;
+                        return (
+                          <div
+                            key={cat.id}
+                            onClick={() => {
+                              setActiveMainCategory(cat.id);
+                              // Auto-select first swatch of the category
+                              const firstSwatch = SUB_SWATCHES[cat.id].items[0];
+                              if (firstSwatch) {
+                                setSelectedKit([firstSwatch]);
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  category: firstSwatch.category,
+                                  materialName: firstSwatch.name,
+                                  composition: firstSwatch.defaultSpecs?.composition || prev.composition,
+                                  weaveOrFinish: firstSwatch.defaultSpecs?.typeVariant || prev.weaveOrFinish,
+                                }));
+                              }
+                            }}
+                            className={`group rounded-2xl border transition-all duration-300 cursor-pointer overflow-hidden flex flex-col ${
+                              isSelected
+                                ? 'border-[#8C6534] bg-[#FAF8F5] ring-2 ring-[#8C6534]/20 shadow-[0_10px_25px_rgba(140,101,52,0.12)]'
+                                : 'border-[#E5E0D8] bg-white hover:border-[#C4BAA9] hover:shadow-md'
+                            }`}
+                          >
+                            <div className="relative h-32 w-full overflow-hidden bg-[#ECE7DC]">
+                              <img
+                                src={cat.image}
+                                alt={cat.title}
+                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                              />
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
                             </div>
-                            <div className="mt-3 pt-2 border-t border-[rgba(225,210,180,0.1)] flex items-center justify-between">
-                              <span className="text-[10px] font-mono text-[#AAA79D] uppercase">
-                                {activeMainCategory === cat.id ? 'Active' : 'Select'}
-                              </span>
-                              {isSelected ? (
-                                <div className="w-4 h-4 rounded-full bg-[#C69A59] text-[#07110D] flex items-center justify-center">
-                                  <Check className="w-2.5 h-2.5 stroke-[3]" />
-                                </div>
-                              ) : (
-                                <div className="w-4 h-4 rounded-full border border-[rgba(224,196,143,0.3)]" />
-                              )}
+
+                            <div className="p-3.5 flex-1 flex flex-col justify-between">
+                              <div>
+                                <h3 className="font-semibold text-sm text-[#181715]">{cat.title}</h3>
+                                <p className="text-[11px] text-[#78736B] mt-0.5 line-clamp-2">
+                                  {cat.subtitle}
+                                </p>
+                              </div>
+
+                              <div className="mt-3 pt-2 border-t border-[#ECE7DE] flex items-center justify-between">
+                                <span className="text-[10px] font-mono text-[#8C877E] uppercase">
+                                  {isSelected ? 'Selected' : 'Select'}
+                                </span>
+                                {isSelected ? (
+                                  <div className="w-4 h-4 rounded-full bg-[#8C6534] text-white flex items-center justify-center">
+                                    <Check className="w-2.5 h-2.5 stroke-[3]" />
+                                  </div>
+                                ) : (
+                                  <div className="w-4 h-4 rounded-full border border-[#D1CCC2]" />
+                                )}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
                   </div>
 
                   {/* Swatches Grid */}
                   <div className="pt-2">
-                    <h3 className="text-xs font-mono uppercase tracking-wider text-[#AAA79D] font-semibold mb-3">
-                      {SUB_SWATCHES[activeMainCategory].heading}
-                    </h3>
+                    <div className="flex items-center justify-between mb-3">
+                      <label className="font-mono text-[11px] uppercase tracking-wider text-[#78736B] font-semibold">
+                        {SUB_SWATCHES[activeMainCategory].heading}{' '}
+                        <span className="text-[#C4432B] font-bold">*</span>
+                      </label>
+                      <span className="text-[11px] text-[#8C6534]">Click to pick</span>
+                    </div>
+
                     <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
                       {SUB_SWATCHES[activeMainCategory].items.map((item) => {
                         const isChosen = selectedKit.some((k) => k.id === item.id);
@@ -996,25 +934,25 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                           <div
                             key={item.id}
                             onClick={() => handleToggleSwatch(item)}
-                            className={`rounded-xl p-2 border transition-all cursor-pointer flex flex-col items-center ${
+                            className={`rounded-2xl p-2.5 border transition-all cursor-pointer flex flex-col items-center ${
                               isChosen
-                                ? 'border-[#C69A59] bg-[rgba(198,154,89,0.15)] shadow-xs'
-                                : 'border-[rgba(224,196,143,0.2)] bg-[rgba(225,235,223,0.02)] hover:border-[rgba(224,196,143,0.4)]'
+                                ? 'border-[#8C6534] bg-[#FAF8F5] ring-2 ring-[#8C6534]/20 shadow-md'
+                                : 'border-[#E5E0D8] bg-white hover:border-[#C4BAA9] hover:shadow-xs'
                             }`}
                           >
-                            <div className="relative w-full aspect-square rounded-lg overflow-hidden bg-stone-900">
+                            <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-[#ECE7DC]">
                               <img
                                 src={item.image}
                                 alt={item.name}
-                                className="w-full h-full object-cover"
+                                className="w-full h-full object-cover transform transition-transform duration-300 hover:scale-105"
                               />
                               {isChosen && (
-                                <div className="absolute bottom-1 right-1 w-4 h-4 rounded-full bg-[#C69A59] text-[#07110D] flex items-center justify-center">
+                                <div className="absolute bottom-1 right-1 w-4 h-4 rounded-full bg-[#8C6534] text-white flex items-center justify-center shadow-xs">
                                   <Check className="w-2.5 h-2.5 stroke-[3]" />
                                 </div>
                               )}
                             </div>
-                            <span className="text-[11px] font-medium text-center mt-1.5 truncate w-full text-[#F7F3EA]">
+                            <span className="text-[11px] font-semibold text-center mt-2 truncate w-full text-[#181715]">
                               {item.name}
                             </span>
                           </div>
@@ -1023,49 +961,147 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-[rgba(225,210,180,0.12)] flex justify-end">
+                  {/* Drag & Drop Upload Section (Optional) */}
+                  <div className="pt-3">
+                    <label className="block font-mono text-[11px] uppercase tracking-wider text-[#78736B] font-semibold mb-2">
+                      Upload reference images (Optional)
+                    </label>
+
+                    <div
+                      onClick={() => fileInputRef.current?.click()}
+                      className="border-2 border-dashed border-[#DDD7CD] hover:border-[#8C6534] rounded-2xl p-5 text-center cursor-pointer transition-colors bg-[#FAF8F5]/60 hover:bg-[#FAF8F5] flex flex-col items-center justify-center gap-2 group"
+                    >
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        multiple
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        className="hidden"
+                      />
+                      <div className="w-10 h-10 rounded-full bg-white border border-[#E5E0D8] flex items-center justify-center text-[#8C6534] group-hover:scale-110 transition-transform shadow-xs">
+                        <Upload className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold text-[#181715]">
+                          Drag &amp; drop or click to upload reference images
+                        </p>
+                        <p className="text-[11px] text-[#78736B] mt-0.5">
+                          Photos of fabrics, accessories, styles or technical sheets (PNG, JPG up to 8MB)
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Uploaded File Pills */}
+                    {uploadedFiles.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mt-3">
+                        {uploadedFiles.map((file, idx) => (
+                          <div
+                            key={idx}
+                            className="inline-flex items-center gap-2 bg-[#F3EFE6] border border-[#DDD6C8] px-3 py-1.5 rounded-full text-xs"
+                          >
+                            <span className="truncate max-w-[140px] text-[#181715] font-medium">
+                              {file.name}
+                            </span>
+                            <span className="text-[10px] text-[#8C877E] font-mono">
+                              ({file.sizeKb} KB)
+                            </span>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleRemoveFile(idx);
+                              }}
+                              className="text-[#8C877E] hover:text-[#C4432B] transition-colors cursor-pointer"
+                            >
+                              <X className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Step 1 Error Notice */}
+                  {step1Error && (
+                    <div className="p-3 bg-[#FDF2F0] border border-[#F5C2B8] rounded-xl flex items-center gap-2 text-xs text-[#C4432B] font-medium">
+                      <AlertCircle className="w-4 h-4 shrink-0" />
+                      <span>{step1Error}</span>
+                    </div>
+                  )}
+
+                  {/* Step 1 Action Bar */}
+                  <div className="pt-4 border-t border-[#ECE7DE] flex items-center justify-between">
+                    <span className="text-xs text-[#78736B]">
+                      {selectedKit.length} material(s) chosen
+                    </span>
                     <button
                       type="button"
-                      onClick={() => setCurrentStep(2)}
-                      className="bg-gradient-to-r from-[#C69A59] to-[#B88A47] text-[#07110D] font-bold px-6 py-2.5 rounded-xl text-xs uppercase tracking-wider cursor-pointer"
+                      onClick={handleProceedToStep2}
+                      className="inline-flex items-center gap-2 bg-[#181715] hover:bg-[#2B2824] text-white font-bold px-7 py-3 rounded-xl text-xs uppercase tracking-wider transition-all shadow-md hover:shadow-lg cursor-pointer"
                     >
-                      Continue to Requirements &rarr;
+                      <span>Continue to Requirements</span>
+                      <ArrowRight className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
               )}
 
-              {/* STEP 2: YOUR REQUIREMENT (IN DARK LUXURY THEME) */}
+              {/* ================================================================= */}
+              {/* STEP 2: YOUR REQUIREMENT                                          */}
+              {/* ================================================================= */}
               {currentStep === 2 && (
                 <div
-                  className="rounded-2xl border border-[rgba(224,196,143,0.28)] bg-[rgba(225,235,223,0.045)] p-6 sm:p-8 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.45)] space-y-6"
+                  className="rounded-3xl border border-[#E5E0D8] bg-white p-6 sm:p-8 space-y-6"
                   style={{
                     boxShadow:
-                      'inset 0 1px 0 rgba(255, 255, 255, 0.10), inset 0 -1px 0 rgba(255, 255, 255, 0.025), 0 20px 60px rgba(0, 0, 0, 0.28)',
+                      '0 20px 50px -10px rgba(24, 23, 21, 0.08), 0 5px 15px rgba(24, 23, 21, 0.03)',
                   }}
                 >
-                  <div className="flex items-center justify-between border-b border-[rgba(225,210,180,0.12)] pb-4">
-                    <div>
-                      <h2 className="font-serif text-2xl font-bold text-[#F7F3EA] tracking-tight">
-                        2. Specify Your Requirement
-                      </h2>
-                      <p className="text-xs sm:text-sm text-[#AAA79D] mt-1">
-                        Enter quantities, specs, and details for your production.
-                      </p>
+                  <div className="flex items-center justify-between border-b border-[#ECE7DE] pb-4">
+                    <div className="flex items-center gap-2">
+                      <span className="w-6 h-6 rounded-full bg-[#181715] text-[#D4AF37] flex items-center justify-center font-bold text-xs">
+                        2
+                      </span>
+                      <div>
+                        <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#181715] tracking-tight">
+                          Specify Your Requirement
+                        </h2>
+                        <p className="text-xs text-[#6B665E] mt-0.5">
+                          Quantities, specifications, and delivery target.{' '}
+                          <span className="text-[#C4432B] font-semibold">* Required</span>
+                        </p>
+                      </div>
                     </div>
                     <button
                       type="button"
                       onClick={() => setCurrentStep(1)}
-                      className="text-xs text-[#D4D0C6] hover:text-[#C69A59] cursor-pointer"
+                      className="inline-flex items-center gap-1.5 text-xs text-[#78736B] hover:text-[#181715] transition-colors cursor-pointer"
                     >
-                      &larr; Back to Materials
+                      <ArrowLeft className="w-3.5 h-3.5" />
+                      <span>Back to Materials</span>
                     </button>
                   </div>
 
+                  {/* Material / Product Name */}
+                  <div>
+                    <label className="block font-mono text-[11px] uppercase tracking-wider text-[#78736B] font-semibold mb-1.5">
+                      MATERIAL / FABRIC TITLE <span className="text-[#C4432B] font-bold">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.materialName}
+                      onChange={(e) => setFormData({ ...formData, materialName: e.target.value })}
+                      placeholder="e.g. 100% Combed Cotton Single Jersey / Heavy Indigo Twill"
+                      className="w-full px-4 py-3 text-xs sm:text-sm rounded-xl border border-[#DDD7CD] bg-white text-[#181715] placeholder-[#9E988E] focus:outline-none focus:border-[#8C6534] focus:ring-1 focus:ring-[#8C6534] transition-all"
+                    />
+                  </div>
+
                   {/* Quantity & Unit */}
-                  <div className="space-y-3">
-                    <label className="block font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-[#AAA79D] font-semibold">
-                      Required Quantity &amp; Unit
+                  <div className="space-y-2">
+                    <label className="block font-mono text-[11px] uppercase tracking-wider text-[#78736B] font-semibold">
+                      REQUIRED TARGET QUANTITY <span className="text-[#C4432B] font-bold">*</span>
                     </label>
                     <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
                       <div className="sm:col-span-8">
@@ -1074,9 +1110,9 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                           disabled={isQuantityUndecided}
                           value={formData.quantity}
                           onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
-                          placeholder={isQuantityUndecided ? 'Sampling first / Undecided' : 'e.g. 500, 2000'}
-                          className={`w-full px-4 py-3 text-xs sm:text-sm rounded-xl border border-[rgba(224,196,143,0.28)] text-[#F7F3EA] placeholder-[#7D7A72] ${
-                            isQuantityUndecided ? 'bg-stone-900/50 opacity-60' : 'bg-[rgba(225,235,223,0.035)]'
+                          placeholder={isQuantityUndecided ? 'Sampling first / Undecided' : 'e.g. 1,200'}
+                          className={`w-full px-4 py-3 text-xs sm:text-sm rounded-xl border border-[#DDD7CD] text-[#181715] placeholder-[#9E988E] focus:outline-none focus:border-[#8C6534] ${
+                            isQuantityUndecided ? 'bg-[#F5F2EB] opacity-60' : 'bg-white'
                           }`}
                         />
                       </div>
@@ -1085,13 +1121,13 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                           disabled={isQuantityUndecided}
                           value={formData.unit}
                           onChange={(e) => setFormData({ ...formData, unit: e.target.value })}
-                          className="w-full px-3 py-3 text-xs sm:text-sm rounded-xl border border-[rgba(224,196,143,0.28)] bg-[#0B1712] text-[#F7F3EA]"
+                          className="w-full px-3 py-3 text-xs sm:text-sm rounded-xl border border-[#DDD7CD] bg-white text-[#181715] focus:outline-none focus:border-[#8C6534]"
                         >
                           <option value="Metres">Metres</option>
+                          <option value="Yards">Yards</option>
                           <option value="Kilograms">Kilograms (Kg)</option>
                           <option value="Pieces">Pieces</option>
                           <option value="Rolls">Rolls</option>
-                          <option value="Yards">Yards</option>
                         </select>
                       </div>
                     </div>
@@ -1099,247 +1135,480 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                     <div className="flex items-center gap-2 pt-1">
                       <input
                         type="checkbox"
-                        id="quantUndecided"
+                        id="qty-undecided"
                         checked={isQuantityUndecided}
-                        onChange={(e) => setIsQuantityUndecided(e.target.checked)}
-                        className="w-4 h-4 text-[#C69A59] border-stone-600 rounded cursor-pointer"
+                        onChange={(e) => {
+                          setIsQuantityUndecided(e.target.checked);
+                          if (e.target.checked) {
+                            setFormData((prev) => ({ ...prev, quantity: 'Undecided' }));
+                          } else {
+                            setFormData((prev) => ({ ...prev, quantity: '1,200' }));
+                          }
+                        }}
+                        className="rounded border-[#DDD7CD] text-[#8C6534] focus:ring-[#8C6534]"
                       />
-                      <label htmlFor="quantUndecided" className="text-xs text-[#AAA79D] cursor-pointer">
-                        Quantity not finalized yet (Need sampling / initial swatch quote)
+                      <label htmlFor="qty-undecided" className="text-xs text-[#78736B] cursor-pointer">
+                        Quantity undecided / Need physical swatch sampling first
                       </label>
                     </div>
                   </div>
 
-                  {/* Specifications */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Specifications Grid */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
                     <div>
-                      <label className="block font-mono text-[10px] uppercase tracking-wider text-[#AAA79D] font-semibold mb-1">
-                        TARGET GSM / WEIGHT
+                      <label className="block font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-[#78736B] font-semibold mb-1">
+                        FABRIC WIDTH (OPTIONAL)
                       </label>
                       <input
                         type="text"
-                        value={formData.specifications.gsmOrWeight || ''}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            specifications: { ...formData.specifications, gsmOrWeight: e.target.value },
-                          })
-                        }
-                        placeholder="e.g. 140 GSM, 11.5 Oz"
-                        className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[rgba(224,196,143,0.28)] bg-[rgba(225,235,223,0.035)] text-[#F7F3EA] placeholder-[#7D7A72]"
+                        value={formData.width || ''}
+                        onChange={(e) => setFormData({ ...formData, width: e.target.value })}
+                        placeholder="e.g. 58 / 60 inches"
+                        className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[#DDD7CD] bg-white text-[#181715] placeholder-[#9E988E] focus:outline-none focus:border-[#8C6534]"
                       />
                     </div>
+
                     <div>
-                      <label className="block font-mono text-[10px] uppercase tracking-wider text-[#AAA79D] font-semibold mb-1">
-                        WIDTH / SIZE
+                      <label className="block font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-[#78736B] font-semibold mb-1">
+                        GSM / WEIGHT (OPTIONAL)
                       </label>
                       <input
                         type="text"
-                        value={formData.specifications.widthOrSize || ''}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            specifications: { ...formData.specifications, widthOrSize: e.target.value },
-                          })
-                        }
-                        placeholder='e.g. 58" / 60", 44"'
-                        className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[rgba(224,196,143,0.28)] bg-[rgba(225,235,223,0.035)] text-[#F7F3EA] placeholder-[#7D7A72]"
+                        value={formData.gsmOrWeight || ''}
+                        onChange={(e) => setFormData({ ...formData, gsmOrWeight: e.target.value })}
+                        placeholder="e.g. 180 - 220 GSM"
+                        className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[#DDD7CD] bg-white text-[#181715] placeholder-[#9E988E] focus:outline-none focus:border-[#8C6534]"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-[#78736B] font-semibold mb-1">
+                        COMPOSITION (OPTIONAL)
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.composition || ''}
+                        onChange={(e) => setFormData({ ...formData, composition: e.target.value })}
+                        placeholder="e.g. 100% Combed Cotton, 95/5 Cotton Lycra"
+                        className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[#DDD7CD] bg-white text-[#181715] placeholder-[#9E988E] focus:outline-none focus:border-[#8C6534]"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-[#78736B] font-semibold mb-1">
+                        WEAVE / FINISH (OPTIONAL)
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.weaveOrFinish || ''}
+                        onChange={(e) => setFormData({ ...formData, weaveOrFinish: e.target.value })}
+                        placeholder="e.g. Enzyme Washed, Mercerized, Bio-polish"
+                        className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[#DDD7CD] bg-white text-[#181715] placeholder-[#9E988E] focus:outline-none focus:border-[#8C6534]"
                       />
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-[rgba(225,210,180,0.12)] flex items-center justify-between">
+                  {/* Delivery Timeline */}
+                  <div>
+                    <label className="block font-mono text-[11px] uppercase tracking-wider text-[#78736B] font-semibold mb-1.5">
+                      TARGET DELIVERY TIMELINE
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.targetDate || ''}
+                      onChange={(e) => setFormData({ ...formData, targetDate: e.target.value })}
+                      placeholder="e.g. May 2026 / Within 3 Weeks"
+                      className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[#DDD7CD] bg-white text-[#181715] placeholder-[#9E988E] focus:outline-none focus:border-[#8C6534]"
+                    />
+                  </div>
+
+                  {/* Step 2 Error Notice */}
+                  {step2Error && (
+                    <div className="p-3 bg-[#FDF2F0] border border-[#F5C2B8] rounded-xl flex items-center gap-2 text-xs text-[#C4432B] font-medium">
+                      <AlertCircle className="w-4 h-4 shrink-0" />
+                      <span>{step2Error}</span>
+                    </div>
+                  )}
+
+                  {/* Action Bar */}
+                  <div className="pt-4 border-t border-[#ECE7DE] flex items-center justify-between">
                     <button
                       type="button"
                       onClick={() => setCurrentStep(1)}
-                      className="px-5 py-2.5 rounded-xl border border-[rgba(224,196,143,0.28)] text-xs text-[#AAA79D] hover:text-[#F7F3EA]"
+                      className="text-xs text-[#78736B] hover:text-[#181715] font-semibold uppercase tracking-wider cursor-pointer"
                     >
-                      &larr; Previous Step
+                      &larr; Back
                     </button>
                     <button
                       type="button"
-                      onClick={() => setCurrentStep(3)}
-                      className="bg-gradient-to-r from-[#C69A59] to-[#B88A47] text-[#07110D] font-bold px-6 py-2.5 rounded-xl text-xs uppercase tracking-wider cursor-pointer"
+                      onClick={handleProceedToStep3}
+                      className="inline-flex items-center gap-2 bg-[#181715] hover:bg-[#2B2824] text-white font-bold px-7 py-3 rounded-xl text-xs uppercase tracking-wider transition-all shadow-md hover:shadow-lg cursor-pointer"
                     >
-                      Continue to Contact Details &rarr;
+                      <span>Continue to Contact Details</span>
+                      <ArrowRight className="w-4 h-4" />
                     </button>
                   </div>
+                </div>
+              )}
+
+              {/* ================================================================= */}
+              {/* STEP 3: CONTACT DETAILS                                           */}
+              {/* ================================================================= */}
+              {currentStep === 3 && (
+                <div
+                  className="rounded-3xl border border-[#E5E0D8] bg-white p-6 sm:p-8 space-y-6"
+                  style={{
+                    boxShadow:
+                      '0 20px 50px -10px rgba(24, 23, 21, 0.08), 0 5px 15px rgba(24, 23, 21, 0.03)',
+                  }}
+                >
+                  <div className="flex items-center justify-between border-b border-[#ECE7DE] pb-4">
+                    <div className="flex items-center gap-2">
+                      <span className="w-6 h-6 rounded-full bg-[#181715] text-[#D4AF37] flex items-center justify-center font-bold text-xs">
+                        3
+                      </span>
+                      <div>
+                        <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#181715] tracking-tight">
+                          3. Contact Details
+                        </h2>
+                        <p className="text-xs text-[#6B665E] mt-0.5">
+                          Where should we send your quotation and material samples?{' '}
+                          <span className="text-[#C4432B] font-semibold">* Required</span>
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setCurrentStep(2)}
+                      className="inline-flex items-center gap-1.5 text-xs text-[#78736B] hover:text-[#181715] transition-colors cursor-pointer"
+                    >
+                      <ArrowLeft className="w-3.5 h-3.5" />
+                      <span>Back to Requirements</span>
+                    </button>
+                  </div>
+
+                  <form onSubmit={handleSubmitEnquiry} className="space-y-4">
+                    {/* Full Name & Company */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-[#78736B] font-semibold mb-1.5">
+                          FULL NAME <span className="text-[#C4432B] font-bold">*</span>
+                        </label>
+                        <div className="relative">
+                          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#9E988E]">
+                            <User className="w-4 h-4" />
+                          </div>
+                          <input
+                            type="text"
+                            required
+                            value={formData.contactName}
+                            onChange={(e) => setFormData({ ...formData, contactName: e.target.value })}
+                            placeholder="Your Name"
+                            className="w-full pl-10 pr-3.5 py-3 text-xs sm:text-sm rounded-xl border border-[#DDD7CD] bg-white text-[#181715] placeholder-[#9E988E] focus:outline-none focus:border-[#8C6534] focus:ring-1 focus:ring-[#8C6534] transition-all"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-[#78736B] font-semibold mb-1.5">
+                          COMPANY / BRAND (OPTIONAL)
+                        </label>
+                        <div className="relative">
+                          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#9E988E]">
+                            <Building className="w-4 h-4" />
+                          </div>
+                          <input
+                            type="text"
+                            value={formData.companyName || ''}
+                            onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
+                            placeholder="Apparel Brand / Factory Name"
+                            className="w-full pl-10 pr-3.5 py-3 text-xs sm:text-sm rounded-xl border border-[#DDD7CD] bg-white text-[#181715] placeholder-[#9E988E] focus:outline-none focus:border-[#8C6534] focus:ring-1 focus:ring-[#8C6534] transition-all"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Phone & Email */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-[#78736B] font-semibold mb-1.5">
+                          PHONE / WHATSAPP NUMBER <span className="text-[#C4432B] font-bold">*</span>
+                        </label>
+                        <div className="relative">
+                          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#9E988E]">
+                            <Phone className="w-4 h-4" />
+                          </div>
+                          <input
+                            type="tel"
+                            required
+                            value={formData.phone}
+                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                            placeholder="+91 94432 23150"
+                            className="w-full pl-10 pr-3.5 py-3 text-xs sm:text-sm rounded-xl border border-[#DDD7CD] bg-white text-[#181715] placeholder-[#9E988E] focus:outline-none focus:border-[#8C6534] focus:ring-1 focus:ring-[#8C6534] transition-all"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-[#78736B] font-semibold mb-1.5">
+                          EMAIL ADDRESS <span className="text-[#C4432B] font-bold">*</span>
+                        </label>
+                        <div className="relative">
+                          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#9E988E]">
+                            <Mail className="w-4 h-4" />
+                          </div>
+                          <input
+                            type="email"
+                            required
+                            value={formData.email}
+                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                            placeholder="buyer@brand.com"
+                            className="w-full pl-10 pr-3.5 py-3 text-xs sm:text-sm rounded-xl border border-[#DDD7CD] bg-white text-[#181715] placeholder-[#9E988E] focus:outline-none focus:border-[#8C6534] focus:ring-1 focus:ring-[#8C6534] transition-all"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Delivery Location */}
+                    <div>
+                      <label className="block font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-[#78736B] font-semibold mb-1.5">
+                        DELIVERY LOCATION / CITY <span className="text-[#C4432B] font-bold">*</span>
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#9E988E]">
+                          <MapPin className="w-4 h-4" />
+                        </div>
+                        <input
+                          type="text"
+                          required
+                          value={formData.cityState}
+                          onChange={(e) => setFormData({ ...formData, cityState: e.target.value })}
+                          placeholder="e.g. Tiruppur, Bengaluru, Mumbai, or International"
+                          className="w-full pl-10 pr-3.5 py-3 text-xs sm:text-sm rounded-xl border border-[#DDD7CD] bg-white text-[#181715] placeholder-[#9E988E] focus:outline-none focus:border-[#8C6534] focus:ring-1 focus:ring-[#8C6534] transition-all"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Additional Notes */}
+                    <div>
+                      <label className="block font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-[#78736B] font-semibold mb-1.5">
+                        ADDITIONAL NOTES / TESTING REQUIREMENTS (OPTIONAL)
+                      </label>
+                      <textarea
+                        rows={3}
+                        value={formData.additionalNotes || ''}
+                        onChange={(e) =>
+                          setFormData({ ...formData, additionalNotes: e.target.value })
+                        }
+                        placeholder="Specify color fastness, Oeko-Tex certification, shrinkage limits, or any special production requests..."
+                        className="w-full px-4 py-3 text-xs sm:text-sm rounded-xl border border-[#DDD7CD] bg-white text-[#181715] placeholder-[#9E988E] focus:outline-none focus:border-[#8C6534] focus:ring-1 focus:ring-[#8C6534] transition-all resize-none"
+                      />
+                    </div>
+
+                    {/* Notice Box */}
+                    <div className="p-3.5 bg-[#FAF8F5] border border-[#DDD7CD] rounded-xl flex items-start gap-3">
+                      <div className="w-5 h-5 rounded-full bg-[#8C6534]/15 text-[#8C6534] flex items-center justify-center shrink-0 mt-0.5">
+                        <FileCheck className="w-3.5 h-3.5" />
+                      </div>
+                      <p className="text-[11px] sm:text-xs text-[#78736B] leading-relaxed">
+                        We prioritize inquiries with accurate company details and estimated order
+                        volumes. Standard turnaround time is 24 business hours.
+                      </p>
+                    </div>
+
+                    {/* Step 3 Error Notice */}
+                    {step3Error && (
+                      <div className="p-3 bg-[#FDF2F0] border border-[#F5C2B8] rounded-xl flex items-center gap-2 text-xs text-[#C4432B] font-medium">
+                        <AlertCircle className="w-4 h-4 shrink-0" />
+                        <span>{step3Error}</span>
+                      </div>
+                    )}
+
+                    {/* Submit Button */}
+                    <div className="pt-2">
+                      <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="w-full flex items-center justify-center gap-2.5 bg-[#181715] hover:bg-[#2B2824] text-white font-bold py-3.5 px-6 rounded-xl text-xs sm:text-sm uppercase tracking-wider transition-all shadow-md hover:shadow-lg cursor-pointer disabled:opacity-50"
+                      >
+                        {isSubmitting ? (
+                          <span>Processing Brief...</span>
+                        ) : (
+                          <>
+                            <span>Review &amp; Submit Brief</span>
+                            <ArrowRight className="w-4 h-4 text-[#D4AF37]" />
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </form>
                 </div>
               )}
             </div>
 
             {/* ------------------------------------------------------------------- */}
-            {/* RIGHT COLUMN: "YOUR MATERIAL BRIEF" PANEL (~42% WIDTH)              */}
+            {/* RIGHT COLUMN: "YOUR MATERIAL BRIEF" SIDEBAR (~42% WIDTH)            */}
             {/* ------------------------------------------------------------------- */}
-            <div className="lg:col-span-5 space-y-6">
+            <div className="lg:col-span-5 space-y-6 lg:sticky lg:top-24">
               <div
-                className="rounded-2xl border border-[rgba(224,196,143,0.28)] bg-[rgba(225,235,223,0.045)] p-6 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.45)] space-y-5 sticky top-28"
+                className="rounded-3xl border border-[#E5E0D8] bg-white p-6 space-y-5"
                 style={{
                   boxShadow:
-                    'inset 0 1px 0 rgba(255, 255, 255, 0.10), inset 0 -1px 0 rgba(255, 255, 255, 0.025), 0 20px 60px rgba(0, 0, 0, 0.28)',
+                    '0 20px 50px -10px rgba(24, 23, 21, 0.08), 0 5px 15px rgba(24, 23, 21, 0.03)',
                 }}
               >
-                {/* Header: Golden Star + Title + Pill Badge */}
-                <div className="flex items-center justify-between">
+                {/* Header */}
+                <div className="flex items-center justify-between border-b border-[#ECE7DE] pb-4">
                   <div className="flex items-center gap-2">
-                    <span className="text-[#C69A59] text-base leading-none select-none">✦</span>
-                    <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#F7F3EA] tracking-tight">
+                    <span className="text-[#8C6534] font-serif text-lg">✦</span>
+                    <h3 className="font-serif text-xl font-bold text-[#181715]">
                       Your Material Brief
                     </h3>
                   </div>
-                  <span className="border border-[rgba(224,196,143,0.28)] text-[11px] font-mono text-[#D4D0C6] px-3 py-0.5 rounded-full bg-[rgba(225,235,223,0.04)]">
+
+                  <span className="bg-[#FAF8F5] border border-[#DDD7CD] text-[#78736B] font-mono text-[11px] px-2.5 py-0.5 rounded-full font-semibold">
                     {selectedKit.length} {selectedKit.length === 1 ? 'item' : 'items'}
                   </span>
                 </div>
 
-                {/* Selected Material Card (Cotton matching reference mockup) */}
-                {selectedKit.length > 0 ? (
+                {/* Swatch List Card */}
+                {selectedKit.length === 0 ? (
+                  <div className="p-6 text-center border border-dashed border-[#DDD7CD] rounded-2xl bg-[#FAF8F5]/60">
+                    <Package className="w-8 h-8 text-[#9E988E] mx-auto mb-2" />
+                    <p className="text-xs font-semibold text-[#181715]">No items selected yet</p>
+                    <p className="text-[11px] text-[#78736B] mt-1">
+                      Pick fabrics or accessories to start building your brief.
+                    </p>
+                  </div>
+                ) : (
                   <div className="space-y-2">
                     {selectedKit.map((item) => (
                       <div
                         key={item.id}
-                        className="rounded-xl border border-[rgba(224,196,143,0.2)] bg-[rgba(225,235,223,0.04)] p-3 flex items-center justify-between gap-3 shadow-xs"
+                        className="rounded-2xl border border-[#E5E0D8] bg-[#FAF8F5] p-3 flex items-center justify-between gap-3 shadow-xs"
                       >
-                        <div className="flex items-center gap-3 min-w-0">
-                          <img
-                            src={item.image}
-                            alt={item.name}
-                            className="w-12 h-12 rounded-lg object-cover border border-[rgba(224,196,143,0.3)] shrink-0"
-                          />
-                          <div className="min-w-0">
-                            <h4 className="font-semibold text-sm text-[#F7F3EA] truncate">
-                              {item.name}
-                            </h4>
-                            <span className="text-xs text-[#AAA79D] font-mono block">
+                        <div className="flex items-center gap-3">
+                          <div className="w-12 h-12 rounded-xl overflow-hidden bg-white border border-[#DDD7CD] shrink-0">
+                            <img
+                              src={item.image}
+                              alt={item.name}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          <div>
+                            <span className="text-[9px] font-mono uppercase tracking-wider text-[#8C6534] font-bold">
                               {item.categoryLabel}
                             </span>
+                            <h4 className="font-serif font-bold text-sm text-[#181715] leading-tight">
+                              {item.name}
+                            </h4>
+                            <p className="text-[10px] text-[#78736B] leading-tight mt-0.5">
+                              {item.defaultSpecs?.composition || item.defaultSpecs?.typeVariant || 'Premium Sourcing'}
+                            </p>
                           </div>
                         </div>
 
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveFromKit(item.id)}
-                          className="w-7 h-7 rounded-full flex items-center justify-center text-[#AAA79D] hover:text-white hover:bg-white/10 transition-colors cursor-pointer shrink-0"
-                          title="Remove item"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => setCurrentStep(1)}
+                            className="text-[11px] text-[#8C6534] hover:underline font-semibold cursor-pointer"
+                          >
+                            Change
+                          </button>
+                        </div>
                       </div>
                     ))}
-
-                    {/* Actions under card */}
-                    <div className="pt-1 flex items-center justify-between text-xs px-1">
-                      <button
-                        type="button"
-                        onClick={() => setCurrentStep(1)}
-                        className="text-[#C69A59] hover:underline font-medium cursor-pointer"
-                      >
-                        + Add more
-                      </button>
-                      <button
-                        type="button"
-                        onClick={handleClearKit}
-                        className="text-[#AAA79D] hover:text-white transition-colors cursor-pointer"
-                      >
-                        Clear all
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="rounded-xl border border-dashed border-[rgba(224,196,143,0.25)] p-5 text-center text-xs text-[#AAA79D]">
-                    No items selected yet.{' '}
-                    <button
-                      type="button"
-                      onClick={() => setCurrentStep(1)}
-                      className="text-[#C69A59] underline"
-                    >
-                      Choose materials
-                    </button>
                   </div>
                 )}
 
-                {/* Metrics Breakdown with Subtle Separators */}
-                <div className="space-y-3 pt-2 text-xs border-t border-[rgba(225,210,180,0.14)]">
-                  {/* Selected Items */}
-                  <div className="flex items-center justify-between py-1.5">
-                    <div className="flex items-center gap-2 text-[#D4D0C6]">
-                      <Package className="w-4 h-4 text-[#C69A59]" />
-                      <span>Selected Items</span>
-                    </div>
-                    <span className="font-mono font-semibold text-[#F7F3EA]">
-                      {selectedKit.length}
-                    </span>
+                {/* Summary Metrics */}
+                <div className="space-y-2.5 pt-2 text-xs border-t border-[#ECE7DE]">
+                  <div className="flex items-center justify-between text-[#78736B]">
+                    <span>Selected Items</span>
+                    <span className="font-semibold text-[#181715]">{selectedKit.length}</span>
                   </div>
 
-                  <div className="h-[1px] bg-[rgba(225,210,180,0.14)]" />
-
-                  {/* Total Quantity */}
-                  <div className="flex items-center justify-between py-1.5">
-                    <div className="flex items-center gap-2 text-[#D4D0C6]">
-                      <FileText className="w-4 h-4 text-[#C69A59]" />
-                      <span>Total Quantity</span>
-                    </div>
-                    <span className="font-mono text-[#D4D0C6]">
+                  <div className="flex items-center justify-between text-[#78736B]">
+                    <span>Target Quantity</span>
+                    <span className="font-semibold text-[#181715]">
                       {isQuantityUndecided
                         ? 'Sampling / Undecided'
-                        : formData.quantity
-                        ? `${formData.quantity} ${formData.unit}`
-                        : 'Sampling / Undecided'}
+                        : `${formData.quantity || '1,200'} ${formData.unit || 'Metres'}`}
                     </span>
                   </div>
 
-                  <div className="h-[1px] bg-[rgba(225,210,180,0.14)]" />
-
-                  {/* Reference Images */}
-                  <div className="flex items-center justify-between py-1.5">
-                    <div className="flex items-center gap-2 text-[#D4D0C6]">
-                      <Upload className="w-4 h-4 text-[#C69A59]" />
-                      <span>Reference Images</span>
-                    </div>
-                    <span className="font-mono font-semibold text-[#F7F3EA]">
-                      {uploadedFiles.length}
+                  <div className="flex items-center justify-between text-[#78736B]">
+                    <span>Reference Images</span>
+                    <span className="font-semibold text-[#181715]">
+                      {uploadedFiles.length > 0
+                        ? `${uploadedFiles.length} file(s) attached`
+                        : '0'}
                     </span>
                   </div>
 
-                  <div className="h-[1px] bg-[rgba(225,210,180,0.14)]" />
-
-                  {/* Custom Notes */}
-                  <div className="flex items-center justify-between py-1.5">
-                    <div className="flex items-center gap-2 text-[#D4D0C6]">
-                      <Pencil className="w-4 h-4 text-[#C69A59]" />
-                      <span>Custom Notes</span>
-                    </div>
-                    <span className="font-mono text-[#AAA79D]">
-                      {formData.additionalNotes ? 'Provided' : '—'}
+                  <div className="flex items-center justify-between text-[#78736B]">
+                    <span>Delivery Target</span>
+                    <span className="font-semibold text-[#181715]">
+                      {formData.targetDate || 'Flexible'}
                     </span>
                   </div>
                 </div>
 
-                {/* Need Help Choosing Materials? Assistance Card */}
-                <div className="rounded-xl border border-[rgba(224,196,143,0.2)] bg-[rgba(225,235,223,0.035)] p-4 flex items-center gap-3.5 group hover:border-[#C69A59]/60 transition-all duration-300">
-                  <div className="w-12 h-12 rounded-full overflow-hidden shrink-0 border border-[rgba(224,196,143,0.3)] bg-black/60 shadow-md">
-                    <img
-                      src="/assets/materials/assistance-headphones.jpg"
-                      alt="Expert Support"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="space-y-0.5 flex-1 min-w-0">
-                    <h4 className="font-semibold text-xs text-[#F7F3EA] leading-tight">
-                      Need help choosing materials?
-                    </h4>
-                    <p className="text-[11px] text-[#AAA79D] leading-tight">
-                      Our experts are here for you.
-                    </p>
+                {/* Primary Action Button */}
+                <div className="pt-2">
+                  {currentStep === 1 && (
                     <button
                       type="button"
-                      onClick={onReachUs}
-                      className="inline-flex items-center gap-1 text-xs text-[#C69A59] group-hover:text-[#E5C58D] font-medium pt-1 transition-colors cursor-pointer"
+                      onClick={handleProceedToStep2}
+                      className="w-full flex items-center justify-center gap-2 bg-[#181715] hover:bg-[#2B2824] text-white font-bold py-3.5 px-6 rounded-xl text-xs uppercase tracking-wider transition-all shadow-md hover:shadow-lg cursor-pointer"
                     >
-                      <span>Reach our team</span>
-                      <ArrowRight className="w-3 h-3" />
+                      <span>Continue to Next Step</span>
+                      <ArrowRight className="w-4 h-4 text-[#D4AF37]" />
                     </button>
+                  )}
+
+                  {currentStep === 2 && (
+                    <button
+                      type="button"
+                      onClick={handleProceedToStep3}
+                      className="w-full flex items-center justify-center gap-2 bg-[#181715] hover:bg-[#2B2824] text-white font-bold py-3.5 px-6 rounded-xl text-xs uppercase tracking-wider transition-all shadow-md hover:shadow-lg cursor-pointer"
+                    >
+                      <span>Continue to Contact Details</span>
+                      <ArrowRight className="w-4 h-4 text-[#D4AF37]" />
+                    </button>
+                  )}
+
+                  {currentStep === 3 && (
+                    <button
+                      type="button"
+                      onClick={handleSubmitEnquiry}
+                      className="w-full flex items-center justify-center gap-2 bg-[#181715] hover:bg-[#2B2824] text-white font-bold py-3.5 px-6 rounded-xl text-xs uppercase tracking-wider transition-all shadow-md hover:shadow-lg cursor-pointer"
+                    >
+                      <span>Submit Material Brief</span>
+                      <ArrowRight className="w-4 h-4 text-[#D4AF37]" />
+                    </button>
+                  )}
+                </div>
+
+                {/* Assistance Card */}
+                <div className="p-4 rounded-2xl bg-[#FAF8F5] border border-[#E5E0D8] space-y-2">
+                  <div className="flex items-center gap-2 text-xs font-semibold text-[#181715]">
+                    <div className="w-6 h-6 rounded-full bg-[#F3EFE6] text-[#8C6534] flex items-center justify-center">
+                      <Headphones className="w-3.5 h-3.5" />
+                    </div>
+                    <span>For more info, contact us</span>
                   </div>
+                  <p className="text-[11px] text-[#78736B] leading-relaxed">
+                    Our textile sourcing team is here to assist with physical swatches, lab dips, and bulk manufacturing.
+                  </p>
+                  <a
+                    href={`tel:${VERIFIED_PHONE_RAW}`}
+                    className="inline-flex items-center gap-2 font-mono text-xs font-bold text-[#8C6534] hover:text-[#181715] transition-colors pt-1"
+                  >
+                    <Phone className="w-3.5 h-3.5" />
+                    <span>{VERIFIED_PHONE_DISPLAY}</span>
+                  </a>
                 </div>
               </div>
             </div>

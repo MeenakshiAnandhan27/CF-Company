@@ -36,7 +36,8 @@ export const Navbar: React.FC<NavbarProps> = ({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const isDarkNav = currentTab === 'reach-us' || currentTab === 'material-request';
+  const isReachUs = currentTab === 'reach-us';
+  const isDarkNav = isReachUs;
 
   return (
     <header

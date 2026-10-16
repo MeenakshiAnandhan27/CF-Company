@@ -582,14 +582,15 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
 
                     {/* Floating Frosted Glass Overlay Badges */}
                     <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between pointer-events-none">
-                      <div className="bg-white/90 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/80 shadow-md flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-[#8C6534] animate-pulse" />
-                        <span className="font-mono text-[10px] tracking-wider font-semibold uppercase text-[#181715]">
+                      <div className="h-8 bg-white/90 backdrop-blur-md px-3.5 rounded-full border border-white/80 shadow-md flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-[#8C6534] animate-pulse shrink-0" />
+                        <span className="font-mono text-[10px] tracking-wider font-semibold uppercase text-[#181715] whitespace-nowrap">
                           STUDIO TEXTILE ARCHIVE
                         </span>
                       </div>
-                      <div className="bg-[#181715]/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-[#D4AF37]/50 shadow-md">
-                        <span className="font-mono text-[10px] tracking-wider font-semibold uppercase text-[#E5C58D]">
+                      <div className="h-8 bg-[#181715]/90 backdrop-blur-md px-3.5 rounded-full border border-[#D4AF37]/50 shadow-md flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] shrink-0" />
+                        <span className="font-mono text-[10px] tracking-wider font-semibold uppercase text-[#E5C58D] whitespace-nowrap">
                           CERTIFIED MILLS
                         </span>
                       </div>
@@ -1591,20 +1592,20 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                   )}
                 </div>
 
-                {/* Assistance Card — Luxury 3D Headphones Card matching Reference */}
+                {/* Assistance Card — Clean White Luxury Card with 3D Headphones */}
                 <div
                   onClick={onReachUs}
-                  className="relative rounded-2xl overflow-hidden p-4 sm:p-5 border border-[#C49A55]/30 bg-gradient-to-r from-[#07110D] via-[#0A1813] to-[#0E1E17] text-[#F7F3EA] shadow-[0_12px_32px_rgba(0,0,0,0.25)] hover:border-[#D4AF37]/60 hover:shadow-[0_16px_40px_rgba(0,0,0,0.35),0_0_25px_rgba(212,175,55,0.18)] transition-all duration-300 group cursor-pointer"
+                  className="relative rounded-2xl overflow-hidden p-4 sm:p-5 border border-[#E5E0D8] bg-white text-[#181715] shadow-[0_10px_30px_rgba(24,23,21,0.06)] hover:border-[#8C6534] hover:shadow-[0_16px_40px_rgba(140,101,52,0.12)] transition-all duration-300 group cursor-pointer"
                 >
                   {/* Subtle Gold Backlight Ambient Glow */}
                   <div
                     aria-hidden="true"
-                    className="absolute -top-8 -right-8 w-24 h-24 bg-[#D4AF37]/15 rounded-full blur-2xl group-hover:bg-[#D4AF37]/25 transition-all"
+                    className="absolute -top-8 -right-8 w-24 h-24 bg-[#D4AF37]/10 rounded-full blur-2xl group-hover:bg-[#D4AF37]/20 transition-all pointer-events-none"
                   />
 
                   <div className="relative flex items-center gap-3.5">
                     {/* 3D Headphones Symbol */}
-                    <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden bg-black/50 border border-[#C49A55]/25 shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform duration-300 shadow-md">
+                    <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden bg-[#FAF8F5] border border-[#DDD7CD] shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform duration-300 shadow-xs">
                       <img
                         src="/assets/materials/assistance-headphones.jpg"
                         alt="3D Studio Headphones"
@@ -1614,15 +1615,15 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
 
                     {/* Content */}
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-serif text-sm sm:text-base font-semibold text-[#F7F3EA] leading-snug group-hover:text-[#E6C995] transition-colors">
+                      <h4 className="font-serif text-sm sm:text-base font-semibold text-[#181715] leading-snug group-hover:text-[#8C6534] transition-colors">
                         Need help choosing materials?
                       </h4>
-                      <p className="text-xs text-[#AAA79D] mt-0.5 leading-snug">
+                      <p className="text-xs text-[#78736B] mt-0.5 leading-snug">
                         Our experts are here for you.
                       </p>
 
                       <div className="mt-2.5 flex items-center justify-between">
-                        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#D4AF37] group-hover:text-[#F3EBDD] transition-colors">
+                        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#8C6534] group-hover:text-[#181715] transition-colors">
                           <span>Reach our team</span>
                           <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
                         </span>
@@ -1630,9 +1631,9 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                         <a
                           href={`tel:${VERIFIED_PHONE_RAW}`}
                           onClick={(e) => e.stopPropagation()}
-                          className="text-[11px] font-mono text-[#AAA79D] hover:text-[#D4AF37] transition-colors flex items-center gap-1"
+                          className="text-[11px] font-mono text-[#78736B] hover:text-[#8C6534] transition-colors flex items-center gap-1 font-semibold"
                         >
-                          <Phone className="w-3 h-3 text-[#D4AF37]" />
+                          <Phone className="w-3 h-3 text-[#8C6534]" />
                           <span>{VERIFIED_PHONE_DISPLAY}</span>
                         </a>
                       </div>

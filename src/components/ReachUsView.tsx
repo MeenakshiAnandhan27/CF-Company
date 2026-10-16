@@ -239,6 +239,11 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
 
             {/* Right Column: 3D Textile Atelier Showcase Vignette */}
             <div className="lg:col-span-6 relative">
+              {/* Ambient Glow */}
+              <div
+                aria-hidden="true"
+                className="absolute -inset-4 bg-gradient-to-tr from-[#16382C]/50 via-[#C49A55]/15 to-transparent rounded-3xl blur-2xl opacity-60 pointer-events-none"
+              />
               <div
                 className="relative rounded-2xl overflow-hidden border border-[#214738] shadow-[0_20px_50px_rgba(0,0,0,0.65)] bg-[#071B15] transition-transform duration-200 ease-out"
                 style={{
@@ -248,16 +253,15 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                 }}
               >
                 {/* 3D Atelier Realistic Scene Crop */}
-                <div className="relative aspect-[16/9] sm:aspect-[2.05/1] w-full bg-[#071B15] overflow-hidden">
+                <div className="relative aspect-[16/9] sm:aspect-[2/1] w-full bg-[#071B15] overflow-hidden">
                   <img
-                    src="/assets/reach-us/hero-atelier-3d.jpg"
+                    src="/assets/reach-us/hero-atelier-3d-hd.jpg"
                     alt="Classic Fashions 3D Textile Atelier with Vintage Sewing Machine and Fabrics"
                     className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
                   />
 
-                  {/* Soft Vignette Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#071B15]/90 via-transparent to-transparent pointer-events-none" />
-                  <div className="absolute inset-0 bg-gradient-to-r from-[#071B15]/40 via-transparent to-[#071B15]/40 pointer-events-none" />
+                  {/* Soft Subtle Vignette Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#071B15]/50 via-transparent to-transparent pointer-events-none" />
 
                   {/* Interactive Hotspot Badges floating on the scene */}
                   <div className="absolute bottom-3 left-4 hidden sm:flex items-center gap-2 bg-[#071B15]/85 backdrop-blur-md border border-[#C49A55]/40 px-3 py-1.5 rounded-full text-[11px] font-mono text-[#E6C995] shadow-lg">
@@ -406,29 +410,30 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
           </div>
 
           {/* --------------------------------------------------------------------- */}
-          {/* RIGHT COLUMN: "SEND US AN ENQUIRY" FLOATING WARM-IVORY PANEL (~58%)    */}
+          {/* RIGHT COLUMN: "SEND US AN ENQUIRY" DARK LUXURY EMERALD PANEL (~58%)   */}
           {/* --------------------------------------------------------------------- */}
           <div className="lg:col-span-7">
-            <div className="bg-[#F7F4EC] text-[#181715] border border-[#E3DCCE] rounded-2xl p-7 sm:p-9 shadow-[0_20px_50px_rgba(0,0,0,0.65)] relative space-y-6">
-              {/* Handwritten Note Annotation on Top Right */}
+            <div className="bg-gradient-to-b from-[#0B1E17] via-[#091B14] to-[#071610] text-[#F3EBDD] border border-[#1A382C] rounded-2xl p-7 sm:p-9 shadow-[0_20px_60px_rgba(0,0,0,0.7)] relative space-y-6">
+              {/* Handwritten Note / Luxury Badge Annotation on Top Right */}
               <div
                 aria-hidden="true"
-                className="absolute -top-3 right-6 hidden sm:flex items-center gap-1.5 text-[#A45B3E] select-none pointer-events-none transform rotate-3"
+                className="absolute -top-3.5 right-6 flex items-center gap-2 bg-[#102C22] border border-[#C49A55]/60 text-[#E6C995] px-3.5 py-1 rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.7)] select-none pointer-events-none z-10"
               >
+                <span className="w-1.5 h-1.5 rounded-full bg-[#C49A55] animate-pulse" />
                 <span className="font-serif italic font-medium text-xs tracking-wide">
                   We are here to help you!
                 </span>
                 <svg
-                  width="22"
-                  height="22"
+                  width="14"
+                  height="14"
                   viewBox="0 0 24 24"
                   fill="none"
-                  className="text-[#A45B3E]"
+                  className="text-[#C49A55] transform rotate-45"
                 >
                   <path
-                    d="M4 4 C12 6, 16 14, 18 20 M14 18 L18 21 L21 16"
+                    d="M5 12h14M12 5l7 7-7 7"
                     stroke="currentColor"
-                    strokeWidth="1.5"
+                    strokeWidth="2.5"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   />
@@ -437,10 +442,10 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
 
               {/* Title & Subtitle */}
               <div>
-                <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#181715] tracking-tight">
+                <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#F3EBDD] tracking-tight">
                   Send Us an Enquiry
                 </h3>
-                <p className="text-xs sm:text-sm text-[#736F68] mt-1">
+                <p className="text-xs sm:text-sm text-[#A3B8B0] mt-1">
                   Share your requirements and our sourcing desk will prepare custom options and
                   pricing.
                 </p>
@@ -448,29 +453,29 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
 
               {/* Success Confirmation Screen if submitted */}
               {isSubmitted ? (
-                <div className="bg-white border border-[#E3DCCE] rounded-xl p-8 text-center space-y-5 animate-in fade-in duration-300">
-                  <div className="w-14 h-14 rounded-full bg-[#102C22]/10 text-[#102C22] flex items-center justify-center mx-auto ring-6 ring-[#102C22]/5">
-                    <CheckCircle2 className="w-7 h-7 text-[#102C22]" />
+                <div className="bg-[#0E261E]/90 border border-[#214738] rounded-xl p-8 text-center space-y-5 animate-in fade-in duration-300">
+                  <div className="w-14 h-14 rounded-full bg-[#C49A55]/15 text-[#C49A55] flex items-center justify-center mx-auto ring-6 ring-[#C49A55]/10">
+                    <CheckCircle2 className="w-7 h-7 text-[#C49A55]" />
                   </div>
 
                   <div className="space-y-1.5">
                     <span className="text-[11px] font-mono text-[#C49A55] uppercase font-bold tracking-wider">
                       ENQUIRY DISPATCHED
                     </span>
-                    <h4 className="font-serif text-2xl font-bold text-[#181715]">
+                    <h4 className="font-serif text-2xl font-bold text-[#F3EBDD]">
                       Thank You, {formState.name}
                     </h4>
-                    <p className="text-xs sm:text-sm text-[#585550] max-w-md mx-auto">
+                    <p className="text-xs sm:text-sm text-[#A3B8B0] max-w-md mx-auto">
                       Your enquiry has been logged successfully with our Tiruppur sourcing office.
                       We will review availability and contact you promptly.
                     </p>
                   </div>
 
-                  <div className="inline-block bg-[#FAF8F5] border border-[#E3DCCE] rounded-lg px-4 py-2">
-                    <span className="text-[10px] font-mono text-[#8C877E] uppercase block">
+                  <div className="inline-block bg-[#071B15] border border-[#214738] rounded-lg px-4 py-2">
+                    <span className="text-[10px] font-mono text-[#A3B8B0] uppercase block">
                       Enquiry Reference
                     </span>
-                    <span className="font-mono text-sm font-bold text-[#181715]">
+                    <span className="font-mono text-sm font-bold text-[#E6C995]">
                       {referenceCode}
                     </span>
                   </div>
@@ -502,7 +507,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                         });
                         setAttachedFiles([]);
                       }}
-                      className="w-full sm:w-auto px-4 py-2.5 rounded-lg border border-[#D5D0C6] text-xs font-semibold text-[#585550] hover:text-[#181715] hover:bg-stone-50 transition-colors"
+                      className="w-full sm:w-auto px-4 py-2.5 rounded-lg border border-[#214738] bg-[#071B15] text-xs font-semibold text-[#A3B8B0] hover:text-[#F3EBDD] hover:border-[#C49A55] transition-colors"
                     >
                       Send Another Message
                     </button>
@@ -514,11 +519,11 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                   {/* Row 1: Name & Company Name */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-[11px] font-mono uppercase tracking-wider text-[#585550] font-semibold mb-1">
-                        NAME *
+                      <label className="block text-[11px] font-mono uppercase tracking-wider text-[#A3B8B0] font-semibold mb-1">
+                        NAME <span className="text-[#C49A55]">*</span>
                       </label>
                       <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-stone-400">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#5A7C6E]">
                           <User className="w-4 h-4" />
                         </div>
                         <input
@@ -527,18 +532,18 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                           value={formState.name}
                           onChange={(e) => setFormState({ ...formState, name: e.target.value })}
                           placeholder="e.g. S. Murugan"
-                          className="w-full pl-9 pr-3 py-2.5 text-xs sm:text-sm bg-white border border-[#D5D0C6] rounded-lg text-[#181715] placeholder-stone-400 focus:outline-none focus:border-[#102C22] focus:ring-1 focus:ring-[#102C22]"
+                          className="w-full pl-9 pr-3 py-2.5 text-xs sm:text-sm bg-[#0E261E]/80 border border-[#214738] rounded-xl text-[#F3EBDD] placeholder-[#5A7C6E] focus:outline-none focus:border-[#C49A55] focus:ring-1 focus:ring-[#C49A55] transition-all"
                         />
                       </div>
-                      {errors.name && <p className="text-[10px] text-red-600 mt-1">{errors.name}</p>}
+                      {errors.name && <p className="text-[10px] text-[#F87171] mt-1">{errors.name}</p>}
                     </div>
 
                     <div>
-                      <label className="block text-[11px] font-mono uppercase tracking-wider text-[#585550] font-semibold mb-1">
+                      <label className="block text-[11px] font-mono uppercase tracking-wider text-[#A3B8B0] font-semibold mb-1">
                         COMPANY NAME
                       </label>
                       <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-stone-400">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#5A7C6E]">
                           <Building className="w-4 h-4" />
                         </div>
                         <input
@@ -548,7 +553,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                             setFormState({ ...formState, companyName: e.target.value })
                           }
                           placeholder="e.g. Tiruppur Apparel Unit"
-                          className="w-full pl-9 pr-3 py-2.5 text-xs sm:text-sm bg-white border border-[#D5D0C6] rounded-lg text-[#181715] placeholder-stone-400 focus:outline-none focus:border-[#102C22] focus:ring-1 focus:ring-[#102C22]"
+                          className="w-full pl-9 pr-3 py-2.5 text-xs sm:text-sm bg-[#0E261E]/80 border border-[#214738] rounded-xl text-[#F3EBDD] placeholder-[#5A7C6E] focus:outline-none focus:border-[#C49A55] focus:ring-1 focus:ring-[#C49A55] transition-all"
                         />
                       </div>
                     </div>
@@ -557,11 +562,11 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                   {/* Row 2: Phone & Email */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-[11px] font-mono uppercase tracking-wider text-[#585550] font-semibold mb-1">
-                        PHONE *
+                      <label className="block text-[11px] font-mono uppercase tracking-wider text-[#A3B8B0] font-semibold mb-1">
+                        PHONE <span className="text-[#C49A55]">*</span>
                       </label>
                       <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-stone-400">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#5A7C6E]">
                           <Phone className="w-4 h-4" />
                         </div>
                         <input
@@ -570,20 +575,20 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                           value={formState.phone}
                           onChange={(e) => setFormState({ ...formState, phone: e.target.value })}
                           placeholder="e.g. 98420 12345"
-                          className="w-full pl-9 pr-3 py-2.5 text-xs sm:text-sm bg-white border border-[#D5D0C6] rounded-lg text-[#181715] placeholder-stone-400 focus:outline-none focus:border-[#102C22] focus:ring-1 focus:ring-[#102C22]"
+                          className="w-full pl-9 pr-3 py-2.5 text-xs sm:text-sm bg-[#0E261E]/80 border border-[#214738] rounded-xl text-[#F3EBDD] placeholder-[#5A7C6E] focus:outline-none focus:border-[#C49A55] focus:ring-1 focus:ring-[#C49A55] transition-all"
                         />
                       </div>
                       {errors.phone && (
-                        <p className="text-[10px] text-red-600 mt-1">{errors.phone}</p>
+                        <p className="text-[10px] text-[#F87171] mt-1">{errors.phone}</p>
                       )}
                     </div>
 
                     <div>
-                      <label className="block text-[11px] font-mono uppercase tracking-wider text-[#585550] font-semibold mb-1">
-                        EMAIL *
+                      <label className="block text-[11px] font-mono uppercase tracking-wider text-[#A3B8B0] font-semibold mb-1">
+                        EMAIL <span className="text-[#C49A55]">*</span>
                       </label>
                       <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-stone-400">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#5A7C6E]">
                           <Mail className="w-4 h-4" />
                         </div>
                         <input
@@ -592,19 +597,19 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                           value={formState.email}
                           onChange={(e) => setFormState({ ...formState, email: e.target.value })}
                           placeholder="buyer@domain.com"
-                          className="w-full pl-9 pr-3 py-2.5 text-xs sm:text-sm bg-white border border-[#D5D0C6] rounded-lg text-[#181715] placeholder-stone-400 focus:outline-none focus:border-[#102C22] focus:ring-1 focus:ring-[#102C22]"
+                          className="w-full pl-9 pr-3 py-2.5 text-xs sm:text-sm bg-[#0E261E]/80 border border-[#214738] rounded-xl text-[#F3EBDD] placeholder-[#5A7C6E] focus:outline-none focus:border-[#C49A55] focus:ring-1 focus:ring-[#C49A55] transition-all"
                         />
                       </div>
                       {errors.email && (
-                        <p className="text-[10px] text-red-600 mt-1">{errors.email}</p>
+                        <p className="text-[10px] text-[#F87171] mt-1">{errors.email}</p>
                       )}
                     </div>
                   </div>
 
                   {/* Row 3: I AM INTERESTED IN (3 Selectable Pill Options matching Mockup) */}
                   <div className="space-y-1.5 pt-1">
-                    <label className="block text-[11px] font-mono uppercase tracking-wider text-[#585550] font-semibold">
-                      I AM INTERESTED IN *
+                    <label className="block text-[11px] font-mono uppercase tracking-wider text-[#A3B8B0] font-semibold">
+                      I AM INTERESTED IN <span className="text-[#C49A55]">*</span>
                     </label>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                       {[
@@ -622,10 +627,10 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                             onClick={() =>
                               setFormState({ ...formState, interestedCategory: item.label })
                             }
-                            className={`flex items-center justify-between px-3.5 py-2.5 rounded-lg border text-xs font-medium transition-all cursor-pointer ${
+                            className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl border text-xs font-medium transition-all cursor-pointer ${
                               isSelected
-                                ? 'bg-[#102C22] text-white border-[#102C22] shadow-sm'
-                                : 'bg-white text-[#4A4742] border-[#D5D0C6] hover:border-[#102C22]'
+                                ? 'bg-[#16382C] text-[#E6C995] border-[#C49A55] shadow-xs'
+                                : 'bg-[#0E261E]/80 text-[#A3B8B0] border-[#214738] hover:border-[#C49A55]/50'
                             }`}
                           >
                             <div className="flex items-center gap-2 truncate">
@@ -633,7 +638,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                               <span className="truncate">{item.label}</span>
                             </div>
                             {isSelected && (
-                              <div className="w-4 h-4 rounded-full bg-[#C49A55] text-[#080A08] flex items-center justify-center shrink-0">
+                              <div className="w-4 h-4 rounded-full bg-[#C49A55] text-[#071B15] flex items-center justify-center shrink-0">
                                 <Check className="w-2.5 h-2.5 stroke-[3]" />
                               </div>
                             )}
@@ -646,11 +651,11 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                   {/* Row 4: Product / Material & Quantity */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
                     <div>
-                      <label className="block text-[11px] font-mono uppercase tracking-wider text-[#585550] font-semibold mb-1">
+                      <label className="block text-[11px] font-mono uppercase tracking-wider text-[#A3B8B0] font-semibold mb-1">
                         PRODUCT / MATERIAL
                       </label>
                       <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-stone-400">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#5A7C6E]">
                           <Box className="w-4 h-4" />
                         </div>
                         <input
@@ -658,17 +663,17 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                           value={formState.product}
                           onChange={(e) => setFormState({ ...formState, product: e.target.value })}
                           placeholder="e.g. Poplin Gada / Cotton Lace / Lycra Mesh"
-                          className="w-full pl-9 pr-3 py-2.5 text-xs sm:text-sm bg-white border border-[#D5D0C6] rounded-lg text-[#181715] placeholder-stone-400 focus:outline-none focus:border-[#102C22] focus:ring-1 focus:ring-[#102C22]"
+                          className="w-full pl-9 pr-3 py-2.5 text-xs sm:text-sm bg-[#0E261E]/80 border border-[#214738] rounded-xl text-[#F3EBDD] placeholder-[#5A7C6E] focus:outline-none focus:border-[#C49A55] focus:ring-1 focus:ring-[#C49A55] transition-all"
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-[11px] font-mono uppercase tracking-wider text-[#585550] font-semibold mb-1">
+                      <label className="block text-[11px] font-mono uppercase tracking-wider text-[#A3B8B0] font-semibold mb-1">
                         QUANTITY (Approx.)
                       </label>
                       <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-stone-400">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#5A7C6E]">
                           <Package className="w-4 h-4" />
                         </div>
                         <input
@@ -676,7 +681,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                           value={formState.quantity}
                           onChange={(e) => setFormState({ ...formState, quantity: e.target.value })}
                           placeholder="e.g. 500 Meters / 1000 pcs"
-                          className="w-full pl-9 pr-3 py-2.5 text-xs sm:text-sm bg-white border border-[#D5D0C6] rounded-lg text-[#181715] placeholder-stone-400 focus:outline-none focus:border-[#102C22] focus:ring-1 focus:ring-[#102C22]"
+                          className="w-full pl-9 pr-3 py-2.5 text-xs sm:text-sm bg-[#0E261E]/80 border border-[#214738] rounded-xl text-[#F3EBDD] placeholder-[#5A7C6E] focus:outline-none focus:border-[#C49A55] focus:ring-1 focus:ring-[#C49A55] transition-all"
                         />
                       </div>
                     </div>
@@ -684,7 +689,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
 
                   {/* Row 5: Message */}
                   <div>
-                    <label className="block text-[11px] font-mono uppercase tracking-wider text-[#585550] font-semibold mb-1">
+                    <label className="block text-[11px] font-mono uppercase tracking-wider text-[#A3B8B0] font-semibold mb-1">
                       MESSAGE
                     </label>
                     <textarea
@@ -692,7 +697,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                       value={formState.message}
                       onChange={(e) => setFormState({ ...formState, message: e.target.value })}
                       placeholder="Tell us about your material needs, specification or any other details..."
-                      className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-white border border-[#D5D0C6] rounded-lg text-[#181715] placeholder-stone-400 focus:outline-none focus:border-[#102C22] focus:ring-1 focus:ring-[#102C22]"
+                      className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-[#0E261E]/80 border border-[#214738] rounded-xl text-[#F3EBDD] placeholder-[#5A7C6E] focus:outline-none focus:border-[#C49A55] focus:ring-1 focus:ring-[#C49A55] transition-all resize-none"
                     />
                   </div>
 
@@ -711,14 +716,14 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                       <button
                         type="button"
                         onClick={() => fileInputRef.current?.click()}
-                        className="flex items-center gap-2 px-3 py-2 bg-white hover:bg-stone-50 text-[#585550] border border-[#D5D0C6] rounded-lg text-xs cursor-pointer transition-colors text-left"
+                        className="flex items-center gap-2 px-3 py-2 bg-[#0E261E]/80 hover:bg-[#123026] text-[#A3B8B0] border border-[#214738] rounded-xl text-xs cursor-pointer transition-colors text-left"
                       >
-                        <Paperclip className="w-3.5 h-3.5 text-stone-500" />
+                        <Paperclip className="w-3.5 h-3.5 text-[#C49A55]" />
                         <div>
-                          <span className="font-semibold block leading-tight text-[#181715]">
-                            Attach Files <span className="font-normal text-[10px] text-stone-400">(Optional)</span>
+                          <span className="font-semibold block leading-tight text-[#F3EBDD]">
+                            Attach Files <span className="font-normal text-[10px] text-[#A3B8B0]">(Optional)</span>
                           </span>
-                          <span className="text-[10px] text-stone-500 block">
+                          <span className="text-[10px] text-[#5A7C6E] block">
                             Max 5 files, upto 10MB each (JPG, PNG, PDF)
                           </span>
                         </div>
@@ -730,13 +735,13 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                           {attachedFiles.map((file, i) => (
                             <span
                               key={i}
-                              className="inline-flex items-center gap-1 bg-white border border-stone-300 rounded px-2 py-0.5 text-[10px] text-stone-700"
+                              className="inline-flex items-center gap-1 bg-[#102C22] border border-[#214738] rounded px-2 py-0.5 text-[10px] text-[#E6C995]"
                             >
                               <span className="truncate max-w-[120px]">{file.name}</span>
                               <button
                                 type="button"
                                 onClick={() => handleRemoveFile(i)}
-                                className="text-stone-400 hover:text-red-600"
+                                className="text-[#A3B8B0] hover:text-[#F87171] cursor-pointer"
                               >
                                 <X className="w-2.5 h-2.5" />
                               </button>
@@ -750,14 +755,14 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="inline-flex items-center justify-center gap-2 bg-[#102C22] hover:bg-[#071B15] text-white px-8 py-3.5 rounded-xl font-medium text-xs sm:text-sm tracking-wide transition-all border border-[#C49A55]/30 shadow-md active:scale-95 cursor-pointer disabled:opacity-50"
+                      className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#C49A55] to-[#B38744] hover:from-[#D4AF37] hover:to-[#C49A55] text-[#071B15] font-bold px-8 py-3.5 rounded-xl font-medium text-xs sm:text-sm uppercase tracking-wider transition-all shadow-[0_4px_20px_rgba(196,154,85,0.3)] hover:shadow-[0_0_25px_rgba(196,154,85,0.5)] active:scale-95 cursor-pointer disabled:opacity-50"
                     >
                       {isSubmitting ? (
                         <span>Sending...</span>
                       ) : (
                         <>
                           <span>Send Enquiry</span>
-                          <Send className="w-4 h-4 text-[#C49A55]" />
+                          <Send className="w-4 h-4 text-[#071B15]" />
                         </>
                       )}
                     </button>

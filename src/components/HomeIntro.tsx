@@ -66,105 +66,117 @@ export const HomeIntro: React.FC<HomeIntroProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 lg:gap-6 relative z-10">
               
               {/* Stage 1: YOUR REQUIREMENT */}
-              <div className="group bg-[#FAF9F5] p-6 lg:p-7 rounded-xl border border-[#E8E4DC] hover:border-[#82553E]/50 hover:bg-white shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-all duration-300 flex flex-col justify-between">
+              <div className="group relative bg-gradient-to-b from-[#1F1C18] via-[#181715] to-[#121110] p-6 lg:p-7 rounded-2xl border border-[#D4AF37]/50 hover:border-[#F2D785] shadow-[0_8px_28px_rgba(0,0,0,0.22)] hover:shadow-[0_16px_36px_rgba(212,175,55,0.22)] transition-all duration-300 flex flex-col justify-between transform hover:-translate-y-1.5">
                 <div>
-                  <div className="w-12 h-12 rounded-xl bg-white border border-[#E5DFD5] text-[#82553E] flex items-center justify-center mb-5 group-hover:scale-105 group-hover:bg-[#82553E] group-hover:text-white transition-all duration-300 shadow-sm">
-                    <Send className="w-5 h-5" />
+                  {/* Luxury Brushed Gold Icon Medallion */}
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-[#D4AF37] via-[#F2D785] to-[#B38728] text-[#181715] flex items-center justify-center mb-5 shadow-[0_4px_16px_rgba(212,175,55,0.35)] group-hover:scale-105 group-hover:shadow-[0_6px_22px_rgba(212,175,55,0.5)] transition-all duration-300">
+                    <Send className="w-5 h-5 text-[#181715] stroke-[2.2]" />
                   </div>
-                  <h3 className="font-serif text-lg font-bold text-[#181715] mb-2 tracking-tight">
+                  <h3 className="font-serif text-lg font-bold text-[#FFF8EC] group-hover:text-[#F2D785] mb-2 tracking-tight transition-colors duration-300">
                     Your Requirement
                   </h3>
-                  <p className="text-xs sm:text-sm text-[#5C5852] leading-relaxed">
+                  <p className="text-xs sm:text-sm text-[#BCB6AA] group-hover:text-[#D5D0C5] leading-relaxed transition-colors duration-300">
                     Share what you need—fabric type, yarn count, finish, colorway, or reference sample image.
                   </p>
                 </div>
 
-                <div className="pt-4 mt-5 border-t border-[#EDE8DF]">
-                  {/* Action Button */}
+                <div className="pt-4 mt-5 border-t border-[#D4AF37]/25">
+                  {/* Action Button - Matte Catalogue Pill */}
                   <button
                     onClick={onRequestMaterial}
-                    className="w-full py-2.5 px-3 rounded-lg bg-white border border-[#DDD5C8] hover:border-[#82553E] hover:bg-[#82553E] text-[#82553E] hover:text-white text-xs font-semibold tracking-wider uppercase transition-all duration-300 flex items-center justify-center gap-2 shadow-2xs group/btn cursor-pointer"
+                    className="w-full py-2 pl-4 pr-1.5 rounded-full bg-gradient-to-r from-[#24211D] via-[#2A2621] to-[#1C1A17] hover:from-[#2E2A23] hover:to-[#221F1B] border border-[#D4AF37]/60 hover:border-[#F2D785] text-[#FFF8EC] transition-all duration-300 flex items-center justify-between shadow-[0_2px_10px_rgba(0,0,0,0.35)] hover:shadow-[0_4px_18px_rgba(212,175,55,0.3)] active:scale-[0.98] group/btn cursor-pointer"
                   >
-                    <span>Submit Spec</span>
-                    <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover/btn:translate-x-1" />
+                    <span className="font-mono text-[11px] tracking-[0.16em] font-bold uppercase">Submit Spec</span>
+                    <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-[#D4AF37] via-[#F2D785] to-[#B38728] text-[#181715] font-bold flex items-center justify-center transition-all duration-300 shadow-xs group-hover/btn:scale-105 group-hover/btn:translate-x-0.5">
+                      <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
+                    </div>
                   </button>
                 </div>
               </div>
 
               {/* Stage 2: WE SOURCE */}
-              <div className="group bg-[#FAF9F5] p-6 lg:p-7 rounded-xl border border-[#E8E4DC] hover:border-[#82553E]/50 hover:bg-white shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-all duration-300 flex flex-col justify-between">
+              <div className="group relative bg-gradient-to-b from-[#1F1C18] via-[#181715] to-[#121110] p-6 lg:p-7 rounded-2xl border border-[#D4AF37]/50 hover:border-[#F2D785] shadow-[0_8px_28px_rgba(0,0,0,0.22)] hover:shadow-[0_16px_36px_rgba(212,175,55,0.22)] transition-all duration-300 flex flex-col justify-between transform hover:-translate-y-1.5">
                 <div>
-                  <div className="w-12 h-12 rounded-xl bg-white border border-[#E5DFD5] text-[#82553E] flex items-center justify-center mb-5 group-hover:scale-105 group-hover:bg-[#82553E] group-hover:text-white transition-all duration-300 shadow-sm">
-                    <Search className="w-5 h-5" />
+                  {/* Luxury Brushed Gold Icon Medallion */}
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-[#D4AF37] via-[#F2D785] to-[#B38728] text-[#181715] flex items-center justify-center mb-5 shadow-[0_4px_16px_rgba(212,175,55,0.35)] group-hover:scale-105 group-hover:shadow-[0_6px_22px_rgba(212,175,55,0.5)] transition-all duration-300">
+                    <Search className="w-5 h-5 text-[#181715] stroke-[2.2]" />
                   </div>
-                  <h3 className="font-serif text-lg font-bold text-[#181715] mb-2 tracking-tight">
+                  <h3 className="font-serif text-lg font-bold text-[#FFF8EC] group-hover:text-[#F2D785] mb-2 tracking-tight transition-colors duration-300">
                     We Source
                   </h3>
-                  <p className="text-xs sm:text-sm text-[#5C5852] leading-relaxed">
+                  <p className="text-xs sm:text-sm text-[#BCB6AA] group-hover:text-[#D5D0C5] leading-relaxed transition-colors duration-300">
                     We map options across verified manufacturing and supply sources to locate the exact match.
                   </p>
                 </div>
 
-                <div className="pt-4 mt-5 border-t border-[#EDE8DF]">
-                  {/* Action Button */}
+                <div className="pt-4 mt-5 border-t border-[#D4AF37]/25">
+                  {/* Action Button - Matte Catalogue Pill */}
                   <button
                     onClick={onExploreCatalogue}
-                    className="w-full py-2.5 px-3 rounded-lg bg-white border border-[#DDD5C8] hover:border-[#82553E] hover:bg-[#82553E] text-[#82553E] hover:text-white text-xs font-semibold tracking-wider uppercase transition-all duration-300 flex items-center justify-center gap-2 shadow-2xs group/btn cursor-pointer"
+                    className="w-full py-2 pl-4 pr-1.5 rounded-full bg-gradient-to-r from-[#24211D] via-[#2A2621] to-[#1C1A17] hover:from-[#2E2A23] hover:to-[#221F1B] border border-[#D4AF37]/60 hover:border-[#F2D785] text-[#FFF8EC] transition-all duration-300 flex items-center justify-between shadow-[0_2px_10px_rgba(0,0,0,0.35)] hover:shadow-[0_4px_18px_rgba(212,175,55,0.3)] active:scale-[0.98] group/btn cursor-pointer"
                   >
-                    <span>Browse Fabrics</span>
-                    <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover/btn:translate-x-1" />
+                    <span className="font-mono text-[11px] tracking-[0.16em] font-bold uppercase">Browse Fabrics</span>
+                    <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-[#D4AF37] via-[#F2D785] to-[#B38728] text-[#181715] font-bold flex items-center justify-center transition-all duration-300 shadow-xs group-hover/btn:scale-105 group-hover/btn:translate-x-0.5">
+                      <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
+                    </div>
                   </button>
                 </div>
               </div>
 
               {/* Stage 3: WE MATCH */}
-              <div className="group bg-[#FAF9F5] p-6 lg:p-7 rounded-xl border border-[#E8E4DC] hover:border-[#82553E]/50 hover:bg-white shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-all duration-300 flex flex-col justify-between">
+              <div className="group relative bg-gradient-to-b from-[#1F1C18] via-[#181715] to-[#121110] p-6 lg:p-7 rounded-2xl border border-[#D4AF37]/50 hover:border-[#F2D785] shadow-[0_8px_28px_rgba(0,0,0,0.22)] hover:shadow-[0_16px_36px_rgba(212,175,55,0.22)] transition-all duration-300 flex flex-col justify-between transform hover:-translate-y-1.5">
                 <div>
-                  <div className="w-12 h-12 rounded-xl bg-white border border-[#E5DFD5] text-[#82553E] flex items-center justify-center mb-5 group-hover:scale-105 group-hover:bg-[#82553E] group-hover:text-white transition-all duration-300 shadow-sm">
-                    <CheckCircle2 className="w-5 h-5" />
+                  {/* Luxury Brushed Gold Icon Medallion */}
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-[#D4AF37] via-[#F2D785] to-[#B38728] text-[#181715] flex items-center justify-center mb-5 shadow-[0_4px_16px_rgba(212,175,55,0.35)] group-hover:scale-105 group-hover:shadow-[0_6px_22px_rgba(212,175,55,0.5)] transition-all duration-300">
+                    <CheckCircle2 className="w-5 h-5 text-[#181715] stroke-[2.2]" />
                   </div>
-                  <h3 className="font-serif text-lg font-bold text-[#181715] mb-2 tracking-tight">
+                  <h3 className="font-serif text-lg font-bold text-[#FFF8EC] group-hover:text-[#F2D785] mb-2 tracking-tight transition-colors duration-300">
                     We Match
                   </h3>
-                  <p className="text-xs sm:text-sm text-[#5C5852] leading-relaxed">
+                  <p className="text-xs sm:text-sm text-[#BCB6AA] group-hover:text-[#D5D0C5] leading-relaxed transition-colors duration-300">
                     We review sample feel, color shade, weave density, and quality against your specifications.
                   </p>
                 </div>
 
-                <div className="pt-4 mt-5 border-t border-[#EDE8DF]">
-                  {/* Action Button */}
+                <div className="pt-4 mt-5 border-t border-[#D4AF37]/25">
+                  {/* Action Button - Matte Catalogue Pill */}
                   <button
                     onClick={onRequestMaterial}
-                    className="w-full py-2.5 px-3 rounded-lg bg-white border border-[#DDD5C8] hover:border-[#82553E] hover:bg-[#82553E] text-[#82553E] hover:text-white text-xs font-semibold tracking-wider uppercase transition-all duration-300 flex items-center justify-center gap-2 shadow-2xs group/btn cursor-pointer"
+                    className="w-full py-2 pl-4 pr-1.5 rounded-full bg-gradient-to-r from-[#24211D] via-[#2A2621] to-[#1C1A17] hover:from-[#2E2A23] hover:to-[#221F1B] border border-[#D4AF37]/60 hover:border-[#F2D785] text-[#FFF8EC] transition-all duration-300 flex items-center justify-between shadow-[0_2px_10px_rgba(0,0,0,0.35)] hover:shadow-[0_4px_18px_rgba(212,175,55,0.3)] active:scale-[0.98] group/btn cursor-pointer"
                   >
-                    <span>Request Swatch</span>
-                    <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover/btn:translate-x-1" />
+                    <span className="font-mono text-[11px] tracking-[0.16em] font-bold uppercase">Request Swatch</span>
+                    <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-[#D4AF37] via-[#F2D785] to-[#B38728] text-[#181715] font-bold flex items-center justify-center transition-all duration-300 shadow-xs group-hover/btn:scale-105 group-hover/btn:translate-x-0.5">
+                      <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
+                    </div>
                   </button>
                 </div>
               </div>
 
               {/* Stage 4: WE SUPPLY */}
-              <div className="group bg-[#FAF9F5] p-6 lg:p-7 rounded-xl border border-[#E8E4DC] hover:border-[#82553E]/50 hover:bg-white shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-all duration-300 flex flex-col justify-between">
+              <div className="group relative bg-gradient-to-b from-[#1F1C18] via-[#181715] to-[#121110] p-6 lg:p-7 rounded-2xl border border-[#D4AF37]/50 hover:border-[#F2D785] shadow-[0_8px_28px_rgba(0,0,0,0.22)] hover:shadow-[0_16px_36px_rgba(212,175,55,0.22)] transition-all duration-300 flex flex-col justify-between transform hover:-translate-y-1.5">
                 <div>
-                  <div className="w-12 h-12 rounded-xl bg-white border border-[#E5DFD5] text-[#82553E] flex items-center justify-center mb-5 group-hover:scale-105 group-hover:bg-[#82553E] group-hover:text-white transition-all duration-300 shadow-sm">
-                    <PackageCheck className="w-5 h-5" />
+                  {/* Luxury Brushed Gold Icon Medallion */}
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-[#D4AF37] via-[#F2D785] to-[#B38728] text-[#181715] flex items-center justify-center mb-5 shadow-[0_4px_16px_rgba(212,175,55,0.35)] group-hover:scale-105 group-hover:shadow-[0_6px_22px_rgba(212,175,55,0.5)] transition-all duration-300">
+                    <PackageCheck className="w-5 h-5 text-[#181715] stroke-[2.2]" />
                   </div>
-                  <h3 className="font-serif text-lg font-bold text-[#181715] mb-2 tracking-tight">
+                  <h3 className="font-serif text-lg font-bold text-[#FFF8EC] group-hover:text-[#F2D785] mb-2 tracking-tight transition-colors duration-300">
                     We Supply
                   </h3>
-                  <p className="text-xs sm:text-sm text-[#5C5852] leading-relaxed">
+                  <p className="text-xs sm:text-sm text-[#BCB6AA] group-hover:text-[#D5D0C5] leading-relaxed transition-colors duration-300">
                     We arrange reliable fulfillment, whether for sampling yardage or commercial production lots.
                   </p>
                 </div>
 
-                <div className="pt-4 mt-5 border-t border-[#EDE8DF]">
-                  {/* Action Button */}
+                <div className="pt-4 mt-5 border-t border-[#D4AF37]/25">
+                  {/* Action Button - Matte Catalogue Pill */}
                   <button
                     onClick={onReachUs}
-                    className="w-full py-2.5 px-3 rounded-lg bg-white border border-[#DDD5C8] hover:border-[#82553E] hover:bg-[#82553E] text-[#82553E] hover:text-white text-xs font-semibold tracking-wider uppercase transition-all duration-300 flex items-center justify-center gap-2 shadow-2xs group/btn cursor-pointer"
+                    className="w-full py-2 pl-4 pr-1.5 rounded-full bg-gradient-to-r from-[#24211D] via-[#2A2621] to-[#1C1A17] hover:from-[#2E2A23] hover:to-[#221F1B] border border-[#D4AF37]/60 hover:border-[#F2D785] text-[#FFF8EC] transition-all duration-300 flex items-center justify-between shadow-[0_2px_10px_rgba(0,0,0,0.35)] hover:shadow-[0_4px_18px_rgba(212,175,55,0.3)] active:scale-[0.98] group/btn cursor-pointer"
                   >
-                    <span>Supply Desk</span>
-                    <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover/btn:translate-x-1" />
+                    <span className="font-mono text-[11px] tracking-[0.16em] font-bold uppercase">Supply Desk</span>
+                    <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-[#D4AF37] via-[#F2D785] to-[#B38728] text-[#181715] font-bold flex items-center justify-center transition-all duration-300 shadow-xs group-hover/btn:scale-105 group-hover/btn:translate-x-0.5">
+                      <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
+                    </div>
                   </button>
                 </div>
               </div>

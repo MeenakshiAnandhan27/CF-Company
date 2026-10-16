@@ -3,6 +3,7 @@ import { businessConfig } from '../data/businessConfig.ts';
 import { ProductCategory, NavigationTab } from '../types.ts';
 import { Menu, X, ArrowRight, Phone, ShoppingBag } from 'lucide-react';
 import { BrandLogo } from './BrandLogo.tsx';
+import { SlideToCatalogueButton } from './SlideToCatalogueButton.tsx';
 
 interface NavbarProps {
   currentTab: NavigationTab;
@@ -143,16 +144,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             </span>
           </button>
 
-          {/* Unique Attractive Catalogue Action Button (Right Edge) */}
-          <button
-            onClick={() => handleNavClick('catalogue')}
-            className="group relative inline-flex items-center gap-3 pl-5 pr-1.5 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] rounded-full transition-all duration-300 text-[#FFF8EC] bg-gradient-to-r from-[#181715] via-[#2A2620] to-[#181715] hover:from-[#24211D] hover:to-[#111110] border border-[#D4AF37] hover:border-[#F2D785] shadow-[0_4px_16px_rgba(212,175,55,0.25)] hover:shadow-[0_6px_28px_rgba(212,175,55,0.45)] active:scale-[0.98] cursor-pointer"
-          >
-            <span className="font-mono text-[11px] tracking-[0.18em] font-bold">Catalogue</span>
-            <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-[#D4AF37] via-[#F2D785] to-[#B38728] text-[#181715] font-bold flex items-center justify-center transition-all duration-300 shadow-sm group-hover:scale-105 group-hover:translate-x-0.5">
-              <ArrowRight className="w-3.5 h-3.5" />
-            </div>
-          </button>
+          {/* Interactive Slide Left-to-Right Catalogue Button */}
+          <SlideToCatalogueButton onSlideComplete={() => handleNavClick('catalogue')} />
         </div>
 
         {/* Mobile Buttons */}

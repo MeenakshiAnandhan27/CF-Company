@@ -137,7 +137,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
 
           {/* Simple, Professional, Concise Narrative */}
           <p className="text-base sm:text-lg text-[#55514B] max-w-2xl mx-auto leading-relaxed">
-            Dedicated supplier of garment accessories and fabrics for apparel makers, design studios, and fashion labels. From everyday trims to custom-developed textiles, we fulfill your exact production requirements with uncompromising fidelity.
+            A trusted supplier of garment accessories and fabrics for apparel manufacturers and clothing brands. From essential trims to custom textile solutions, we support your production needs with quality materials and reliable supply.
           </p>
 
           {/* Quality Feature Figure Badges */}

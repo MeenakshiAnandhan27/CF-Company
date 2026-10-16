@@ -26,9 +26,12 @@ export type NavigationTab =
 
 export type MaterialRequestCategory = 
   | 'fabric' 
+  | 'denim'
+  | 'mesh'
   | 'lace' 
-  | 'denim' 
-  | 'mesh' 
+  | 'zipper'
+  | 'button'
+  | 'tipping'
   | 'accessories' 
   | 'processing' 
   | 'other';
@@ -53,6 +56,11 @@ export interface MaterialRequestData {
     dataUrl?: string;
     sizeKb?: number;
   };
+  referenceImages?: {
+    name: string;
+    dataUrl?: string;
+    sizeKb?: number;
+  }[];
   hasPhysicalSample: boolean;
   sampleCourierNotes?: string;
   quantity: string;

@@ -88,10 +88,12 @@ export default function App() {
           ? 'denim'
           : category === 'mesh' || category === 'lycra-mesh'
           ? 'mesh'
-          : category === 'accessories' || category === 'tapes' || category === 'tags' || category === 'buttons'
+          : category === 'buttons'
+          ? 'button'
+          : category === 'accessories' || category === 'tapes' || category === 'tags'
           ? 'accessories'
           : category === 'processing'
-          ? 'processing'
+          ? 'other'
           : 'fabric';
       setInitialRequestCategory(mapped);
     } else {

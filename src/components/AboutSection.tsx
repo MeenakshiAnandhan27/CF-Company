@@ -119,72 +119,75 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
           }}
         />
 
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8">
-          {/* Unique Massive Editorial Headline — No "Classic Fashions" badge above */}
-          <h1 className="font-['Marcellus',serif] text-4xl sm:text-5xl lg:text-6xl font-normal text-[#181715] tracking-tight leading-[1.14]">
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-7">
+          {/* Headline matching Home page font, without trailing dot */}
+          <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#181715] leading-[1.12]">
             Materials That Match <br className="hidden sm:inline" />
-            <span className="italic text-[#82553E]">Your Requirement.</span>
+            <span className="text-[#82553E]">Your Requirement</span>
           </h1>
 
+          {/* Elegant Gold Diamond Motif Divider matching Home page */}
+          <div className="relative flex items-center justify-center w-full max-w-xs mx-auto pt-0.5">
+            <div className="h-[1px] w-20 bg-gradient-to-r from-transparent via-[#D4AF37]/50 to-[#D4AF37]" />
+            <div className="relative mx-2.5 flex items-center justify-center">
+              <div className="w-2 h-2 bg-gradient-to-tr from-[#D4AF37] via-[#F2D785] to-[#B38728] rotate-45 shadow-[0_0_8px_rgba(212,175,55,0.75)]" />
+            </div>
+            <div className="h-[1px] w-20 bg-gradient-to-r from-[#D4AF37] via-[#D4AF37]/50 to-transparent" />
+          </div>
+
           {/* Simple, Professional, Concise Narrative */}
-          <p className="text-base sm:text-lg text-[#4A4742] max-w-2xl mx-auto leading-relaxed font-['Plus_Jakarta_Sans',sans-serif]">
+          <p className="text-base sm:text-lg text-[#55514B] max-w-2xl mx-auto leading-relaxed">
             Dedicated supplier of garment accessories and fabrics for apparel makers, design studios, and fashion labels. From everyday trims to custom-developed textiles, we fulfill your exact production requirements with uncompromising fidelity.
           </p>
 
-          {/* Action Buttons with Button-in-Button Trailing Icons */}
-          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3.5">
-            <button
-              onClick={() => onExploreCatalogue()}
-              className="group relative inline-flex items-center justify-between gap-4 px-7 py-3.5 bg-[#181715] hover:bg-[#2C2925] text-white rounded-full shadow-sm hover:shadow-md transition-all duration-300 active:scale-[0.98] cursor-pointer"
-            >
-              <span className="text-xs font-semibold uppercase tracking-wider font-['Outfit',sans-serif]">
-                Explore Catalogue
-              </span>
-              <span className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center transition-transform duration-300 group-hover:translate-x-1">
-                <ArrowRight className="w-3.5 h-3.5 text-white" />
-              </span>
-            </button>
-
-            {onRequestMaterial && (
-              <button
-                onClick={onRequestMaterial}
-                className="group relative inline-flex items-center justify-between gap-4 px-7 py-3.5 bg-white hover:bg-[#F2ECE4] border border-[#DDD5C9] text-[#82553E] rounded-full shadow-xs hover:shadow-sm transition-all duration-300 active:scale-[0.98] cursor-pointer"
-              >
-                <span className="text-xs font-semibold uppercase tracking-wider font-['Outfit',sans-serif]">
-                  Request a Material
-                </span>
-                <span className="w-7 h-7 rounded-full bg-[#82553E]/10 flex items-center justify-center transition-transform duration-300 group-hover:rotate-45">
-                  <Compass className="w-3.5 h-3.5 text-[#82553E]" />
-                </span>
-              </button>
-            )}
-          </div>
-
-          {/* 3 Physical Atelier Quality Indicators */}
-          <div className="pt-8 border-t border-[#E8E2D8] grid grid-cols-3 gap-6 max-w-xl mx-auto">
-            <div>
-              <span className="font-['Marcellus',serif] text-2xl font-bold text-[#181715] block">
+          {/* Quality Feature Figure Badges */}
+          <div className="pt-4 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
+            {/* Figure 1: 100% Spec Matching */}
+            <div className="group p-5 rounded-2xl bg-white/95 backdrop-blur-md border border-[#E8E2D8] hover:border-[#D4AF37]/60 shadow-[0_4px_18px_rgba(24,23,21,0.04)] hover:shadow-[0_10px_28px_rgba(212,175,55,0.12)] transition-all duration-300 flex flex-col items-center text-center">
+              <div className="w-12 h-12 rounded-xl bg-[#FAF5EE] text-[#82553E] border border-[#ECDCCB] flex items-center justify-center mb-3 shadow-xs group-hover:scale-108 transition-transform duration-300">
+                <ShieldCheck className="w-6 h-6 text-[#82553E]" />
+              </div>
+              <span className="font-serif text-2xl sm:text-3xl font-bold text-[#181715] tracking-tight block">
                 100%
               </span>
-              <span className="text-[11px] font-mono uppercase tracking-wider text-[#8A847C] block mt-1">
+              <span className="text-[11px] font-mono uppercase tracking-[0.16em] text-[#8A847C] font-semibold mt-1">
                 Spec Matching
               </span>
+              <p className="text-xs text-[#6B655C] mt-1.5 leading-snug">
+                Strict GSM, weave &amp; finish fidelity
+              </p>
             </div>
-            <div>
-              <span className="font-['Marcellus',serif] text-2xl font-bold text-[#181715] block">
+
+            {/* Figure 2: Single Supply Desk */}
+            <div className="group p-5 rounded-2xl bg-white/95 backdrop-blur-md border border-[#E8E2D8] hover:border-[#D4AF37]/60 shadow-[0_4px_18px_rgba(24,23,21,0.04)] hover:shadow-[0_10px_28px_rgba(212,175,55,0.12)] transition-all duration-300 flex flex-col items-center text-center">
+              <div className="w-12 h-12 rounded-xl bg-[#EEF3F8] text-[#385375] border border-[#D5E1ED] flex items-center justify-center mb-3 shadow-xs group-hover:scale-108 transition-transform duration-300">
+                <Package className="w-6 h-6 text-[#385375]" />
+              </div>
+              <span className="font-serif text-2xl sm:text-3xl font-bold text-[#181715] tracking-tight block">
                 Single
               </span>
-              <span className="text-[11px] font-mono uppercase tracking-wider text-[#8A847C] block mt-1">
+              <span className="text-[11px] font-mono uppercase tracking-[0.16em] text-[#8A847C] font-semibold mt-1">
                 Supply Desk
               </span>
+              <p className="text-xs text-[#6B655C] mt-1.5 leading-snug">
+                Unified fabrics &amp; trims coordination
+              </p>
             </div>
-            <div>
-              <span className="font-['Marcellus',serif] text-2xl font-bold text-[#181715] block">
+
+            {/* Figure 3: Verified Material Grade */}
+            <div className="group p-5 rounded-2xl bg-white/95 backdrop-blur-md border border-[#E8E2D8] hover:border-[#D4AF37]/60 shadow-[0_4px_18px_rgba(24,23,21,0.04)] hover:shadow-[0_10px_28px_rgba(212,175,55,0.12)] transition-all duration-300 flex flex-col items-center text-center">
+              <div className="w-12 h-12 rounded-xl bg-[#EFF5F1] text-[#3F5A50] border border-[#D3E5DA] flex items-center justify-center mb-3 shadow-xs group-hover:scale-108 transition-transform duration-300">
+                <CheckCircle2 className="w-6 h-6 text-[#3F5A50]" />
+              </div>
+              <span className="font-serif text-2xl sm:text-3xl font-bold text-[#181715] tracking-tight block">
                 Verified
               </span>
-              <span className="text-[11px] font-mono uppercase tracking-wider text-[#8A847C] block mt-1">
+              <span className="text-[11px] font-mono uppercase tracking-[0.16em] text-[#8A847C] font-semibold mt-1">
                 Material Grade
               </span>
+              <p className="text-xs text-[#6B655C] mt-1.5 leading-snug">
+                Vetted for apparel production durability
+              </p>
             </div>
           </div>
 
@@ -195,12 +198,12 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
       <section className="py-20 md:py-28 border-b border-[#E8E2D8] bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
-          {/* Section Header with refined Marcellus typography */}
+          {/* Section Header with refined typography matching Home page */}
           <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
-            <h2 className="font-['Marcellus',serif] text-3xl sm:text-4xl lg:text-5xl font-normal text-[#181715] tracking-[0.08em] uppercase">
+            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-[#181715] tracking-tight uppercase">
               WHAT WE DO
             </h2>
-            <p className="text-sm sm:text-base text-[#5C564D] leading-relaxed font-['Plus_Jakarta_Sans',sans-serif]">
+            <p className="text-sm sm:text-base text-[#5C564D] leading-relaxed">
               We supply garment accessories and fabrics across a wide spectrum of requirements, delivering dependable materials tailored to your apparel production.
             </p>
           </div>
@@ -215,10 +218,10 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
                   <div className="w-12 h-12 rounded-xl bg-[#F4EFE8] text-[#82553E] flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
                     <Tag className="w-6 h-6" />
                   </div>
-                  <h3 className="font-['Marcellus',serif] text-xl font-bold text-[#181715] tracking-wide uppercase">
+                  <h3 className="font-serif text-xl font-bold text-[#181715] tracking-tight uppercase">
                     GARMENT ACCESSORIES
                   </h3>
-                  <p className="text-xs sm:text-sm text-[#58534C] leading-relaxed font-['Plus_Jakarta_Sans',sans-serif]">
+                  <p className="text-xs sm:text-sm text-[#58534C] leading-relaxed">
                     Laces, tags, tapes, buttons and essential finishing trims coordinated for garment production lines.
                   </p>
                 </div>
@@ -232,10 +235,10 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
                   <div className="w-12 h-12 rounded-xl bg-[#EAF1F8] text-[#385375] flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
                     <Layers className="w-6 h-6" />
                   </div>
-                  <h3 className="font-['Marcellus',serif] text-xl font-bold text-[#181715] tracking-wide uppercase">
+                  <h3 className="font-serif text-xl font-bold text-[#181715] tracking-tight uppercase">
                     FABRICS
                   </h3>
-                  <p className="text-xs sm:text-sm text-[#58534C] leading-relaxed font-['Plus_Jakarta_Sans',sans-serif]">
+                  <p className="text-xs sm:text-sm text-[#58534C] leading-relaxed">
                     A diverse range of woven textiles, unbleached and dyed gadas, denim twills, and specialized mesh.
                   </p>
                 </div>
@@ -249,10 +252,10 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
                   <div className="w-12 h-12 rounded-xl bg-[#F4EFE8] text-[#82553E] flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
                     <Compass className="w-6 h-6" />
                   </div>
-                  <h3 className="font-['Marcellus',serif] text-xl font-bold text-[#181715] tracking-wide uppercase">
+                  <h3 className="font-serif text-xl font-bold text-[#181715] tracking-tight uppercase">
                     TAILORED MATERIAL SUPPLY
                   </h3>
-                  <p className="text-xs sm:text-sm text-[#58534C] leading-relaxed font-['Plus_Jakarta_Sans',sans-serif]">
+                  <p className="text-xs sm:text-sm text-[#58534C] leading-relaxed">
                     Share your unique material specifications, swatches, or samples to fulfill your exact production needs.
                   </p>
                 </div>
@@ -266,10 +269,10 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
                   <div className="w-12 h-12 rounded-xl bg-[#EBF4EF] text-[#3F5A50] flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
                     <CheckCircle2 className="w-6 h-6" />
                   </div>
-                  <h3 className="font-['Marcellus',serif] text-xl font-bold text-[#181715] tracking-wide uppercase">
+                  <h3 className="font-serif text-xl font-bold text-[#181715] tracking-tight uppercase">
                     END-TO-END SUPPLY
                   </h3>
-                  <p className="text-xs sm:text-sm text-[#58534C] leading-relaxed font-['Plus_Jakarta_Sans',sans-serif]">
+                  <p className="text-xs sm:text-sm text-[#58534C] leading-relaxed">
                     We coordinate dependable production and wholesale distribution aligned with your project timelines.
                   </p>
                 </div>
@@ -287,10 +290,10 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
           {/* Section Header (No 'Material Categories' badge) */}
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
             <div className="space-y-3 max-w-xl">
-              <h2 className="font-['Marcellus',serif] text-3xl sm:text-4xl lg:text-5xl font-normal text-[#181715] tracking-[0.05em]">
+              <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-[#181715] tracking-tight">
                 What We Offer
               </h2>
-              <p className="text-sm sm:text-base text-[#5C564D] leading-relaxed font-['Plus_Jakarta_Sans',sans-serif]">
+              <p className="text-sm sm:text-base text-[#5C564D] leading-relaxed">
                 Explore our diverse selection of garment accessories and fabrics, backed by customized fulfillment for specialized requirements.
               </p>
             </div>
@@ -354,10 +357,10 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
                 {/* Card Body */}
                 <div className="p-6 sm:p-7 flex-1 flex flex-col justify-between space-y-4">
                   <div className="space-y-2">
-                    <h3 className="font-['Marcellus',serif] text-xl font-bold text-[#181715] tracking-tight">
+                    <h3 className="font-serif text-xl font-bold text-[#181715] tracking-tight">
                       {item.name}
                     </h3>
-                    <p className="text-xs sm:text-sm text-[#5C564D] leading-relaxed font-['Plus_Jakarta_Sans',sans-serif]">
+                    <p className="text-xs sm:text-sm text-[#5C564D] leading-relaxed">
                       {item.description}
                     </p>
                   </div>
@@ -391,7 +394,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
                 <ShieldCheck className="w-5 h-5 text-[#C89D6B]" />
               </div>
               <div className="space-y-1">
-                <h4 className="font-['Marcellus',serif] text-base font-bold text-[#181715] uppercase tracking-wide">
+                <h4 className="font-serif text-base font-bold text-[#181715] uppercase tracking-wide">
                   Specification Fidelity
                 </h4>
                 <p className="text-xs text-[#5C564D] leading-relaxed">
@@ -405,7 +408,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
                 <Package className="w-5 h-5 text-[#C89D6B]" />
               </div>
               <div className="space-y-1">
-                <h4 className="font-['Marcellus',serif] text-base font-bold text-[#181715] uppercase tracking-wide">
+                <h4 className="font-serif text-base font-bold text-[#181715] uppercase tracking-wide">
                   Single-Window Supply
                 </h4>
                 <p className="text-xs text-[#5C564D] leading-relaxed">
@@ -419,7 +422,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
                 <Check className="w-5 h-5 text-[#C89D6B]" />
               </div>
               <div className="space-y-1">
-                <h4 className="font-['Marcellus',serif] text-base font-bold text-[#181715] uppercase tracking-wide">
+                <h4 className="font-serif text-base font-bold text-[#181715] uppercase tracking-wide">
                   Production Dependability
                 </h4>
                 <p className="text-xs text-[#5C564D] leading-relaxed">
@@ -450,11 +453,11 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
             Direct Supply Coordination
           </span>
 
-          <h2 className="font-['Marcellus',serif] text-3xl sm:text-4xl lg:text-5xl font-normal tracking-[0.04em] text-white">
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white">
             Looking for Something Specific?
           </h2>
 
-          <p className="text-sm sm:text-base text-[#D4C8BC] max-w-2xl mx-auto leading-relaxed font-['Plus_Jakarta_Sans',sans-serif]">
+          <p className="text-sm sm:text-base text-[#D4C8BC] max-w-2xl mx-auto leading-relaxed">
             Need a specialized weave, custom GSM, distinct dye lot, or bespoke branded trim? Share your tech pack specifications or physical swatches with our procurement desk. We source, develop, and deliver the precise materials to fulfill your exact production standards.
           </p>
 

@@ -36,15 +36,15 @@ export const Navbar: React.FC<NavbarProps> = ({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const isReachUs = currentTab === 'reach-us';
+  const isDarkNav = currentTab === 'reach-us' || currentTab === 'material-request';
 
   return (
     <header
       className={`sticky top-0 z-40 transition-all duration-300 ${
-        isReachUs
+        isDarkNav
           ? isScrolled
-            ? 'bg-[#071B15]/95 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.5)] border-b border-[#1A382C]'
-            : 'bg-[#071B15] border-b border-[#1A382C]'
+            ? 'bg-[#07110D]/95 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.5)] border-b border-[rgba(224,196,143,0.2)]'
+            : 'bg-[#07110D] border-b border-[rgba(224,196,143,0.2)]'
           : isScrolled
           ? 'bg-white/95 backdrop-blur-md shadow-[0_1px_4px_rgba(0,0,0,0.06)] border-b border-[#E8E6E0]'
           : 'bg-white border-b border-[#E8E6E0]'
@@ -62,12 +62,12 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
           <div className="flex flex-col justify-center">
             <span className={`font-display text-lg sm:text-xl font-bold tracking-[0.12em] block leading-none whitespace-nowrap uppercase transition-colors ${
-              isReachUs ? 'text-[#F3EBDD] group-hover:text-[#E6C995]' : 'text-[#181715] group-hover:text-[#8C6534]'
+              isDarkNav ? 'text-[#F3EBDD] group-hover:text-[#E6C995]' : 'text-[#181715] group-hover:text-[#8C6534]'
             }`}>
               {businessConfig.businessName}
             </span>
             <span className={`font-mono text-[8px] sm:text-[9px] tracking-[0.18em] font-semibold uppercase mt-0.5 block ${
-              isReachUs ? 'text-[#C49A55]' : 'text-[#8C6534]/80'
+              isDarkNav ? 'text-[#C49A55]' : 'text-[#8C6534]/80'
             }`}>
               GARMENT ACCESSORIES &amp; FABRIC EXPERTS
             </span>
@@ -76,16 +76,16 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Zone 2: Navigation Links - Spaced & Balanced */}
         <nav className={`hidden md:flex items-center gap-6 lg:gap-8 xl:gap-10 text-xs font-semibold uppercase tracking-wider ${
-          isReachUs ? 'text-[#F3EBDD]/80' : 'text-[#585550]'
+          isDarkNav ? 'text-[#F3EBDD]/80' : 'text-[#585550]'
         }`}>
           <button
             onClick={() => handleNavClick('home')}
             className={`whitespace-nowrap transition-colors relative py-2 ${
               currentTab === 'home'
-                ? isReachUs
+                ? isDarkNav
                   ? 'text-[#F3EBDD] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#C49A55]'
                   : 'text-[#181715] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#181715]'
-                : isReachUs
+                : isDarkNav
                 ? 'hover:text-[#E6C995]'
                 : 'hover:text-[#181715]'
             }`}
@@ -96,10 +96,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={() => handleNavClick('about')}
             className={`whitespace-nowrap transition-colors relative py-2 ${
               currentTab === 'about'
-                ? isReachUs
+                ? isDarkNav
                   ? 'text-[#F3EBDD] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#C49A55]'
                   : 'text-[#181715] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#181715]'
-                : isReachUs
+                : isDarkNav
                 ? 'hover:text-[#E6C995]'
                 : 'hover:text-[#181715]'
             }`}
@@ -110,10 +110,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={() => handleNavClick('catalogue')}
             className={`whitespace-nowrap transition-colors relative py-2 ${
               currentTab === 'catalogue'
-                ? isReachUs
+                ? isDarkNav
                   ? 'text-[#F3EBDD] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#C49A55]'
                   : 'text-[#181715] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#181715]'
-                : isReachUs
+                : isDarkNav
                 ? 'hover:text-[#E6C995]'
                 : 'hover:text-[#181715]'
             }`}
@@ -124,11 +124,9 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={() => handleNavClick('material-request')}
             className={`whitespace-nowrap transition-colors relative py-2 flex items-center gap-1 ${
               currentTab === 'material-request'
-                ? isReachUs
-                  ? 'text-[#F3EBDD] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#C49A55]'
-                  : 'text-[#181715] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#181715]'
-                : isReachUs
-                ? 'text-[#C49A55] hover:text-[#E6C995]'
+                ? 'text-[#C69A59] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#C69A59]'
+                : isDarkNav
+                ? 'text-[#F3EBDD]/80 hover:text-[#E6C995]'
                 : 'text-[#82553E] hover:text-[#181715]'
             }`}
           >
@@ -139,7 +137,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             className={`whitespace-nowrap transition-colors relative py-2 ${
               currentTab === 'reach-us'
                 ? 'text-[#E6C995] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#C49A55]'
-                : isReachUs
+                : isDarkNav
                 ? 'hover:text-[#E6C995]'
                 : 'hover:text-[#181715]'
             }`}
@@ -154,7 +152,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={() => handleNavClick('collection')}
             className={`group relative inline-flex items-center gap-2 pl-4 pr-2.5 py-2 text-xs font-semibold uppercase tracking-wider rounded-full border transition-all duration-300 cursor-pointer shadow-xs active:scale-[0.98] ${
-              isReachUs
+              isDarkNav
                 ? 'bg-[#102C22] text-[#F3EBDD] border-[#2A5243] hover:border-[#C49A55]'
                 : currentTab === 'collection'
                 ? 'bg-[#181715] text-white border-[#181715] shadow-md'
@@ -163,12 +161,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             title="View selected wholesale materials"
           >
             <ShoppingBag className={`w-3.5 h-3.5 transition-transform duration-300 group-hover:scale-110 ${
-              isReachUs ? 'text-[#C49A55]' : currentTab === 'collection' ? 'text-[#D4AF37]' : 'text-[#8C6534]'
+              isDarkNav ? 'text-[#C49A55]' : currentTab === 'collection' ? 'text-[#D4AF37]' : 'text-[#8C6534]'
             }`} />
             <span className="font-mono text-[11px] tracking-[0.14em] font-bold">Collection</span>
             <span
               className={`font-mono text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-extrabold transition-colors ${
-                isReachUs
+                isDarkNav
                   ? 'bg-[#C49A55] text-[#071B15]'
                   : currentTab === 'collection'
                   ? 'bg-[#D4AF37] text-[#181715]'

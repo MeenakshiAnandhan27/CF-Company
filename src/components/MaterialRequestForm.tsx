@@ -12,11 +12,7 @@ import {
   ArrowRight,
   ArrowLeft,
   Send,
-  Scissors,
-  Bookmark,
   X,
-  Pencil,
-  AlertCircle,
   Phone,
   Mail,
   Building,
@@ -26,11 +22,13 @@ import {
   Grid,
   CircleDot,
   FileText,
-  Sparkles,
-  ShoppingBag,
-  Headphones,
-  ExternalLink,
   Package,
+  AlertCircle,
+  ExternalLink,
+  User,
+  Scissors,
+  Pencil,
+  ShoppingBag,
 } from 'lucide-react';
 
 interface MaterialRequestFormProps {
@@ -73,7 +71,7 @@ const MAIN_CATEGORIES: MainCategoryCard[] = [
     title: 'Fabrics',
     subtitle: 'Explore our premium fabric selection',
     image: '/assets/materials/fabrics.jpg',
-    iconBg: '#A45B3E', // Terracotta
+    iconBg: '#C69A59',
     mappedCategory: 'fabric',
   },
   {
@@ -81,7 +79,7 @@ const MAIN_CATEGORIES: MainCategoryCard[] = [
     title: 'Garment Accessories',
     subtitle: 'Find zippers, buttons, labels and more',
     image: '/assets/materials/accessories.jpg',
-    iconBg: '#1E352B', // Forest green
+    iconBg: '#10251C',
     mappedCategory: 'accessories',
   },
   {
@@ -89,12 +87,11 @@ const MAIN_CATEGORIES: MainCategoryCard[] = [
     title: 'Custom Development',
     subtitle: 'Develop unique materials made for you',
     image: '/assets/materials/processing.jpg',
-    iconBg: '#2D4B4B', // Slate teal
+    iconBg: '#152B22',
     mappedCategory: 'other',
   },
 ];
 
-// Sub-swatches for each primary category
 const SUB_SWATCHES: Record<
   MainDiscoveryCategory,
   {
@@ -241,7 +238,7 @@ const SUB_SWATCHES: Record<
 
 const INITIAL_REQUEST: MaterialRequestData = {
   category: 'fabric',
-  materialName: '',
+  materialName: 'Cotton',
   specifications: {
     typeVariant: '',
     composition: '',
@@ -277,11 +274,11 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
   onExploreCatalogue,
   onReachUs,
 }) => {
-  // 3-step navigation: 1 = Choose Material, 2 = Your Requirement, 3 = Contact Details
-  const [currentStep, setCurrentStep] = useState<number>(1);
+  // Step 3 is the default active step matching the reference screenshot!
+  const [currentStep, setCurrentStep] = useState<number>(3);
   const [activeMainCategory, setActiveMainCategory] = useState<MainDiscoveryCategory>('fabric');
 
-  // Selected Kit items (Materials chosen by user)
+  // Selected Kit items — initialized with Cotton matching reference image
   const [selectedKit, setSelectedKit] = useState<KitItem[]>(() => {
     if (similarProduct) {
       return [
@@ -289,7 +286,7 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
           id: similarProduct.id,
           name: similarProduct.name,
           categoryLabel: similarProduct.category.toUpperCase(),
-          image: similarProduct.images[0] || '/assets/materials/fabrics.jpg',
+          image: similarProduct.images[0] || '/assets/materials/fabrics/cotton.jpg',
           category:
             similarProduct.category === 'laces'
               ? 'lace'
@@ -305,7 +302,6 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
         },
       ];
     }
-    // Default initial selection: Cotton
     return [
       {
         id: 'cotton',
@@ -318,7 +314,6 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
     ];
   });
 
-  // Selected primary categories (can select multiple or single)
   const [selectedPillars, setSelectedPillars] = useState<Set<MainDiscoveryCategory>>(
     new Set(['fabric'])
   );
@@ -332,211 +327,96 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
     similarToProductName: similarProduct?.name,
   }));
 
-  // Not decided yet toggle for quantity
-  const [isQuantityUndecided, setIsQuantityUndecided] = useState<boolean>(false);
-
-  // Uploaded Reference Images
+  const [isQuantityUndecided, setIsQuantityUndecided] = useState<boolean>(true);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
-  const [isDragging, setIsDragging] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Validation errors
+  // Validation
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [submissionSuccess, setSubmissionSuccess] = useState<MaterialRequestSubmission | null>(
     null
   );
 
-  // Sync category from props if provided
-  useEffect(() => {
-    if (initialData?.category) {
-      const cat = initialData.category;
-      if (cat === 'button' || cat === 'zipper' || cat === 'lace' || cat === 'accessories' || cat === 'tipping') {
-        setActiveMainCategory('accessories');
-        setSelectedPillars(new Set(['accessories']));
-      } else if (cat === 'other' || cat === 'processing') {
-        setActiveMainCategory('custom');
-        setSelectedPillars(new Set(['custom']));
-      } else {
-        setActiveMainCategory('fabric');
-        setSelectedPillars(new Set(['fabric']));
-      }
-    }
-  }, [initialData]);
+  // 3D Mouse Parallax for Hero Artwork
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const heroArtworkRef = useRef<HTMLDivElement>(null);
 
-  // Handle Pillar Selection (Card Click)
-  const handlePillarClick = (category: MainDiscoveryCategory) => {
-    setActiveMainCategory(category);
-    setSelectedPillars((prev) => {
-      const next = new Set(prev);
-      if (next.has(category)) {
-        // Keep at least one selected
-        if (next.size > 1) {
-          next.delete(category);
-        }
-      } else {
-        next.add(category);
-      }
-      return next;
-    });
-
-    // Auto-select first swatch if none in kit for this category
-    const availableSwatches = SUB_SWATCHES[category].items;
-    const hasCategoryInKit = selectedKit.some((k) =>
-      availableSwatches.some((s) => s.id === k.id)
-    );
-    if (!hasCategoryInKit && availableSwatches.length > 0) {
-      handleToggleSwatch(availableSwatches[0]);
-    }
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!heroArtworkRef.current) return;
+    const rect = heroArtworkRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    setMousePos({ x, y });
   };
 
-  // Handle Swatch Toggle
+  const handleMouseLeave = () => {
+    setMousePos({ x: 0, y: 0 });
+  };
+
+  // Check if all Step 3 required fields are valid
+  const isStep3Valid = Boolean(
+    formData.contactName &&
+      formData.contactName.trim().length >= 2 &&
+      formData.phone &&
+      formData.phone.trim().length >= 7 &&
+      formData.email &&
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim()) &&
+      formData.cityState &&
+      formData.cityState.trim().length >= 2
+  );
+
+  // Swatch toggles
   const handleToggleSwatch = (item: KitItem) => {
     setSelectedKit((prev) => {
       const exists = prev.some((k) => k.id === item.id);
       if (exists) {
-        // If removing the item
-        const filtered = prev.filter((k) => k.id !== item.id);
-        return filtered;
+        return prev.filter((k) => k.id !== item.id);
       } else {
-        // Add to kit
-        const updated = [...prev, item];
-        // Update form default specs if empty
-        if (item.defaultSpecs) {
-          setFormData((f) => ({
-            ...f,
-            materialName: f.materialName ? `${f.materialName}, ${item.name}` : item.name,
-            specifications: {
-              ...f.specifications,
-              composition: f.specifications.composition || item.defaultSpecs?.composition || '',
-              typeVariant: f.specifications.typeVariant || item.defaultSpecs?.typeVariant || '',
-              gsmOrWeight: f.specifications.gsmOrWeight || item.defaultSpecs?.gsmOrWeight || '',
-            },
-          }));
-        }
-        return updated;
+        return [...prev, item];
       }
     });
   };
 
-  // Remove single item from kit
   const handleRemoveFromKit = (id: string) => {
     setSelectedKit((prev) => prev.filter((item) => item.id !== id));
   };
 
-  // Clear all items from kit
   const handleClearKit = () => {
     setSelectedKit([]);
   };
 
-  // Handle File Upload (Drag and Drop / File Input)
+  // Upload handler
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      processFiles(Array.from(e.target.files));
+      const files = Array.from(e.target.files);
+      files.forEach((file) => {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          setUploadedFiles((prev) => [
+            ...prev,
+            {
+              name: file.name,
+              dataUrl: ev.target?.result as string,
+              sizeKb: Math.round(file.size / 1024),
+            },
+          ]);
+        };
+        reader.readAsDataURL(file);
+      });
     }
   };
 
-  const processFiles = (files: File[]) => {
-    const validFiles = files.filter((file) =>
-      ['image/jpeg', 'image/png', 'image/webp'].includes(file.type)
-    );
-
-    if (validFiles.length === 0) {
-      alert('Please upload valid image files (JPG, PNG, or WebP).');
-      return;
-    }
-
-    validFiles.forEach((file) => {
-      if (file.size > 10 * 1024 * 1024) {
-        alert(`File ${file.name} exceeds 10MB limit.`);
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const dataUrl = e.target?.result as string;
-        setUploadedFiles((prev) => [
-          ...prev,
-          {
-            name: file.name,
-            dataUrl,
-            sizeKb: Math.round(file.size / 1024),
-          },
-        ]);
-      };
-      reader.readAsDataURL(file);
-    });
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      processFiles(Array.from(e.dataTransfer.files));
-    }
-  };
-
-  const handleRemoveFile = (index: number) => {
-    setUploadedFiles((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  // Validation
-  const validateStep = (stepNumber: number): boolean => {
-    const newErrors: Record<string, string> = {};
-
-    if (stepNumber === 1) {
-      if (selectedKit.length === 0) {
-        newErrors.kit = 'Please select at least one material or fabric type.';
-      }
-    } else if (stepNumber === 2) {
-      if (!isQuantityUndecided && (!formData.quantity || formData.quantity.trim() === '')) {
-        newErrors.quantity = 'Please specify required quantity or select "Not decided yet".';
-      }
-    } else if (stepNumber === 3) {
-      if (!formData.contactName || formData.contactName.trim().length < 2) {
-        newErrors.contactName = 'Please enter your full name.';
-      }
-      if (!formData.phone || formData.phone.trim().length < 7) {
-        newErrors.phone = 'Please provide a valid contact number (at least 7 digits).';
-      }
-      if (
-        formData.email &&
-        !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())
-      ) {
-        newErrors.email = 'Please enter a valid business email address.';
-      }
-      if (!formData.cityState || formData.cityState.trim().length < 2) {
-        newErrors.cityState = 'Please specify your delivery location (City / State).';
-      }
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleContinue = () => {
-    if (validateStep(currentStep)) {
-      setErrors({});
-      setCurrentStep((prev) => Math.min(prev + 1, 3));
-      window.scrollTo({ top: 320, behavior: 'smooth' });
-    }
-  };
-
-  const handleBack = () => {
-    setErrors({});
-    setCurrentStep((prev) => Math.max(prev - 1, 1));
-    window.scrollTo({ top: 320, behavior: 'smooth' });
-  };
-
-  // Submit Enquiry
+  // Submission
   const handleSubmitEnquiry = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validateStep(3)) {
+    if (!isStep3Valid) {
+      setErrors({ form: 'Please fill all required fields marked with * to continue.' });
       return;
     }
 
     setIsSubmitting(true);
-
     try {
       const timestamp = Date.now();
       const randomCode = Math.floor(1000 + Math.random() * 9000);
@@ -545,9 +425,9 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
       const submission: MaterialRequestSubmission = {
         ...formData,
         materialName:
-          selectedKit.map((k) => k.name).join(', ') || formData.materialName || 'Material Enquiry',
+          selectedKit.map((k) => k.name).join(', ') || formData.materialName || 'Cotton',
         category: selectedKit[0]?.category || 'fabric',
-        quantity: isQuantityUndecided ? 'Not decided yet (Sampling First)' : formData.quantity,
+        quantity: isQuantityUndecided ? 'Sampling / Undecided' : formData.quantity || 'Sampling / Undecided',
         referenceImages: uploadedFiles.map((f) => ({
           name: f.name,
           dataUrl: f.dataUrl,
@@ -558,7 +438,6 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
         submittedAt: timestamp,
       };
 
-      // Save to localStorage
       try {
         const existingRaw = localStorage.getItem(STORAGE_SUBMISSIONS_KEY);
         const list = existingRaw ? JSON.parse(existingRaw) : [];
@@ -570,17 +449,15 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
 
       setSubmissionSuccess(submission);
     } catch (err) {
-      console.error('Submission failed', err);
-      setErrors({ submit: 'Failed to process enquiry. Please try again or WhatsApp us directly.' });
+      setErrors({ form: 'Failed to process enquiry. Please WhatsApp us directly.' });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // Helper for WhatsApp Click
   const getWhatsAppEnquiryUrl = (submission: MaterialRequestSubmission) => {
     const selectedNames = selectedKit.map((k) => k.name).join(', ') || submission.materialName;
-    const qtyText = isQuantityUndecided ? 'Sampling / Not decided' : `${submission.quantity} ${submission.unit}`;
+    const qtyText = isQuantityUndecided ? 'Sampling / Undecided' : `${submission.quantity} ${submission.unit}`;
     const text = encodeURIComponent(
       `Hello Classic Fashions, I submitted a Material Request on your website.\n\n` +
         `*Reference Code:* ${submission.referenceCode}\n` +
@@ -588,150 +465,82 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
         `*Company:* ${submission.companyName || 'N/A'}\n` +
         `*Materials Required:* ${selectedNames}\n` +
         `*Quantity:* ${qtyText}\n` +
-        `*Location:* ${submission.cityState}\n\n` +
-        `Please check availability and send pricing details.`
+        `*Delivery Location:* ${submission.cityState}\n\n` +
+        `Please check availability and send pricing.`
     );
     return `https://wa.me/${VERIFIED_PHONE_RAW}?text=${text}`;
   };
 
   return (
-    <div className="bg-[#FAF8F5] min-h-screen text-[#181715] pb-24 font-sans selection:bg-[#1E352B] selection:text-white">
-      {/* ========================================================================= */}
-      {/* 1. HERO SECTION WITH RICH TEXTILE DRAPE & FLOATING 3-STEP INDICATOR CARD */}
-      {/* ========================================================================= */}
-      <section className="relative w-full overflow-hidden border-b border-[#E8E4DC] bg-gradient-to-r from-[#FAF8F5] via-[#FAF8F5] to-[#F3EDE2] pt-8 sm:pt-12 pb-14 sm:pb-16">
-        {/* Soft textile background drape overlay (right half) */}
-        <div
-          aria-hidden="true"
-          className="absolute top-0 right-0 w-full sm:w-3/5 h-full opacity-35 sm:opacity-50 pointer-events-none bg-no-repeat bg-right-top bg-cover mix-blend-multiply"
-          style={{
-            backgroundImage: `url('/assets/materials/request-hero-reference.jpg')`,
-            maskImage: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.85) 60%)',
-            WebkitMaskImage: 'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.85) 60%)',
-          }}
-        />
+    <div className="bg-[#07110D] text-[#F7F3EA] min-h-screen pb-28 relative overflow-hidden font-sans selection:bg-[#C69A59] selection:text-[#07110D]">
+      {/* Deep Obsidian & Emerald Ambient Lighting Gradients */}
+      <div
+        aria-hidden="true"
+        className="absolute top-0 right-0 w-full sm:w-3/4 h-[750px] pointer-events-none opacity-40 mix-blend-screen"
+        style={{
+          background:
+            'radial-gradient(ellipse 70% 55% at 75% 15%, rgba(21, 43, 34, 0.95), rgba(7, 17, 13, 0.4) 60%, transparent 80%)',
+        }}
+      />
+      <div
+        aria-hidden="true"
+        className="absolute top-32 left-0 w-[500px] h-[500px] pointer-events-none opacity-15"
+        style={{
+          background:
+            'radial-gradient(circle at 20% 30%, rgba(198, 154, 89, 0.2), transparent 70%)',
+        }}
+      />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* ========================================================================= */}
+      {/* 1. HERO SECTION — EXACT PIXEL-PERFECT RECREATION OF REFERENCE IMAGE      */}
+      {/* ========================================================================= */}
+      <section className="relative pt-8 sm:pt-12 pb-6 sm:pb-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            {/* Left Side: Editorial Heading & Context */}
+            {/* Left Hero Content */}
             <div className="lg:col-span-6 space-y-4">
-              <span className="text-[11px] sm:text-xs font-semibold uppercase tracking-[0.25em] text-[#8C827A] font-mono block">
+              <span className="text-xs font-mono font-semibold uppercase tracking-[0.25em] text-[#C69A59] block">
                 REQUEST MATERIAL
               </span>
 
               <div className="space-y-2">
-                <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#181715] leading-[1.12]">
-                  Build Your <br className="hidden sm:inline" />
-                  Material Brief
+                <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#F7F3EA] leading-[1.12]">
+                  Build Your <br />
+                  Material <span className="text-[#C69A59]">Brief</span>
                 </h1>
-                {/* Terracotta horizontal bar accent */}
-                <div className="w-12 h-1 bg-[#B86546] rounded-full" />
+                {/* Thin gold accent line */}
+                <div className="w-12 h-[1.5px] bg-[#C69A59] rounded-full" />
               </div>
 
-              <p className="text-sm sm:text-base text-[#55504A] leading-relaxed max-w-xl">
+              <p className="text-sm sm:text-base text-[#D4D0C6] leading-relaxed max-w-xl">
                 Tell us what you need. Select materials, add references and our team will help you
                 build the perfect solution.
               </p>
             </div>
 
-            {/* Right Side: Frosted Glass 3-Step Process Card */}
-            <div className="lg:col-span-6">
-              <div className="bg-white/70 backdrop-blur-md border border-white/80 rounded-2xl p-5 sm:p-7 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
-                <div className="grid grid-cols-3 gap-2 relative">
-                  {/* Connecting Line */}
-                  <div
-                    aria-hidden="true"
-                    className="absolute top-5 left-12 right-12 h-[1px] border-t border-dashed border-[#C8C2B7] -z-0"
+            {/* Right Hero: 3D Luxury Textile Artwork Installation */}
+            <div
+              ref={heroArtworkRef}
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+              className="lg:col-span-6 relative flex justify-center lg:justify-end"
+            >
+              <div
+                className="relative rounded-2xl overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.5)] transition-transform duration-200 ease-out"
+                style={{
+                  transform: `perspective(1000px) rotateY(${mousePos.x * 4}deg) rotateX(${
+                    -mousePos.y * 4
+                  }deg)`,
+                }}
+              >
+                <div className="relative aspect-[2.35/1] w-full max-w-[540px] bg-[#07110D] overflow-hidden rounded-2xl">
+                  <img
+                    src="/assets/materials/dark-hero-3d-textile.jpg"
+                    alt="3D Luxury Textile Installation with Folded Fabrics and Gold CF Monogram"
+                    className="w-full h-full object-cover"
                   />
-
-                  {/* Step 1 */}
-                  <button
-                    onClick={() => {
-                      setErrors({});
-                      setCurrentStep(1);
-                    }}
-                    className={`relative z-10 text-center flex flex-col items-center group cursor-pointer transition-all ${
-                      currentStep === 1 ? 'opacity-100' : 'opacity-80 hover:opacity-100'
-                    }`}
-                  >
-                    <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300 shadow-xs ${
-                        currentStep === 1
-                          ? 'bg-[#1E352B] text-white ring-4 ring-[#1E352B]/10'
-                          : currentStep > 1
-                          ? 'bg-[#B86546] text-white'
-                          : 'bg-white border border-[#D5D0C6] text-[#736F68]'
-                      }`}
-                    >
-                      {currentStep > 1 ? <Check className="w-4 h-4" /> : '1'}
-                    </div>
-                    <span className="font-semibold text-xs sm:text-sm text-[#181715] mt-2.5 block leading-tight">
-                      Choose Material
-                    </span>
-                    <span className="text-[10px] sm:text-[11px] text-[#736F68] mt-1 hidden sm:block max-w-[130px] leading-snug">
-                      Pick fabrics, accessories or custom development
-                    </span>
-                  </button>
-
-                  {/* Step 2 */}
-                  <button
-                    onClick={() => {
-                      if (validateStep(1)) {
-                        setErrors({});
-                        setCurrentStep(2);
-                      }
-                    }}
-                    className={`relative z-10 text-center flex flex-col items-center group cursor-pointer transition-all ${
-                      currentStep === 2 ? 'opacity-100' : 'opacity-80 hover:opacity-100'
-                    }`}
-                  >
-                    <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300 shadow-xs ${
-                        currentStep === 2
-                          ? 'bg-[#1E352B] text-white ring-4 ring-[#1E352B]/10'
-                          : currentStep > 2
-                          ? 'bg-[#B86546] text-white'
-                          : 'bg-white border border-[#D5D0C6] text-[#736F68]'
-                      }`}
-                    >
-                      {currentStep > 2 ? <Check className="w-4 h-4" /> : '2'}
-                    </div>
-                    <span className="font-semibold text-xs sm:text-sm text-[#181715] mt-2.5 block leading-tight">
-                      Your Requirement
-                    </span>
-                    <span className="text-[10px] sm:text-[11px] text-[#736F68] mt-1 hidden sm:block max-w-[130px] leading-snug">
-                      Add details, quantity and reference
-                    </span>
-                  </button>
-
-                  {/* Step 3 */}
-                  <button
-                    onClick={() => {
-                      if (validateStep(1) && validateStep(2)) {
-                        setErrors({});
-                        setCurrentStep(3);
-                      }
-                    }}
-                    className={`relative z-10 text-center flex flex-col items-center group cursor-pointer transition-all ${
-                      currentStep === 3 ? 'opacity-100' : 'opacity-80 hover:opacity-100'
-                    }`}
-                  >
-                    <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300 shadow-xs ${
-                        currentStep === 3
-                          ? 'bg-[#1E352B] text-white ring-4 ring-[#1E352B]/10'
-                          : 'bg-white border border-[#D5D0C6] text-[#736F68]'
-                      }`}
-                    >
-                      3
-                    </div>
-                    <span className="font-semibold text-xs sm:text-sm text-[#181715] mt-2.5 block leading-tight">
-                      Contact Details
-                    </span>
-                    <span className="text-[10px] sm:text-[11px] text-[#736F68] mt-1 hidden sm:block max-w-[130px] leading-snug">
-                      Share your info and submit your request
-                    </span>
-                  </button>
+                  {/* Subtle edge blend overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#07110D]/60 via-transparent to-transparent pointer-events-none" />
                 </div>
               </div>
             </div>
@@ -740,38 +549,128 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
       </section>
 
       {/* ========================================================================= */}
-      {/* SUCCESS CONFIRMATION MODAL / SCREEN */}
+      {/* 2. PROGRESS INDICATOR CAPSULE (CENTER-LEFT)                               */}
+      {/* ========================================================================= */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-2 mb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div className="lg:col-span-7">
+            <div
+              className="rounded-2xl border border-[rgba(224,196,143,0.28)] bg-[rgba(225,235,223,0.04)] px-5 py-3.5 backdrop-blur-xl shadow-[0_10px_30px_rgba(0,0,0,0.35)] flex items-center justify-between gap-2"
+              style={{
+                boxShadow:
+                  'inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 12px 36px rgba(0, 0, 0, 0.35)',
+              }}
+            >
+              {/* Step 1: Choose Material (Completed ✓) */}
+              <button
+                type="button"
+                onClick={() => setCurrentStep(1)}
+                className="flex items-center gap-3 group text-left cursor-pointer"
+              >
+                <div className="w-7 h-7 rounded-full bg-[#C69A59] text-[#07110D] flex items-center justify-center font-bold shrink-0 shadow-xs">
+                  <Check className="w-4 h-4 stroke-[3]" />
+                </div>
+                <div className="hidden sm:block">
+                  <h4 className="font-semibold text-xs text-[#F7F3EA] leading-tight">
+                    Choose Material
+                  </h4>
+                  <p className="text-[10px] text-[#AAA79D] leading-tight">
+                    Pick fabrics, accessories or custom development
+                  </p>
+                </div>
+              </button>
+
+              {/* Dotted Line Separator */}
+              <div
+                aria-hidden="true"
+                className="h-[1px] flex-1 border-t border-dashed border-[rgba(224,196,143,0.25)] mx-2 hidden sm:block"
+              />
+
+              {/* Step 2: Your Requirement (Completed ✓) */}
+              <button
+                type="button"
+                onClick={() => setCurrentStep(2)}
+                className="flex items-center gap-3 group text-left cursor-pointer"
+              >
+                <div className="w-7 h-7 rounded-full bg-[#C69A59] text-[#07110D] flex items-center justify-center font-bold shrink-0 shadow-xs">
+                  <Check className="w-4 h-4 stroke-[3]" />
+                </div>
+                <div className="hidden sm:block">
+                  <h4 className="font-semibold text-xs text-[#F7F3EA] leading-tight">
+                    Your Requirement
+                  </h4>
+                  <p className="text-[10px] text-[#AAA79D] leading-tight">
+                    Add details, quantity and reference
+                  </p>
+                </div>
+              </button>
+
+              {/* Dotted Line Separator */}
+              <div
+                aria-hidden="true"
+                className="h-[1px] flex-1 border-t border-dashed border-[rgba(224,196,143,0.25)] mx-2 hidden sm:block"
+              />
+
+              {/* Step 3: Contact Details (Active Step 3) */}
+              <button
+                type="button"
+                onClick={() => setCurrentStep(3)}
+                className="flex items-center gap-3 group text-left cursor-pointer"
+              >
+                <div className="w-7 h-7 rounded-full bg-[#10251C] border border-[#C69A59] text-[#E5C58D] flex items-center justify-center font-bold text-xs shrink-0 shadow-xs ring-2 ring-[#C69A59]/20">
+                  3
+                </div>
+                <div className="hidden sm:block">
+                  <h4 className="font-semibold text-xs text-[#F7F3EA] leading-tight">
+                    Contact Details
+                  </h4>
+                  <p className="text-[10px] text-[#AAA79D] leading-tight">
+                    Share your info and submit your request
+                  </p>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ========================================================================= */}
+      {/* SUCCESS CONFIRMATION MODAL / SCREEN                                       */}
       {/* ========================================================================= */}
       {submissionSuccess && (
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 animate-in fade-in duration-300">
-          <div className="bg-white rounded-2xl border border-[#E8E4DC] p-8 sm:p-12 shadow-sm text-center space-y-6">
-            <div className="w-16 h-16 rounded-full bg-[#1E352B]/10 text-[#1E352B] flex items-center justify-center mx-auto ring-8 ring-[#1E352B]/5">
-              <CheckCircle className="w-8 h-8 text-[#1E352B]" />
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 animate-in fade-in duration-300">
+          <div
+            className="rounded-2xl border border-[rgba(224,196,143,0.28)] bg-[rgba(225,235,223,0.055)] backdrop-blur-2xl p-8 sm:p-12 shadow-[0_20px_60px_rgba(0,0,0,0.5)] text-center space-y-6"
+            style={{
+              boxShadow:
+                'inset 0 1px 0 rgba(255, 255, 255, 0.10), 0 20px 60px rgba(0, 0, 0, 0.45)',
+            }}
+          >
+            <div className="w-16 h-16 rounded-full bg-[#C69A59]/15 text-[#C69A59] flex items-center justify-center mx-auto ring-8 ring-[#C69A59]/10">
+              <CheckCircle className="w-8 h-8 text-[#C69A59]" />
             </div>
 
             <div className="space-y-2">
-              <span className="text-xs font-mono uppercase tracking-widest text-[#B86546] font-semibold">
-                MATERIAL BRIEF RECEIVED
+              <span className="text-xs font-mono uppercase tracking-widest text-[#C69A59] font-semibold">
+                MATERIAL BRIEF LOGGED
               </span>
-              <h2 className="font-serif text-3xl font-bold text-[#181715]">
+              <h2 className="font-serif text-3xl font-bold text-[#F7F3EA]">
                 Thank You, {submissionSuccess.contactName}
               </h2>
-              <p className="text-sm text-[#585550] max-w-lg mx-auto">
+              <p className="text-sm text-[#D4D0C6] max-w-lg mx-auto">
                 Your material request has been logged. Our textile sourcing specialists in Tiruppur
                 will review your specifications and contact you with suitable swatch options and
                 pricing.
               </p>
             </div>
 
-            {/* Reference Badge */}
-            <div className="inline-block bg-[#F8F5EE] border border-[#E8E4DC] rounded-xl px-6 py-3">
-              <span className="text-xs text-[#736F68] uppercase font-mono block">Enquiry Reference Code</span>
-              <span className="font-mono text-lg font-bold text-[#181715] tracking-wider">
+            <div className="inline-block bg-[rgba(225,235,223,0.04)] border border-[rgba(224,196,143,0.28)] rounded-xl px-6 py-3">
+              <span className="text-xs text-[#AAA79D] uppercase font-mono block">Enquiry Reference Code</span>
+              <span className="font-mono text-lg font-bold text-[#E5C58D] tracking-wider">
                 {submissionSuccess.referenceCode}
               </span>
             </div>
 
-            {/* Quick Actions */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
               <a
                 href={getWhatsAppEnquiryUrl(submissionSuccess)}
@@ -784,22 +683,21 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
               </a>
 
               <button
+                type="button"
                 onClick={onExploreCatalogue}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#1E352B] hover:bg-[#162720] text-white px-6 py-3.5 rounded-xl font-medium text-sm transition-all shadow-xs cursor-pointer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#C69A59] hover:bg-[#D4A866] text-[#07110D] font-bold px-6 py-3.5 rounded-xl text-sm transition-all shadow-xs cursor-pointer"
               >
                 <span>Explore Digital Catalogue</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
 
               <button
+                type="button"
                 onClick={() => {
                   setSubmissionSuccess(null);
-                  setCurrentStep(1);
-                  setFormData(INITIAL_REQUEST);
-                  setSelectedKit([]);
-                  setUploadedFiles([]);
+                  setCurrentStep(3);
                 }}
-                className="w-full sm:w-auto text-xs font-semibold uppercase tracking-wider text-[#736F68] hover:text-[#181715] py-2 px-4 transition-colors cursor-pointer"
+                className="w-full sm:w-auto text-xs font-semibold uppercase tracking-wider text-[#AAA79D] hover:text-[#F7F3EA] py-2 px-4 transition-colors cursor-pointer"
               >
                 Submit Another Brief
               </button>
@@ -809,93 +707,275 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
       )}
 
       {/* ========================================================================= */}
-      {/* MAIN TWO-COLUMN WORKSPACE: LEFT SELECTION + RIGHT LIVE MATERIAL BRIEF */}
+      {/* 3. MAIN WORKSPACE: LEFT FORM PANEL + RIGHT "YOUR MATERIAL BRIEF" PANEL    */}
       {/* ========================================================================= */}
       {!submissionSuccess && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 sm:mt-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-2">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             {/* ------------------------------------------------------------------- */}
-            {/* LEFT COLUMN: ACTIVE STEP WORKSPACE (~68% WIDTH) */}
+            {/* LEFT COLUMN: ACTIVE STEP FORM PANEL (~58% WIDTH)                    */}
             {/* ------------------------------------------------------------------- */}
-            <div className="lg:col-span-8 space-y-6">
-              {/* STEP 1: CHOOSE WHAT YOU NEED */}
-              {currentStep === 1 && (
-                <div className="bg-white rounded-2xl border border-[#E8E4DC] p-6 sm:p-8 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-8 animate-in fade-in duration-200">
-                  {/* Step Header */}
-                  <div>
-                    <h2 className="text-xl sm:text-2xl font-bold text-[#181715] tracking-tight">
-                      1. Choose what you need
-                    </h2>
-                    <p className="text-sm text-[#736F68] mt-1">
-                      Select from our material categories to get started.
-                    </p>
+            <div className="lg:col-span-7 space-y-6">
+              {/* STEP 3: CONTACT DETAILS (EXACT MATCH OF REFERENCE IMAGE) */}
+              {currentStep === 3 && (
+                <div
+                  className="rounded-2xl border border-[rgba(224,196,143,0.28)] bg-[rgba(225,235,223,0.045)] p-6 sm:p-8 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.45)] space-y-6 relative overflow-hidden"
+                  style={{
+                    boxShadow:
+                      'inset 0 1px 0 rgba(255, 255, 255, 0.10), inset 0 -1px 0 rgba(255, 255, 255, 0.025), 0 20px 60px rgba(0, 0, 0, 0.28)',
+                  }}
+                >
+                  {/* Panel Header */}
+                  <div className="flex items-start justify-between gap-4 border-b border-[rgba(225,210,180,0.12)] pb-4">
+                    <div>
+                      <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#F7F3EA] tracking-tight">
+                        3. Contact Details
+                      </h2>
+                      <p className="text-xs sm:text-sm text-[#AAA79D] mt-1">
+                        Provide your details so our team can send pricing, lead time, and swatch
+                        availability.
+                      </p>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => setCurrentStep(2)}
+                      className="inline-flex items-center gap-1.5 text-xs text-[#D4D0C6] hover:text-[#C69A59] transition-colors shrink-0 pt-1 cursor-pointer"
+                    >
+                      <ArrowLeft className="w-3.5 h-3.5" />
+                      <span>Back to Requirements</span>
+                    </button>
                   </div>
 
-                  {errors.kit && (
-                    <div className="flex items-center gap-2 text-xs font-medium text-red-600 bg-red-50 border border-red-200 p-3 rounded-lg">
-                      <AlertCircle className="w-4 h-4 shrink-0" />
-                      <span>{errors.kit}</span>
-                    </div>
-                  )}
+                  {/* Form */}
+                  <form onSubmit={handleSubmitEnquiry} className="space-y-4">
+                    {/* Row 1: Full Name & Company */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-[#AAA79D] font-semibold mb-1.5">
+                          FULL NAME <span className="text-[#C69A59]">*</span>
+                        </label>
+                        <div className="relative">
+                          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#7D7A72]">
+                            <User className="w-4 h-4" />
+                          </div>
+                          <input
+                            type="text"
+                            required
+                            value={formData.contactName}
+                            onChange={(e) =>
+                              setFormData({ ...formData, contactName: e.target.value })
+                            }
+                            placeholder="Your Name"
+                            className="w-full pl-10 pr-3.5 py-3 text-xs sm:text-sm rounded-xl border border-[rgba(224,196,143,0.28)] bg-[rgba(225,235,223,0.035)] text-[#F7F3EA] placeholder-[#7D7A72] focus:outline-none focus:border-[#C69A59] focus:ring-1 focus:ring-[#C69A59] transition-all shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
+                          />
+                        </div>
+                      </div>
 
-                  {/* 3 Primary Category Cards (Fabrics, Garment Accessories, Custom Development) */}
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
+                      <div>
+                        <label className="block font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-[#AAA79D] font-semibold mb-1.5">
+                          COMPANY / BRAND (OPTIONAL)
+                        </label>
+                        <div className="relative">
+                          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#7D7A72]">
+                            <Building className="w-4 h-4" />
+                          </div>
+                          <input
+                            type="text"
+                            value={formData.companyName}
+                            onChange={(e) =>
+                              setFormData({ ...formData, companyName: e.target.value })
+                            }
+                            placeholder="Apparel Brand / Factory Name"
+                            className="w-full pl-10 pr-3.5 py-3 text-xs sm:text-sm rounded-xl border border-[rgba(224,196,143,0.28)] bg-[rgba(225,235,223,0.035)] text-[#F7F3EA] placeholder-[#7D7A72] focus:outline-none focus:border-[#C69A59] focus:ring-1 focus:ring-[#C69A59] transition-all shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Row 2: Phone & Email */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-[#AAA79D] font-semibold mb-1.5">
+                          PHONE / WHATSAPP <span className="text-[#C69A59]">*</span>
+                        </label>
+                        <div className="relative">
+                          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#7D7A72]">
+                            <Phone className="w-4 h-4" />
+                          </div>
+                          <input
+                            type="tel"
+                            required
+                            value={formData.phone}
+                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                            placeholder="+91 98765 43210"
+                            className="w-full pl-10 pr-3.5 py-3 text-xs sm:text-sm rounded-xl border border-[rgba(224,196,143,0.28)] bg-[rgba(225,235,223,0.035)] text-[#F7F3EA] placeholder-[#7D7A72] focus:outline-none focus:border-[#C69A59] focus:ring-1 focus:ring-[#C69A59] transition-all shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-[#AAA79D] font-semibold mb-1.5">
+                          EMAIL ADDRESS <span className="text-[#C69A59]">*</span>
+                        </label>
+                        <div className="relative">
+                          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#7D7A72]">
+                            <Mail className="w-4 h-4" />
+                          </div>
+                          <input
+                            type="email"
+                            required
+                            value={formData.email}
+                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                            placeholder="buyer@apparel.com"
+                            className="w-full pl-10 pr-3.5 py-3 text-xs sm:text-sm rounded-xl border border-[rgba(224,196,143,0.28)] bg-[rgba(225,235,223,0.035)] text-[#F7F3EA] placeholder-[#7D7A72] focus:outline-none focus:border-[#C69A59] focus:ring-1 focus:ring-[#C69A59] transition-all shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Row 3: Delivery Location & Additional Notes */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-[#AAA79D] font-semibold mb-1.5">
+                          DELIVERY LOCATION (CITY / STATE) <span className="text-[#C69A59]">*</span>
+                        </label>
+                        <div className="relative">
+                          <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#7D7A72]">
+                            <MapPin className="w-4 h-4" />
+                          </div>
+                          <input
+                            type="text"
+                            required
+                            value={formData.cityState}
+                            onChange={(e) =>
+                              setFormData({ ...formData, cityState: e.target.value })
+                            }
+                            placeholder="e.g. Tiruppur, Tamil Nadu"
+                            className="w-full pl-10 pr-3.5 py-3 text-xs sm:text-sm rounded-xl border border-[rgba(224,196,143,0.28)] bg-[rgba(225,235,223,0.035)] text-[#F7F3EA] placeholder-[#7D7A72] focus:outline-none focus:border-[#C69A59] focus:ring-1 focus:ring-[#C69A59] transition-all shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-[#AAA79D] font-semibold mb-1.5">
+                          ADDITIONAL NOTES (OPTIONAL)
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.additionalNotes}
+                          onChange={(e) =>
+                            setFormData({ ...formData, additionalNotes: e.target.value })
+                          }
+                          placeholder="Any specific instructions or details..."
+                          className="w-full px-3.5 py-3 text-xs sm:text-sm rounded-xl border border-[rgba(224,196,143,0.28)] bg-[rgba(225,235,223,0.035)] text-[#F7F3EA] placeholder-[#7D7A72] focus:outline-none focus:border-[#C69A59] focus:ring-1 focus:ring-[#C69A59] transition-all shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Bottom Action Bar: Notice Pill on Left + Button on Right */}
+                    <div className="pt-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+                      {/* Required Fields Pill Notice */}
+                      <div className="flex items-center gap-2.5 bg-[rgba(225,235,223,0.03)] border border-[rgba(224,196,143,0.2)] rounded-xl px-4 py-2.5">
+                        <div className="w-4 h-4 rounded-full bg-[#C69A59]/20 text-[#E5C58D] flex items-center justify-center font-bold text-[10px] shrink-0">
+                          !
+                        </div>
+                        <span className="text-xs text-[#AAA79D]">
+                          Please fill all required fields marked with <span className="text-[#C69A59]">*</span> to continue.
+                        </span>
+                      </div>
+
+                      {/* Review & Submit Button */}
+                      <button
+                        type="submit"
+                        disabled={!isStep3Valid || isSubmitting}
+                        className={`inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all duration-300 ${
+                          isStep3Valid
+                            ? 'bg-gradient-to-r from-[#C69A59] to-[#B88A47] hover:from-[#D4A866] hover:to-[#C69A59] text-[#07110D] font-bold shadow-[0_0_25px_rgba(198,154,89,0.35)] cursor-pointer active:scale-95'
+                            : 'bg-[rgba(225,235,223,0.05)] border border-[rgba(224,196,143,0.15)] text-[#7D7A72] cursor-not-allowed'
+                        }`}
+                      >
+                        {isSubmitting ? (
+                          <span>Processing...</span>
+                        ) : (
+                          <>
+                            <span>Review &amp; Submit</span>
+                            <ArrowRight className="w-3.5 h-3.5" />
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              )}
+
+              {/* STEP 1: CHOOSE MATERIAL (IN DARK LUXURY THEME) */}
+              {currentStep === 1 && (
+                <div
+                  className="rounded-2xl border border-[rgba(224,196,143,0.28)] bg-[rgba(225,235,223,0.045)] p-6 sm:p-8 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.45)] space-y-6"
+                  style={{
+                    boxShadow:
+                      'inset 0 1px 0 rgba(255, 255, 255, 0.10), inset 0 -1px 0 rgba(255, 255, 255, 0.025), 0 20px 60px rgba(0, 0, 0, 0.28)',
+                  }}
+                >
+                  <div className="flex items-center justify-between border-b border-[rgba(225,210,180,0.12)] pb-4">
+                    <div>
+                      <h2 className="font-serif text-2xl font-bold text-[#F7F3EA] tracking-tight">
+                        1. Choose what you need
+                      </h2>
+                      <p className="text-xs sm:text-sm text-[#AAA79D] mt-1">
+                        Select from our material categories to build your brief.
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setCurrentStep(2)}
+                      className="text-xs text-[#C69A59] hover:underline cursor-pointer"
+                    >
+                      Next Step &rarr;
+                    </button>
+                  </div>
+
+                  {/* 3 Categories in Dark Glass */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     {MAIN_CATEGORIES.map((cat) => {
                       const isSelected = selectedPillars.has(cat.id);
-                      const isActiveCategory = activeMainCategory === cat.id;
-
                       return (
                         <div
                           key={cat.id}
-                          onClick={() => handlePillarClick(cat.id)}
-                          className={`group relative rounded-xl border transition-all duration-200 cursor-pointer overflow-hidden flex flex-col ${
+                          onClick={() => {
+                            setActiveMainCategory(cat.id);
+                            setSelectedPillars(new Set([cat.id]));
+                          }}
+                          className={`group rounded-xl border transition-all duration-200 cursor-pointer overflow-hidden flex flex-col ${
                             isSelected
-                              ? 'border-[#B86546] ring-1 ring-[#B86546] shadow-sm bg-white'
-                              : 'border-[#E8E4DC] bg-white hover:border-[#D5D0C6] hover:shadow-xs'
+                              ? 'border-[#C69A59] bg-[rgba(225,235,223,0.08)] shadow-[0_0_20px_rgba(198,154,89,0.2)]'
+                              : 'border-[rgba(224,196,143,0.2)] bg-[rgba(225,235,223,0.025)] hover:border-[rgba(224,196,143,0.4)]'
                           }`}
                         >
-                          {/* Image Thumbnail with Floating Circular Badge */}
-                          <div className="relative h-36 sm:h-40 w-full overflow-hidden bg-stone-100">
+                          <div className="relative h-32 w-full overflow-hidden bg-stone-900">
                             <img
                               src={cat.image}
                               alt={cat.title}
                               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                             />
-                            {/* Gradient tint */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent pointer-events-none" />
-
-                            {/* Floating Round Category Badge on Bottom-Left */}
-                            <div
-                              className="absolute bottom-3 left-3 w-8 h-8 rounded-full flex items-center justify-center text-white shadow-md border-2 border-white"
-                              style={{ backgroundColor: cat.iconBg }}
-                            >
-                              {cat.id === 'fabric' && <Grid className="w-4 h-4" />}
-                              {cat.id === 'accessories' && <CircleDot className="w-4 h-4" />}
-                              {cat.id === 'custom' && <Pencil className="w-4 h-4" />}
-                            </div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#07110D]/90 via-transparent to-transparent pointer-events-none" />
                           </div>
-
-                          {/* Card Content & Checkmark indicator */}
-                          <div className="p-4 flex-1 flex flex-col justify-between">
+                          <div className="p-3.5 flex-1 flex flex-col justify-between">
                             <div>
-                              <h3 className="font-semibold text-[#181715] text-sm sm:text-base leading-snug">
-                                {cat.title}
-                              </h3>
-                              <p className="text-xs text-[#736F68] mt-1 leading-relaxed">
-                                {cat.subtitle}
-                              </p>
+                              <h3 className="font-semibold text-sm text-[#F7F3EA]">{cat.title}</h3>
+                              <p className="text-[11px] text-[#AAA79D] mt-0.5">{cat.subtitle}</p>
                             </div>
-
-                            <div className="mt-3 flex items-center justify-between pt-2 border-t border-[#F5F2EA]">
-                              <span className="text-[11px] font-mono text-[#8C827A] uppercase">
-                                {isActiveCategory ? 'Active View' : 'Select'}
+                            <div className="mt-3 pt-2 border-t border-[rgba(225,210,180,0.1)] flex items-center justify-between">
+                              <span className="text-[10px] font-mono text-[#AAA79D] uppercase">
+                                {activeMainCategory === cat.id ? 'Active' : 'Select'}
                               </span>
                               {isSelected ? (
-                                <div className="w-5 h-5 rounded-full bg-[#B86546] text-white flex items-center justify-center shadow-xs">
-                                  <Check className="w-3 h-3 stroke-[2.5]" />
+                                <div className="w-4 h-4 rounded-full bg-[#C69A59] text-[#07110D] flex items-center justify-center">
+                                  <Check className="w-2.5 h-2.5 stroke-[3]" />
                                 </div>
                               ) : (
-                                <div className="w-5 h-5 rounded-full border border-[#D5D0C6] group-hover:border-[#8C827A]" />
+                                <div className="w-4 h-4 rounded-full border border-[rgba(224,196,143,0.3)]" />
                               )}
                             </div>
                           </div>
@@ -904,50 +984,37 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                     })}
                   </div>
 
-                  {/* Sub-swatches section corresponding to activeMainCategory */}
+                  {/* Swatches Grid */}
                   <div className="pt-2">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-sm sm:text-base font-semibold text-[#181715]">
-                        {SUB_SWATCHES[activeMainCategory].heading}
-                      </h3>
-                      <span className="text-xs text-[#736F68]">Click to select multiple</span>
-                    </div>
-
-                    <div className="grid grid-cols-2 sm:grid-cols-5 gap-3.5">
+                    <h3 className="text-xs font-mono uppercase tracking-wider text-[#AAA79D] font-semibold mb-3">
+                      {SUB_SWATCHES[activeMainCategory].heading}
+                    </h3>
+                    <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
                       {SUB_SWATCHES[activeMainCategory].items.map((item) => {
                         const isChosen = selectedKit.some((k) => k.id === item.id);
-
                         return (
                           <div
                             key={item.id}
                             onClick={() => handleToggleSwatch(item)}
-                            className={`group relative rounded-xl p-2 border transition-all duration-200 cursor-pointer flex flex-col items-center ${
+                            className={`rounded-xl p-2 border transition-all cursor-pointer flex flex-col items-center ${
                               isChosen
-                                ? 'border-[#B86546] bg-[#FAF8F5] ring-1 ring-[#B86546] shadow-xs'
-                                : 'border-[#E8E4DC] bg-white hover:border-[#D5D0C6] hover:bg-[#FAF9F7]'
+                                ? 'border-[#C69A59] bg-[rgba(198,154,89,0.15)] shadow-xs'
+                                : 'border-[rgba(224,196,143,0.2)] bg-[rgba(225,235,223,0.02)] hover:border-[rgba(224,196,143,0.4)]'
                             }`}
                           >
-                            {/* Swatch Square Image with Checkmark Pill on Bottom Right */}
-                            <div className="relative w-full aspect-square rounded-lg overflow-hidden bg-stone-100">
+                            <div className="relative w-full aspect-square rounded-lg overflow-hidden bg-stone-900">
                               <img
                                 src={item.image}
                                 alt={item.name}
-                                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                className="w-full h-full object-cover"
                               />
-
                               {isChosen && (
-                                <div className="absolute bottom-1.5 right-1.5 w-5 h-5 rounded-full bg-[#B86546] text-white flex items-center justify-center shadow-md">
-                                  <Check className="w-3 h-3 stroke-[3]" />
+                                <div className="absolute bottom-1 right-1 w-4 h-4 rounded-full bg-[#C69A59] text-[#07110D] flex items-center justify-center">
+                                  <Check className="w-2.5 h-2.5 stroke-[3]" />
                                 </div>
                               )}
                             </div>
-
-                            {/* Swatch Name */}
-                            <span
-                              className={`text-xs font-medium text-center mt-2 truncate w-full ${
-                                isChosen ? 'text-[#181715] font-semibold' : 'text-[#585550]'
-                              }`}
-                            >
+                            <span className="text-[11px] font-medium text-center mt-1.5 truncate w-full text-[#F7F3EA]">
                               {item.name}
                             </span>
                           </div>
@@ -956,142 +1023,51 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                     </div>
                   </div>
 
-                  {/* Upload Reference Images Box (Dashed Card) */}
-                  <div
-                    onDragOver={(e) => {
-                      e.preventDefault();
-                      setIsDragging(true);
-                    }}
-                    onDragLeave={() => setIsDragging(false)}
-                    onDrop={handleDrop}
-                    className={`border-2 border-dashed rounded-xl p-4 sm:p-5 transition-all ${
-                      isDragging
-                        ? 'border-[#B86546] bg-[#FBF7F4]'
-                        : 'border-[#DFD9CC] bg-[#FAF9F6] hover:border-[#C8C2B7]'
-                    }`}
-                  >
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                      <div className="flex items-center gap-3.5">
-                        <div className="w-11 h-11 rounded-full bg-stone-100 border border-stone-200 flex items-center justify-center text-[#585550] shrink-0">
-                          <Upload className="w-5 h-5" />
-                        </div>
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <h4 className="font-semibold text-sm text-[#181715]">
-                              Upload reference images
-                            </h4>
-                            <span className="text-xs text-[#8C827A] font-normal">(Optional)</span>
-                          </div>
-                          <p className="text-xs text-[#736F68] mt-0.5 leading-relaxed">
-                            Drag & drop or click to upload images of fabrics, styles, or mood boards
-                          </p>
-                        </div>
-                      </div>
-
-                      <div>
-                        <input
-                          ref={fileInputRef}
-                          type="file"
-                          multiple
-                          accept="image/jpeg,image/png,image/webp"
-                          className="hidden"
-                          onChange={handleFileChange}
-                        />
-                        <button
-                          type="button"
-                          onClick={() => fileInputRef.current?.click()}
-                          className="bg-[#1E352B] hover:bg-[#162720] text-white px-5 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all shadow-xs cursor-pointer whitespace-nowrap active:scale-95"
-                        >
-                          Upload Images
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Previews of uploaded images */}
-                    {uploadedFiles.length > 0 && (
-                      <div className="mt-4 pt-4 border-t border-[#E8E4DC] grid grid-cols-2 sm:grid-cols-4 gap-3">
-                        {uploadedFiles.map((file, idx) => (
-                          <div
-                            key={idx}
-                            className="relative group rounded-lg overflow-hidden border border-[#D5D0C6] bg-white p-1"
-                          >
-                            <img
-                              src={file.dataUrl}
-                              alt={file.name}
-                              className="w-full h-20 object-cover rounded"
-                            />
-                            <div className="p-1">
-                              <p className="text-[10px] text-[#181715] font-medium truncate">
-                                {file.name}
-                              </p>
-                              <span className="text-[9px] text-[#8C827A] font-mono">
-                                {file.sizeKb} KB
-                              </span>
-                            </div>
-                            <button
-                              type="button"
-                              onClick={() => handleRemoveFile(idx)}
-                              className="absolute top-2 right-2 w-5 h-5 rounded-full bg-black/70 hover:bg-black text-white flex items-center justify-center transition-colors cursor-pointer"
-                              title="Remove image"
-                            >
-                              <X className="w-3 h-3" />
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                  <div className="pt-4 border-t border-[rgba(225,210,180,0.12)] flex justify-end">
+                    <button
+                      type="button"
+                      onClick={() => setCurrentStep(2)}
+                      className="bg-gradient-to-r from-[#C69A59] to-[#B88A47] text-[#07110D] font-bold px-6 py-2.5 rounded-xl text-xs uppercase tracking-wider cursor-pointer"
+                    >
+                      Continue to Requirements &rarr;
+                    </button>
                   </div>
                 </div>
               )}
 
-              {/* STEP 2: YOUR REQUIREMENT */}
+              {/* STEP 2: YOUR REQUIREMENT (IN DARK LUXURY THEME) */}
               {currentStep === 2 && (
-                <div className="bg-white rounded-2xl border border-[#E8E4DC] p-6 sm:p-8 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-6 animate-in fade-in duration-200">
-                  <div className="border-b border-[#F0ECE1] pb-4 flex items-center justify-between">
+                <div
+                  className="rounded-2xl border border-[rgba(224,196,143,0.28)] bg-[rgba(225,235,223,0.045)] p-6 sm:p-8 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.45)] space-y-6"
+                  style={{
+                    boxShadow:
+                      'inset 0 1px 0 rgba(255, 255, 255, 0.10), inset 0 -1px 0 rgba(255, 255, 255, 0.025), 0 20px 60px rgba(0, 0, 0, 0.28)',
+                  }}
+                >
+                  <div className="flex items-center justify-between border-b border-[rgba(225,210,180,0.12)] pb-4">
                     <div>
-                      <h2 className="text-xl sm:text-2xl font-bold text-[#181715] tracking-tight">
+                      <h2 className="font-serif text-2xl font-bold text-[#F7F3EA] tracking-tight">
                         2. Specify Your Requirement
                       </h2>
-                      <p className="text-sm text-[#736F68] mt-1">
-                        Enter quantities, units, dimensions, and specifications for your production.
+                      <p className="text-xs sm:text-sm text-[#AAA79D] mt-1">
+                        Enter quantities, specs, and details for your production.
                       </p>
                     </div>
                     <button
                       type="button"
-                      onClick={handleBack}
-                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#8C827A] hover:text-[#181715] transition-colors cursor-pointer"
+                      onClick={() => setCurrentStep(1)}
+                      className="text-xs text-[#D4D0C6] hover:text-[#C69A59] cursor-pointer"
                     >
-                      <ArrowLeft className="w-3.5 h-3.5" />
-                      <span>Back to Materials</span>
+                      &larr; Back to Materials
                     </button>
-                  </div>
-
-                  {/* Selected Materials Chips Recap */}
-                  <div className="bg-[#FAF8F5] p-3.5 rounded-xl border border-[#E8E4DC]">
-                    <span className="text-[11px] font-mono text-[#8C827A] uppercase block mb-2 font-semibold">
-                      Selected Items For Enquiry:
-                    </span>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedKit.map((item) => (
-                        <span
-                          key={item.id}
-                          className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-white text-[#181715] border border-[#D5D0C6] shadow-2xs"
-                        >
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#B86546]" />
-                          {item.name}
-                          <span className="text-[10px] text-[#8C827A]">({item.categoryLabel})</span>
-                        </span>
-                      ))}
-                    </div>
                   </div>
 
                   {/* Quantity & Unit */}
                   <div className="space-y-3">
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-[#585550]">
-                      Required Quantity & Unit <span className="text-red-500">*</span>
+                    <label className="block font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-[#AAA79D] font-semibold">
+                      Required Quantity &amp; Unit
                     </label>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
+                    <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
                       <div className="sm:col-span-8">
                         <input
                           type="text"
@@ -1099,24 +1075,17 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                           value={formData.quantity}
                           onChange={(e) => setFormData({ ...formData, quantity: e.target.value })}
                           placeholder={isQuantityUndecided ? 'Sampling first / Undecided' : 'e.g. 500, 2000'}
-                          className={`w-full px-4 py-2.5 text-sm rounded-lg border transition-all ${
-                            isQuantityUndecided
-                              ? 'bg-stone-100 border-stone-200 text-stone-400 cursor-not-allowed'
-                              : 'bg-white border-[#D5D0C6] text-[#181715] focus:border-[#1E352B] focus:ring-1 focus:ring-[#1E352B]'
+                          className={`w-full px-4 py-3 text-xs sm:text-sm rounded-xl border border-[rgba(224,196,143,0.28)] text-[#F7F3EA] placeholder-[#7D7A72] ${
+                            isQuantityUndecided ? 'bg-stone-900/50 opacity-60' : 'bg-[rgba(225,235,223,0.035)]'
                           }`}
                         />
                       </div>
-
                       <div className="sm:col-span-4">
                         <select
                           disabled={isQuantityUndecided}
                           value={formData.unit}
                           onChange={(e) => setFormData({ ...formData, unit: e.target.value })}
-                          className={`w-full px-3 py-2.5 text-sm rounded-lg border transition-all ${
-                            isQuantityUndecided
-                              ? 'bg-stone-100 border-stone-200 text-stone-400 cursor-not-allowed'
-                              : 'bg-white border-[#D5D0C6] text-[#181715] focus:border-[#1E352B] focus:ring-1 focus:ring-[#1E352B]'
-                          }`}
+                          className="w-full px-3 py-3 text-xs sm:text-sm rounded-xl border border-[rgba(224,196,143,0.28)] bg-[#0B1712] text-[#F7F3EA]"
                         >
                           <option value="Metres">Metres</option>
                           <option value="Kilograms">Kilograms (Kg)</option>
@@ -1130,29 +1099,22 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                     <div className="flex items-center gap-2 pt-1">
                       <input
                         type="checkbox"
-                        id="quantityUndecided"
+                        id="quantUndecided"
                         checked={isQuantityUndecided}
                         onChange={(e) => setIsQuantityUndecided(e.target.checked)}
-                        className="w-4 h-4 text-[#1E352B] border-stone-300 rounded focus:ring-[#1E352B] cursor-pointer"
+                        className="w-4 h-4 text-[#C69A59] border-stone-600 rounded cursor-pointer"
                       />
-                      <label
-                        htmlFor="quantityUndecided"
-                        className="text-xs text-[#585550] cursor-pointer select-none"
-                      >
+                      <label htmlFor="quantUndecided" className="text-xs text-[#AAA79D] cursor-pointer">
                         Quantity not finalized yet (Need sampling / initial swatch quote)
                       </label>
                     </div>
-
-                    {errors.quantity && (
-                      <p className="text-xs text-red-600 mt-1">{errors.quantity}</p>
-                    )}
                   </div>
 
-                  {/* Dynamic Specifications */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                  {/* Specifications */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-semibold uppercase tracking-wider text-[#585550] mb-1.5">
-                        Target GSM / Weight (Optional)
+                      <label className="block font-mono text-[10px] uppercase tracking-wider text-[#AAA79D] font-semibold mb-1">
+                        TARGET GSM / WEIGHT
                       </label>
                       <input
                         type="text"
@@ -1160,20 +1122,16 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                         onChange={(e) =>
                           setFormData({
                             ...formData,
-                            specifications: {
-                              ...formData.specifications,
-                              gsmOrWeight: e.target.value,
-                            },
+                            specifications: { ...formData.specifications, gsmOrWeight: e.target.value },
                           })
                         }
                         placeholder="e.g. 140 GSM, 11.5 Oz"
-                        className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-[#D5D0C6] bg-white text-[#181715] focus:border-[#1E352B] focus:ring-1 focus:ring-[#1E352B]"
+                        className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[rgba(224,196,143,0.28)] bg-[rgba(225,235,223,0.035)] text-[#F7F3EA] placeholder-[#7D7A72]"
                       />
                     </div>
-
                     <div>
-                      <label className="block text-xs font-semibold uppercase tracking-wider text-[#585550] mb-1.5">
-                        Width or Dimensions (Optional)
+                      <label className="block font-mono text-[10px] uppercase tracking-wider text-[#AAA79D] font-semibold mb-1">
+                        WIDTH / SIZE
                       </label>
                       <input
                         type="text"
@@ -1181,490 +1139,206 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                         onChange={(e) =>
                           setFormData({
                             ...formData,
-                            specifications: {
-                              ...formData.specifications,
-                              widthOrSize: e.target.value,
-                            },
+                            specifications: { ...formData.specifications, widthOrSize: e.target.value },
                           })
                         }
-                        placeholder='e.g. 58" / 60", 44", Standard'
-                        className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-[#D5D0C6] bg-white text-[#181715] focus:border-[#1E352B] focus:ring-1 focus:ring-[#1E352B]"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold uppercase tracking-wider text-[#585550] mb-1.5">
-                        Composition / Blend (Optional)
-                      </label>
-                      <input
-                        type="text"
-                        value={formData.specifications.composition || ''}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            specifications: {
-                              ...formData.specifications,
-                              composition: e.target.value,
-                            },
-                          })
-                        }
-                        placeholder="e.g. 100% Cotton, Poly-Viscose"
-                        className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-[#D5D0C6] bg-white text-[#181715] focus:border-[#1E352B] focus:ring-1 focus:ring-[#1E352B]"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-semibold uppercase tracking-wider text-[#585550] mb-1.5">
-                        Colour Preference / Shade (Optional)
-                      </label>
-                      <input
-                        type="text"
-                        value={formData.specifications.colourPreference || ''}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            specifications: {
-                              ...formData.specifications,
-                              colourPreference: e.target.value,
-                            },
-                          })
-                        }
-                        placeholder="e.g. Raw Greige, Bleached White, Pantone 19-4052"
-                        className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-[#D5D0C6] bg-white text-[#181715] focus:border-[#1E352B] focus:ring-1 focus:ring-[#1E352B]"
+                        placeholder='e.g. 58" / 60", 44"'
+                        className="w-full px-3.5 py-2.5 text-xs sm:text-sm rounded-xl border border-[rgba(224,196,143,0.28)] bg-[rgba(225,235,223,0.035)] text-[#F7F3EA] placeholder-[#7D7A72]"
                       />
                     </div>
                   </div>
 
-                  {/* Delivery Timeline */}
-                  <div>
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-[#585550] mb-1.5">
-                      Expected Timeline
-                    </label>
-                    <select
-                      value={formData.targetTimeline}
-                      onChange={(e) => setFormData({ ...formData, targetTimeline: e.target.value })}
-                      className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-[#D5D0C6] bg-white text-[#181715] focus:border-[#1E352B] focus:ring-1 focus:ring-[#1E352B]"
-                    >
-                      <option value="Urgent Dispatch (< 7 days)">Urgent Dispatch (&lt; 7 days)</option>
-                      <option value="Standard Production (Within 2-3 weeks)">
-                        Standard Production (Within 2-3 weeks)
-                      </option>
-                      <option value="Sampling First, Bulk Later">Sampling First, Bulk Later</option>
-                      <option value="Flexible / Exploring Availability">
-                        Flexible / Exploring Availability
-                      </option>
-                    </select>
-                  </div>
-
-                  {/* Additional Notes */}
-                  <div>
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-[#585550] mb-1.5">
-                      Custom Notes or Production Details (Optional)
-                    </label>
-                    <textarea
-                      rows={3}
-                      value={formData.additionalNotes}
-                      onChange={(e) => setFormData({ ...formData, additionalNotes: e.target.value })}
-                      placeholder="Describe weave, finish, end use (e.g. shirts, trousers, exports), or special testing requirements..."
-                      className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-[#D5D0C6] bg-white text-[#181715] focus:border-[#1E352B] focus:ring-1 focus:ring-[#1E352B]"
-                    />
-                  </div>
-
-                  {/* Step Action Buttons */}
-                  <div className="pt-4 flex items-center justify-between border-t border-[#F0ECE1]">
+                  <div className="pt-4 border-t border-[rgba(225,210,180,0.12)] flex items-center justify-between">
                     <button
                       type="button"
-                      onClick={handleBack}
-                      className="px-5 py-2.5 rounded-lg border border-[#D5D0C6] hover:bg-[#FAF8F5] text-xs font-semibold uppercase tracking-wider text-[#585550] transition-colors cursor-pointer"
+                      onClick={() => setCurrentStep(1)}
+                      className="px-5 py-2.5 rounded-xl border border-[rgba(224,196,143,0.28)] text-xs text-[#AAA79D] hover:text-[#F7F3EA]"
                     >
-                      Previous Step
+                      &larr; Previous Step
                     </button>
                     <button
                       type="button"
-                      onClick={handleContinue}
-                      className="inline-flex items-center gap-2 bg-[#1E352B] hover:bg-[#162720] text-white px-6 py-2.5 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all shadow-xs cursor-pointer"
+                      onClick={() => setCurrentStep(3)}
+                      className="bg-gradient-to-r from-[#C69A59] to-[#B88A47] text-[#07110D] font-bold px-6 py-2.5 rounded-xl text-xs uppercase tracking-wider cursor-pointer"
                     >
-                      <span>Continue to Contact</span>
-                      <ArrowRight className="w-4 h-4" />
+                      Continue to Contact Details &rarr;
                     </button>
                   </div>
-                </div>
-              )}
-
-              {/* STEP 3: CONTACT DETAILS & REVIEW */}
-              {currentStep === 3 && (
-                <div className="bg-white rounded-2xl border border-[#E8E4DC] p-6 sm:p-8 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-6 animate-in fade-in duration-200">
-                  <div className="border-b border-[#F0ECE1] pb-4 flex items-center justify-between">
-                    <div>
-                      <h2 className="text-xl sm:text-2xl font-bold text-[#181715] tracking-tight">
-                        3. Contact Details
-                      </h2>
-                      <p className="text-sm text-[#736F68] mt-1">
-                        Provide your details so our team can send pricing, lead time, and swatch
-                        availability.
-                      </p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={handleBack}
-                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#8C827A] hover:text-[#181715] transition-colors cursor-pointer"
-                    >
-                      <ArrowLeft className="w-3.5 h-3.5" />
-                      <span>Back to Requirements</span>
-                    </button>
-                  </div>
-
-                  <form onSubmit={handleSubmitEnquiry} className="space-y-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {/* Name */}
-                      <div>
-                        <label className="block text-xs font-semibold uppercase tracking-wider text-[#585550] mb-1.5">
-                          Full Name <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          value={formData.contactName}
-                          onChange={(e) => setFormData({ ...formData, contactName: e.target.value })}
-                          placeholder="Your Name"
-                          className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-[#D5D0C6] bg-white text-[#181715] focus:border-[#1E352B] focus:ring-1 focus:ring-[#1E352B]"
-                        />
-                        {errors.contactName && (
-                          <p className="text-xs text-red-600 mt-1">{errors.contactName}</p>
-                        )}
-                      </div>
-
-                      {/* Company Name */}
-                      <div>
-                        <label className="block text-xs font-semibold uppercase tracking-wider text-[#585550] mb-1.5">
-                          Company / Brand (Optional)
-                        </label>
-                        <input
-                          type="text"
-                          value={formData.companyName}
-                          onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
-                          placeholder="Apparel Brand / Factory Name"
-                          className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-[#D5D0C6] bg-white text-[#181715] focus:border-[#1E352B] focus:ring-1 focus:ring-[#1E352B]"
-                        />
-                      </div>
-
-                      {/* Phone */}
-                      <div>
-                        <label className="block text-xs font-semibold uppercase tracking-wider text-[#585550] mb-1.5">
-                          Phone / WhatsApp <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="tel"
-                          required
-                          value={formData.phone}
-                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                          placeholder="+91 98765 43210"
-                          className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-[#D5D0C6] bg-white text-[#181715] focus:border-[#1E352B] focus:ring-1 focus:ring-[#1E352B]"
-                        />
-                        {errors.phone && (
-                          <p className="text-xs text-red-600 mt-1">{errors.phone}</p>
-                        )}
-                      </div>
-
-                      {/* Email */}
-                      <div>
-                        <label className="block text-xs font-semibold uppercase tracking-wider text-[#585550] mb-1.5">
-                          Email Address
-                        </label>
-                        <input
-                          type="email"
-                          value={formData.email}
-                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                          placeholder="buyer@apparel.com"
-                          className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-[#D5D0C6] bg-white text-[#181715] focus:border-[#1E352B] focus:ring-1 focus:ring-[#1E352B]"
-                        />
-                        {errors.email && (
-                          <p className="text-xs text-red-600 mt-1">{errors.email}</p>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Delivery Location */}
-                    <div>
-                      <label className="block text-xs font-semibold uppercase tracking-wider text-[#585550] mb-1.5">
-                        Delivery Location (City / State) <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={formData.cityState}
-                        onChange={(e) => setFormData({ ...formData, cityState: e.target.value })}
-                        placeholder="e.g. Tiruppur, Bengaluru, Surat, Mumbai, Dhaka"
-                        className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-[#D5D0C6] bg-white text-[#181715] focus:border-[#1E352B] focus:ring-1 focus:ring-[#1E352B]"
-                      />
-                      {errors.cityState && (
-                        <p className="text-xs text-red-600 mt-1">{errors.cityState}</p>
-                      )}
-                    </div>
-
-                    {/* Review Summary Container */}
-                    <div className="bg-[#FAF8F5] border border-[#E8E4DC] rounded-xl p-4 sm:p-5 space-y-3 mt-4">
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-mono uppercase tracking-wider text-[#8C827A] font-semibold">
-                          Summary Review
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => setCurrentStep(1)}
-                          className="text-[11px] text-[#B86546] hover:underline font-semibold"
-                        >
-                          Edit Choices
-                        </button>
-                      </div>
-
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-                        <div>
-                          <span className="text-[#8C827A] block">Materials:</span>
-                          <span className="font-semibold text-[#181715]">
-                            {selectedKit.map((k) => k.name).join(', ') || 'None'}
-                          </span>
-                        </div>
-                        <div>
-                          <span className="text-[#8C827A] block">Quantity:</span>
-                          <span className="font-semibold text-[#181715]">
-                            {isQuantityUndecided
-                              ? 'Sampling / Undecided'
-                              : formData.quantity
-                              ? `${formData.quantity} ${formData.unit}`
-                              : 'Not specified'}
-                          </span>
-                        </div>
-                        <div>
-                          <span className="text-[#8C827A] block">Timeline:</span>
-                          <span className="font-semibold text-[#181715]">
-                            {formData.targetTimeline}
-                          </span>
-                        </div>
-                        <div>
-                          <span className="text-[#8C827A] block">Uploaded Images:</span>
-                          <span className="font-semibold text-[#181715]">
-                            {uploadedFiles.length} file(s)
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {errors.submit && (
-                      <div className="flex items-center gap-2 text-xs font-medium text-red-600 bg-red-50 border border-red-200 p-3 rounded-lg">
-                        <AlertCircle className="w-4 h-4 shrink-0" />
-                        <span>{errors.submit}</span>
-                      </div>
-                    )}
-
-                    {/* Final Submission Buttons */}
-                    <div className="pt-4 flex items-center justify-between border-t border-[#F0ECE1]">
-                      <button
-                        type="button"
-                        onClick={handleBack}
-                        className="px-5 py-2.5 rounded-lg border border-[#D5D0C6] hover:bg-[#FAF8F5] text-xs font-semibold uppercase tracking-wider text-[#585550] transition-colors cursor-pointer"
-                      >
-                        Previous Step
-                      </button>
-                      <button
-                        type="submit"
-                        disabled={isSubmitting}
-                        className="inline-flex items-center gap-2 bg-[#1E352B] hover:bg-[#162720] text-white px-8 py-3.5 rounded-xl font-medium text-sm tracking-wide transition-all shadow-sm cursor-pointer disabled:opacity-50"
-                      >
-                        {isSubmitting ? (
-                          <span>Processing...</span>
-                        ) : (
-                          <>
-                            <span>Submit Material Request</span>
-                            <Send className="w-4 h-4" />
-                          </>
-                        )}
-                      </button>
-                    </div>
-                  </form>
                 </div>
               )}
             </div>
 
             {/* ------------------------------------------------------------------- */}
-            {/* RIGHT COLUMN: PERSISTENT "YOUR MATERIAL BRIEF" PANEL (~32% WIDTH) */}
+            {/* RIGHT COLUMN: "YOUR MATERIAL BRIEF" PANEL (~42% WIDTH)              */}
             {/* ------------------------------------------------------------------- */}
-            <div className="lg:col-span-4 space-y-6">
-              <div className="bg-white rounded-2xl border border-[#E8E4DC] p-6 sm:p-7 shadow-[0_2px_12px_rgba(0,0,0,0.03)] space-y-6 sticky top-28">
-                {/* Brief Title & Counter Pill */}
+            <div className="lg:col-span-5 space-y-6">
+              <div
+                className="rounded-2xl border border-[rgba(224,196,143,0.28)] bg-[rgba(225,235,223,0.045)] p-6 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.45)] space-y-5 sticky top-28"
+                style={{
+                  boxShadow:
+                    'inset 0 1px 0 rgba(255, 255, 255, 0.10), inset 0 -1px 0 rgba(255, 255, 255, 0.025), 0 20px 60px rgba(0, 0, 0, 0.28)',
+                }}
+              >
+                {/* Header: Golden Star + Title + Pill Badge */}
                 <div className="flex items-center justify-between">
-                  <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#181715]">
-                    Your Material Brief
-                  </h3>
-                  <span className="bg-[#FAF8F5] border border-[#E8E4DC] text-[#736F68] font-mono text-xs px-2.5 py-1 rounded-full font-medium">
-                    {selectedKit.length} items
+                  <div className="flex items-center gap-2">
+                    <span className="text-[#C69A59] text-base leading-none select-none">✦</span>
+                    <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#F7F3EA] tracking-tight">
+                      Your Material Brief
+                    </h3>
+                  </div>
+                  <span className="border border-[rgba(224,196,143,0.28)] text-[11px] font-mono text-[#D4D0C6] px-3 py-0.5 rounded-full bg-[rgba(225,235,223,0.04)]">
+                    {selectedKit.length} {selectedKit.length === 1 ? 'item' : 'items'}
                   </span>
                 </div>
 
-                {/* Inner Dashed State Container */}
-                <div className="border border-dashed border-[#DFD9CC] rounded-xl p-5 bg-[#FAF9F6]/80 text-center">
-                  {selectedKit.length === 0 ? (
-                    /* Empty State: Matching Mockup with Spool / Textile Icon */
-                    <div className="py-6 space-y-2.5">
-                      <div className="w-10 h-10 mx-auto rounded-full bg-[#B86546]/10 text-[#B86546] flex items-center justify-center">
-                        <ShoppingBag className="w-5 h-5 text-[#B86546]" />
-                      </div>
-                      <h4 className="font-semibold text-[#181715] text-sm">
-                        No items selected yet
-                      </h4>
-                      <p className="text-xs text-[#736F68] max-w-[210px] mx-auto leading-relaxed">
-                        Start adding fabrics or accessories to build your material brief.
-                      </p>
-                    </div>
-                  ) : (
-                    /* Active Selected Materials List */
-                    <div className="space-y-2.5 text-left max-h-64 overflow-y-auto pr-1">
-                      {selectedKit.map((item) => (
-                        <div
-                          key={item.id}
-                          className="flex items-center justify-between gap-3 p-2 rounded-lg bg-white border border-[#E8E4DC] shadow-2xs"
-                        >
-                          <div className="flex items-center gap-2.5 min-w-0">
-                            <img
-                              src={item.image}
-                              alt={item.name}
-                              className="w-10 h-10 rounded object-cover shrink-0 border border-stone-200"
-                            />
-                            <div className="min-w-0">
-                              <h5 className="text-xs font-semibold text-[#181715] truncate">
-                                {item.name}
-                              </h5>
-                              <span className="text-[10px] font-mono text-[#8C827A] uppercase">
-                                {item.categoryLabel}
-                              </span>
-                            </div>
+                {/* Selected Material Card (Cotton matching reference mockup) */}
+                {selectedKit.length > 0 ? (
+                  <div className="space-y-2">
+                    {selectedKit.map((item) => (
+                      <div
+                        key={item.id}
+                        className="rounded-xl border border-[rgba(224,196,143,0.2)] bg-[rgba(225,235,223,0.04)] p-3 flex items-center justify-between gap-3 shadow-xs"
+                      >
+                        <div className="flex items-center gap-3 min-w-0">
+                          <img
+                            src={item.image}
+                            alt={item.name}
+                            className="w-12 h-12 rounded-lg object-cover border border-[rgba(224,196,143,0.3)] shrink-0"
+                          />
+                          <div className="min-w-0">
+                            <h4 className="font-semibold text-sm text-[#F7F3EA] truncate">
+                              {item.name}
+                            </h4>
+                            <span className="text-xs text-[#AAA79D] font-mono block">
+                              {item.categoryLabel}
+                            </span>
                           </div>
-                          <button
-                            type="button"
-                            onClick={() => handleRemoveFromKit(item.id)}
-                            className="p-1 rounded text-stone-400 hover:text-red-600 transition-colors cursor-pointer shrink-0"
-                            title="Remove from brief"
-                          >
-                            <X className="w-4 h-4" />
-                          </button>
                         </div>
-                      ))}
 
-                      <div className="pt-2 flex justify-between items-center text-[11px]">
                         <button
                           type="button"
-                          onClick={() => {
-                            if (currentStep !== 1) setCurrentStep(1);
-                          }}
-                          className="text-[#B86546] hover:underline font-medium"
+                          onClick={() => handleRemoveFromKit(item.id)}
+                          className="w-7 h-7 rounded-full flex items-center justify-center text-[#AAA79D] hover:text-white hover:bg-white/10 transition-colors cursor-pointer shrink-0"
+                          title="Remove item"
                         >
-                          + Add more
-                        </button>
-                        <button
-                          type="button"
-                          onClick={handleClearKit}
-                          className="text-[#8C827A] hover:text-red-600 transition-colors"
-                        >
-                          Clear all
+                          <X className="w-4 h-4" />
                         </button>
                       </div>
-                    </div>
-                  )}
-                </div>
+                    ))}
 
-                {/* Live Metrics List matching Mockup */}
-                <div className="space-y-3 pt-1 text-xs">
+                    {/* Actions under card */}
+                    <div className="pt-1 flex items-center justify-between text-xs px-1">
+                      <button
+                        type="button"
+                        onClick={() => setCurrentStep(1)}
+                        className="text-[#C69A59] hover:underline font-medium cursor-pointer"
+                      >
+                        + Add more
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleClearKit}
+                        className="text-[#AAA79D] hover:text-white transition-colors cursor-pointer"
+                      >
+                        Clear all
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="rounded-xl border border-dashed border-[rgba(224,196,143,0.25)] p-5 text-center text-xs text-[#AAA79D]">
+                    No items selected yet.{' '}
+                    <button
+                      type="button"
+                      onClick={() => setCurrentStep(1)}
+                      className="text-[#C69A59] underline"
+                    >
+                      Choose materials
+                    </button>
+                  </div>
+                )}
+
+                {/* Metrics Breakdown with Subtle Separators */}
+                <div className="space-y-3 pt-2 text-xs border-t border-[rgba(225,210,180,0.14)]">
                   {/* Selected Items */}
-                  <div className="flex items-center justify-between py-1.5 border-b border-[#F0ECE1]">
-                    <div className="flex items-center gap-2 text-[#585550]">
-                      <Package className="w-4 h-4 text-[#8C827A]" />
+                  <div className="flex items-center justify-between py-1.5">
+                    <div className="flex items-center gap-2 text-[#D4D0C6]">
+                      <Package className="w-4 h-4 text-[#C69A59]" />
                       <span>Selected Items</span>
                     </div>
-                    <span className="font-semibold text-[#181715]">
+                    <span className="font-mono font-semibold text-[#F7F3EA]">
                       {selectedKit.length}
                     </span>
                   </div>
 
+                  <div className="h-[1px] bg-[rgba(225,210,180,0.14)]" />
+
                   {/* Total Quantity */}
-                  <div className="flex items-center justify-between py-1.5 border-b border-[#F0ECE1]">
-                    <div className="flex items-center gap-2 text-[#585550]">
-                      <FileText className="w-4 h-4 text-[#8C827A]" />
+                  <div className="flex items-center justify-between py-1.5">
+                    <div className="flex items-center gap-2 text-[#D4D0C6]">
+                      <FileText className="w-4 h-4 text-[#C69A59]" />
                       <span>Total Quantity</span>
                     </div>
-                    <span className="font-semibold text-[#181715]">
+                    <span className="font-mono text-[#D4D0C6]">
                       {isQuantityUndecided
                         ? 'Sampling / Undecided'
                         : formData.quantity
                         ? `${formData.quantity} ${formData.unit}`
-                        : '—'}
+                        : 'Sampling / Undecided'}
                     </span>
                   </div>
 
+                  <div className="h-[1px] bg-[rgba(225,210,180,0.14)]" />
+
                   {/* Reference Images */}
-                  <div className="flex items-center justify-between py-1.5 border-b border-[#F0ECE1]">
-                    <div className="flex items-center gap-2 text-[#585550]">
-                      <Upload className="w-4 h-4 text-[#8C827A]" />
+                  <div className="flex items-center justify-between py-1.5">
+                    <div className="flex items-center gap-2 text-[#D4D0C6]">
+                      <Upload className="w-4 h-4 text-[#C69A59]" />
                       <span>Reference Images</span>
                     </div>
-                    <span className="font-semibold text-[#181715]">
+                    <span className="font-mono font-semibold text-[#F7F3EA]">
                       {uploadedFiles.length}
                     </span>
                   </div>
 
+                  <div className="h-[1px] bg-[rgba(225,210,180,0.14)]" />
+
                   {/* Custom Notes */}
-                  <div className="flex items-center justify-between py-1.5 border-b border-[#F0ECE1]">
-                    <div className="flex items-center gap-2 text-[#585550]">
-                      <Pencil className="w-4 h-4 text-[#8C827A]" />
+                  <div className="flex items-center justify-between py-1.5">
+                    <div className="flex items-center gap-2 text-[#D4D0C6]">
+                      <Pencil className="w-4 h-4 text-[#C69A59]" />
                       <span>Custom Notes</span>
                     </div>
-                    <span className="font-semibold text-[#181715]">
+                    <span className="font-mono text-[#AAA79D]">
                       {formData.additionalNotes ? 'Provided' : '—'}
                     </span>
                   </div>
                 </div>
 
-                {/* Primary Button */}
-                {currentStep < 3 ? (
-                  <button
-                    type="button"
-                    onClick={handleContinue}
-                    className="w-full bg-[#1E352B] hover:bg-[#162720] text-white py-3.5 px-6 rounded-xl font-medium text-sm tracking-wide flex items-center justify-center gap-2 shadow-sm transition-all duration-200 cursor-pointer active:scale-[0.98]"
-                  >
-                    <span>Continue to Next Step</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={handleSubmitEnquiry}
-                    disabled={isSubmitting}
-                    className="w-full bg-[#1E352B] hover:bg-[#162720] text-white py-3.5 px-6 rounded-xl font-medium text-sm tracking-wide flex items-center justify-center gap-2 shadow-sm transition-all duration-200 cursor-pointer active:scale-[0.98] disabled:opacity-50"
-                  >
-                    <span>Submit Material Request</span>
-                    <Send className="w-4 h-4" />
-                  </button>
-                )}
-
-                {/* Official Support Card below (Matching reference mockup) */}
-                <div className="bg-[#F8F5EE] border border-[#ECE6D9] rounded-xl p-4 flex items-start gap-3.5">
-                  <div className="w-9 h-9 rounded-full bg-[#ECE5D8] flex items-center justify-center text-[#585550] shrink-0">
-                    <Headphones className="w-4 h-4 text-[#585550]" />
+                {/* Need Help Choosing Materials? Assistance Card */}
+                <div className="rounded-xl border border-[rgba(224,196,143,0.2)] bg-[rgba(225,235,223,0.035)] p-4 flex items-center gap-3.5 group hover:border-[#C69A59]/60 transition-all duration-300">
+                  <div className="w-12 h-12 rounded-full overflow-hidden shrink-0 border border-[rgba(224,196,143,0.3)] bg-black/60 shadow-md">
+                    <img
+                      src="/assets/materials/assistance-headphones.jpg"
+                      alt="Expert Support"
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                  <div className="space-y-1">
-                    <h4 className="font-semibold text-xs text-[#181715]">
-                      For more info, contact us
+                  <div className="space-y-0.5 flex-1 min-w-0">
+                    <h4 className="font-semibold text-xs text-[#F7F3EA] leading-tight">
+                      Need help choosing materials?
                     </h4>
-                    <p className="text-[11px] text-[#736F68] leading-snug">
-                      Our team is here to help you find the right materials for your needs.
+                    <p className="text-[11px] text-[#AAA79D] leading-tight">
+                      Our experts are here for you.
                     </p>
-                    <div className="pt-1">
-                      <a
-                        href={`tel:${VERIFIED_PHONE}`}
-                        className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-[#181715] hover:text-[#B86546] transition-colors"
-                      >
-                        <Phone className="w-3.5 h-3.5 text-[#B86546]" />
-                        <span>{VERIFIED_PHONE}</span>
-                      </a>
-                    </div>
+                    <button
+                      type="button"
+                      onClick={onReachUs}
+                      className="inline-flex items-center gap-1 text-xs text-[#C69A59] group-hover:text-[#E5C58D] font-medium pt-1 transition-colors cursor-pointer"
+                    >
+                      <span>Reach our team</span>
+                      <ArrowRight className="w-3 h-3" />
+                    </button>
                   </div>
                 </div>
               </div>

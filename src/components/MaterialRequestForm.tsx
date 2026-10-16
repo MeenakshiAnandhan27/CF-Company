@@ -1591,24 +1591,53 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                   )}
                 </div>
 
-                {/* Assistance Card */}
-                <div className="p-4 rounded-2xl bg-[#FAF8F5] border border-[#E5E0D8] space-y-2">
-                  <div className="flex items-center gap-2 text-xs font-semibold text-[#181715]">
-                    <div className="w-6 h-6 rounded-full bg-[#F3EFE6] text-[#8C6534] flex items-center justify-center">
-                      <Headphones className="w-3.5 h-3.5" />
+                {/* Assistance Card — Luxury 3D Headphones Card matching Reference */}
+                <div
+                  onClick={onReachUs}
+                  className="relative rounded-2xl overflow-hidden p-4 sm:p-5 border border-[#C49A55]/30 bg-gradient-to-r from-[#07110D] via-[#0A1813] to-[#0E1E17] text-[#F7F3EA] shadow-[0_12px_32px_rgba(0,0,0,0.25)] hover:border-[#D4AF37]/60 hover:shadow-[0_16px_40px_rgba(0,0,0,0.35),0_0_25px_rgba(212,175,55,0.18)] transition-all duration-300 group cursor-pointer"
+                >
+                  {/* Subtle Gold Backlight Ambient Glow */}
+                  <div
+                    aria-hidden="true"
+                    className="absolute -top-8 -right-8 w-24 h-24 bg-[#D4AF37]/15 rounded-full blur-2xl group-hover:bg-[#D4AF37]/25 transition-all"
+                  />
+
+                  <div className="relative flex items-center gap-3.5">
+                    {/* 3D Headphones Symbol */}
+                    <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden bg-black/50 border border-[#C49A55]/25 shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform duration-300 shadow-md">
+                      <img
+                        src="/assets/materials/assistance-headphones.jpg"
+                        alt="3D Studio Headphones"
+                        className="w-full h-full object-cover"
+                      />
                     </div>
-                    <span>For more info, contact us</span>
+
+                    {/* Content */}
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-serif text-sm sm:text-base font-semibold text-[#F7F3EA] leading-snug group-hover:text-[#E6C995] transition-colors">
+                        Need help choosing materials?
+                      </h4>
+                      <p className="text-xs text-[#AAA79D] mt-0.5 leading-snug">
+                        Our experts are here for you.
+                      </p>
+
+                      <div className="mt-2.5 flex items-center justify-between">
+                        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#D4AF37] group-hover:text-[#F3EBDD] transition-colors">
+                          <span>Reach our team</span>
+                          <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
+                        </span>
+
+                        <a
+                          href={`tel:${VERIFIED_PHONE_RAW}`}
+                          onClick={(e) => e.stopPropagation()}
+                          className="text-[11px] font-mono text-[#AAA79D] hover:text-[#D4AF37] transition-colors flex items-center gap-1"
+                        >
+                          <Phone className="w-3 h-3 text-[#D4AF37]" />
+                          <span>{VERIFIED_PHONE_DISPLAY}</span>
+                        </a>
+                      </div>
+                    </div>
                   </div>
-                  <p className="text-[11px] text-[#78736B] leading-relaxed">
-                    Our textile sourcing team is here to assist with physical swatches, lab dips, and bulk manufacturing.
-                  </p>
-                  <a
-                    href={`tel:${VERIFIED_PHONE_RAW}`}
-                    className="inline-flex items-center gap-2 font-mono text-xs font-bold text-[#8C6534] hover:text-[#181715] transition-colors pt-1"
-                  >
-                    <Phone className="w-3.5 h-3.5" />
-                    <span>{VERIFIED_PHONE_DISPLAY}</span>
-                  </a>
                 </div>
               </div>
             </div>

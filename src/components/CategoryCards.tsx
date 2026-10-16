@@ -213,25 +213,25 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({
         {/* ======================================================== */}
         {/* SECTION HEADER — REFINED COMPACT EDITORIAL */}
         {/* ======================================================== */}
-        <div className="mb-6 sm:mb-8 pb-4 border-b border-[#E6E0D2] flex flex-col md:flex-row md:items-end justify-between gap-3">
-          <div>
+        <div className="relative mb-6 sm:mb-8 pb-4 border-b border-[#E6E0D2] flex flex-col items-center text-center">
+          <div className="max-w-3xl mx-auto px-4">
             <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-[#181715] tracking-tight">
               MATERIALS FOR EVERY CREATION
             </h2>
-            {/* Elegant Golden Motif Line */}
-            <div className="relative flex items-center justify-start my-2.5 w-full max-w-sm">
-              <div className="h-[1px] w-24 bg-gradient-to-r from-[#D4AF37] to-[#D4AF37]/50" />
-              <div className="relative mx-2 flex items-center justify-center">
-                <div className="w-1.5 h-1.5 bg-gradient-to-tr from-[#D4AF37] via-[#F2D785] to-[#B38728] rotate-45 shadow-[0_0_8px_rgba(212,175,55,0.75)]" />
+            {/* Elegant Golden Motif Line Centered */}
+            <div className="relative flex items-center justify-center my-3 w-full max-w-sm mx-auto">
+              <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-[#D4AF37]/50 to-[#D4AF37]" />
+              <div className="relative mx-3 flex items-center justify-center">
+                <div className="w-2 h-2 bg-gradient-to-tr from-[#D4AF37] via-[#F2D785] to-[#B38728] rotate-45 shadow-[0_0_10px_rgba(212,175,55,0.75)]" />
               </div>
-              <div className="h-[1px] flex-1 bg-gradient-to-r from-[#D4AF37]/50 to-transparent" />
+              <div className="h-[1px] w-full bg-gradient-to-r from-[#D4AF37] via-[#D4AF37]/50 to-transparent" />
             </div>
-            <p className="text-xs sm:text-sm md:text-base text-[#585550] max-w-2xl font-normal leading-relaxed pt-1">
+            <p className="text-xs sm:text-sm md:text-base text-[#585550] max-w-2xl mx-auto font-normal leading-relaxed pt-1 text-pretty">
               Explore fabrics, laces, and garment accessories — sourced and manufactured to match your exact requirements.
             </p>
           </div>
-          {/* Shelf Scroll Navigation Buttons */}
-          <div className="hidden sm:flex items-center gap-2 shrink-0">
+          {/* Shelf Scroll Navigation Buttons (Absolute Right on Desktop for Balance) */}
+          <div className="hidden sm:flex absolute right-0 bottom-4 items-center gap-2 shrink-0">
             <button
               onClick={() => scrollShelf('left')}
               className="w-9 h-9 rounded-full border border-[#D5D0C6] hover:border-[#181715] bg-white hover:bg-[#181715] text-[#181715] hover:text-white flex items-center justify-center transition-all duration-300 shadow-xs hover:shadow-md cursor-pointer disabled:opacity-30 disabled:pointer-events-none"

@@ -255,11 +255,11 @@ export default function App() {
 
               <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
                 <h3 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-[#FAF8F5]">
-                  Connect Directly With Our Supply Desk
+                  Your Requirements, Our Expertise
                 </h3>
 
                 <p className="text-sm sm:text-base text-[#BDB5AB] max-w-2xl mx-auto leading-relaxed">
-                  From everyday garment accessories to specific fabric requirements, we manufacture and supply materials to match your needs with prompt response and dependable delivery.
+                  We source and manufacture fabrics and garment accessories to meet your specific requirements, with a focus on quality and reliable delivery.
                 </p>
 
                 <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">

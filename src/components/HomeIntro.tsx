@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Scissors, Store, Tag, Sparkles, ArrowRight, ArrowDown, CheckCircle2, Search, Send, PackageCheck, Check, Layers } from 'lucide-react';
+import { Scissors, Store, Tag, Sparkles, ArrowRight, ArrowDown, CheckCircle2, Search, Send, PackageCheck, Check, Layers, BookOpen } from 'lucide-react';
 
 interface HomeIntroProps {
   onExploreCatalogue: () => void;
@@ -248,21 +248,26 @@ export const HomeIntro: React.FC<HomeIntroProps> = ({
                 </div>
               </div>
 
-              {/* CTAs */}
-              <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+              {/* Unique Luxury CTAs */}
+              <div className="pt-3 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
+                {/* Primary: REQUEST A MATERIAL — Unique Obsidian & Metallic Gold Capsule */}
                 <button
                   onClick={onRequestMaterial}
-                  className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 text-xs font-semibold uppercase tracking-wider text-white bg-[#181715] hover:bg-[#302D29] rounded-xl shadow-xs hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5 cursor-pointer"
+                  className="group relative inline-flex items-center justify-between gap-3 pl-6 pr-2 py-2 text-xs font-semibold uppercase tracking-[0.16em] rounded-full transition-all duration-300 text-[#FFF8EC] bg-gradient-to-r from-[#181715] via-[#24211D] to-[#181715] hover:from-[#24211D] hover:to-[#111110] border border-[#D4AF37] hover:border-[#F2D785] shadow-[0_4px_16px_rgba(212,175,55,0.25)] hover:shadow-[0_6px_28px_rgba(212,175,55,0.45)] active:scale-[0.98] cursor-pointer whitespace-nowrap min-h-[46px]"
                 >
-                  <span>Request a Material</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <span className="font-mono text-[11px] tracking-[0.18em] font-bold">Request a Material</span>
+                  <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-[#D4AF37] via-[#F2D785] to-[#B38728] text-[#181715] font-bold flex items-center justify-center transition-all duration-300 shadow-sm group-hover:scale-105 group-hover:translate-x-0.5">
+                    <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
+                  </div>
                 </button>
 
+                {/* Secondary: BROWSE CURRENT CATALOGUE — Luxury Ivory Satin Pill with Gold Accents */}
                 <button
                   onClick={onExploreCatalogue}
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 text-xs font-semibold uppercase tracking-wider text-[#181715] bg-white border border-[#D5D0C6] hover:bg-[#F2EFEA] rounded-xl transition-colors cursor-pointer"
+                  className="group relative inline-flex items-center justify-center gap-2.5 px-6 py-2.5 text-xs font-semibold uppercase tracking-[0.14em] rounded-full transition-all duration-300 text-[#181715] hover:text-[#82553E] bg-gradient-to-b from-white via-[#FAF7F2] to-[#F3EDE3] hover:from-white hover:to-[#FAF6EE] border border-[#D4AF37]/50 hover:border-[#D4AF37] shadow-[0_2px_12px_rgba(212,175,55,0.12)] hover:shadow-[0_4px_20px_rgba(212,175,55,0.25)] active:scale-[0.98] cursor-pointer whitespace-nowrap min-h-[46px]"
                 >
-                  <span>Browse Current Catalogue</span>
+                  <BookOpen className="w-4 h-4 text-[#8C6534] transition-transform duration-300 group-hover:scale-110" />
+                  <span className="font-mono text-[11px] tracking-[0.16em] font-bold">Browse Current Catalogue</span>
                 </button>
               </div>
 
@@ -371,84 +376,84 @@ export const HomeIntro: React.FC<HomeIntroProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             
             {/* Card 1: REQUIREMENT-BASED SOURCING */}
-            <div className="group bg-[#FAF9F5] hover:bg-white p-6 lg:p-7 rounded-2xl border border-[#E8E4DC] hover:border-[#82553E]/50 shadow-[0_2px_12px_rgba(24,23,21,0.03)] hover:shadow-[0_12px_32px_rgba(24,23,21,0.08)] transition-all duration-300 flex flex-col justify-start">
+            <div className="group relative bg-gradient-to-b from-[#FFFFFF] via-[#FFFDF7] to-[#F5EAD4] p-6 lg:p-7 rounded-2xl border border-[#DEC599] hover:border-[#D4AF37] shadow-[0_4px_20px_rgba(212,175,55,0.12)] hover:shadow-[0_12px_32px_rgba(212,175,55,0.25)] transition-all duration-300 flex flex-col justify-start transform hover:-translate-y-1.5">
               <div>
                 <div className="flex items-center justify-between mb-5">
-                  <div className="w-12 h-12 rounded-xl bg-white border border-[#E5DFD5] text-[#82553E] flex items-center justify-center shadow-xs group-hover:bg-[#82553E] group-hover:text-white transition-all duration-300">
-                    <Sparkles className="w-5 h-5" />
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-[#D4AF37] via-[#F2D785] to-[#B38728] text-[#181715] flex items-center justify-center shadow-xs group-hover:scale-105 group-hover:shadow-md transition-all duration-300">
+                    <Sparkles className="w-5 h-5 text-[#181715] stroke-[2.2]" />
                   </div>
-                  <span className="text-[10px] font-mono uppercase tracking-wider font-semibold px-2.5 py-1 rounded-full bg-white border border-[#E5DFD5] text-[#82553E]">
+                  <span className="text-[10px] font-mono uppercase tracking-wider font-bold px-2.5 py-1 rounded-full bg-white/95 border border-[#DEC599] text-[#8C6228] shadow-2xs">
                     Direct Sourcing
                   </span>
                 </div>
 
-                <h4 className="font-serif text-lg font-bold text-[#181715] mb-2 tracking-tight group-hover:text-[#82553E] transition-colors">
+                <h4 className="font-serif text-lg font-bold text-[#181715] mb-2 tracking-tight group-hover:text-[#8C6228] transition-colors">
                   Requirement Sourcing
                 </h4>
-                <p className="text-xs sm:text-sm text-[#5C5852] leading-relaxed">
+                <p className="text-xs sm:text-sm text-[#55514B] leading-relaxed">
                   Direct mill sourcing for exact yarn counts, GSM weights, and custom weave structures to match your tech pack.
                 </p>
               </div>
             </div>
 
             {/* Card 2: GARMENT ACCESSORIES */}
-            <div className="group bg-[#FAF9F5] hover:bg-white p-6 lg:p-7 rounded-2xl border border-[#E8E4DC] hover:border-[#82553E]/50 shadow-[0_2px_12px_rgba(24,23,21,0.03)] hover:shadow-[0_12px_32px_rgba(24,23,21,0.08)] transition-all duration-300 flex flex-col justify-start">
+            <div className="group relative bg-gradient-to-b from-[#FFFFFF] via-[#FFFDF7] to-[#F5EAD4] p-6 lg:p-7 rounded-2xl border border-[#DEC599] hover:border-[#D4AF37] shadow-[0_4px_20px_rgba(212,175,55,0.12)] hover:shadow-[0_12px_32px_rgba(212,175,55,0.25)] transition-all duration-300 flex flex-col justify-start transform hover:-translate-y-1.5">
               <div>
                 <div className="flex items-center justify-between mb-5">
-                  <div className="w-12 h-12 rounded-xl bg-white border border-[#E5DFD5] text-[#82553E] flex items-center justify-center shadow-xs group-hover:bg-[#82553E] group-hover:text-white transition-all duration-300">
-                    <Tag className="w-5 h-5" />
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-[#D4AF37] via-[#F2D785] to-[#B38728] text-[#181715] flex items-center justify-center shadow-xs group-hover:scale-105 group-hover:shadow-md transition-all duration-300">
+                    <Tag className="w-5 h-5 text-[#181715] stroke-[2.2]" />
                   </div>
-                  <span className="text-[10px] font-mono uppercase tracking-wider font-semibold px-2.5 py-1 rounded-full bg-white border border-[#E5DFD5] text-[#82553E]">
+                  <span className="text-[10px] font-mono uppercase tracking-wider font-bold px-2.5 py-1 rounded-full bg-white/95 border border-[#DEC599] text-[#8C6228] shadow-2xs">
                     Trims &amp; Tags
                   </span>
                 </div>
 
-                <h4 className="font-serif text-lg font-bold text-[#181715] mb-2 tracking-tight group-hover:text-[#82553E] transition-colors">
+                <h4 className="font-serif text-lg font-bold text-[#181715] mb-2 tracking-tight group-hover:text-[#8C6228] transition-colors">
                   Garment Accessories
                 </h4>
-                <p className="text-xs sm:text-sm text-[#5C5852] leading-relaxed">
+                <p className="text-xs sm:text-sm text-[#55514B] leading-relaxed">
                   Laces, embroidered trims, woven damask labels, twill tapes, and essential garment hardware.
                 </p>
               </div>
             </div>
 
             {/* Card 3: WIDE FABRIC NETWORK */}
-            <div className="group bg-[#FAF9F5] hover:bg-white p-6 lg:p-7 rounded-2xl border border-[#E8E4DC] hover:border-[#82553E]/50 shadow-[0_2px_12px_rgba(24,23,21,0.03)] hover:shadow-[0_12px_32px_rgba(24,23,21,0.08)] transition-all duration-300 flex flex-col justify-start">
+            <div className="group relative bg-gradient-to-b from-[#FFFFFF] via-[#FFFDF7] to-[#F5EAD4] p-6 lg:p-7 rounded-2xl border border-[#DEC599] hover:border-[#D4AF37] shadow-[0_4px_20px_rgba(212,175,55,0.12)] hover:shadow-[0_12px_32px_rgba(212,175,55,0.25)] transition-all duration-300 flex flex-col justify-start transform hover:-translate-y-1.5">
               <div>
                 <div className="flex items-center justify-between mb-5">
-                  <div className="w-12 h-12 rounded-xl bg-white border border-[#E5DFD5] text-[#82553E] flex items-center justify-center shadow-xs group-hover:bg-[#82553E] group-hover:text-white transition-all duration-300">
-                    <Scissors className="w-5 h-5" />
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-[#D4AF37] via-[#F2D785] to-[#B38728] text-[#181715] flex items-center justify-center shadow-xs group-hover:scale-105 group-hover:shadow-md transition-all duration-300">
+                    <Scissors className="w-5 h-5 text-[#181715] stroke-[2.2]" />
                   </div>
-                  <span className="text-[10px] font-mono uppercase tracking-wider font-semibold px-2.5 py-1 rounded-full bg-white border border-[#E5DFD5] text-[#82553E]">
+                  <span className="text-[10px] font-mono uppercase tracking-wider font-bold px-2.5 py-1 rounded-full bg-white/95 border border-[#DEC599] text-[#8C6228] shadow-2xs">
                     Textile Weaves
                   </span>
                 </div>
 
-                <h4 className="font-serif text-lg font-bold text-[#181715] mb-2 tracking-tight group-hover:text-[#82553E] transition-colors">
+                <h4 className="font-serif text-lg font-bold text-[#181715] mb-2 tracking-tight group-hover:text-[#8C6228] transition-colors">
                   Wide Fabric Range
                 </h4>
-                <p className="text-xs sm:text-sm text-[#5C5852] leading-relaxed">
+                <p className="text-xs sm:text-sm text-[#55514B] leading-relaxed">
                   Extensive weave access spanning cotton poplins, twills, raw gadas, denim, and technical mesh.
                 </p>
               </div>
             </div>
 
             {/* Card 4: WHOLESALE & RETAIL */}
-            <div className="group bg-[#FAF9F5] hover:bg-white p-6 lg:p-7 rounded-2xl border border-[#E8E4DC] hover:border-[#82553E]/50 shadow-[0_2px_12px_rgba(24,23,21,0.03)] hover:shadow-[0_12px_32px_rgba(24,23,21,0.08)] transition-all duration-300 flex flex-col justify-start">
+            <div className="group relative bg-gradient-to-b from-[#FFFFFF] via-[#FFFDF7] to-[#F5EAD4] p-6 lg:p-7 rounded-2xl border border-[#DEC599] hover:border-[#D4AF37] shadow-[0_4px_20px_rgba(212,175,55,0.12)] hover:shadow-[0_12px_32px_rgba(212,175,55,0.25)] transition-all duration-300 flex flex-col justify-start transform hover:-translate-y-1.5">
               <div>
                 <div className="flex items-center justify-between mb-5">
-                  <div className="w-12 h-12 rounded-xl bg-white border border-[#E5DFD5] text-[#82553E] flex items-center justify-center shadow-xs group-hover:bg-[#82553E] group-hover:text-white transition-all duration-300">
-                    <Store className="w-5 h-5" />
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-[#D4AF37] via-[#F2D785] to-[#B38728] text-[#181715] flex items-center justify-center shadow-xs group-hover:scale-105 group-hover:shadow-md transition-all duration-300">
+                    <Store className="w-5 h-5 text-[#181715] stroke-[2.2]" />
                   </div>
-                  <span className="text-[10px] font-mono uppercase tracking-wider font-semibold px-2.5 py-1 rounded-full bg-white border border-[#E5DFD5] text-[#82553E]">
+                  <span className="text-[10px] font-mono uppercase tracking-wider font-bold px-2.5 py-1 rounded-full bg-white/95 border border-[#DEC599] text-[#8C6228] shadow-2xs">
                     Flexible Volume
                   </span>
                 </div>
 
-                <h4 className="font-serif text-lg font-bold text-[#181715] mb-2 tracking-tight group-hover:text-[#82553E] transition-colors">
+                <h4 className="font-serif text-lg font-bold text-[#181715] mb-2 tracking-tight group-hover:text-[#8C6228] transition-colors">
                   Wholesale &amp; Retail Supply
                 </h4>
-                <p className="text-xs sm:text-sm text-[#5C5852] leading-relaxed">
+                <p className="text-xs sm:text-sm text-[#55514B] leading-relaxed">
                   Flexible supply model supporting sample yardage for designers and commercial container lots for factories.
                 </p>
               </div>

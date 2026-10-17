@@ -9,6 +9,7 @@ import { CategoryShowcase } from './CategoryShowcase.tsx';
 import { MaterialGrid } from './MaterialGrid.tsx';
 import { MaterialDetail } from './MaterialDetail.tsx';
 import { MaterialWall } from './MaterialWall.tsx';
+import { MaterialWallStudio } from './MaterialWallStudio.tsx';
 import { CatalogueNavigation, NavFilter } from './CatalogueNavigation.tsx';
 import { DigitalCatalogue } from './DigitalCatalogue.tsx';
 import { FabricViewer360 } from './FabricViewer360.tsx';
@@ -46,8 +47,17 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
   });
 
   const [searchQuery, setSearchQuery] = useState('');
+
+  // ── FEATURE 1: Explore Fabrics — selectedMaterial opens MaterialDetail drawer (UNCHANGED)
   const [selectedMaterial, setSelectedMaterial] = useState<DiscoveryMaterial | null>(null);
+
+  // ── FEATURE 2: Digital Lookbook — separate book interface
   const [isDigitalBookOpen, setIsDigitalBookOpen] = useState(false);
+
+  // ── FEATURE 3: Material Wall Studio — separate full-screen gallery
+  const [isMaterialWallStudioOpen, setIsMaterialWallStudioOpen] = useState(false);
+
+  // ── 360° Viewer
   const [isViewer360Open, setIsViewer360Open] = useState(false);
   const [viewer360Material, setViewer360Material] = useState<DiscoveryMaterial | null>(null);
 
@@ -230,6 +240,7 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
 
         {/* ========================================================
             4. DYNAMIC MATERIAL DISCOVERY (CIRCULAR SWATCHES)
+            — FEATURE 1: EXPLORE FABRICS (UNCHANGED)
             ======================================================== */}
         <div ref={materialsSectionRef} className="space-y-12">
           {/* Section Breadcrumbs / Active Context Indicator */}
@@ -414,12 +425,40 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
         </div>
 
         {/* ========================================================
-            5. MATERIAL WALL: The Flowing Circular Swatch Gallery
+            5. THE MATERIAL WALL — Tactile swatch preview strip
+            Clicking "Open Studio" launches MaterialWallStudio
+            The swatch circles themselves do NOT open the drawer here
             ======================================================== */}
-        <MaterialWall
-          onSelectMaterial={setSelectedMaterial}
-          onOpen360={handleOpen360Viewer}
-        />
+        <section className="py-12 sm:py-16">
+          {/* Editorial Section Introduction */}
+          <div className="text-center max-w-3xl mx-auto space-y-3 mb-10 sm:mb-14">
+            <div className="inline-flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.22em] text-[#82553E] font-semibold bg-[#F0EBE1] px-3 py-1 rounded-full border border-[#DDD5C7]">
+              <Layers className="w-3.5 h-3.5" />
+              <span>Visual Material Exploration Studio</span>
+            </div>
+            <h3 className="font-serif text-3xl sm:text-4xl md:text-5xl font-medium text-[#181715] tracking-tight">
+              The Material Wall
+            </h3>
+            <p className="text-xs sm:text-sm md:text-base text-[#6E685F] leading-relaxed max-w-xl mx-auto">
+              A full-screen visual gallery for inspecting, selecting, and comparing raw textiles, trims and garment hardware. Filter by category, zoom into textures, and compare up to three materials side-by-side.
+            </p>
+            <button
+              type="button"
+              onClick={() => setIsMaterialWallStudioOpen(true)}
+              className="inline-flex items-center gap-2.5 px-7 py-3.5 bg-[#181715] text-white text-xs font-bold uppercase tracking-[0.18em] rounded-full hover:bg-[#2E2B26] shadow-lg hover:shadow-xl hover:scale-105 transition-all"
+            >
+              <Layers className="w-4 h-4 text-[#C5A07A]" />
+              Open Material Wall Studio
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* Preview swatch strip — decorative only, clicking opens the full studio */}
+          <MaterialWall
+            onSelectMaterial={() => setIsMaterialWallStudioOpen(true)}
+            onOpen360={handleOpen360Viewer}
+          />
+        </section>
 
         {/* ========================================================
             6. REQUEST A MATERIAL CALLOUT
@@ -434,7 +473,8 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
       </div>
 
       {/* ========================================================
-          7. SLIDE-OVER QUICK MATERIAL DETAIL DRAWER
+          7. FEATURE 1: SLIDE-OVER QUICK MATERIAL DETAIL DRAWER
+          Only opened by "Explore Fabrics" material cards (setSelectedMaterial)
           ======================================================== */}
       <MaterialDetail
         material={selectedMaterial}
@@ -447,15 +487,12 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
       />
 
       {/* ========================================================
-          8. DIGITAL CATALOGUE MODAL (Book flip experience)
+          8. FEATURE 2: DIGITAL LOOKBOOK (Book flip experience)
+          Enquire goes directly to enquiry modal — no drawer involved
           ======================================================== */}
       <DigitalCatalogue
         isOpen={isDigitalBookOpen}
         onClose={() => setIsDigitalBookOpen(false)}
-        onSelectMaterial={(mat) => {
-          setSelectedMaterial(mat);
-          setIsDigitalBookOpen(false);
-        }}
         onEnquire={(mat) => {
           setIsDigitalBookOpen(false);
           handleEnquireMaterial(mat);
@@ -463,7 +500,27 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
       />
 
       {/* ========================================================
-          9. 360° FABRIC STUDIO & TURNTABLE INSPECTOR
+          9. FEATURE 3: MATERIAL WALL STUDIO (Full gallery)
+          Compare, filter, swatch inquiry — NO drawer involved
+          ======================================================== */}
+      <MaterialWallStudio
+        isOpen={isMaterialWallStudioOpen}
+        onClose={() => setIsMaterialWallStudioOpen(false)}
+        onEnquire={(mat) => {
+          setIsMaterialWallStudioOpen(false);
+          handleEnquireMaterial(mat);
+        }}
+        onAddToSwatchInquiry={(mat) => {
+          handleAddToCollectionMaterial(mat);
+        }}
+        onOpen360={(mat) => {
+          setIsMaterialWallStudioOpen(false);
+          handleOpen360Viewer(mat);
+        }}
+      />
+
+      {/* ========================================================
+          10. 360° FABRIC STUDIO & TURNTABLE INSPECTOR
           ======================================================== */}
       <FabricViewer360
         isOpen={isViewer360Open}

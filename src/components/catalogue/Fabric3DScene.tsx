@@ -233,20 +233,22 @@ export const Fabric3DScene: React.FC<Fabric3DSceneProps> = ({
       for (let i = 0; i < pos.count; i++) {
         const x = pos.getX(i);
         const y = pos.getY(i);
-        const normY = (y + height / 2) / height; // 0 (bottom) to 1 (top)
+        const normY = Math.max(0, Math.min(1, (y + height / 2) / height)); // 0 (bottom) to 1 (top)
+        const invertNormY = Math.max(0, Math.min(1, 1 - normY));
 
         if (mode === 'drape') {
           // Natural Atelier Hanging Drape: Catenary sag and undulating S-folds
           // Frequencies and amplitudes scale with material stiffness
           const foldFreq = 2.5 + (1 - stiffness) * 1.5; // silk ripples more, denim broader
           const primaryFold = Math.sin(x * foldFreq) * (0.28 - stiffness * 0.08) * Math.sin(normY * Math.PI * 0.95);
-          const secondaryWave = Math.cos(x * foldFreq * 1.8 + 0.5) * 0.08 * (1 - normY);
-          const bottomCurl = Math.sin(x * foldFreq * 2.2) * 0.09 * Math.pow(1 - normY, 2.5);
+          const secondaryWave = Math.cos(x * foldFreq * 1.8 + 0.5) * 0.08 * invertNormY;
+          const bottomCurl = Math.sin(x * foldFreq * 2.2) * 0.09 * Math.pow(invertNormY, 2.5);
 
           const z = primaryFold + secondaryWave + bottomCurl;
-          pos.setZ(i, z);
+          pos.setZ(i, isNaN(z) ? 0 : z);
           // Subtle vertical catenary drape sagging
-          pos.setY(i, y - Math.pow(x / (width * 0.6), 2) * 0.08 * (1 - stiffness));
+          const sag = Math.pow(Math.abs(x) / (width * 0.6), 2) * 0.08 * (1 - stiffness);
+          pos.setY(i, y - (isNaN(sag) ? 0 : sag));
         } else if (mode === 'curved-swatch') {
           // Architectural Curved Swatch Plaque: Smooth cylindrical arc
           const arc = Math.cos((x / width) * Math.PI) * 0.35;
@@ -258,6 +260,8 @@ export const Fabric3DScene: React.FC<Fabric3DSceneProps> = ({
       }
 
       geometry.computeVertexNormals();
+      geometry.computeBoundingBox();
+      geometry.computeBoundingSphere();
       return geometry;
     },
     []
@@ -291,7 +295,7 @@ export const Fabric3DScene: React.FC<Fabric3DSceneProps> = ({
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.15;
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.shadowMap.type = THREE.PCFShadowMap;
 
     container.appendChild(renderer.domElement);
     rendererRef.current = renderer;

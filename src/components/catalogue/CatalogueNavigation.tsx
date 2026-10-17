@@ -87,11 +87,12 @@ export const CatalogueNavigation: React.FC<CatalogueNavigationProps> = ({
               <button
                 type="button"
                 onClick={onOpen360}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider bg-[#181715] text-[#FAF8F5] hover:bg-[#82553E] rounded-full shadow-xs transition-all shrink-0 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 text-xs font-mono font-bold uppercase tracking-wider bg-gradient-to-r from-[#181715] to-[#2E2519] text-[#FAF8F5] border border-[#D4AF37] hover:border-[#F2D785] hover:bg-[#382C1B] rounded-full shadow-[0_2px_10px_rgba(212,175,55,0.25)] transition-all shrink-0 hover:scale-[1.03] active:scale-[0.98] cursor-pointer"
+                title="Launch 360° 3D Fabric Atelier Studio"
               >
-                <RotateCw className="w-3.5 h-3.5 text-[#C89D6B]" />
+                <RotateCw className="w-3.5 h-3.5 text-[#D4AF37] animate-spin-slow" />
                 <span className="hidden sm:inline">360° Studio</span>
-                <span className="sm:hidden">360°</span>
+                <span className="sm:hidden font-mono">360° Studio</span>
               </button>
             )}
 

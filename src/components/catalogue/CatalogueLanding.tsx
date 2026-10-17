@@ -142,23 +142,28 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
             Explore fabrics, denim, chambray, laces and garment accessories sourced for apparel production.
           </p>
 
-          <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
+          <div className="pt-2 flex flex-wrap items-center justify-center gap-3.5">
             <button
               type="button"
               onClick={() => handleOpen360Viewer()}
-              className="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-semibold uppercase tracking-wider bg-[#82553E] hover:bg-[#6e4632] text-white rounded-full shadow-sm transition-all hover:scale-[1.02] cursor-pointer"
+              className="group relative inline-flex items-center gap-2.5 px-6 py-3 text-xs font-mono font-bold uppercase tracking-[0.18em] bg-gradient-to-r from-[#181715] via-[#2A2318] to-[#181715] text-[#FAF7F2] border-2 border-[#D4AF37] hover:border-[#F3E2B8] rounded-full shadow-[0_4px_20px_rgba(212,175,55,0.35)] hover:shadow-[0_6px_28px_rgba(212,175,55,0.6)] transition-all duration-300 hover:scale-[1.04] active:scale-[0.98] cursor-pointer"
             >
-              <RotateCw className="w-3.5 h-3.5" />
-              <span>360° Fabric Studio</span>
+              <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-[#D4AF37] to-[#F5DE93] text-[#181715] flex items-center justify-center shadow-xs group-hover:rotate-180 transition-transform duration-700">
+                <RotateCw className="w-3.5 h-3.5" />
+              </div>
+              <span className="text-[#FAF7F2]">3D & 360° Fabric Studio</span>
+              <span className="text-[9px] font-sans px-2 py-0.5 rounded-full bg-[#D4AF37]/20 text-[#F5DE93] border border-[#D4AF37]/40 tracking-wider">
+                LIVE 3D
+              </span>
             </button>
 
             <button
               type="button"
               onClick={() => setIsDigitalBookOpen(true)}
-              className="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-semibold uppercase tracking-wider bg-white hover:bg-[#F2ECE1] text-[#181715] border border-[#DDD5C7] rounded-full shadow-xs transition-all hover:scale-[1.02] cursor-pointer"
+              className="inline-flex items-center gap-2 px-5 py-3 text-xs font-mono font-semibold uppercase tracking-wider bg-white hover:bg-[#F2ECE1] text-[#181715] border border-[#DDD5C7] rounded-full shadow-xs transition-all hover:scale-[1.02] cursor-pointer"
             >
               <BookOpen className="w-3.5 h-3.5 text-[#82553E]" />
-              <span>Open Digital Lookbook</span>
+              <span>Digital Lookbook</span>
             </button>
           </div>
         </div>
@@ -192,6 +197,36 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
             onSelectCategory={handleSelectCategoryPanel}
           />
         )}
+
+        {/* ========================================================
+            3B. INTERACTIVE 3D & 360° FABRIC ATELIER BANNER
+            ======================================================== */}
+        <section className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-[#181715] via-[#23201C] to-[#141311] border border-[#D4AF37]/40 shadow-xl p-6 sm:p-8 text-white">
+          <div className="absolute top-0 right-0 -mt-10 -mr-10 w-60 h-60 bg-[#D4AF37]/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="space-y-2 text-center md:text-left">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D4AF37]/15 border border-[#D4AF37]/30 text-[#F5DE93] text-[10px] font-mono uppercase tracking-[0.2em] font-semibold">
+                <RotateCw className="w-3 h-3 text-[#D4AF37] animate-spin-slow" />
+                <span>3D Cloth Physics & 360° Turntable</span>
+              </div>
+              <h3 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-[#FAF7F2]">
+                Interactive 360° Fabric Atelier Studio
+              </h3>
+              <p className="text-xs sm:text-sm text-[#DDD5C8] max-w-xl leading-relaxed">
+                Inspect 8 master 4K fabric styles—Organic Cotton, Mulberry Silk, Belgian Linen, Indigo Twill Denim, Plush Velvet, Merino Wool, Jacquard Brocade, and Pique Knit—with genuine 3D cloth physics, draping modes, and 360° rotational camera.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => handleOpen360Viewer()}
+              className="group inline-flex items-center gap-3 px-6 py-3.5 text-xs font-mono font-bold uppercase tracking-[0.18em] rounded-full bg-gradient-to-r from-[#D4AF37] via-[#F3E2B8] to-[#D4AF37] text-[#181715] shadow-[0_4px_20px_rgba(212,175,55,0.4)] hover:shadow-[0_6px_28px_rgba(212,175,55,0.6)] transition-all hover:scale-105 active:scale-95 shrink-0 cursor-pointer"
+            >
+              <span>Launch 360° Studio</span>
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </button>
+          </div>
+        </section>
 
         {/* ========================================================
             4. DYNAMIC MATERIAL DISCOVERY (CIRCULAR SWATCHES)

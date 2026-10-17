@@ -524,13 +524,6 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             {/* Left Hero Content */}
             <div className="lg:col-span-6 space-y-4">
-              <div className="inline-flex items-center gap-2 bg-[#F3EFE6] border border-[#DDD6C8] px-3 py-1 rounded-full">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#8C6534]" />
-                <span className="text-[11px] font-mono font-semibold uppercase tracking-[0.2em] text-[#8C6534]">
-                  REQUEST MATERIAL
-                </span>
-              </div>
-
               <div className="space-y-3">
                 <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#181715] leading-[1.12]">
                   Build Your <br />
@@ -579,22 +572,6 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                     />
                     {/* Soft gradient blend */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
-
-                    {/* Floating Frosted Glass Overlay Badges */}
-                    <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between pointer-events-none">
-                      <div className="h-8 bg-white/90 backdrop-blur-md px-3.5 rounded-full border border-white/80 shadow-md flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-[#8C6534] animate-pulse shrink-0" />
-                        <span className="font-mono text-[10px] tracking-wider font-semibold uppercase text-[#181715] whitespace-nowrap">
-                          STUDIO TEXTILE ARCHIVE
-                        </span>
-                      </div>
-                      <div className="h-8 bg-[#181715]/90 backdrop-blur-md px-3.5 rounded-full border border-[#D4AF37]/50 shadow-md flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] shrink-0" />
-                        <span className="font-mono text-[10px] tracking-wider font-semibold uppercase text-[#E5C58D] whitespace-nowrap">
-                          CERTIFIED MILLS
-                        </span>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -640,9 +617,8 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                   {currentStep > 1 ? <Check className="w-4 h-4 stroke-[3]" /> : '1'}
                 </div>
                 <div className="hidden sm:block">
-                  <h4 className="font-semibold text-xs text-[#181715] leading-tight flex items-center gap-1">
+                  <h4 className="font-semibold text-xs text-[#181715] leading-tight">
                     Choose Material
-                    <span className="text-[#C4432B] font-bold text-[13px]">*</span>
                   </h4>
                   <p className="text-[10px] text-[#78736B] leading-tight">
                     Pick fabrics, accessories or custom
@@ -686,9 +662,8 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                   {currentStep > 2 ? <Check className="w-4 h-4 stroke-[3]" /> : '2'}
                 </div>
                 <div className="hidden sm:block">
-                  <h4 className="font-semibold text-xs text-[#181715] leading-tight flex items-center gap-1">
+                  <h4 className="font-semibold text-xs text-[#181715] leading-tight">
                     Your Requirement
-                    <span className="text-[#C4432B] font-bold text-[13px]">*</span>
                   </h4>
                   <p className="text-[10px] text-[#78736B] leading-tight">
                     Add details, quantity and reference
@@ -726,9 +701,8 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                   3
                 </div>
                 <div className="hidden sm:block">
-                  <h4 className="font-semibold text-xs text-[#181715] leading-tight flex items-center gap-1">
+                  <h4 className="font-semibold text-xs text-[#181715] leading-tight">
                     Contact Details
-                    <span className="text-[#C4432B] font-bold text-[13px]">*</span>
                   </h4>
                   <p className="text-[10px] text-[#78736B] leading-tight">
                     Share your info and submit brief
@@ -844,8 +818,7 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                       </h2>
                     </div>
                     <p className="text-xs sm:text-sm text-[#6B665E] mt-1 ml-8">
-                      Select from our material categories to get started.{' '}
-                      <span className="text-[#C4432B] font-semibold">* Required</span>
+                      Select from our material categories to get started.
                     </p>
                   </div>
 
@@ -1445,6 +1418,64 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                   </form>
                 </div>
               )}
+
+              {/* Assistance Card — Wide, Clean, Simple Luxury Banner */}
+              <div
+                onClick={onReachUs}
+                className="relative rounded-3xl overflow-hidden p-6 sm:p-8 border border-[#E5E0D8] bg-white text-[#181715] shadow-[0_15px_35px_rgba(24,23,21,0.05)] hover:border-[#8C6534] hover:shadow-[0_20px_45px_rgba(140,101,52,0.12)] transition-all duration-300 group cursor-pointer"
+              >
+                {/* Subtle Warm Amber / Gold Backlight Glow */}
+                <div
+                  aria-hidden="true"
+                  className="absolute -top-10 -right-10 w-48 h-48 bg-[#D4AF37]/10 rounded-full blur-3xl group-hover:bg-[#D4AF37]/20 transition-all pointer-events-none"
+                />
+
+                <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
+                  <div className="flex items-center gap-4 sm:gap-5">
+                    {/* 3D Headphones Symbol Container */}
+                    <div className="relative w-16 h-16 sm:w-18 sm:h-18 rounded-2xl overflow-hidden bg-[#FAF8F5] border border-[#DDD7CD] shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform duration-300 shadow-sm">
+                      <img
+                        src="/assets/materials/assistance-headphones.jpg"
+                        alt="Classic Fashions Dedicated Assistance"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+
+                    <div>
+                      <h4 className="font-serif text-xl sm:text-2xl font-bold text-[#181715] group-hover:text-[#8C6534] transition-colors tracking-tight">
+                        Need help choosing materials?
+                      </h4>
+                      <p className="text-xs sm:text-sm text-[#6B665E] mt-1 max-w-lg leading-relaxed">
+                        Our textile specialists are here to guide your custom specifications, sourcing, and sampling.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Reach Us Action & Direct Phone */}
+                  <div className="flex flex-wrap items-center gap-3 sm:gap-4 shrink-0">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onReachUs();
+                      }}
+                      className="inline-flex items-center gap-2 bg-[#181715] group-hover:bg-[#8C6534] text-white font-semibold text-xs sm:text-sm px-6 py-3 rounded-full transition-colors shadow-sm"
+                    >
+                      <span>Reach Our Team</span>
+                      <ArrowRight className="w-4 h-4 text-[#D4AF37] transform group-hover:translate-x-1 transition-transform" />
+                    </button>
+
+                    <a
+                      href={`tel:${VERIFIED_PHONE_RAW}`}
+                      onClick={(e) => e.stopPropagation()}
+                      className="inline-flex items-center gap-2 text-xs font-mono font-semibold text-[#6B665E] hover:text-[#8C6534] px-4 py-3 rounded-full border border-[#E5E0D8] bg-[#FAF8F5] transition-colors"
+                    >
+                      <Phone className="w-3.5 h-3.5 text-[#8C6534]" />
+                      <span>{VERIFIED_PHONE_DISPLAY}</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* ------------------------------------------------------------------- */}
@@ -1590,55 +1621,6 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                       <ArrowRight className="w-4 h-4 text-[#D4AF37]" />
                     </button>
                   )}
-                </div>
-
-                {/* Assistance Card — Clean White Luxury Card with 3D Headphones */}
-                <div
-                  onClick={onReachUs}
-                  className="relative rounded-2xl overflow-hidden p-4 sm:p-5 border border-[#E5E0D8] bg-white text-[#181715] shadow-[0_10px_30px_rgba(24,23,21,0.06)] hover:border-[#8C6534] hover:shadow-[0_16px_40px_rgba(140,101,52,0.12)] transition-all duration-300 group cursor-pointer"
-                >
-                  {/* Subtle Gold Backlight Ambient Glow */}
-                  <div
-                    aria-hidden="true"
-                    className="absolute -top-8 -right-8 w-24 h-24 bg-[#D4AF37]/10 rounded-full blur-2xl group-hover:bg-[#D4AF37]/20 transition-all pointer-events-none"
-                  />
-
-                  <div className="relative flex items-center gap-3.5">
-                    {/* 3D Headphones Symbol */}
-                    <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden bg-[#FAF8F5] border border-[#DDD7CD] shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform duration-300 shadow-xs">
-                      <img
-                        src="/assets/materials/assistance-headphones.jpg"
-                        alt="3D Studio Headphones"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-
-                    {/* Content */}
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-serif text-sm sm:text-base font-semibold text-[#181715] leading-snug group-hover:text-[#8C6534] transition-colors">
-                        Need help choosing materials?
-                      </h4>
-                      <p className="text-xs text-[#78736B] mt-0.5 leading-snug">
-                        Our experts are here for you.
-                      </p>
-
-                      <div className="mt-2.5 flex items-center justify-between">
-                        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#8C6534] group-hover:text-[#181715] transition-colors">
-                          <span>Reach our team</span>
-                          <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
-                        </span>
-
-                        <a
-                          href={`tel:${VERIFIED_PHONE_RAW}`}
-                          onClick={(e) => e.stopPropagation()}
-                          className="text-[11px] font-mono text-[#78736B] hover:text-[#8C6534] transition-colors flex items-center gap-1 font-semibold"
-                        >
-                          <Phone className="w-3 h-3 text-[#8C6534]" />
-                          <span>{VERIFIED_PHONE_DISPLAY}</span>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>

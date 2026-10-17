@@ -36,6 +36,7 @@ export const Navbar: React.FC<NavbarProps> = ({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const isReachUs = false;
   const isDarkNav = false;
 
   return (

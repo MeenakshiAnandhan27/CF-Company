@@ -355,7 +355,7 @@ export default function App() {
       {/* Footer */}
       <Footer
         onNavigate={handleNavigate}
-        isDarkLuxuryTheme={currentTab === 'reach-us'}
+        isDarkLuxuryTheme={false}
       />
 
       {/* Product Detail Modal */}

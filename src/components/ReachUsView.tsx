@@ -17,9 +17,7 @@ import {
   MessageSquare,
   Headphones,
   Package,
-  Clock,
   ArrowUpRight,
-  ShieldCheck,
 } from 'lucide-react';
 
 interface ReachUsViewProps {
@@ -223,67 +221,45 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
   };
 
   return (
-    <div className="bg-[#070B09] text-[#F7F3EA] min-h-screen pb-24 relative overflow-hidden font-sans selection:bg-[#C49A55] selection:text-[#070B09]">
-      {/* Ambient Deep Forest Green & Warm Gold Glows */}
+    <div className="bg-[#FAF8F5] text-[#181715] min-h-screen pb-24 relative overflow-hidden font-sans selection:bg-[#D4AF37] selection:text-[#181715]">
+      {/* Refined Luxury Ambient Backdrop Atmosphere (Identical to Home / Request Material) */}
       <div
         aria-hidden="true"
-        className="absolute top-0 right-0 w-full sm:w-2/3 h-[600px] pointer-events-none opacity-40 mix-blend-screen"
+        className="absolute top-0 right-0 w-full sm:w-2/3 h-[600px] pointer-events-none opacity-60"
         style={{
           background:
-            'radial-gradient(ellipse 70% 50% at 70% 15%, rgba(16, 44, 34, 0.9), rgba(7, 24, 18, 0.3) 50%, transparent 80%)',
+            'radial-gradient(ellipse 65% 50% at 80% 20%, rgba(212, 175, 55, 0.08), rgba(245, 240, 230, 0.4) 60%, transparent 80%)',
         }}
       />
       <div
         aria-hidden="true"
-        className="absolute top-28 left-1/4 w-[500px] h-[500px] pointer-events-none opacity-20"
+        className="absolute top-48 left-0 w-[550px] h-[550px] pointer-events-none opacity-40"
         style={{
           background:
-            'radial-gradient(circle at 40% 40%, rgba(196, 154, 85, 0.16), transparent 70%)',
+            'radial-gradient(circle at 10% 20%, rgba(140, 101, 52, 0.05), transparent 70%)',
         }}
       />
 
       {/* ========================================================================= */}
-      {/* 1. TYPOGRAPHY-FOCUSED HERO SECTION (NO HERO IMAGE)                        */}
+      {/* 1. TYPOGRAPHY-FOCUSED HERO SECTION                                        */}
       {/* ========================================================================= */}
-      <section className="relative pt-12 sm:pt-16 lg:pt-20 pb-12 sm:pb-16 border-b border-[#16382C]/60 text-center">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-          {/* Subtle Top Pill Badge */}
-          <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[#0D241C] border border-[#214738] shadow-[0_0_20px_rgba(196,154,85,0.08)]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#C49A55] animate-pulse" />
-            <span className="font-mono text-[11px] font-semibold tracking-[0.2em] text-[#E5C58D] uppercase">
-              TIRUPPUR TEXTILE DESK • B2B SOURCING
+      <section className="relative pt-12 sm:pt-16 lg:pt-20 pb-12 sm:pb-16 border-b border-[#ECE7DE] text-center">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
+          {/* Clean Typography-Focused Heading with Gold Accent */}
+          <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-[#181715] leading-[1.08]">
+            Let’s Connect &amp;{' '}
+            <span className="relative inline-block text-[#8C6534] font-serif italic font-normal tracking-normal">
+              Create.
+              {/* Subtle gold accent underline */}
+              <span className="absolute -bottom-1.5 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#8C6534] to-transparent rounded-full" />
             </span>
-          </div>
-
-          {/* Clean Typography-Focused Heading with Animated Gold Accent */}
-          <div className="space-y-3">
-            <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-[#F7F3EA] leading-[1.08]">
-              Let’s Connect &amp;{' '}
-              <span className="relative inline-block text-transparent bg-clip-text bg-gradient-to-r from-[#F7F3EA] via-[#E5C58D] to-[#C49A55] font-serif italic font-normal tracking-normal drop-shadow-[0_2px_15px_rgba(196,154,85,0.25)]">
-                Create.
-                {/* Subtle animated underline gold accent */}
-                <span className="absolute -bottom-1.5 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent rounded-full shadow-[0_0_12px_#D4AF37]" />
-              </span>
-            </h1>
-          </div>
+          </h1>
 
           {/* Supporting Copy */}
-          <p className="text-sm sm:text-base lg:text-lg text-[#A3B8B0] leading-relaxed max-w-2xl mx-auto">
+          <p className="text-sm sm:text-base lg:text-lg text-[#6B665E] leading-relaxed max-w-2xl mx-auto pt-1">
             Have a question or a business requirement? We’re here to help with fabrics, garment
             accessories, manufacturing, and bulk orders.
           </p>
-
-          {/* Quick Credibility / Response Guarantee Badges */}
-          <div className="pt-2 flex flex-wrap items-center justify-center gap-4 text-xs font-mono text-[#E5C58D]">
-            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0B1E17] border border-[#1A382C]">
-              <Clock className="w-3.5 h-3.5 text-[#C49A55]" />
-              <span>Direct Desk: Mon – Sat • Rapid Response</span>
-            </div>
-            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0B1E17] border border-[#1A382C]">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#C49A55]" />
-              <span>Certified Mill &amp; Trims Sourcing Partner</span>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -296,28 +272,28 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
           {/* LEFT COLUMN: COMPACT INTERACTIVE BUSINESS INFORMATION (~40% WIDTH)    */}
           {/* --------------------------------------------------------------------- */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="bg-gradient-to-b from-[#0B1E17] to-[#071712] border border-[#1A382C] rounded-3xl p-6 sm:p-7 shadow-[0_15px_45px_rgba(0,0,0,0.6)] space-y-5 relative overflow-hidden">
+            <div className="bg-white border border-[#E5E0D8] rounded-3xl p-6 sm:p-7 shadow-[0_15px_45px_rgba(24,23,21,0.05)] space-y-5 relative overflow-hidden">
               {/* Header */}
               <div className="space-y-1.5">
-                <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#C49A55] font-semibold">
+                <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#8C6534] font-semibold">
                   OFFICIAL CONTACTS
                 </span>
-                <h2 className="font-serif text-2xl font-bold text-[#F7F3EA] tracking-tight">
+                <h2 className="font-serif text-2xl font-bold text-[#181715] tracking-tight">
                   Let’s Connect
                 </h2>
-                <div className="w-10 h-0.5 bg-[#C49A55] rounded-full" />
+                <div className="w-10 h-0.5 bg-[#8C6534] rounded-full" />
               </div>
 
               {/* 3 Compact Business Information Cards */}
               <div className="space-y-3.5">
                 {/* 1. Atelier & Studio Address */}
-                <div className="bg-[#0E261E]/80 border border-[#214738] hover:border-[#C49A55]/60 rounded-2xl p-4 sm:p-5 transition-all duration-300 group shadow-md hover:shadow-lg">
+                <div className="bg-[#FAF8F5] border border-[#E5E0D8] hover:border-[#8C6534] rounded-2xl p-4 sm:p-5 transition-all duration-300 group shadow-xs hover:shadow-md">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-xl bg-[#16382C] text-[#C49A55] border border-[#2C5E4B] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                      <div className="w-8 h-8 rounded-xl bg-[#F3EFE6] text-[#8C6534] border border-[#DDD6C8] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                         <MapPin className="w-4 h-4" />
                       </div>
-                      <span className="text-[10px] font-mono uppercase tracking-widest text-[#A3B8B0] font-semibold">
+                      <span className="text-[10px] font-mono uppercase tracking-widest text-[#78736B] font-semibold">
                         OUR ATELIER &amp; STUDIO
                       </span>
                     </div>
@@ -326,7 +302,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                       href={mapsSearchUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-[11px] font-mono font-semibold text-[#C49A55] hover:text-[#E5C58D] bg-[#16382C]/70 hover:bg-[#16382C] border border-[#2C5E4B] px-3 py-1 rounded-lg transition-colors shrink-0"
+                      className="inline-flex items-center gap-1.5 text-[11px] font-mono font-semibold text-[#8C6534] hover:text-[#181715] bg-white hover:bg-[#F3EFE6] border border-[#DDD6C8] px-3 py-1 rounded-lg transition-colors shrink-0"
                     >
                       <span>Google Maps</span>
                       <ExternalLink className="w-3 h-3" />
@@ -334,30 +310,30 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                   </div>
 
                   <div className="mt-3 pl-10">
-                    <p className="text-xs sm:text-sm text-[#F7F3EA] leading-relaxed font-medium">
+                    <p className="text-xs sm:text-sm text-[#181715] leading-relaxed font-medium">
                       {businessConfig.addressLine1},<br />
                       {businessConfig.addressLine2},<br />
                       {businessConfig.city}, {businessConfig.state} – {businessConfig.pincode}
                     </p>
-                    <span className="text-[11px] text-[#A3B8B0] block mt-1.5 font-sans">
+                    <span className="text-[11px] text-[#78736B] block mt-1.5 font-sans">
                       Fabric &amp; Trims Sourcing District • Tiruppur
                     </span>
                   </div>
                 </div>
 
                 {/* 2. Call Our Team */}
-                <div className="bg-[#0E261E]/80 border border-[#214738] hover:border-[#C49A55]/60 rounded-2xl p-4 sm:p-5 transition-all duration-300 group shadow-md hover:shadow-lg">
+                <div className="bg-[#FAF8F5] border border-[#E5E0D8] hover:border-[#8C6534] rounded-2xl p-4 sm:p-5 transition-all duration-300 group shadow-xs hover:shadow-md">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-xl bg-[#16382C] text-[#C49A55] border border-[#2C5E4B] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                      <div className="w-8 h-8 rounded-xl bg-[#F3EFE6] text-[#8C6534] border border-[#DDD6C8] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                         <Phone className="w-4 h-4" />
                       </div>
-                      <span className="text-[10px] font-mono uppercase tracking-widest text-[#A3B8B0] font-semibold">
+                      <span className="text-[10px] font-mono uppercase tracking-widest text-[#78736B] font-semibold">
                         CALL OUR TEAM
                       </span>
                     </div>
 
-                    <span className="inline-flex items-center gap-1.5 text-[10px] font-mono font-semibold text-[#E5C58D] bg-[#16382C]/70 border border-[#2C5E4B] px-2.5 py-0.5 rounded-full">
+                    <span className="inline-flex items-center gap-1.5 text-[10px] font-mono font-semibold text-[#8C6534] bg-[#F3EFE6] border border-[#DDD6C8] px-2.5 py-0.5 rounded-full">
                       <span className="w-1.5 h-1.5 rounded-full bg-[#25D366] animate-pulse" />
                       <span>DIRECT DESK</span>
                     </span>
@@ -367,11 +343,11 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                     <div>
                       <a
                         href={`tel:${VERIFIED_PHONE}`}
-                        className="font-mono text-base sm:text-lg font-bold text-[#F7F3EA] hover:text-[#E5C58D] transition-colors block leading-tight"
+                        className="font-mono text-base sm:text-lg font-bold text-[#181715] hover:text-[#8C6534] transition-colors block leading-tight"
                       >
                         {VERIFIED_PHONE}
                       </a>
-                      <span className="text-[11px] text-[#A3B8B0] block mt-0.5">
+                      <span className="text-[11px] text-[#78736B] block mt-0.5">
                         Direct Wholesale &amp; Sampling Line
                       </span>
                     </div>
@@ -379,9 +355,9 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                     <div className="flex items-center gap-2">
                       <a
                         href={`tel:${VERIFIED_PHONE}`}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#16382C] hover:bg-[#1f4a3b] border border-[#2C5E4B] text-[11px] font-mono text-[#E5C58D] transition-colors"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#181715] hover:bg-[#2B2824] text-white text-[11px] font-mono transition-colors shadow-xs"
                       >
-                        <Phone className="w-3 h-3 text-[#C49A55]" />
+                        <Phone className="w-3 h-3 text-[#D4AF37]" />
                         <span>Call</span>
                       </a>
                       <a
@@ -390,7 +366,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                         )}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#25D366]/20 hover:bg-[#25D366]/30 border border-[#25D366]/40 text-[11px] font-mono text-[#25D366] transition-colors"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#25D366]/15 hover:bg-[#25D366]/25 border border-[#25D366]/30 text-[11px] font-mono text-[#15803D] transition-colors"
                       >
                         <span>WhatsApp</span>
                         <ExternalLink className="w-3 h-3" />
@@ -400,20 +376,20 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                 </div>
 
                 {/* 3. Business Enquiries Email */}
-                <div className="bg-[#0E261E]/80 border border-[#214738] hover:border-[#C49A55]/60 rounded-2xl p-4 sm:p-5 transition-all duration-300 group shadow-md hover:shadow-lg">
+                <div className="bg-[#FAF8F5] border border-[#E5E0D8] hover:border-[#8C6534] rounded-2xl p-4 sm:p-5 transition-all duration-300 group shadow-xs hover:shadow-md">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-xl bg-[#16382C] text-[#C49A55] border border-[#2C5E4B] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                      <div className="w-8 h-8 rounded-xl bg-[#F3EFE6] text-[#8C6534] border border-[#DDD6C8] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
                         <Mail className="w-4 h-4" />
                       </div>
-                      <span className="text-[10px] font-mono uppercase tracking-widest text-[#A3B8B0] font-semibold">
+                      <span className="text-[10px] font-mono uppercase tracking-widest text-[#78736B] font-semibold">
                         BUSINESS ENQUIRIES
                       </span>
                     </div>
 
                     <a
                       href={`mailto:${VERIFIED_EMAIL}`}
-                      className="inline-flex items-center gap-1.5 text-[11px] font-mono font-semibold text-[#C49A55] hover:text-[#E5C58D] bg-[#16382C]/70 hover:bg-[#16382C] border border-[#2C5E4B] px-3 py-1 rounded-lg transition-colors shrink-0"
+                      className="inline-flex items-center gap-1.5 text-[11px] font-mono font-semibold text-[#8C6534] hover:text-[#181715] bg-white hover:bg-[#F3EFE6] border border-[#DDD6C8] px-3 py-1 rounded-lg transition-colors shrink-0"
                     >
                       <Mail className="w-3 h-3" />
                       <span>Send Mail</span>
@@ -423,11 +399,11 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                   <div className="mt-3 pl-10">
                     <a
                       href={`mailto:${VERIFIED_EMAIL}`}
-                      className="font-mono text-sm sm:text-base font-bold text-[#F7F3EA] hover:text-[#E5C58D] transition-colors block truncate leading-tight"
+                      className="font-mono text-sm sm:text-base font-bold text-[#181715] hover:text-[#8C6534] transition-colors block truncate leading-tight"
                     >
                       {VERIFIED_EMAIL}
                     </a>
-                    <span className="text-[11px] text-[#A3B8B0] block mt-1">
+                    <span className="text-[11px] text-[#78736B] block mt-1">
                       Guaranteed response within 24 business hours
                     </span>
                   </div>
@@ -436,15 +412,15 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
 
               {/* Dedicated Catalogue Helper */}
               {onExploreCatalogue && (
-                <div className="pt-2 border-t border-[#16382C]/70 flex items-center justify-between">
-                  <span className="text-xs text-[#A3B8B0]">Need to view our fabric archive?</span>
+                <div className="pt-2 border-t border-[#ECE7DE] flex items-center justify-between">
+                  <span className="text-xs text-[#78736B]">Need to view our fabric archive?</span>
                   <button
                     type="button"
                     onClick={onExploreCatalogue}
-                    className="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-[#E5C58D] hover:text-[#F7F3EA] transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-[#8C6534] hover:text-[#181715] transition-colors cursor-pointer"
                   >
                     <span>Digital Catalogue</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-[#C49A55]" />
+                    <ArrowRight className="w-3.5 h-3.5 text-[#8C6534]" />
                   </button>
                 </div>
               )}
@@ -455,28 +431,28 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
           {/* RIGHT COLUMN: UNIQUE INTERACTIVE CONTACT HUB (~60% WIDTH)             */}
           {/* --------------------------------------------------------------------- */}
           <div className="lg:col-span-7">
-            <div className="bg-gradient-to-b from-[#0B1E17] via-[#091B14] to-[#071610] text-[#F7F3EA] border border-[#1A382C] rounded-3xl p-6 sm:p-9 shadow-[0_20px_60px_rgba(0,0,0,0.7)] relative space-y-7">
+            <div className="bg-white text-[#181715] border border-[#E5E0D8] rounded-3xl p-6 sm:p-9 shadow-[0_20px_50px_rgba(24,23,21,0.06)] relative space-y-7">
               {/* Luxury Annotation Badge Top Right */}
               <div
                 aria-hidden="true"
-                className="absolute -top-3.5 right-6 sm:right-8 flex items-center gap-2 bg-[#102C22] border border-[#C49A55]/60 text-[#E5C58D] px-3.5 py-1 rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.7)] select-none pointer-events-none z-10"
+                className="absolute -top-3.5 right-6 sm:right-8 flex items-center gap-2 bg-[#FAF8F5] border border-[#DDD6C8] text-[#8C6534] px-3.5 py-1 rounded-full shadow-xs select-none pointer-events-none z-10"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#C49A55] animate-pulse" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#8C6534] animate-pulse" />
                 <span className="font-serif italic font-medium text-xs tracking-wide">
                   We are here to help you!
                 </span>
-                <ArrowUpRight className="w-3.5 h-3.5 text-[#C49A55]" />
+                <ArrowUpRight className="w-3.5 h-3.5 text-[#8C6534]" />
               </div>
 
               {/* Section Heading */}
               <div>
-                <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#C49A55] font-semibold block mb-1">
+                <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#8C6534] font-semibold block mb-1">
                   INTERACTIVE CONTACT HUB
                 </span>
-                <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#F7F3EA] tracking-tight">
+                <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#181715] tracking-tight">
                   Choose Your Enquiry Type
                 </h3>
-                <p className="text-xs sm:text-sm text-[#A3B8B0] mt-1">
+                <p className="text-xs sm:text-sm text-[#6B665E] mt-1">
                   Select an option to reveal tailored details and quick direct contact channels.
                 </p>
               </div>
@@ -498,26 +474,26 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                       }}
                       className={`relative text-left p-4 rounded-2xl border transition-all duration-300 cursor-pointer flex flex-col justify-between gap-3 group ${
                         isSelected
-                          ? 'bg-[#14352A] border-[#C49A55] shadow-[0_0_25px_rgba(196,154,85,0.18)] ring-1 ring-[#C49A55]'
-                          : 'bg-[#0E261E]/70 border-[#214738] hover:border-[#C49A55]/50 hover:bg-[#102C22]'
+                          ? 'bg-[#FAF8F5] border-[#8C6534] ring-2 ring-[#8C6534]/20 shadow-xs'
+                          : 'bg-white border-[#E5E0D8] hover:border-[#8C6534]/50 hover:bg-[#FAF8F5]'
                       }`}
                     >
                       <div className="flex items-center justify-between">
                         <div
                           className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all ${
                             isSelected
-                              ? 'bg-[#C49A55] text-[#071B15]'
-                              : 'bg-[#16382C] text-[#C49A55] group-hover:scale-105'
+                              ? 'bg-[#8C6534] text-white shadow-xs'
+                              : 'bg-[#FAF8F5] text-[#8C6534] border border-[#DDD6C8] group-hover:scale-105'
                           }`}
                         >
                           <Icon className="w-4 h-4" />
                         </div>
                         {isSelected ? (
-                          <div className="w-5 h-5 rounded-full bg-[#C49A55] text-[#071B15] flex items-center justify-center">
+                          <div className="w-5 h-5 rounded-full bg-[#8C6534] text-white flex items-center justify-center">
                             <Check className="w-3 h-3 stroke-[3]" />
                           </div>
                         ) : (
-                          <span className="text-[10px] font-mono text-[#7A998D] uppercase tracking-wider">
+                          <span className="text-[10px] font-mono text-[#8C877E] uppercase tracking-wider">
                             {item.badge}
                           </span>
                         )}
@@ -526,12 +502,12 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                       <div>
                         <h4
                           className={`font-serif text-sm sm:text-base font-bold transition-colors ${
-                            isSelected ? 'text-[#F7F3EA]' : 'text-[#D8D2C5] group-hover:text-[#F7F3EA]'
+                            isSelected ? 'text-[#181715]' : 'text-[#4A463F] group-hover:text-[#181715]'
                           }`}
                         >
                           {item.label}
                         </h4>
-                        <p className="text-[11px] text-[#A3B8B0] mt-0.5 leading-snug line-clamp-2">
+                        <p className="text-[11px] text-[#78736B] mt-0.5 leading-snug line-clamp-2">
                           {item.tagline}
                         </p>
                       </div>
@@ -541,18 +517,18 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
               </div>
 
               {/* Context Banner: Explaining Selected Hub Option */}
-              <div className="bg-[#0E261E]/80 border border-[#214738] rounded-2xl p-4 flex items-start gap-3 text-xs sm:text-sm text-[#D8D2C5] animate-in fade-in duration-200">
-                <Sparkles className="w-4 h-4 text-[#C49A55] shrink-0 mt-0.5" />
+              <div className="bg-[#FAF8F5] border border-[#E5E0D8] rounded-2xl p-4 flex items-start gap-3 text-xs sm:text-sm text-[#4A463F] animate-in fade-in duration-200">
+                <Sparkles className="w-4 h-4 text-[#8C6534] shrink-0 mt-0.5" />
                 <p className="leading-relaxed">{currentHub.description}</p>
               </div>
 
               {/* 2. Quick Contact Interaction ("How would you like to connect?") */}
-              <div className="space-y-4 pt-1 border-t border-[#16382C]/70">
+              <div className="space-y-4 pt-1 border-t border-[#ECE7DE]">
                 <div>
-                  <h4 className="font-serif text-lg sm:text-xl font-bold text-[#F7F3EA] tracking-tight">
+                  <h4 className="font-serif text-lg sm:text-xl font-bold text-[#181715] tracking-tight">
                     How would you like to connect?
                   </h4>
-                  <p className="text-xs text-[#A3B8B0] mt-0.5">
+                  <p className="text-xs text-[#78736B] mt-0.5">
                     Connect instantly via WhatsApp, direct phone call, email, or send a brief through our website.
                   </p>
                 </div>
@@ -595,22 +571,22 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                         onClick={() => setActiveChannel(ch.id)}
                         className={`p-3 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
                           isSelected
-                            ? 'bg-[#16382C] border-[#C49A55] text-[#F7F3EA] shadow-[0_0_15px_rgba(196,154,85,0.15)] ring-1 ring-[#C49A55]'
-                            : 'bg-[#0E261E]/60 border-[#214738] text-[#A3B8B0] hover:border-[#C49A55]/40 hover:bg-[#0E261E]'
+                            ? 'bg-[#FAF8F5] border-[#8C6534] text-[#181715] ring-1 ring-[#8C6534] shadow-xs'
+                            : 'bg-white border-[#E5E0D8] text-[#78736B] hover:border-[#8C6534]/40 hover:bg-[#FAF8F5]'
                         }`}
                       >
                         <div className="flex items-center justify-between mb-1">
                           <Icon
                             className={`w-3.5 h-3.5 ${
-                              isSelected ? 'text-[#C49A55]' : 'text-[#7A998D]'
+                              isSelected ? 'text-[#8C6534]' : 'text-[#8C877E]'
                             }`}
                           />
                           {isSelected && (
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#C49A55]" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#8C6534]" />
                           )}
                         </div>
                         <span className="text-xs font-semibold block leading-tight">{ch.label}</span>
-                        <span className="text-[10px] text-[#7A998D] block">{ch.sub}</span>
+                        <span className="text-[10px] text-[#8C877E] block">{ch.sub}</span>
                       </button>
                     );
                   })}
@@ -620,27 +596,27 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                 <div className="mt-4">
                   {/* CHANNEL: WHATSAPP DIRECT */}
                   {activeChannel === 'whatsapp' && (
-                    <div className="bg-[#0E261E]/90 border border-[#214738] rounded-2xl p-6 sm:p-7 space-y-4 animate-in fade-in duration-200">
+                    <div className="bg-[#FAF8F5] border border-[#E5E0D8] rounded-2xl p-6 sm:p-7 space-y-4 animate-in fade-in duration-200">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-[#25D366]/20 border border-[#25D366]/40 text-[#25D366] flex items-center justify-center shrink-0">
+                        <div className="w-10 h-10 rounded-xl bg-[#25D366]/15 border border-[#25D366]/30 text-[#15803D] flex items-center justify-center shrink-0">
                           <ExternalLink className="w-5 h-5" />
                         </div>
                         <div>
-                          <h5 className="font-serif text-lg font-bold text-[#F7F3EA]">
+                          <h5 className="font-serif text-lg font-bold text-[#181715]">
                             Chat on WhatsApp
                           </h5>
-                          <p className="text-xs text-[#A3B8B0]">
-                            Direct Line: <span className="font-mono text-[#E5C58D] font-bold">{VERIFIED_PHONE}</span>
+                          <p className="text-xs text-[#78736B]">
+                            Direct Line: <span className="font-mono text-[#181715] font-bold">{VERIFIED_PHONE}</span>
                           </p>
                         </div>
                       </div>
 
-                      <p className="text-xs sm:text-sm text-[#D8D2C5] leading-relaxed">
+                      <p className="text-xs sm:text-sm text-[#4A463F] leading-relaxed">
                         Click below to open WhatsApp with a pre-formatted message tailored for your{' '}
-                        <strong className="text-[#E5C58D]">{currentHub.label}</strong> inquiry.
+                        <strong className="text-[#8C6534]">{currentHub.label}</strong> inquiry.
                       </p>
 
-                      <div className="p-3 bg-[#071B15] border border-[#1A382C] rounded-xl text-xs font-mono text-[#A3B8B0] line-clamp-3">
+                      <div className="p-3 bg-white border border-[#DDD6C8] rounded-xl text-xs font-mono text-[#6B665E] line-clamp-3">
                         {currentHub.whatsappMessage}
                       </div>
 
@@ -649,7 +625,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                           href={getCustomWhatsAppUrl()}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1EBE5D] text-white font-bold px-6 py-3 rounded-xl text-xs sm:text-sm uppercase tracking-wider transition-all shadow-[0_4px_15px_rgba(37,211,102,0.3)] active:scale-95"
+                          className="inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1EBE5D] text-white font-bold px-6 py-3 rounded-xl text-xs sm:text-sm uppercase tracking-wider transition-all shadow-sm active:scale-95"
                         >
                           <span>Open WhatsApp Chat</span>
                           <ExternalLink className="w-4 h-4" />
@@ -657,7 +633,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                         <button
                           type="button"
                           onClick={() => setActiveChannel('message')}
-                          className="px-4 py-3 rounded-xl border border-[#214738] bg-[#0E261E] text-xs font-mono text-[#A3B8B0] hover:text-[#F7F3EA] transition-colors"
+                          className="px-4 py-3 rounded-xl border border-[#DDD6C8] bg-white text-xs font-mono text-[#78736B] hover:text-[#181715] transition-colors"
                         >
                           Or send via website form
                         </button>
@@ -667,37 +643,37 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
 
                   {/* CHANNEL: PHONE CALL */}
                   {activeChannel === 'call' && (
-                    <div className="bg-[#0E261E]/90 border border-[#214738] rounded-2xl p-6 sm:p-7 space-y-4 animate-in fade-in duration-200">
+                    <div className="bg-[#FAF8F5] border border-[#E5E0D8] rounded-2xl p-6 sm:p-7 space-y-4 animate-in fade-in duration-200">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-[#16382C] border border-[#2C5E4B] text-[#C49A55] flex items-center justify-center shrink-0">
+                        <div className="w-10 h-10 rounded-xl bg-[#F3EFE6] border border-[#DDD6C8] text-[#8C6534] flex items-center justify-center shrink-0">
                           <Phone className="w-5 h-5" />
                         </div>
                         <div>
-                          <h5 className="font-serif text-lg font-bold text-[#F7F3EA]">
+                          <h5 className="font-serif text-lg font-bold text-[#181715]">
                             Direct Phone Call
                           </h5>
-                          <p className="text-xs text-[#A3B8B0]">
+                          <p className="text-xs text-[#78736B]">
                             Tiruppur Sampling &amp; Sourcing Desk
                           </p>
                         </div>
                       </div>
 
-                      <div className="p-4 bg-[#071B15] border border-[#1A382C] rounded-2xl flex items-center justify-between">
+                      <div className="p-4 bg-white border border-[#E5E0D8] rounded-2xl flex items-center justify-between">
                         <div>
-                          <span className="text-[10px] font-mono text-[#A3B8B0] uppercase block">
+                          <span className="text-[10px] font-mono text-[#78736B] uppercase block">
                             TELEPHONE NUMBER
                           </span>
-                          <span className="font-mono text-xl sm:text-2xl font-bold text-[#E5C58D]">
+                          <span className="font-mono text-xl sm:text-2xl font-bold text-[#181715]">
                             {VERIFIED_PHONE}
                           </span>
                         </div>
-                        <span className="inline-flex items-center gap-1.5 text-[10px] font-mono text-[#25D366] bg-[#25D366]/15 border border-[#25D366]/30 px-2.5 py-1 rounded-full">
+                        <span className="inline-flex items-center gap-1.5 text-[10px] font-mono text-[#15803D] bg-[#25D366]/15 border border-[#25D366]/30 px-2.5 py-1 rounded-full">
                           <span className="w-1.5 h-1.5 rounded-full bg-[#25D366] animate-pulse" />
                           <span>AVAILABLE</span>
                         </span>
                       </div>
 
-                      <p className="text-xs sm:text-sm text-[#D8D2C5] leading-relaxed">
+                      <p className="text-xs sm:text-sm text-[#4A463F] leading-relaxed">
                         Speak directly with our senior material coordinators regarding wholesale supply,
                         fabric lots, or manufacturing feasibility.
                       </p>
@@ -705,15 +681,15 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                       <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                         <a
                           href={`tel:${VERIFIED_PHONE}`}
-                          className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#C49A55] to-[#B38744] hover:from-[#D4AF37] hover:to-[#C49A55] text-[#071B15] font-bold px-6 py-3 rounded-xl text-xs sm:text-sm uppercase tracking-wider transition-all shadow-[0_4px_15px_rgba(196,154,85,0.3)] active:scale-95"
+                          className="inline-flex items-center justify-center gap-2 bg-[#181715] hover:bg-[#2B2824] text-white font-bold px-6 py-3 rounded-xl text-xs sm:text-sm uppercase tracking-wider transition-all shadow-sm active:scale-95"
                         >
-                          <Phone className="w-4 h-4" />
+                          <Phone className="w-4 h-4 text-[#D4AF37]" />
                           <span>Call {VERIFIED_PHONE}</span>
                         </a>
                         <button
                           type="button"
                           onClick={() => setActiveChannel('message')}
-                          className="px-4 py-3 rounded-xl border border-[#214738] bg-[#0E261E] text-xs font-mono text-[#A3B8B0] hover:text-[#F7F3EA] transition-colors"
+                          className="px-4 py-3 rounded-xl border border-[#DDD6C8] bg-white text-xs font-mono text-[#78736B] hover:text-[#181715] transition-colors"
                         >
                           Or write to us online
                         </button>
@@ -723,49 +699,49 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
 
                   {/* CHANNEL: EMAIL */}
                   {activeChannel === 'email' && (
-                    <div className="bg-[#0E261E]/90 border border-[#214738] rounded-2xl p-6 sm:p-7 space-y-4 animate-in fade-in duration-200">
+                    <div className="bg-[#FAF8F5] border border-[#E5E0D8] rounded-2xl p-6 sm:p-7 space-y-4 animate-in fade-in duration-200">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-[#16382C] border border-[#2C5E4B] text-[#C49A55] flex items-center justify-center shrink-0">
+                        <div className="w-10 h-10 rounded-xl bg-[#F3EFE6] border border-[#DDD6C8] text-[#8C6534] flex items-center justify-center shrink-0">
                           <Mail className="w-5 h-5" />
                         </div>
                         <div>
-                          <h5 className="font-serif text-lg font-bold text-[#F7F3EA]">
+                          <h5 className="font-serif text-lg font-bold text-[#181715]">
                             Business Email
                           </h5>
-                          <p className="text-xs text-[#A3B8B0]">
+                          <p className="text-xs text-[#78736B]">
                             Guaranteed response within 24 business hours
                           </p>
                         </div>
                       </div>
 
-                      <div className="p-4 bg-[#071B15] border border-[#1A382C] rounded-2xl">
-                        <span className="text-[10px] font-mono text-[#A3B8B0] uppercase block">
+                      <div className="p-4 bg-white border border-[#E5E0D8] rounded-2xl">
+                        <span className="text-[10px] font-mono text-[#78736B] uppercase block">
                           OFFICIAL EMAIL DESK
                         </span>
                         <a
                           href={`mailto:${VERIFIED_EMAIL}`}
-                          className="font-mono text-lg sm:text-xl font-bold text-[#E5C58D] hover:underline"
+                          className="font-mono text-lg sm:text-xl font-bold text-[#8C6534] hover:underline"
                         >
                           {VERIFIED_EMAIL}
                         </a>
                       </div>
 
-                      <p className="text-xs sm:text-sm text-[#D8D2C5] leading-relaxed">
+                      <p className="text-xs sm:text-sm text-[#4A463F] leading-relaxed">
                         Best suited for formal RFQs, purchase orders, technical spec sheets, and high-resolution design packages.
                       </p>
 
                       <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                         <a
                           href={getCustomMailtoUrl()}
-                          className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#C49A55] to-[#B38744] hover:from-[#D4AF37] hover:to-[#C49A55] text-[#071B15] font-bold px-6 py-3 rounded-xl text-xs sm:text-sm uppercase tracking-wider transition-all shadow-[0_4px_15px_rgba(196,154,85,0.3)] active:scale-95"
+                          className="inline-flex items-center justify-center gap-2 bg-[#181715] hover:bg-[#2B2824] text-white font-bold px-6 py-3 rounded-xl text-xs sm:text-sm uppercase tracking-wider transition-all shadow-sm active:scale-95"
                         >
-                          <Mail className="w-4 h-4" />
+                          <Mail className="w-4 h-4 text-[#D4AF37]" />
                           <span>Compose Email</span>
                         </a>
                         <button
                           type="button"
                           onClick={() => setActiveChannel('message')}
-                          className="px-4 py-3 rounded-xl border border-[#214738] bg-[#0E261E] text-xs font-mono text-[#A3B8B0] hover:text-[#F7F3EA] transition-colors"
+                          className="px-4 py-3 rounded-xl border border-[#DDD6C8] bg-white text-xs font-mono text-[#78736B] hover:text-[#181715] transition-colors"
                         >
                           Or use the website form
                         </button>
@@ -778,29 +754,29 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                     <div>
                       {isSubmitted ? (
                         /* Submission Success Screen */
-                        <div className="bg-[#0E261E]/95 border border-[#214738] rounded-2xl p-7 sm:p-9 text-center space-y-5 animate-in fade-in duration-300">
-                          <div className="w-14 h-14 rounded-full bg-[#C49A55]/15 text-[#C49A55] flex items-center justify-center mx-auto ring-6 ring-[#C49A55]/10">
-                            <CheckCircle2 className="w-7 h-7 text-[#C49A55]" />
+                        <div className="bg-[#FAF8F5] border border-[#E5E0D8] rounded-2xl p-7 sm:p-9 text-center space-y-5 animate-in fade-in duration-300">
+                          <div className="w-14 h-14 rounded-full bg-[#F3EFE6] text-[#8C6534] flex items-center justify-center mx-auto ring-6 ring-[#8C6534]/10">
+                            <CheckCircle2 className="w-7 h-7 text-[#8C6534]" />
                           </div>
 
                           <div className="space-y-1.5">
-                            <span className="text-[11px] font-mono text-[#C49A55] uppercase font-bold tracking-wider">
+                            <span className="text-[11px] font-mono text-[#8C6534] uppercase font-bold tracking-wider">
                               ENQUIRY DISPATCHED • {currentHub.label}
                             </span>
-                            <h4 className="font-serif text-2xl font-bold text-[#F7F3EA]">
+                            <h4 className="font-serif text-2xl font-bold text-[#181715]">
                               Thank You, {formData.name}
                             </h4>
-                            <p className="text-xs sm:text-sm text-[#A3B8B0] max-w-md mx-auto">
+                            <p className="text-xs sm:text-sm text-[#6B665E] max-w-md mx-auto">
                               Your requirement has been logged with our Tiruppur sourcing desk. We will review
-                              availability and contact you shortly.
+                              availability and contact you promptly.
                             </p>
                           </div>
 
-                          <div className="inline-block bg-[#071B15] border border-[#214738] rounded-xl px-5 py-2.5">
-                            <span className="text-[10px] font-mono text-[#A3B8B0] uppercase block">
+                          <div className="inline-block bg-white border border-[#DDD6C8] rounded-xl px-5 py-2.5">
+                            <span className="text-[10px] font-mono text-[#78736B] uppercase block">
                               Enquiry Reference Code
                             </span>
-                            <span className="font-mono text-base font-bold text-[#E5C58D]">
+                            <span className="font-mono text-base font-bold text-[#8C6534]">
                               {referenceCode}
                             </span>
                           </div>
@@ -828,7 +804,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                                 });
                                 setAttachedFiles([]);
                               }}
-                              className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-[#214738] bg-[#071B15] text-xs font-semibold text-[#A3B8B0] hover:text-[#F7F3EA] hover:border-[#C49A55] transition-colors cursor-pointer"
+                              className="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-[#DDD6C8] bg-white text-xs font-semibold text-[#78736B] hover:text-[#181715] hover:border-[#8C6534] transition-colors cursor-pointer"
                             >
                               Send Another Message
                             </button>
@@ -837,16 +813,16 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                       ) : (
                         /* Compact 3-Field Form */
                         <form onSubmit={handleSubmit} className="space-y-4">
-                          <div className="bg-[#0E261E]/80 border border-[#214738] rounded-2xl p-5 sm:p-6 space-y-4">
+                          <div className="bg-[#FAF8F5] border border-[#E5E0D8] rounded-2xl p-5 sm:p-6 space-y-4">
                             {/* Row 1: Name & Phone (Required) */}
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                               {/* 1. Name */}
                               <div>
-                                <label className="block text-[11px] font-mono uppercase tracking-wider text-[#A3B8B0] font-semibold mb-1">
-                                  YOUR NAME <span className="text-[#C49A55]">*</span>
+                                <label className="block text-[11px] font-mono uppercase tracking-wider text-[#78736B] font-semibold mb-1">
+                                  YOUR NAME <span className="text-[#8C6534]">*</span>
                                 </label>
                                 <div className="relative">
-                                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#5A7C6E]">
+                                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#8C877E]">
                                     <User className="w-4 h-4" />
                                   </div>
                                   <input
@@ -857,21 +833,21 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                                       setFormData({ ...formData, name: e.target.value })
                                     }
                                     placeholder="e.g. S. Murugan"
-                                    className="w-full pl-9 pr-3 py-2.5 text-xs sm:text-sm bg-[#071B15] border border-[#214738] rounded-xl text-[#F7F3EA] placeholder-[#5A7C6E] focus:outline-none focus:border-[#C49A55] focus:ring-1 focus:ring-[#C49A55] transition-all"
+                                    className="w-full pl-9 pr-3 py-2.5 text-xs sm:text-sm bg-white border border-[#DDD6C8] rounded-xl text-[#181715] placeholder-[#9E988F] focus:outline-none focus:border-[#8C6534] focus:ring-1 focus:ring-[#8C6534] transition-all"
                                   />
                                 </div>
                                 {errors.name && (
-                                  <p className="text-[10px] text-[#F87171] mt-1">{errors.name}</p>
+                                  <p className="text-[10px] text-[#C4432B] mt-1">{errors.name}</p>
                                 )}
                               </div>
 
                               {/* 2. Phone / WhatsApp */}
                               <div>
-                                <label className="block text-[11px] font-mono uppercase tracking-wider text-[#A3B8B0] font-semibold mb-1">
-                                  PHONE / WHATSAPP <span className="text-[#C49A55]">*</span>
+                                <label className="block text-[11px] font-mono uppercase tracking-wider text-[#78736B] font-semibold mb-1">
+                                  PHONE / WHATSAPP <span className="text-[#8C6534]">*</span>
                                 </label>
                                 <div className="relative">
-                                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#5A7C6E]">
+                                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#8C877E]">
                                     <Phone className="w-4 h-4" />
                                   </div>
                                   <input
@@ -882,11 +858,11 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                                       setFormData({ ...formData, phone: e.target.value })
                                     }
                                     placeholder="e.g. 98420 12345"
-                                    className="w-full pl-9 pr-3 py-2.5 text-xs sm:text-sm bg-[#071B15] border border-[#214738] rounded-xl text-[#F7F3EA] placeholder-[#5A7C6E] focus:outline-none focus:border-[#C49A55] focus:ring-1 focus:ring-[#C49A55] transition-all"
+                                    className="w-full pl-9 pr-3 py-2.5 text-xs sm:text-sm bg-white border border-[#DDD6C8] rounded-xl text-[#181715] placeholder-[#9E988F] focus:outline-none focus:border-[#8C6534] focus:ring-1 focus:ring-[#8C6534] transition-all"
                                   />
                                 </div>
                                 {errors.phone && (
-                                  <p className="text-[10px] text-[#F87171] mt-1">{errors.phone}</p>
+                                  <p className="text-[10px] text-[#C4432B] mt-1">{errors.phone}</p>
                                 )}
                               </div>
                             </div>
@@ -894,10 +870,10 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                             {/* Row 2: Message (Required) */}
                             <div>
                               <div className="flex items-center justify-between mb-1">
-                                <label className="block text-[11px] font-mono uppercase tracking-wider text-[#A3B8B0] font-semibold">
-                                  MESSAGE / REQUIREMENT <span className="text-[#C49A55]">*</span>
+                                <label className="block text-[11px] font-mono uppercase tracking-wider text-[#78736B] font-semibold">
+                                  MESSAGE / REQUIREMENT <span className="text-[#8C6534]">*</span>
                                 </label>
-                                <span className="text-[10px] font-mono text-[#7A998D]">
+                                <span className="text-[10px] font-mono text-[#8C877E]">
                                   Targeting: {currentHub.label}
                                 </span>
                               </div>
@@ -909,17 +885,17 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                                   setFormData({ ...formData, message: e.target.value })
                                 }
                                 placeholder={currentHub.placeholderMessage}
-                                className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-[#071B15] border border-[#214738] rounded-xl text-[#F7F3EA] placeholder-[#5A7C6E] focus:outline-none focus:border-[#C49A55] focus:ring-1 focus:ring-[#C49A55] transition-all resize-none"
+                                className="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-white border border-[#DDD6C8] rounded-xl text-[#181715] placeholder-[#9E988F] focus:outline-none focus:border-[#8C6534] focus:ring-1 focus:ring-[#8C6534] transition-all resize-none"
                               />
                             </div>
 
                             {/* Row 3: Email (Optional) */}
                             <div>
-                              <label className="block text-[11px] font-mono uppercase tracking-wider text-[#A3B8B0] font-semibold mb-1">
-                                EMAIL ADDRESS <span className="font-normal text-[10px] text-[#7A998D]">(Optional)</span>
+                              <label className="block text-[11px] font-mono uppercase tracking-wider text-[#78736B] font-semibold mb-1">
+                                EMAIL ADDRESS <span className="font-normal text-[10px] text-[#8C877E]">(Optional)</span>
                               </label>
                               <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#5A7C6E]">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#8C877E]">
                                   <Mail className="w-4 h-4" />
                                 </div>
                                 <input
@@ -929,11 +905,11 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                                     setFormData({ ...formData, email: e.target.value })
                                   }
                                   placeholder="buyer@domain.com (if you prefer email reply)"
-                                  className="w-full pl-9 pr-3 py-2.5 text-xs sm:text-sm bg-[#071B15] border border-[#214738] rounded-xl text-[#F7F3EA] placeholder-[#5A7C6E] focus:outline-none focus:border-[#C49A55] focus:ring-1 focus:ring-[#C49A55] transition-all"
+                                  className="w-full pl-9 pr-3 py-2.5 text-xs sm:text-sm bg-white border border-[#DDD6C8] rounded-xl text-[#181715] placeholder-[#9E988F] focus:outline-none focus:border-[#8C6534] focus:ring-1 focus:ring-[#8C6534] transition-all"
                                 />
                               </div>
                               {errors.email && (
-                                <p className="text-[10px] text-[#F87171] mt-1">{errors.email}</p>
+                                <p className="text-[10px] text-[#C4432B] mt-1">{errors.email}</p>
                               )}
                             </div>
                           </div>
@@ -953,14 +929,14 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                               <button
                                 type="button"
                                 onClick={() => fileInputRef.current?.click()}
-                                className="flex items-center gap-2 px-3 py-2 bg-[#0E261E]/80 hover:bg-[#123026] text-[#A3B8B0] border border-[#214738] rounded-xl text-xs cursor-pointer transition-colors text-left"
+                                className="flex items-center gap-2 px-3 py-2 bg-white hover:bg-[#F3EFE6] text-[#6B665E] border border-[#DDD6C8] rounded-xl text-xs cursor-pointer transition-colors text-left"
                               >
-                                <Paperclip className="w-3.5 h-3.5 text-[#C49A55]" />
+                                <Paperclip className="w-3.5 h-3.5 text-[#8C6534]" />
                                 <div>
-                                  <span className="font-semibold block leading-tight text-[#F7F3EA]">
-                                    Attach Swatch / Specs <span className="font-normal text-[10px] text-[#7A998D]">(Optional)</span>
+                                  <span className="font-semibold block leading-tight text-[#181715]">
+                                    Attach Swatch / Specs <span className="font-normal text-[10px] text-[#8C877E]">(Optional)</span>
                                   </span>
-                                  <span className="text-[10px] text-[#5A7C6E] block">
+                                  <span className="text-[10px] text-[#78736B] block">
                                     Max 5 files, up to 10MB each
                                   </span>
                                 </div>
@@ -971,13 +947,13 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                                   {attachedFiles.map((file, i) => (
                                     <span
                                       key={i}
-                                      className="inline-flex items-center gap-1 bg-[#102C22] border border-[#214738] rounded px-2 py-0.5 text-[10px] text-[#E5C58D]"
+                                      className="inline-flex items-center gap-1 bg-[#F3EFE6] border border-[#DDD6C8] rounded px-2 py-0.5 text-[10px] text-[#8C6534]"
                                     >
                                       <span className="truncate max-w-[130px]">{file.name}</span>
                                       <button
                                         type="button"
                                         onClick={() => handleRemoveFile(i)}
-                                        className="text-[#A3B8B0] hover:text-[#F87171] cursor-pointer"
+                                        className="text-[#78736B] hover:text-[#C4432B] cursor-pointer"
                                       >
                                         <X className="w-2.5 h-2.5" />
                                       </button>
@@ -991,14 +967,14 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({ onExploreCatalogue }) 
                             <button
                               type="submit"
                               disabled={isSubmitting}
-                              className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#C49A55] to-[#B38744] hover:from-[#D4AF37] hover:to-[#C49A55] text-[#071B15] font-bold px-8 py-3.5 rounded-xl font-medium text-xs sm:text-sm uppercase tracking-wider transition-all shadow-[0_4px_20px_rgba(196,154,85,0.3)] hover:shadow-[0_0_25px_rgba(196,154,85,0.5)] active:scale-95 cursor-pointer disabled:opacity-50 shrink-0"
+                              className="inline-flex items-center justify-center gap-2 bg-[#181715] hover:bg-[#2B2824] text-white font-bold px-8 py-3.5 rounded-xl font-medium text-xs sm:text-sm uppercase tracking-wider transition-all shadow-md hover:shadow-lg active:scale-95 cursor-pointer disabled:opacity-50 shrink-0"
                             >
                               {isSubmitting ? (
                                 <span>Sending Brief...</span>
                               ) : (
                                 <>
                                   <span>Send Enquiry</span>
-                                  <Send className="w-4 h-4 text-[#071B15]" />
+                                  <Send className="w-4 h-4 text-[#D4AF37]" />
                                 </>
                               )}
                             </button>

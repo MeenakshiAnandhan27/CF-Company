@@ -36,17 +36,12 @@ export const Navbar: React.FC<NavbarProps> = ({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const isReachUs = currentTab === 'reach-us';
-  const isDarkNav = isReachUs;
+  const isDarkNav = false;
 
   return (
     <header
       className={`sticky top-0 z-40 transition-all duration-300 ${
-        isDarkNav
-          ? isScrolled
-            ? 'bg-[#07110D]/95 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.5)] border-b border-[rgba(224,196,143,0.2)]'
-            : 'bg-[#07110D] border-b border-[rgba(224,196,143,0.2)]'
-          : isScrolled
+        isScrolled
           ? 'bg-white/95 backdrop-blur-md shadow-[0_1px_4px_rgba(0,0,0,0.06)] border-b border-[#E8E6E0]'
           : 'bg-white border-b border-[#E8E6E0]'
       }`}
@@ -62,15 +57,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             <BrandLogo variant="white" size="sm" className="w-full h-auto transition-transform duration-300 group-hover:scale-105" />
           </div>
           <div className="flex flex-col justify-center">
-            <span className={`font-display text-lg sm:text-xl font-bold tracking-[0.12em] block leading-none whitespace-nowrap uppercase transition-colors ${
-              isDarkNav ? 'text-[#F3EBDD] group-hover:text-[#E6C995]' : 'text-[#181715] group-hover:text-[#8C6534]'
-            }`}>
+            <span className="font-display text-lg sm:text-xl font-bold tracking-[0.12em] block leading-none whitespace-nowrap uppercase transition-colors text-[#181715] group-hover:text-[#8C6534]">
               {businessConfig.businessName}
-            </span>
-            <span className={`font-mono text-[8px] sm:text-[9px] tracking-[0.18em] font-semibold uppercase mt-0.5 block ${
-              isDarkNav ? 'text-[#C49A55]' : 'text-[#8C6534]/80'
-            }`}>
-              GARMENT ACCESSORIES &amp; FABRIC EXPERTS
             </span>
           </div>
         </button>

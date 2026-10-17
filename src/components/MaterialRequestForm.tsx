@@ -1418,64 +1418,6 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                   </form>
                 </div>
               )}
-
-              {/* Assistance Card — Wide, Clean, Simple Luxury Banner */}
-              <div
-                onClick={onReachUs}
-                className="relative rounded-3xl overflow-hidden p-6 sm:p-8 border border-[#E5E0D8] bg-white text-[#181715] shadow-[0_15px_35px_rgba(24,23,21,0.05)] hover:border-[#8C6534] hover:shadow-[0_20px_45px_rgba(140,101,52,0.12)] transition-all duration-300 group cursor-pointer"
-              >
-                {/* Subtle Warm Amber / Gold Backlight Glow */}
-                <div
-                  aria-hidden="true"
-                  className="absolute -top-10 -right-10 w-48 h-48 bg-[#D4AF37]/10 rounded-full blur-3xl group-hover:bg-[#D4AF37]/20 transition-all pointer-events-none"
-                />
-
-                <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
-                  <div className="flex items-center gap-4 sm:gap-5">
-                    {/* 3D Headphones Symbol Container */}
-                    <div className="relative w-16 h-16 sm:w-18 sm:h-18 rounded-2xl overflow-hidden bg-[#FAF8F5] border border-[#DDD7CD] shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform duration-300 shadow-sm">
-                      <img
-                        src="/assets/materials/assistance-headphones.jpg"
-                        alt="Classic Fashions Dedicated Assistance"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-
-                    <div>
-                      <h4 className="font-serif text-xl sm:text-2xl font-bold text-[#181715] group-hover:text-[#8C6534] transition-colors tracking-tight">
-                        Need help choosing materials?
-                      </h4>
-                      <p className="text-xs sm:text-sm text-[#6B665E] mt-1 max-w-lg leading-relaxed">
-                        Our textile specialists are here to guide your custom specifications, sourcing, and sampling.
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Reach Us Action & Direct Phone */}
-                  <div className="flex flex-wrap items-center gap-3 sm:gap-4 shrink-0">
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onReachUs();
-                      }}
-                      className="inline-flex items-center gap-2 bg-[#181715] group-hover:bg-[#8C6534] text-white font-semibold text-xs sm:text-sm px-6 py-3 rounded-full transition-colors shadow-sm"
-                    >
-                      <span>Reach Our Team</span>
-                      <ArrowRight className="w-4 h-4 text-[#D4AF37] transform group-hover:translate-x-1 transition-transform" />
-                    </button>
-
-                    <a
-                      href={`tel:${VERIFIED_PHONE_RAW}`}
-                      onClick={(e) => e.stopPropagation()}
-                      className="inline-flex items-center gap-2 text-xs font-mono font-semibold text-[#6B665E] hover:text-[#8C6534] px-4 py-3 rounded-full border border-[#E5E0D8] bg-[#FAF8F5] transition-colors"
-                    >
-                      <Phone className="w-3.5 h-3.5 text-[#8C6534]" />
-                      <span>{VERIFIED_PHONE_DISPLAY}</span>
-                    </a>
-                  </div>
-                </div>
-              </div>
             </div>
 
             {/* ------------------------------------------------------------------- */}
@@ -1621,6 +1563,62 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                       <ArrowRight className="w-4 h-4 text-[#D4AF37]" />
                     </button>
                   )}
+                </div>
+              </div>
+
+              {/* Assistance Card — Compact, Neat Luxury Card below Your Material Brief */}
+              <div
+                onClick={onReachUs}
+                className="relative rounded-2xl overflow-hidden p-4 sm:p-5 border border-[#E5E0D8] bg-white text-[#181715] shadow-[0_8px_25px_rgba(24,23,21,0.04)] hover:border-[#8C6534] hover:shadow-[0_12px_32px_rgba(140,101,52,0.10)] transition-all duration-300 group cursor-pointer"
+              >
+                {/* Subtle Gold Backlight Ambient Glow */}
+                <div
+                  aria-hidden="true"
+                  className="absolute -top-8 -right-8 w-28 h-28 bg-[#D4AF37]/10 rounded-full blur-2xl group-hover:bg-[#D4AF37]/20 transition-all pointer-events-none"
+                />
+
+                <div className="relative flex items-center gap-3.5">
+                  {/* 3D Headphones Symbol Container */}
+                  <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-xl overflow-hidden bg-[#FAF8F5] border border-[#DDD7CD] shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform duration-300 shadow-xs">
+                    <img
+                      src="/assets/materials/assistance-headphones.jpg"
+                      alt="Classic Fashions Material Specialists"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+
+                  {/* Content */}
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-serif text-sm sm:text-base font-bold text-[#181715] group-hover:text-[#8C6534] transition-colors leading-tight">
+                      Need help choosing materials?
+                    </h4>
+                    <p className="text-[11px] sm:text-xs text-[#6B665E] mt-0.5 leading-snug">
+                      Our textile specialists are here to guide your custom specifications, sourcing, and sampling.
+                    </p>
+
+                    <div className="mt-3 flex items-center justify-between gap-2 flex-wrap">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onReachUs();
+                        }}
+                        className="inline-flex items-center gap-1.5 bg-[#8C6534] hover:bg-[#735128] text-white font-semibold text-[11px] px-3.5 py-1.5 rounded-full transition-colors shadow-xs"
+                      >
+                        <span>Reach Our Team</span>
+                        <ArrowRight className="w-3 h-3 text-[#E5C58D] transform group-hover:translate-x-0.5 transition-transform" />
+                      </button>
+
+                      <a
+                        href={`tel:${VERIFIED_PHONE_RAW}`}
+                        onClick={(e) => e.stopPropagation()}
+                        className="inline-flex items-center gap-1 text-[11px] font-mono font-semibold text-[#6B665E] hover:text-[#8C6534] px-2.5 py-1 rounded-full border border-[#DDD6C8] bg-[#FAF8F5] transition-colors"
+                      >
+                        <Phone className="w-3 h-3 text-[#8C6534]" />
+                        <span>{VERIFIED_PHONE_DISPLAY}</span>
+                      </a>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

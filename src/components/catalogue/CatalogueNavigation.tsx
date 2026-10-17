@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, X, BookOpen, Sparkles, Filter, RotateCw } from 'lucide-react';
+import { Search, X, BookOpen, Sparkles, Filter, RotateCw, Layers } from 'lucide-react';
 
 export type NavFilter = 'ALL' | 'FABRICS' | 'DENIM & CHAMBRAY' | 'LACES' | 'GARMENT ACCESSORIES';
 
@@ -9,6 +9,7 @@ interface CatalogueNavigationProps {
   searchQuery: string;
   onSearchChange: (query: string) => void;
   onOpenDigitalBook: () => void;
+  onOpenMaterialWall?: () => void;
   onOpen360?: () => void;
   totalMaterialsCount: number;
 }
@@ -19,6 +20,7 @@ export const CatalogueNavigation: React.FC<CatalogueNavigationProps> = ({
   searchQuery,
   onSearchChange,
   onOpenDigitalBook,
+  onOpenMaterialWall,
   onOpen360,
   totalMaterialsCount,
 }) => {
@@ -46,7 +48,7 @@ export const CatalogueNavigation: React.FC<CatalogueNavigationProps> = ({
                   key={tab.id}
                   type="button"
                   onClick={() => onSelectFilter(tab.id)}
-                  className={`px-3 sm:px-4 py-2 rounded-full text-xs font-medium tracking-wide transition-all whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-[#82553E] ${
+                  className={`px-3 sm:px-4 py-2 rounded-full text-xs font-medium tracking-wide transition-all whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-[#82553E] cursor-pointer ${
                     isActive
                       ? 'bg-[#181715] text-white shadow-xs'
                       : 'text-[#6A645A] hover:text-[#181715] hover:bg-[#EFECE5]'
@@ -58,16 +60,16 @@ export const CatalogueNavigation: React.FC<CatalogueNavigationProps> = ({
             })}
           </div>
 
-          {/* Right Tools: Search & Digital Book Launcher */}
-          <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
+          {/* Right Tools: Search & Feature Launchers */}
+          <div className="flex items-center gap-2.5 w-full md:w-auto justify-between md:justify-end overflow-x-auto no-scrollbar py-0.5">
             {/* Quick Search Bar */}
-            <div className="relative flex-1 md:w-56 lg:w-64">
+            <div className="relative flex-1 md:w-48 lg:w-56 shrink-0">
               <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#8C877E] pointer-events-none" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => onSearchChange(e.target.value)}
-                placeholder="Search raw weaves, laces..."
+                placeholder="Search raw weaves..."
                 className="w-full pl-8 pr-7 py-1.5 text-xs bg-white border border-[#DDD5C7] rounded-full placeholder-[#A39C91] text-[#181715] focus:outline-none focus:border-[#82553E] focus:ring-1 focus:ring-[#82553E] transition-all"
               />
               {searchQuery && (
@@ -82,30 +84,45 @@ export const CatalogueNavigation: React.FC<CatalogueNavigationProps> = ({
               )}
             </div>
 
-            {/* 360° FABRIC STUDIO (Turntable Experience) */}
+            {/* FEATURE 1: THE MATERIAL WALL (Visual Studio) */}
+            {onOpenMaterialWall && (
+              <button
+                type="button"
+                onClick={onOpenMaterialWall}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-bold uppercase tracking-wider bg-white text-[#181715] hover:bg-[#F2ECE1] border border-[#DDD5C7] rounded-full shadow-xs transition-all shrink-0 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+                title="Launch The Material Wall Studio"
+              >
+                <Layers className="w-3.5 h-3.5 text-[#82553E]" />
+                <span className="hidden sm:inline">Material Wall</span>
+                <span className="sm:hidden font-mono">Wall</span>
+              </button>
+            )}
+
+            {/* FEATURE 2: OPEN DIGITAL LOOKBOOK (Printed Book Experience) */}
+            <button
+              type="button"
+              onClick={onOpenDigitalBook}
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-mono font-bold uppercase tracking-wider bg-[#82553E] text-white hover:bg-[#6e4632] rounded-full shadow-xs transition-all shrink-0 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+              title="Open Digital Printed Textile Lookbook"
+            >
+              <BookOpen className="w-3.5 h-3.5 text-[#F5DE93]" />
+              <span className="hidden sm:inline">Lookbook</span>
+              <span className="sm:hidden font-mono">Book</span>
+            </button>
+
+            {/* 360° Studio */}
             {onOpen360 && (
               <button
                 type="button"
                 onClick={onOpen360}
-                className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 text-xs font-mono font-bold uppercase tracking-wider bg-gradient-to-r from-[#181715] to-[#2E2519] text-[#FAF8F5] border border-[#D4AF37] hover:border-[#F2D785] hover:bg-[#382C1B] rounded-full shadow-[0_2px_10px_rgba(212,175,55,0.25)] transition-all shrink-0 hover:scale-[1.03] active:scale-[0.98] cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-bold uppercase tracking-wider bg-gradient-to-r from-[#181715] to-[#2E2519] text-[#FAF8F5] border border-[#D4AF37] hover:border-[#F2D785] rounded-full shadow-[0_2px_8px_rgba(212,175,55,0.2)] transition-all shrink-0 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
                 title="Launch 360° 3D Fabric Atelier Studio"
               >
                 <RotateCw className="w-3.5 h-3.5 text-[#D4AF37] animate-spin-slow" />
                 <span className="hidden sm:inline">360° Studio</span>
-                <span className="sm:hidden font-mono">360° Studio</span>
+                <span className="sm:hidden font-mono">360°</span>
               </button>
             )}
-
-            {/* OPEN DIGITAL CATALOGUE (Book Experience) */}
-            <button
-              type="button"
-              onClick={onOpenDigitalBook}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider bg-[#82553E] text-white hover:bg-[#6e4632] rounded-full shadow-xs transition-all shrink-0 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
-            >
-              <BookOpen className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Open Digital Catalogue</span>
-              <span className="sm:hidden">Lookbook</span>
-            </button>
           </div>
         </div>
       </div>

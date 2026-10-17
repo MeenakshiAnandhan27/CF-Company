@@ -1,32 +1,60 @@
 import React, { useState } from 'react';
 import { MATERIAL_WALL_ITEMS, DiscoveryMaterial } from '../../data/catalogueDiscoveryData.ts';
-import { Sparkles, Eye, Layers, RotateCw } from 'lucide-react';
+import { Sparkles, Eye, Layers, RotateCw, ArrowRight } from 'lucide-react';
 
 interface MaterialWallProps {
   onSelectMaterial: (material: DiscoveryMaterial) => void;
   onOpen360?: (material: DiscoveryMaterial) => void;
+  onOpenFullStudio?: () => void;
 }
 
-export const MaterialWall: React.FC<MaterialWallProps> = ({ onSelectMaterial, onOpen360 }) => {
+export const MaterialWall: React.FC<MaterialWallProps> = ({
+  onSelectMaterial,
+  onOpen360,
+  onOpenFullStudio,
+}) => {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+
+  const handleOpenStudio = () => {
+    if (onOpenFullStudio) {
+      onOpenFullStudio();
+    } else {
+      onSelectMaterial(MATERIAL_WALL_ITEMS[0]);
+    }
+  };
 
   return (
     <section aria-label="Tactile Material Wall" className="py-12 sm:py-16">
       {/* Editorial Section Introduction */}
-      <div className="text-center max-w-3xl mx-auto space-y-3 mb-10 sm:mb-14">
-        <div className="inline-flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.22em] text-[#82553E] font-semibold bg-[#F0EBE1] px-3 py-1 rounded-full border border-[#DDD5C7]">
-          <Layers className="w-3.5 h-3.5" />
-          <span>Interactive Swatch Archive</span>
+      <div className="text-center max-w-3xl mx-auto space-y-4 mb-10 sm:mb-14">
+        <div className="inline-flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.22em] text-[#82553E] font-semibold bg-[#F0EBE1] px-3.5 py-1.5 rounded-full border border-[#DDD5C7]">
+          <Layers className="w-3.5 h-3.5 text-[#82553E]" />
+          <span>Visual Material Exploration Studio</span>
         </div>
+
         <h3 className="font-serif text-3xl sm:text-4xl md:text-5xl font-medium text-[#181715] tracking-tight">
           The Material Wall
         </h3>
+
         <p className="text-xs sm:text-sm md:text-base text-[#6E685F] leading-relaxed max-w-xl mx-auto">
-          A tactile gallery of raw textiles, trims and garment hardware. Hover to inspect weaves and select any material to examine sourcing specifications.
+          A dedicated visual gallery for inspecting textures, selecting materials, and comparing up to three textiles side by side.
         </p>
+
+        {/* Launch Studio Button */}
+        <div className="pt-2">
+          <button
+            type="button"
+            onClick={handleOpenStudio}
+            className="group inline-flex items-center gap-2.5 px-6 py-3 bg-[#181715] hover:bg-[#82553E] text-white text-xs font-mono font-bold uppercase tracking-[0.18em] rounded-full shadow-md hover:shadow-lg transition-all hover:scale-105 active:scale-95 cursor-pointer"
+          >
+            <Layers className="w-4 h-4 text-[#D4AF37]" />
+            <span>Open Material Wall Studio</span>
+            <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+          </button>
+        </div>
       </div>
 
-      {/* Wall Swatch Grid / Flowing Arrangement */}
+      {/* Wall Swatch Grid / Flowing Tactile Swatch Arrangement */}
       <div className="relative bg-gradient-to-b from-[#F5F1E8]/70 via-[#EDE7DC]/90 to-[#F5F1E8]/70 border border-[#DDD5C7] rounded-3xl p-6 sm:p-10 md:p-12 shadow-inner overflow-hidden">
         {/* Subtle grid backdrop pattern */}
         <div
@@ -37,7 +65,6 @@ export const MaterialWall: React.FC<MaterialWallProps> = ({ onSelectMaterial, on
         <div className="relative z-10 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-6 gap-6 sm:gap-8 md:gap-10 justify-items-center items-center">
           {MATERIAL_WALL_ITEMS.map((item, idx) => {
             const isHovered = hoveredId === item.id;
-            // Slight organic scale variance based on index for a natural tactile lookbook feel
             const isHeroSwatch = idx % 5 === 0;
 
             return (
@@ -131,7 +158,7 @@ export const MaterialWall: React.FC<MaterialWallProps> = ({ onSelectMaterial, on
         {/* Floating helper at bottom */}
         <div className="mt-10 pt-4 border-t border-[#DDD5C7]/70 text-center">
           <p className="text-xs text-[#7B756C] font-mono tracking-wide">
-            CLICK ANY SWATCH TO INSPECT SPECS · SOURCED AND SUPPLIED FOR APPAREL CREATION
+            CLICK ANY SWATCH TO INSPECT TEXTURES & COMPARE SIDE-BY-SIDE IN THE MATERIAL WALL STUDIO
           </p>
         </div>
       </div>

@@ -56,6 +56,7 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
 
   // ── FEATURE 3: Material Wall Studio — separate full-screen gallery
   const [isMaterialWallStudioOpen, setIsMaterialWallStudioOpen] = useState(false);
+  const [initialStudioMaterial, setInitialStudioMaterial] = useState<DiscoveryMaterial | null>(null);
 
   // ── 360° Viewer
   const [isViewer360Open, setIsViewer360Open] = useState(false);
@@ -152,28 +153,52 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
             Explore fabrics, denim, chambray, laces and garment accessories sourced for apparel production.
           </p>
 
-          <div className="pt-2 flex flex-wrap items-center justify-center gap-3.5">
+          <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
+            {/* 1. Explore Fabrics (Scroll to category browsing) */}
             <button
               type="button"
-              onClick={() => handleOpen360Viewer()}
-              className="group relative inline-flex items-center gap-2.5 px-6 py-3 text-xs font-mono font-bold uppercase tracking-[0.18em] bg-gradient-to-r from-[#181715] via-[#2A2318] to-[#181715] text-[#FAF7F2] border-2 border-[#D4AF37] hover:border-[#F3E2B8] rounded-full shadow-[0_4px_20px_rgba(212,175,55,0.35)] hover:shadow-[0_6px_28px_rgba(212,175,55,0.6)] transition-all duration-300 hover:scale-[1.04] active:scale-[0.98] cursor-pointer"
+              onClick={() => {
+                if (materialsSectionRef.current) {
+                  materialsSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+              }}
+              className="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-mono font-bold uppercase tracking-wider bg-[#181715] hover:bg-[#2E2B26] text-white rounded-full shadow-xs transition-all hover:scale-[1.02] cursor-pointer"
             >
-              <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-[#D4AF37] to-[#F5DE93] text-[#181715] flex items-center justify-center shadow-xs group-hover:rotate-180 transition-transform duration-700">
-                <RotateCw className="w-3.5 h-3.5" />
-              </div>
-              <span className="text-[#FAF7F2]">3D & 360° Fabric Studio</span>
-              <span className="text-[9px] font-sans px-2 py-0.5 rounded-full bg-[#D4AF37]/20 text-[#F5DE93] border border-[#D4AF37]/40 tracking-wider">
-                LIVE 3D
-              </span>
+              <span>Explore Fabrics</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </button>
 
+            {/* 2. Open Digital Lookbook (Interactive Printed Book) */}
             <button
               type="button"
               onClick={() => setIsDigitalBookOpen(true)}
-              className="inline-flex items-center gap-2 px-5 py-3 text-xs font-mono font-semibold uppercase tracking-wider bg-white hover:bg-[#F2ECE1] text-[#181715] border border-[#DDD5C7] rounded-full shadow-xs transition-all hover:scale-[1.02] cursor-pointer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-mono font-bold uppercase tracking-wider bg-[#82553E] hover:bg-[#6e4632] text-white rounded-full shadow-xs transition-all hover:scale-[1.02] cursor-pointer"
             >
-              <BookOpen className="w-3.5 h-3.5 text-[#82553E]" />
+              <BookOpen className="w-3.5 h-3.5 text-[#F5DE93]" />
               <span>Digital Lookbook</span>
+            </button>
+
+            {/* 3. The Material Wall (Visual Exploration Studio) */}
+            <button
+              type="button"
+              onClick={() => {
+                setInitialStudioMaterial(null);
+                setIsMaterialWallStudioOpen(true);
+              }}
+              className="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-mono font-bold uppercase tracking-wider bg-white hover:bg-[#F2ECE1] text-[#181715] border border-[#DDD5C7] rounded-full shadow-xs transition-all hover:scale-[1.02] cursor-pointer"
+            >
+              <Layers className="w-3.5 h-3.5 text-[#82553E]" />
+              <span>The Material Wall</span>
+            </button>
+
+            {/* 4. 3D & 360° Fabric Studio */}
+            <button
+              type="button"
+              onClick={() => handleOpen360Viewer()}
+              className="group relative inline-flex items-center gap-2 px-5 py-2.5 text-xs font-mono font-bold uppercase tracking-wider bg-gradient-to-r from-[#181715] via-[#2A2318] to-[#181715] text-[#FAF7F2] border border-[#D4AF37] hover:border-[#F3E2B8] rounded-full shadow-[0_2px_12px_rgba(212,175,55,0.25)] transition-all hover:scale-[1.02] cursor-pointer"
+            >
+              <RotateCw className="w-3.5 h-3.5 text-[#D4AF37] animate-spin-slow" />
+              <span>360° Studio</span>
             </button>
           </div>
         </div>
@@ -191,6 +216,10 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         onOpenDigitalBook={() => setIsDigitalBookOpen(true)}
+        onOpenMaterialWall={() => {
+          setInitialStudioMaterial(null);
+          setIsMaterialWallStudioOpen(true);
+        }}
         onOpen360={() => handleOpen360Viewer()}
         totalMaterialsCount={filteredMaterials.length}
       />
@@ -425,40 +454,21 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
         </div>
 
         {/* ========================================================
-            5. THE MATERIAL WALL — Tactile swatch preview strip
-            Clicking "Open Studio" launches MaterialWallStudio
-            The swatch circles themselves do NOT open the drawer here
+            5. THE MATERIAL WALL — Visual Material Exploration Studio
+            Separate visual interface with search, close-up zoom, side-by-side compare
+            Clicking swatches opens MaterialWallStudio directly focused on that material
             ======================================================== */}
-        <section className="py-12 sm:py-16">
-          {/* Editorial Section Introduction */}
-          <div className="text-center max-w-3xl mx-auto space-y-3 mb-10 sm:mb-14">
-            <div className="inline-flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.22em] text-[#82553E] font-semibold bg-[#F0EBE1] px-3 py-1 rounded-full border border-[#DDD5C7]">
-              <Layers className="w-3.5 h-3.5" />
-              <span>Visual Material Exploration Studio</span>
-            </div>
-            <h3 className="font-serif text-3xl sm:text-4xl md:text-5xl font-medium text-[#181715] tracking-tight">
-              The Material Wall
-            </h3>
-            <p className="text-xs sm:text-sm md:text-base text-[#6E685F] leading-relaxed max-w-xl mx-auto">
-              A full-screen visual gallery for inspecting, selecting, and comparing raw textiles, trims and garment hardware. Filter by category, zoom into textures, and compare up to three materials side-by-side.
-            </p>
-            <button
-              type="button"
-              onClick={() => setIsMaterialWallStudioOpen(true)}
-              className="inline-flex items-center gap-2.5 px-7 py-3.5 bg-[#181715] text-white text-xs font-bold uppercase tracking-[0.18em] rounded-full hover:bg-[#2E2B26] shadow-lg hover:shadow-xl hover:scale-105 transition-all"
-            >
-              <Layers className="w-4 h-4 text-[#C5A07A]" />
-              Open Material Wall Studio
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-
-          {/* Preview swatch strip — decorative only, clicking opens the full studio */}
-          <MaterialWall
-            onSelectMaterial={() => setIsMaterialWallStudioOpen(true)}
-            onOpen360={handleOpen360Viewer}
-          />
-        </section>
+        <MaterialWall
+          onSelectMaterial={(item) => {
+            setInitialStudioMaterial(item);
+            setIsMaterialWallStudioOpen(true);
+          }}
+          onOpenFullStudio={() => {
+            setInitialStudioMaterial(null);
+            setIsMaterialWallStudioOpen(true);
+          }}
+          onOpen360={handleOpen360Viewer}
+        />
 
         {/* ========================================================
             6. REQUEST A MATERIAL CALLOUT
@@ -500,12 +510,16 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
       />
 
       {/* ========================================================
-          9. FEATURE 3: MATERIAL WALL STUDIO (Full gallery)
-          Compare, filter, swatch inquiry — NO drawer involved
+          9. FEATURE 3: MATERIAL WALL STUDIO (Full Visual Gallery)
+          Compare, filter, swatch inquiry, texture close-up — strictly NO drawer
           ======================================================== */}
       <MaterialWallStudio
         isOpen={isMaterialWallStudioOpen}
-        onClose={() => setIsMaterialWallStudioOpen(false)}
+        initialMaterial={initialStudioMaterial}
+        onClose={() => {
+          setIsMaterialWallStudioOpen(false);
+          setInitialStudioMaterial(null);
+        }}
         onEnquire={(mat) => {
           setIsMaterialWallStudioOpen(false);
           handleEnquireMaterial(mat);

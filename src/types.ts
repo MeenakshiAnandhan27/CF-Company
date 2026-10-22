@@ -22,7 +22,8 @@ export type NavigationTab =
   | 'catalogue' 
   | 'collection' 
   | 'material-request' 
-  | 'reach-us';
+  | 'reach-us'
+  | '3d-fabric-viewer';
 
 export type MaterialRequestCategory = 
   | 'fabric' 

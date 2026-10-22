@@ -13,6 +13,8 @@ import { Chatbot } from './components/Chatbot.tsx';
 import { Footer } from './components/Footer.tsx';
 import { ProductDetailModal } from './components/ProductDetailModal.tsx';
 import { EnquiryModal } from './components/EnquiryModal.tsx';
+import { FireflyFabric3DViewer } from './components/catalogue/FireflyFabric3DViewer.tsx';
+import { FireflyFabricItem, getProductForFireflyFabric } from './data/fireflyFabricsData.ts';
 import { Product, ProductCategory, CollectionItem, NavigationTab, MaterialRequestCategory } from './types.ts';
 import { products } from './data/products.ts';
 import { ArrowRight, ShoppingBag, Sparkles, PhoneCall } from 'lucide-react';
@@ -65,6 +67,26 @@ export default function App() {
   const [enquiryProduct, setEnquiryProduct] = useState<Product | null>(null);
   const [isEnquiryOpen, setIsEnquiryOpen] = useState(false);
   const [isCollectionEnquiry, setIsCollectionEnquiry] = useState(false);
+
+  // Listen for hash navigation (#3d-fabric-viewer)
+  useEffect(() => {
+    const handleHash = () => {
+      const hash = window.location.hash.toLowerCase();
+      if (hash === '#3d-fabric-viewer' || hash === '#firefly-viewer' || hash === '#3d-viewer') {
+        setCurrentTab('3d-fabric-viewer');
+      }
+    };
+    handleHash();
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, []);
+
+  const handleFireflyEnquire = (fabric: FireflyFabricItem) => {
+    const prod = getProductForFireflyFabric(fabric);
+    setEnquiryProduct(prod);
+    setIsCollectionEnquiry(false);
+    setIsEnquiryOpen(true);
+  };
 
   // Navigation handler
   const handleNavigate = (
@@ -357,6 +379,13 @@ export default function App() {
             onGenerateEnquiry={handleGenerateCollectionEnquiry}
             onExploreCatalogue={() => handleNavigate('catalogue')}
             onViewDetails={handleOpenDetails}
+          />
+        )}
+
+                {currentTab === '3d-fabric-viewer' && (
+          <FireflyFabric3DViewer
+            onBack={() => handleNavigate('catalogue')}
+            onEnquire={handleFireflyEnquire}
           />
         )}
 

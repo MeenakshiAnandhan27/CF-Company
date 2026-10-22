@@ -13,6 +13,8 @@ import { MaterialWallStudio } from './MaterialWallStudio.tsx';
 import { CatalogueNavigation, NavFilter } from './CatalogueNavigation.tsx';
 import { DigitalCatalogue } from './DigitalCatalogue.tsx';
 import { FabricViewer360 } from './FabricViewer360.tsx';
+import { FireflyFabric3DViewer } from './FireflyFabric3DViewer.tsx';
+import { getProductForFireflyFabric } from '../../data/fireflyFabricsData.ts';
 import { RequestMaterialCallout } from './RequestMaterialCallout.tsx';
 import { Product, CollectionItem } from '../../types.ts';
 import { Sparkles, ArrowRight, Layers, BookOpen, RotateCw } from 'lucide-react';
@@ -60,6 +62,7 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
 
   // ── 360° Viewer
   const [isViewer360Open, setIsViewer360Open] = useState(false);
+  const [isFireflyViewerOpen, setIsFireflyViewerOpen] = useState(false);
   const [viewer360Material, setViewer360Material] = useState<DiscoveryMaterial | null>(null);
 
   const handleOpen360Viewer = (material?: DiscoveryMaterial) => {
@@ -536,6 +539,20 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
       {/* ========================================================
           10. 360° FABRIC STUDIO & TURNTABLE INSPECTOR
           ======================================================== */}
+      {/* ========================================================
+          11. FIREFLY 3D FABRIC STUDIO (15 REAL FABRIC TEXTURES)
+          ======================================================== */}
+      {isFireflyViewerOpen && (
+        <FireflyFabric3DViewer
+          isModal={true}
+          onBack={() => setIsFireflyViewerOpen(false)}
+          onEnquire={(f) => {
+            setIsFireflyViewerOpen(false);
+            onEnquire(getProductForFireflyFabric(f));
+          }}
+        />
+      )}
+
       <FabricViewer360
         isOpen={isViewer360Open}
         initialMaterial={viewer360Material}

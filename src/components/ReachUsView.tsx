@@ -11,6 +11,8 @@ import {
   Copy,
   Check,
   RotateCcw,
+  User,
+  MessageSquare,
 } from 'lucide-react';
 
 interface ReachUsViewProps {
@@ -152,172 +154,226 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
       {/* 2. CLEAN TWO-COLUMN LAYOUT: CONTACT DETAILS (LEFT) & ENQUIRY FORM (RIGHT)  */}
       {/* ========================================================================= */}
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 sm:mt-16">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
           
           {/* ─────────────────────────────────────────────────────────────────────── */}
-          {/* LEFT COLUMN: CONTACT DETAILS (~42% width)                               */}
+          {/* LEFT COLUMN: CONTACT DETAILS (Matched to Reference Mockup) (~44% width)  */}
           {/* ─────────────────────────────────────────────────────────────────────── */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="bg-[#FFFFFF] border border-[#E6DFD3] rounded-2xl p-6 sm:p-8 lg:p-9 shadow-[0_4px_24px_rgba(24,54,38,0.03)] space-y-8">
+            <div className="bg-white border border-[#E6DFD3] rounded-[28px] p-6 sm:p-8 shadow-[0_8px_30px_rgba(20,46,32,0.03)] space-y-5">
               
-              <div className="space-y-1.5 pb-4 border-b border-[#EFEBE1]">
-                <span className="text-[10px] font-mono uppercase tracking-[0.22em] text-[#B8934A] font-bold block">
-                  CONTACT DETAILS
+              <div className="pb-3 border-b border-[#EFEBE1]">
+                <span className="text-[10px] font-mono uppercase tracking-[0.22em] text-[#B8934A] font-bold block mb-1">
+                  GET IN TOUCH
                 </span>
-                <h2 className="font-serif text-2xl font-medium text-[#142E20]">
-                  Classic Fashions
+                <h2 className="font-serif text-2xl sm:text-3xl font-medium text-[#142E20] tracking-tight">
+                  Let’s Connect
                 </h2>
-                <p className="text-xs text-[#526B5C]">
-                  Supplier of Garment Accessories &amp; Fabrics · Tiruppur
-                </p>
               </div>
 
-              {/* 1. Business Address */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-[#183626]">
+              {/* 1. Our Studio Tile with Miniature 3D Building */}
+              <div className="bg-[#FAF8F5] border border-[#E8E2D6] rounded-2xl p-4 sm:p-5 flex items-start justify-between gap-3 group hover:border-[#C5A059]/60 transition-all">
+                <div className="flex items-start gap-3.5 flex-1 min-w-0">
+                  <div className="w-10 h-10 rounded-full bg-[#183626]/8 border border-[#C5A059]/40 flex items-center justify-center shrink-0 mt-0.5 text-[#142E20]">
                     <MapPin className="w-4 h-4 text-[#C5A059]" />
-                    <span className="text-[11px] font-mono uppercase tracking-wider font-semibold text-[#142E20]">
-                      Business Address
-                    </span>
                   </div>
-                  <a
-                    href={mapsSearchUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-[11px] font-mono text-[#B8934A] hover:text-[#142E20] transition-colors"
-                  >
-                    <span>View Map</span>
-                    <ExternalLink className="w-3 h-3" />
-                  </a>
-                </div>
-
-                <div className="pl-6 space-y-1">
-                  <p className="text-sm text-[#274232] leading-relaxed">
-                    {businessConfig.addressLine1},<br />
-                    {businessConfig.addressLine2},<br />
-                    {businessConfig.city}, {businessConfig.state} – {businessConfig.pincode}, India
-                  </p>
-                </div>
-              </div>
-
-              {/* 2. Phone / WhatsApp */}
-              <div className="space-y-2 pt-2 border-t border-[#F2ECE2]">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-[#183626]">
-                    <Phone className="w-4 h-4 text-[#C5A059]" />
-                    <span className="text-[11px] font-mono uppercase tracking-wider font-semibold text-[#142E20]">
-                      Phone / WhatsApp
+                  <div className="space-y-1 min-w-0 flex-1">
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#B8934A] font-bold block">
+                      OUR STUDIO
                     </span>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => handleCopy(VERIFIED_PHONE, 'phone')}
-                    className="inline-flex items-center gap-1 text-[11px] font-mono text-[#B8934A] hover:text-[#142E20] transition-colors cursor-pointer"
-                  >
-                    {copiedPhone ? (
-                      <>
-                        <Check className="w-3 h-3 text-[#183626]" />
-                        <span className="text-[#183626]">Copied</span>
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="w-3 h-3" />
-                        <span>Copy</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-
-                <div className="pl-6 space-y-2">
-                  <a
-                    href={`tel:${VERIFIED_PHONE}`}
-                    className="font-mono text-base sm:text-lg font-semibold text-[#142E20] hover:text-[#C5A059] transition-colors block"
-                  >
-                    {VERIFIED_PHONE}
-                  </a>
-
-                  <div className="flex items-center gap-3 pt-1">
+                    <p className="text-xs sm:text-sm text-[#274232] leading-relaxed">
+                      {businessConfig.addressLine1},<br />
+                      {businessConfig.addressLine2},<br />
+                      {businessConfig.city}, {businessConfig.state} – {businessConfig.pincode}
+                    </p>
                     <a
-                      href={`tel:${VERIFIED_PHONE}`}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FAF7F2] hover:bg-[#F2ECE2] border border-[#DDD5C7] text-xs font-mono text-[#142E20] transition-colors"
-                    >
-                      <Phone className="w-3 h-3 text-[#C5A059]" />
-                      <span>Call Now</span>
-                    </a>
-                    <a
-                      href={`https://wa.me/${VERIFIED_PHONE_RAW}?text=${encodeURIComponent(
-                        'Hello Classic Fashions, I would like to inquire about fabrics and accessories.'
-                      )}`}
+                      href={mapsSearchUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FAF7F2] hover:bg-[#F2ECE2] border border-[#DDD5C7] text-xs font-mono text-[#183626] font-medium transition-colors"
+                      className="inline-flex items-center gap-1 text-[11px] font-mono text-[#B8934A] hover:text-[#142E20] pt-1 transition-colors"
                     >
-                      <span>WhatsApp Chat</span>
-                      <ExternalLink className="w-3 h-3 text-[#C5A059]" />
+                      <span>View on Google Maps</span>
+                      <ExternalLink className="w-3 h-3" />
                     </a>
                   </div>
                 </div>
+
+                {/* 3D Miniature Studio Building from Reference Mockup */}
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border border-[#DDD5C7] bg-[#EDE6DC] shrink-0 shadow-xs">
+                  <img
+                    src="/assets/reach-us/card-studio-building.jpg"
+                    alt="Classic Fashions Studio Building"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLElement).style.display = 'none';
+                    }}
+                  />
+                </div>
               </div>
 
-              {/* 3. Email */}
-              <div className="space-y-2 pt-2 border-t border-[#F2ECE2]">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-[#183626]">
-                    <Mail className="w-4 h-4 text-[#C5A059]" />
-                    <span className="text-[11px] font-mono uppercase tracking-wider font-semibold text-[#142E20]">
-                      Email
+              {/* 2. Call Our Team Tile with Miniature Vintage Phone */}
+              <div className="bg-[#FAF8F5] border border-[#E8E2D6] rounded-2xl p-4 sm:p-5 flex items-start justify-between gap-3 group hover:border-[#C5A059]/60 transition-all">
+                <div className="flex items-start gap-3.5 flex-1 min-w-0">
+                  <div className="w-10 h-10 rounded-full bg-[#183626]/8 border border-[#C5A059]/40 flex items-center justify-center shrink-0 mt-0.5 text-[#142E20]">
+                    <Phone className="w-4 h-4 text-[#C5A059]" />
+                  </div>
+                  <div className="space-y-1 min-w-0 flex-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-mono uppercase tracking-widest text-[#B8934A] font-bold block">
+                        CALL OUR TEAM
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => handleCopy(VERIFIED_PHONE, 'phone')}
+                        className="inline-flex items-center gap-1 text-[10px] font-mono text-[#B8934A] hover:text-[#142E20] transition-colors cursor-pointer"
+                        title="Copy phone number"
+                      >
+                        {copiedPhone ? (
+                          <>
+                            <Check className="w-3 h-3 text-[#183626]" />
+                            <span className="text-[#183626]">Copied</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-3 h-3" />
+                            <span>Copy</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+
+                    <a
+                      href={`tel:${VERIFIED_PHONE}`}
+                      className="font-mono text-sm sm:text-base font-bold text-[#142E20] hover:text-[#C5A059] transition-colors block truncate"
+                    >
+                      {VERIFIED_PHONE}
+                    </a>
+                    <span className="text-[11px] text-[#526B5C] block">
+                      Direct Wholesale Desk
                     </span>
+
+                    <div className="flex items-center gap-2 pt-1.5">
+                      <a
+                        href={`tel:${VERIFIED_PHONE}`}
+                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white hover:bg-[#F2ECE2] border border-[#DDD5C7] text-[11px] font-mono text-[#142E20] transition-colors"
+                      >
+                        <Phone className="w-3 h-3 text-[#C5A059]" />
+                        <span>Call</span>
+                      </a>
+                      <a
+                        href={`https://wa.me/${VERIFIED_PHONE_RAW}?text=${encodeURIComponent(
+                          'Hello Classic Fashions, I would like to inquire about fabrics and accessories.'
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white hover:bg-[#F2ECE2] border border-[#DDD5C7] text-[11px] font-mono text-[#183626] font-medium transition-colors"
+                      >
+                        <span>WhatsApp</span>
+                        <ExternalLink className="w-3 h-3 text-[#C5A059]" />
+                      </a>
+                    </div>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => handleCopy(VERIFIED_EMAIL, 'email')}
-                    className="inline-flex items-center gap-1 text-[11px] font-mono text-[#B8934A] hover:text-[#142E20] transition-colors cursor-pointer"
-                  >
-                    {copiedEmail ? (
-                      <>
-                        <Check className="w-3 h-3 text-[#183626]" />
-                        <span className="text-[#183626]">Copied</span>
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="w-3 h-3" />
-                        <span>Copy</span>
-                      </>
-                    )}
-                  </button>
                 </div>
 
-                <div className="pl-6 space-y-1">
-                  <a
-                    href={`mailto:${VERIFIED_EMAIL}`}
-                    className="font-mono text-sm sm:text-base font-medium text-[#142E20] hover:text-[#C5A059] transition-colors block truncate"
-                  >
-                    {VERIFIED_EMAIL}
-                  </a>
-                  <span className="text-xs text-[#526B5C] block">
-                    For sample requests, purchase orders &amp; inquiries
-                  </span>
+                {/* 3D Miniature Vintage Phone from Reference Mockup */}
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border border-[#DDD5C7] bg-[#EDE6DC] shrink-0 shadow-xs">
+                  <img
+                    src="/assets/reach-us/card-vintage-phone.jpg"
+                    alt="Call Classic Fashions"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLElement).style.display = 'none';
+                    }}
+                  />
                 </div>
               </div>
 
-              {/* 4. Working Hours */}
-              <div className="space-y-2 pt-2 border-t border-[#F2ECE2]">
-                <div className="flex items-center gap-2 text-[#183626]">
-                  <Clock className="w-4 h-4 text-[#C5A059]" />
-                  <span className="text-[11px] font-mono uppercase tracking-wider font-semibold text-[#142E20]">
-                    Working Hours
-                  </span>
+              {/* 3. Business Enquiries Tile with Miniature Wax Envelope */}
+              <div className="bg-[#FAF8F5] border border-[#E8E2D6] rounded-2xl p-4 sm:p-5 flex items-start justify-between gap-3 group hover:border-[#C5A059]/60 transition-all">
+                <div className="flex items-start gap-3.5 flex-1 min-w-0">
+                  <div className="w-10 h-10 rounded-full bg-[#183626]/8 border border-[#C5A059]/40 flex items-center justify-center shrink-0 mt-0.5 text-[#142E20]">
+                    <Mail className="w-4 h-4 text-[#C5A059]" />
+                  </div>
+                  <div className="space-y-1 min-w-0 flex-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-mono uppercase tracking-widest text-[#B8934A] font-bold block">
+                        BUSINESS ENQUIRIES
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => handleCopy(VERIFIED_EMAIL, 'email')}
+                        className="inline-flex items-center gap-1 text-[10px] font-mono text-[#B8934A] hover:text-[#142E20] transition-colors cursor-pointer"
+                        title="Copy email address"
+                      >
+                        {copiedEmail ? (
+                          <>
+                            <Check className="w-3 h-3 text-[#183626]" />
+                            <span className="text-[#183626]">Copied</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-3 h-3" />
+                            <span>Copy</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+
+                    <a
+                      href={`mailto:${VERIFIED_EMAIL}`}
+                      className="font-mono text-xs sm:text-sm font-semibold text-[#142E20] hover:text-[#C5A059] transition-colors block truncate"
+                    >
+                      {VERIFIED_EMAIL}
+                    </a>
+                    <span className="text-[11px] text-[#526B5C] block">
+                      We reply within 24 hours
+                    </span>
+
+                    <div className="pt-1.5">
+                      <a
+                        href={`mailto:${VERIFIED_EMAIL}?subject=${encodeURIComponent(
+                          'Sourcing Inquiry — Classic Fashions'
+                        )}`}
+                        className="inline-flex items-center gap-1.5 text-[11px] font-mono text-[#B8934A] hover:text-[#142E20] transition-colors"
+                      >
+                        <span>Send Direct Mail</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="pl-6 space-y-1 text-sm text-[#274232]">
-                  <div className="flex items-center justify-between">
-                    <span>Monday – Saturday</span>
-                    <span className="font-mono text-xs font-semibold text-[#142E20]">9:30 AM – 7:30 PM IST</span>
-                  </div>
-                  <div className="flex items-center justify-between text-xs text-[#6B8274] pt-0.5">
-                    <span>Sunday</span>
-                    <span className="font-mono text-[11px]">Closed</span>
+                {/* 3D Miniature Wax-Sealed Envelope from Reference Mockup */}
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border border-[#DDD5C7] bg-[#EDE6DC] shrink-0 shadow-xs">
+                  <img
+                    src="/assets/reach-us/card-wax-envelope.jpg"
+                    alt="Email Classic Fashions"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLElement).style.display = 'none';
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* 4. Working Hours Tile (Required by Prompt) */}
+              <div className="bg-[#FAF8F5] border border-[#E8E2D6] rounded-2xl p-4 sm:p-5 flex items-start gap-3.5 group hover:border-[#C5A059]/60 transition-all">
+                <div className="w-10 h-10 rounded-full bg-[#183626]/8 border border-[#C5A059]/40 flex items-center justify-center shrink-0 mt-0.5 text-[#142E20]">
+                  <Clock className="w-4 h-4 text-[#C5A059]" />
+                </div>
+                <div className="space-y-1 flex-1">
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#B8934A] font-bold block">
+                    WORKING HOURS
+                  </span>
+                  <div className="text-xs sm:text-sm text-[#274232] space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span>Monday – Saturday</span>
+                      <span className="font-mono text-xs font-semibold text-[#142E20]">9:30 AM – 7:30 PM IST</span>
+                    </div>
+                    <div className="flex items-center justify-between text-[#6B8274] text-xs">
+                      <span>Sunday</span>
+                      <span className="font-mono text-[11px]">Closed</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -326,21 +382,34 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
           </div>
 
           {/* ─────────────────────────────────────────────────────────────────────── */}
-          {/* RIGHT COLUMN: SIMPLE ENQUIRY FORM (~58% width)                          */}
+          {/* RIGHT COLUMN: SIMPLE ENQUIRY FORM (Matched to Reference Mockup) (~56%)  */}
           {/* ─────────────────────────────────────────────────────────────────────── */}
           <div className="lg:col-span-7">
-            <div className="bg-[#FFFFFF] border border-[#E6DFD3] rounded-2xl p-6 sm:p-9 lg:p-10 shadow-[0_4px_24px_rgba(24,54,38,0.03)] space-y-6">
+            <div className="bg-white border border-[#E6DFD3] rounded-[28px] p-6 sm:p-9 lg:p-10 shadow-[0_8px_30px_rgba(20,46,32,0.03)] space-y-6 relative overflow-hidden">
               
-              <div className="space-y-1 pb-4 border-b border-[#EFEBE1]">
-                <span className="text-[10px] font-mono uppercase tracking-[0.22em] text-[#B8934A] font-bold block">
-                  DIRECT ENQUIRY
-                </span>
-                <h3 className="font-serif text-2xl font-medium text-[#142E20]">
-                  Send Us a Message
-                </h3>
-                <p className="text-xs text-[#526B5C]">
-                  Fill out the form below and our sourcing desk will respond promptly.
-                </p>
+              {/* Header with Title and "We are here to help you!" Script Note */}
+              <div className="flex items-start justify-between gap-4 pb-4 border-b border-[#EFEBE1]">
+                <div>
+                  <h3 className="font-serif text-2xl sm:text-3xl font-medium text-[#142E20] tracking-tight">
+                    Send Us an Enquiry
+                  </h3>
+                  <p className="text-xs text-[#526B5C] mt-1">
+                    Share your requirements below and our textile sourcing desk will respond promptly.
+                  </p>
+                </div>
+
+                {/* Hand-drawn Script Touch from Reference Mockup */}
+                <div className="hidden sm:flex flex-col items-end text-right select-none pt-1">
+                  <span
+                    className="font-serif italic text-sm text-[#B8934A] tracking-wide"
+                    style={{ fontFamily: 'Georgia, serif' }}
+                  >
+                    We are here to help you!
+                  </span>
+                  <span className="text-base text-[#C5A059] leading-none -rotate-12 mt-0.5">
+                    ⤷
+                  </span>
+                </div>
               </div>
 
               {isSubmitted ? (
@@ -358,7 +427,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
                       Thank you, {formData.name}
                     </h4>
                     <p className="text-xs sm:text-sm text-[#3A5344] max-w-md mx-auto leading-relaxed">
-                      Your inquiry has been registered. Our team will reach out via {formData.phone}.
+                      Your inquiry has been registered. Our team will reach out to you via {formData.phone}.
                     </p>
                   </div>
 
@@ -376,7 +445,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
                       href={getWhatsAppEnquiryUrl()}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#183626] hover:bg-[#142E20] text-[#FAF7F2] px-6 py-2.5 rounded-xl text-xs font-mono font-medium tracking-wider transition-colors cursor-pointer"
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#183626] hover:bg-[#142E20] text-[#FAF7F2] px-6 py-2.5 rounded-xl text-xs font-mono font-medium tracking-wider transition-colors cursor-pointer shadow-xs"
                     >
                       <span>Share on WhatsApp</span>
                       <ExternalLink className="w-3.5 h-3.5 text-[#C5A059]" />
@@ -402,99 +471,124 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
                   </div>
                 </div>
               ) : (
-                /* Simple Enquiry Form */
-                <form onSubmit={handleSubmit} className="space-y-5">
+                /* Simple Enquiry Form matching Reference Mockup */
+                <form onSubmit={handleSubmit} className="space-y-4">
                   
-                  {/* 1. Name (Required) */}
-                  <div>
-                    <label className="block text-[11px] font-mono uppercase tracking-wider text-[#142E20] font-semibold mb-1.5">
-                      Name <span className="text-[#C5A059]">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      placeholder="Your Full Name"
-                      className="w-full px-4 py-3 text-sm bg-[#FAF8F5] border border-[#DDD5C7] rounded-xl text-[#142E20] placeholder-[#8A9E92] focus:bg-white focus:outline-none focus:border-[#183626] focus:ring-1 focus:ring-[#183626] transition-all"
-                    />
-                    {errors.name && (
-                      <p className="text-[11px] text-[#A63624] mt-1 font-mono">{errors.name}</p>
-                    )}
+                  {/* Row 1: Name & Phone */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {/* 1. Name (Required) */}
+                    <div>
+                      <label className="block text-[11px] font-mono uppercase tracking-wider text-[#142E20] font-semibold mb-1.5">
+                        NAME <span className="text-[#C5A059]">*</span>
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#8A9E92]">
+                          <User className="w-4 h-4" />
+                        </div>
+                        <input
+                          type="text"
+                          required
+                          value={formData.name}
+                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                          placeholder="e.g. S. Murugan"
+                          className="w-full pl-10 pr-3.5 py-3 text-sm bg-[#FAF8F5] border border-[#DDD5C7] rounded-xl text-[#142E20] placeholder-[#8A9E92] focus:bg-white focus:outline-none focus:border-[#183626] focus:ring-1 focus:ring-[#183626] transition-all"
+                        />
+                      </div>
+                      {errors.name && (
+                        <p className="text-[11px] text-[#A63624] mt-1 font-mono">{errors.name}</p>
+                      )}
+                    </div>
+
+                    {/* 2. Phone / WhatsApp (Required) */}
+                    <div>
+                      <label className="block text-[11px] font-mono uppercase tracking-wider text-[#142E20] font-semibold mb-1.5">
+                        PHONE / WHATSAPP <span className="text-[#C5A059]">*</span>
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#8A9E92]">
+                          <Phone className="w-4 h-4" />
+                        </div>
+                        <input
+                          type="tel"
+                          required
+                          value={formData.phone}
+                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                          placeholder="e.g. 98420 12345"
+                          className="w-full pl-10 pr-3.5 py-3 text-sm bg-[#FAF8F5] border border-[#DDD5C7] rounded-xl text-[#142E20] placeholder-[#8A9E92] focus:bg-white focus:outline-none focus:border-[#183626] focus:ring-1 focus:ring-[#183626] transition-all"
+                        />
+                      </div>
+                      {errors.phone && (
+                        <p className="text-[11px] text-[#A63624] mt-1 font-mono">{errors.phone}</p>
+                      )}
+                    </div>
                   </div>
 
-                  {/* 2. Phone / WhatsApp (Required) */}
+                  {/* Row 2: Email (Optional) */}
                   <div>
                     <label className="block text-[11px] font-mono uppercase tracking-wider text-[#142E20] font-semibold mb-1.5">
-                      Phone / WhatsApp <span className="text-[#C5A059]">*</span>
+                      EMAIL <span className="font-normal text-[10px] text-[#6B8274]">(Optional)</span>
                     </label>
-                    <input
-                      type="tel"
-                      required
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      placeholder="+91 98420 12345"
-                      className="w-full px-4 py-3 text-sm bg-[#FAF8F5] border border-[#DDD5C7] rounded-xl text-[#142E20] placeholder-[#8A9E92] focus:bg-white focus:outline-none focus:border-[#183626] focus:ring-1 focus:ring-[#183626] transition-all"
-                    />
-                    {errors.phone && (
-                      <p className="text-[11px] text-[#A63624] mt-1 font-mono">{errors.phone}</p>
-                    )}
-                  </div>
-
-                  {/* 3. Email (Optional) */}
-                  <div>
-                    <label className="block text-[11px] font-mono uppercase tracking-wider text-[#142E20] font-semibold mb-1.5">
-                      Email <span className="font-normal text-[10px] text-[#6B8274]">(Optional)</span>
-                    </label>
-                    <input
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      placeholder="name@company.com"
-                      className="w-full px-4 py-3 text-sm bg-[#FAF8F5] border border-[#DDD5C7] rounded-xl text-[#142E20] placeholder-[#8A9E92] focus:bg-white focus:outline-none focus:border-[#183626] focus:ring-1 focus:ring-[#183626] transition-all"
-                    />
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#8A9E92]">
+                        <Mail className="w-4 h-4" />
+                      </div>
+                      <input
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        placeholder="buyer@domain.com"
+                        className="w-full pl-10 pr-3.5 py-3 text-sm bg-[#FAF8F5] border border-[#DDD5C7] rounded-xl text-[#142E20] placeholder-[#8A9E92] focus:bg-white focus:outline-none focus:border-[#183626] focus:ring-1 focus:ring-[#183626] transition-all"
+                      />
+                    </div>
                     {errors.email && (
                       <p className="text-[11px] text-[#A63624] mt-1 font-mono">{errors.email}</p>
                     )}
                   </div>
 
-                  {/* 4. Message */}
+                  {/* Row 3: Message */}
                   <div>
                     <label className="block text-[11px] font-mono uppercase tracking-wider text-[#142E20] font-semibold mb-1.5">
-                      Message <span className="font-normal text-[10px] text-[#6B8274]">(Optional)</span>
+                      MESSAGE <span className="font-normal text-[10px] text-[#6B8274]">(Optional)</span>
                     </label>
-                    <textarea
-                      rows={4}
-                      value={formData.message}
-                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      placeholder="Please specify fabric type, count, quantity, accessories, or sample requirements..."
-                      className="w-full px-4 py-3 text-sm bg-[#FAF8F5] border border-[#DDD5C7] rounded-xl text-[#142E20] placeholder-[#8A9E92] focus:bg-white focus:outline-none focus:border-[#183626] focus:ring-1 focus:ring-[#183626] transition-all resize-none"
-                    />
+                    <div className="relative">
+                      <div className="absolute top-3 left-3.5 pointer-events-none text-[#8A9E92]">
+                        <MessageSquare className="w-4 h-4" />
+                      </div>
+                      <textarea
+                        rows={4}
+                        value={formData.message}
+                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                        placeholder="Tell us about your material needs, specification or any other details..."
+                        className="w-full pl-10 pr-3.5 py-3 text-sm bg-[#FAF8F5] border border-[#DDD5C7] rounded-xl text-[#142E20] placeholder-[#8A9E92] focus:bg-white focus:outline-none focus:border-[#183626] focus:ring-1 focus:ring-[#183626] transition-all resize-none"
+                      />
+                    </div>
                   </div>
 
                   {errors.form && (
                     <p className="text-xs text-[#A63624] font-mono">{errors.form}</p>
                   )}
 
-                  {/* 5. One Send Enquiry Button */}
-                  <div className="pt-2">
+                  {/* Row 4: One Send Enquiry Button (Pill with Circular Send Icon as in Mockup) */}
+                  <div className="pt-3 flex justify-end">
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl bg-[#183626] hover:bg-[#142E20] text-[#FAF7F2] border border-[#C5A059]/30 text-xs font-mono font-bold uppercase tracking-[0.2em] shadow-[0_4px_16px_rgba(24,54,38,0.15)] hover:shadow-[0_6px_20px_rgba(24,54,38,0.25)] transition-all hover:scale-[1.01] active:scale-[0.98] cursor-pointer disabled:opacity-50"
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-3.5 rounded-full bg-[#183626] hover:bg-[#122A1E] text-[#FAF7F2] border border-[#C5A059]/40 text-xs font-mono font-bold uppercase tracking-[0.18em] shadow-[0_4px_16px_rgba(24,54,38,0.18)] hover:shadow-[0_6px_22px_rgba(24,54,38,0.28)] transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer disabled:opacity-50"
                     >
                       {isSubmitting ? (
                         <span>Sending Enquiry...</span>
                       ) : (
                         <>
                           <span>Send Enquiry</span>
-                          <Send className="w-3.5 h-3.5 text-[#C5A059]" />
+                          <div className="w-6 h-6 rounded-full bg-[#FAF7F2]/10 border border-[#C5A059]/50 flex items-center justify-center">
+                            <Send className="w-3 h-3 text-[#C5A059]" />
+                          </div>
                         </>
                       )}
                     </button>
                   </div>
 
-                  <div className="text-center pt-1">
+                  <div className="text-center sm:text-right pt-1">
                     <span className="text-[11px] text-[#6B8274] font-light">
                       We respect your privacy. Details are used solely to reply to your inquiry.
                     </span>

@@ -20,7 +20,20 @@ import { ArrowRight, ShoppingBag, Sparkles, PhoneCall } from 'lucide-react';
 const COLLECTION_STORAGE_KEY = 'cf_dealer_collection_v1';
 
 export default function App() {
-  const [currentTab, setCurrentTab] = useState<NavigationTab>('home');
+  const [currentTab, setCurrentTab] = useState<NavigationTab>(() => {
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash.replace('#', '') as NavigationTab;
+      if (['home', 'about', 'catalogue', 'material-request', 'collection', 'reach-us'].includes(hash)) {
+        return hash;
+      }
+      const params = new URLSearchParams(window.location.search);
+      const tabParam = params.get('tab') as NavigationTab;
+      if (['home', 'about', 'catalogue', 'material-request', 'collection', 'reach-us'].includes(tabParam)) {
+        return tabParam;
+      }
+    }
+    return 'home';
+  });
   const [catalogueCategory, setCatalogueCategory] = useState<ProductCategory | 'all'>('all');
   const [similarProductForRequest, setSimilarProductForRequest] = useState<Product | null>(null);
   const [initialRequestCategory, setInitialRequestCategory] = useState<MaterialRequestCategory | undefined>(undefined);

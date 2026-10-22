@@ -568,7 +568,8 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
     <div
       role="region"
       aria-label="Interactive 3D Fabric Atelier Studio"
-      className={`relative w-full ${isModal ? 'fixed inset-0 z-[70] bg-[#0B0A09]/98 backdrop-blur-2xl' : 'h-[calc(100vh-80px)] min-h-[650px] bg-[#0D0C0B]'} text-white flex flex-col overflow-hidden select-none`}
+      style={isModal ? { position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 9999 } : undefined}
+      className={`${isModal ? 'fixed inset-0 z-[9999] w-screen h-screen bg-[#0B0A09]/98 backdrop-blur-2xl' : 'relative w-full h-[calc(100vh-80px)] min-h-[650px] bg-[#0D0C0B]'} text-white flex flex-col overflow-hidden select-none`}
     >
       {/* Top Header Bar */}
       <header className="relative z-20 flex items-center justify-between px-4 sm:px-6 py-2.5 border-b border-[#262420] bg-[#141311]/95 backdrop-blur-md shrink-0">

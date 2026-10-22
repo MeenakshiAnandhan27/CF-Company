@@ -537,31 +537,23 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
       />
 
       {/* ========================================================
-          10. 360° FABRIC STUDIO & TURNTABLE INSPECTOR
+          10. 360° FABRIC ATELIER STUDIO (15 REAL FABRIC TEXTURES)
           ======================================================== */}
-      {/* ========================================================
-          11. FIREFLY 3D FABRIC STUDIO (15 REAL FABRIC TEXTURES)
-          ======================================================== */}
-      {isFireflyViewerOpen && (
+      {isViewer360Open && (
         <FireflyFabric3DViewer
           isModal={true}
-          onBack={() => setIsFireflyViewerOpen(false)}
+          initialMaterial={viewer360Material}
+          onBack={() => {
+            setIsViewer360Open(false);
+            setViewer360Material(null);
+          }}
           onEnquire={(f) => {
-            setIsFireflyViewerOpen(false);
+            setIsViewer360Open(false);
+            setViewer360Material(null);
             onEnquire(getProductForFireflyFabric(f));
           }}
         />
       )}
-
-      <FabricViewer360
-        isOpen={isViewer360Open}
-        initialMaterial={viewer360Material}
-        onClose={() => {
-          setIsViewer360Open(false);
-          setViewer360Material(null);
-        }}
-        onEnquire={handleEnquireMaterial}
-      />
     </div>
   );
 };

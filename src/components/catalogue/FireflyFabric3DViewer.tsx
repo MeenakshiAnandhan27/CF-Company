@@ -19,21 +19,36 @@ import {
   CheckCircle2,
   Maximize2,
 } from 'lucide-react';
-import { FIREFLY_FABRICS, FireflyFabricItem } from '../../data/fireflyFabricsData.ts';
+import { FIREFLY_FABRICS, FireflyFabricItem, findMatchingFireflyIndex } from '../../data/fireflyFabricsData.ts';
 
 interface FireflyFabric3DViewerProps {
   onBack?: () => void;
   onEnquire?: (fabric: FireflyFabricItem) => void;
   isModal?: boolean;
+  initialMaterial?: { id?: string; name?: string; subcategory?: string } | null;
+  initialFabricId?: string;
 }
 
 export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
   onBack,
   onEnquire,
   isModal = false,
+  initialMaterial,
+  initialFabricId,
 }) => {
-  // Active Fabric Selection
-  const [selectedFabricIndex, setSelectedFabricIndex] = useState<number>(0);
+  // Active Fabric Selection — intelligently pre-select matching fabric from initialMaterial or ID
+  const [selectedFabricIndex, setSelectedFabricIndex] = useState<number>(() => {
+    const query = initialFabricId || initialMaterial?.name || initialMaterial?.id;
+    return findMatchingFireflyIndex(query);
+  });
+
+  // Keep selected fabric in sync if initialMaterial or initialFabricId changes
+  useEffect(() => {
+    const query = initialFabricId || initialMaterial?.name || initialMaterial?.id;
+    if (query) {
+      setSelectedFabricIndex(findMatchingFireflyIndex(query));
+    }
+  }, [initialMaterial, initialFabricId]);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [activeCategory, setActiveCategory] = useState<string>('All');
 
@@ -256,7 +271,7 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
     shadowMesh.rotation.x = -Math.PI / 2;
     shadowMesh.position.y = -1.5;
     shadowMesh.receiveShadow = true;
-    turntableGroup.add(shadowMesh);
+    scene.add(shadowMesh);
 
     // 6. Fabric Physical Material & Mesh
     const initialFab = FIREFLY_FABRICS[0];
@@ -359,8 +374,16 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
 
     window.addEventListener('resize', handleResize);
 
+    const resizeObserver = new ResizeObserver(() => {
+      handleResize();
+    });
+    if (container) {
+      resizeObserver.observe(container);
+    }
+
     return () => {
       window.removeEventListener('resize', handleResize);
+      resizeObserver.disconnect();
       if (animFrameIdRef.current) {
         cancelAnimationFrame(animFrameIdRef.current);
       }
@@ -545,7 +568,7 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
     <div
       role="region"
       aria-label="Interactive 3D Fabric Atelier Studio"
-      className={`relative w-full ${isModal ? 'fixed inset-0 z-50 bg-[#0B0A09]/98 backdrop-blur-2xl' : 'h-[calc(100vh-80px)] min-h-[650px] bg-[#0D0C0B]'} text-white flex flex-col overflow-hidden select-none`}
+      className={`relative w-full ${isModal ? 'fixed inset-0 z-[70] bg-[#0B0A09]/98 backdrop-blur-2xl' : 'h-[calc(100vh-80px)] min-h-[650px] bg-[#0D0C0B]'} text-white flex flex-col overflow-hidden select-none`}
     >
       {/* Top Header Bar */}
       <header className="relative z-20 flex items-center justify-between px-4 sm:px-6 py-2.5 border-b border-[#262420] bg-[#141311]/95 backdrop-blur-md shrink-0">

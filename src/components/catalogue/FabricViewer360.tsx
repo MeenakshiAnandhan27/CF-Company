@@ -23,6 +23,7 @@ export const FabricViewer360: React.FC<FabricViewer360Props> = ({
   return (
     <FireflyFabric3DViewer
       isModal={true}
+      initialMaterial={initialMaterial}
       onBack={onClose}
       onEnquire={(f: FireflyFabricItem) => {
         if (onEnquire) {

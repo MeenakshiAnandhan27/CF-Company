@@ -376,8 +376,8 @@ const TextureCloseUp: React.FC<{
             <span>{isInCompare ? 'Added to Compare' : 'Compare Material'}</span>
           </button>
 
-          {/* Optional: 360° Studio inspection trigger */}
-          {onOpen360 && fabric4k && (
+          {/* 360° Studio inspection trigger */}
+          {onOpen360 && (
             <button
               type="button"
               onClick={() => onOpen360(material)}

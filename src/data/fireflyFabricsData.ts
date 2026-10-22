@@ -1,4 +1,14 @@
 import { Product } from '../types.ts';
+
+/**
+ * Robust asset URL resolver for local Vite dev server and GitHub Pages / production base paths
+ */
+export function getFireflyAssetUrl(filename: string): string {
+  const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
+  const prefix = base ? `${base}/` : '/';
+  return `${prefix}assets/firefly-fabrics/${filename}`;
+}
+
 export interface FireflyFabricItem {
   id: string;
   name: string;
@@ -26,7 +36,7 @@ export const FIREFLY_FABRICS: FireflyFabricItem[] = [
     name: 'Canvas / Gada Fabric',
     category: 'Natural Fibers',
     filename: 'canvas gada.png',
-    imageUrl: '/assets/firefly-fabrics/canvas gada.png',
+    imageUrl: getFireflyAssetUrl('canvas gada.png'),
     composition: '100% Unbleached Coarse Cotton Yarn',
     weave: 'Heavy Duck / Plain Basket Weave',
     weightGsm: '340 GSM',
@@ -44,7 +54,7 @@ export const FIREFLY_FABRICS: FireflyFabricItem[] = [
     name: 'Checked Woven Fabric',
     category: 'Natural Fibers',
     filename: 'checked fab.png',
-    imageUrl: '/assets/firefly-fabrics/checked fab.png',
+    imageUrl: getFireflyAssetUrl('checked fab.png'),
     composition: '100% Yarn-Dyed Combed Cotton',
     weave: 'Longitudinal & Latitudinal Balanced Check',
     weightGsm: '145 GSM',
@@ -62,7 +72,7 @@ export const FIREFLY_FABRICS: FireflyFabricItem[] = [
     name: 'Cotton Mesh Fabric',
     category: 'Mesh & Knits',
     filename: 'cotton mesh.png',
-    imageUrl: '/assets/firefly-fabrics/cotton mesh.png',
+    imageUrl: getFireflyAssetUrl('cotton mesh.png'),
     composition: '100% Porous Long-Staple Cotton',
     weave: 'Open-Cell Hexagonal Eyelet Knit',
     weightGsm: '160 GSM',
@@ -80,7 +90,7 @@ export const FIREFLY_FABRICS: FireflyFabricItem[] = [
     name: 'Pure Combed Cotton',
     category: 'Natural Fibers',
     filename: 'cotton.png',
-    imageUrl: '/assets/firefly-fabrics/cotton.png',
+    imageUrl: getFireflyAssetUrl('cotton.png'),
     composition: '100% Ring-Spun Combed Cotton',
     weave: '1/1 Balanced Plain Weave',
     weightGsm: '140 GSM',
@@ -98,7 +108,7 @@ export const FIREFLY_FABRICS: FireflyFabricItem[] = [
     name: 'Atelier Specimen Spec',
     category: 'Blends',
     filename: 'Firefly_Gemini Flash.png',
-    imageUrl: '/assets/firefly-fabrics/Firefly_Gemini Flash.png',
+    imageUrl: getFireflyAssetUrl('Firefly_Gemini Flash.png'),
     composition: 'Curated Textile Specimen Studio Blend',
     weave: 'Complex Multilayer Dobby Weave',
     weightGsm: '210 GSM',
@@ -116,7 +126,7 @@ export const FIREFLY_FABRICS: FireflyFabricItem[] = [
     name: 'Brushed Cotton Flannel',
     category: 'Natural Fibers',
     filename: 'flannel.png',
-    imageUrl: '/assets/firefly-fabrics/flannel.png',
+    imageUrl: getFireflyAssetUrl('flannel.png'),
     composition: '100% Heavy Twill Cotton (Double Napped)',
     weave: '2/2 Broken Twill with Wire Brushed Nap',
     weightGsm: '220 GSM',
@@ -134,7 +144,7 @@ export const FIREFLY_FABRICS: FireflyFabricItem[] = [
     name: 'Plush Faux Fur Pile',
     category: 'Synthetics',
     filename: 'fur.png',
-    imageUrl: '/assets/firefly-fabrics/fur.png',
+    imageUrl: getFireflyAssetUrl('fur.png'),
     composition: '100% Acrylic / Polyester Microfiber Tufts',
     weave: 'Tufted Deep Cut-Pile Construction',
     weightGsm: '480 GSM',
@@ -152,7 +162,7 @@ export const FIREFLY_FABRICS: FireflyFabricItem[] = [
     name: 'Natural Belgian Linen',
     category: 'Natural Fibers',
     filename: 'linen.png',
-    imageUrl: '/assets/firefly-fabrics/linen.png',
+    imageUrl: getFireflyAssetUrl('linen.png'),
     composition: '100% Long-Flax European Linen',
     weave: 'Organic Slub Plain Weave',
     weightGsm: '195 GSM',
@@ -170,7 +180,7 @@ export const FIREFLY_FABRICS: FireflyFabricItem[] = [
     name: 'Lycra 4-Way Stretch Mesh',
     category: 'Mesh & Knits',
     filename: 'Lycra mesh fab.png',
-    imageUrl: '/assets/firefly-fabrics/Lycra mesh fab.png',
+    imageUrl: getFireflyAssetUrl('Lycra mesh fab.png'),
     composition: '82% Polyamide Microfiber, 18% Elastane',
     weave: '4-Way Stretch Warp-Knit Tricot Net',
     weightGsm: '175 GSM',
@@ -188,7 +198,7 @@ export const FIREFLY_FABRICS: FireflyFabricItem[] = [
     name: 'Classic Plain Weave',
     category: 'Natural Fibers',
     filename: 'plain.png',
-    imageUrl: '/assets/firefly-fabrics/plain.png',
+    imageUrl: getFireflyAssetUrl('plain.png'),
     composition: '100% Pure Carded & Combed Cotton',
     weave: '1/1 Balanced Interlaced Plain Weave',
     weightGsm: '130 GSM',
@@ -206,7 +216,7 @@ export const FIREFLY_FABRICS: FireflyFabricItem[] = [
     name: 'Poly-Cotton Blended Fabric',
     category: 'Blends',
     filename: 'poly-cotton blended fabric.png',
-    imageUrl: '/assets/firefly-fabrics/poly-cotton blended fabric.png',
+    imageUrl: getFireflyAssetUrl('poly-cotton blended fabric.png'),
     composition: '65% Polyester, 35% Combed Cotton',
     weave: 'Fine Combed Blended Twill',
     weightGsm: '185 GSM',
@@ -224,7 +234,7 @@ export const FIREFLY_FABRICS: FireflyFabricItem[] = [
     name: 'Athletic Polyester Mesh',
     category: 'Mesh & Knits',
     filename: 'Polyster mesh fab.png',
-    imageUrl: '/assets/firefly-fabrics/Polyster mesh fab.png',
+    imageUrl: getFireflyAssetUrl('Polyster mesh fab.png'),
     composition: '100% High-Tenacity Polyester Filament',
     weave: 'Honeycomb Perforated Sports Eyelet',
     weightGsm: '150 GSM',
@@ -242,7 +252,7 @@ export const FIREFLY_FABRICS: FireflyFabricItem[] = [
     name: 'High-Tenacity Polyester',
     category: 'Synthetics',
     filename: 'polyster.png',
-    imageUrl: '/assets/firefly-fabrics/polyster.png',
+    imageUrl: getFireflyAssetUrl('polyster.png'),
     composition: '100% Continuous Filament Polyester',
     weave: 'Tightly Packed Filament Plain Weave',
     weightGsm: '165 GSM',
@@ -262,7 +272,7 @@ export const FIREFLY_FABRICS: FireflyFabricItem[] = [
     name: 'Traditional Putta Fabric',
     category: 'Natural Fibers',
     filename: 'Putta Fabric.png',
-    imageUrl: '/assets/firefly-fabrics/Putta Fabric.png',
+    imageUrl: getFireflyAssetUrl('Putta Fabric.png'),
     composition: '100% Traditional Handloom Cotton Yarn',
     weave: 'Artisanal Raised Rib & Corded Texture Weave',
     weightGsm: '235 GSM',
@@ -280,7 +290,7 @@ export const FIREFLY_FABRICS: FireflyFabricItem[] = [
     name: 'Royal Plush Velvet',
     category: 'Synthetics',
     filename: 'velvet.png',
-    imageUrl: '/assets/firefly-fabrics/velvet.png',
+    imageUrl: getFireflyAssetUrl('velvet.png'),
     composition: '92% Polyester Microfiber, 8% Spandex Backing',
     weave: 'Warp Cut-Pile Sheared Velvet',
     weightGsm: '320 GSM',
@@ -294,6 +304,88 @@ export const FIREFLY_FABRICS: FireflyFabricItem[] = [
     description: 'Extravagant sheared cut-pile textile with anisotropic light play, deep color absorption when viewed directly, and luminous golden glow under grazing angles.',
   },
 ];
+
+/**
+ * Intelligent matcher from any Catalogue material (name or id) to the most accurate Firefly fabric index (0 to 14)
+ */
+export function findMatchingFireflyIndex(query?: string | null): number {
+  if (!query) return 0;
+  const q = query.toLowerCase().trim();
+
+  // 1. Direct ID match
+  const idIdx = FIREFLY_FABRICS.findIndex((f) => f.id.toLowerCase() === q);
+  if (idIdx !== -1) return idIdx;
+
+  // 2. Specific exact keywords
+  if (q.includes('cotton mesh')) {
+    const idx = FIREFLY_FABRICS.findIndex((f) => f.id === 'ff-cotton-mesh');
+    if (idx !== -1) return idx;
+  }
+  if (q.includes('lycra mesh')) {
+    const idx = FIREFLY_FABRICS.findIndex((f) => f.id === 'ff-lycra-mesh');
+    if (idx !== -1) return idx;
+  }
+  if (q.includes('poly-cotton') || q.includes('poly cotton') || q.includes('blended')) {
+    const idx = FIREFLY_FABRICS.findIndex((f) => f.id === 'ff-poly-cotton');
+    if (idx !== -1) return idx;
+  }
+  if (q.includes('canvas') || q.includes('gada') || q.includes('twill') || q.includes('drill') || q.includes('duck')) {
+    const idx = FIREFLY_FABRICS.findIndex((f) => f.id === 'ff-canvas-gada');
+    if (idx !== -1) return idx;
+  }
+  if (q.includes('check')) {
+    const idx = FIREFLY_FABRICS.findIndex((f) => f.id === 'ff-checked');
+    if (idx !== -1) return idx;
+  }
+  if (q.includes('cotton')) {
+    const idx = FIREFLY_FABRICS.findIndex((f) => f.id === 'ff-cotton-combed');
+    if (idx !== -1) return idx;
+  }
+  if (q.includes('velvet')) {
+    const idx = FIREFLY_FABRICS.findIndex((f) => f.id === 'ff-velvet');
+    if (idx !== -1) return idx;
+  }
+  if (q.includes('linen') || q.includes('chambray')) {
+    const idx = FIREFLY_FABRICS.findIndex((f) => f.id === 'ff-linen');
+    if (idx !== -1) return idx;
+  }
+  if (q.includes('flannel')) {
+    const idx = FIREFLY_FABRICS.findIndex((f) => f.id === 'ff-flannel');
+    if (idx !== -1) return idx;
+  }
+  if (q.includes('fur')) {
+    const idx = FIREFLY_FABRICS.findIndex((f) => f.id === 'ff-fur');
+    if (idx !== -1) return idx;
+  }
+  if (q.includes('putta')) {
+    const idx = FIREFLY_FABRICS.findIndex((f) => f.id === 'ff-putta');
+    if (idx !== -1) return idx;
+  }
+  if (q.includes('mesh')) {
+    const idx = FIREFLY_FABRICS.findIndex((f) => f.id === 'ff-polyester-mesh');
+    if (idx !== -1) return idx;
+  }
+  if (q.includes('poly') || q.includes('satin') || q.includes('taffeta') || q.includes('chiffon')) {
+    const idx = FIREFLY_FABRICS.findIndex((f) => f.id === 'ff-polyester');
+    if (idx !== -1) return idx;
+  }
+  if (q.includes('plain') || q.includes('stripes') || q.includes('seersucker')) {
+    const idx = FIREFLY_FABRICS.findIndex((f) => f.id === 'ff-plain');
+    if (idx !== -1) return idx;
+  }
+  if (q.includes('gemini') || q.includes('atelier')) {
+    const idx = FIREFLY_FABRICS.findIndex((f) => f.id === 'ff-showcase');
+    if (idx !== -1) return idx;
+  }
+
+  // 3. Substring matching
+  const nameIdx = FIREFLY_FABRICS.findIndex(
+    (f) => f.name.toLowerCase().includes(q) || q.includes(f.name.toLowerCase())
+  );
+  if (nameIdx !== -1) return nameIdx;
+
+  return 0;
+}
 
 /**
  * Convert FireflyFabricItem to compliant Product object for enquiry

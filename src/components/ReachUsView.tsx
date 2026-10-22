@@ -5,14 +5,13 @@ import {
   Mail,
   MapPin,
   Clock,
-  Send,
+  ArrowRight,
+  ArrowUpRight,
   CheckCircle2,
   ExternalLink,
   Copy,
   Check,
   RotateCcw,
-  User,
-  MessageSquare,
 } from 'lucide-react';
 
 interface ReachUsViewProps {
@@ -57,7 +56,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
     }
   };
 
-  // Form validation: Name & Phone/WhatsApp are required
+  // Form validation: Name, Phone/WhatsApp, and Message are required
   const validateForm = () => {
     const errs: Record<string, string> = {};
     if (!formData.name.trim() || formData.name.trim().length < 2) {
@@ -71,6 +70,9 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
       !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())
     ) {
       errs.email = 'Please enter a valid email address, or leave it blank.';
+    }
+    if (!formData.message.trim() || formData.message.trim().length < 4) {
+      errs.message = 'Please provide details about your requirements.';
     }
     setErrors(errs);
     return Object.keys(errs).length === 0;
@@ -92,7 +94,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
         name: formData.name.trim(),
         phone: formData.phone.trim(),
         email: formData.email.trim() || undefined,
-        message: formData.message.trim() || undefined,
+        message: formData.message.trim(),
         submittedAt: timestamp,
       };
 
@@ -117,110 +119,97 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
   // WhatsApp link for success state
   const getWhatsAppEnquiryUrl = () => {
     const text =
-      `*New Enquiry — Classic Fashions*\n` +
+      `*New Requirement — Classic Fashions*\n` +
       `• *Name:* ${formData.name.trim()}\n` +
       `• *Phone/WhatsApp:* ${formData.phone.trim()}\n` +
       (formData.email.trim() ? `• *Email:* ${formData.email.trim()}\n` : '') +
-      (formData.message.trim() ? `• *Message:* ${formData.message.trim()}\n` : '') +
+      `• *Requirement:* ${formData.message.trim()}\n` +
       (referenceCode ? `• *Reference:* ${referenceCode}\n` : '');
 
     return `https://wa.me/${VERIFIED_PHONE_RAW}?text=${encodeURIComponent(text)}`;
   };
 
   return (
-    <div className="bg-[#FAF7F2] text-[#183626] min-h-screen pb-24 font-sans selection:bg-[#C5A059]/30 selection:text-[#183626]">
+    <div className="bg-[#FAF7F2] text-[#242422] min-h-screen pb-28 font-sans selection:bg-[#C5A059]/25 selection:text-[#142E20]">
       {/* ========================================================================= */}
-      {/* 1. SPACIOUS, CENTERED HEADER: “Let’s Get in Touch”                        */}
+      {/* 2. HERO SECTION: Spacious, Centered with Italic Accent                     */}
       {/* ========================================================================= */}
-      <section className="pt-16 sm:pt-20 lg:pt-24 pb-12 sm:pb-16 text-center border-b border-[#E8E2D6]/80">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 space-y-4">
-          <span className="inline-flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.28em] text-[#B8934A] font-semibold">
-            CLASSIC FASHIONS · TIRUPPUR
+      <section className="pt-20 sm:pt-24 lg:pt-32 pb-14 sm:pb-20 text-center px-4 sm:px-6">
+        <div className="max-w-2xl mx-auto space-y-3.5">
+          <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.28em] text-[#B8934A] font-semibold block">
+            CLASSIC FASHIONS · REACH US
           </span>
 
-          <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-medium tracking-tight text-[#142E20] leading-[1.15]">
-            Let’s Get in Touch
+          <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-normal tracking-tight text-[#142E20] leading-[1.15]">
+            Let’s Get <span className="italic font-serif text-[#C5A059]">in</span> Touch
           </h1>
 
-          <div className="w-12 h-px bg-[#C5A059] mx-auto opacity-70" />
+          <div className="w-10 h-px bg-[#C5A059]/60 mx-auto" />
 
-          <p className="text-sm sm:text-base text-[#3A5344] max-w-xl mx-auto leading-relaxed font-light">
-            We are here to assist with your fabric sourcing, garment trims, wholesale material inquiries, and sample requirements. Reach out to our team in Tiruppur.
+          <p className="text-sm sm:text-base text-[#52524E] font-normal leading-relaxed max-w-lg mx-auto pt-1">
+            Have a question or a business requirement? We’re here to help.
           </p>
         </div>
       </section>
 
       {/* ========================================================================= */}
-      {/* 2. CLEAN TWO-COLUMN LAYOUT: CONTACT DETAILS (LEFT) & ENQUIRY FORM (RIGHT)  */}
+      {/* 3. MAIN LAYOUT: Balanced Two-Column (Contact Details & Enquiry Form)       */}
       {/* ========================================================================= */}
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 sm:mt-16">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           
           {/* ─────────────────────────────────────────────────────────────────────── */}
-          {/* LEFT COLUMN: CONTACT DETAILS (Matched to Reference Mockup) (~44% width)  */}
+          {/* LEFT — CONTACT DETAILS (4 Clean Rows with Outline Icons & Dividers)      */}
           {/* ─────────────────────────────────────────────────────────────────────── */}
-          <div className="lg:col-span-5 space-y-6">
-            <div className="bg-white border border-[#E6DFD3] rounded-[28px] p-6 sm:p-8 shadow-[0_8px_30px_rgba(20,46,32,0.03)] space-y-5">
+          <div className="lg:col-span-5">
+            <div className="bg-white border border-[#E8E2D8] rounded-2xl p-7 sm:p-9 lg:p-10 shadow-[0_2px_16px_rgba(20,46,32,0.02)] space-y-7">
               
-              <div className="pb-3 border-b border-[#EFEBE1]">
-                <span className="text-[10px] font-mono uppercase tracking-[0.22em] text-[#B8934A] font-bold block mb-1">
-                  GET IN TOUCH
+              <div className="pb-4 border-b border-[#EFEBE3]">
+                <span className="text-[10px] font-mono uppercase tracking-[0.22em] text-[#B8934A] font-semibold block mb-1">
+                  OFFICIAL CONTACTS
                 </span>
-                <h2 className="font-serif text-2xl sm:text-3xl font-medium text-[#142E20] tracking-tight">
-                  Let’s Connect
+                <h2 className="font-serif text-2xl font-normal text-[#142E20] tracking-tight">
+                  Tiruppur Mill &amp; Atelier Desk
                 </h2>
               </div>
 
-              {/* 1. Our Studio Tile with Miniature 3D Building */}
-              <div className="bg-[#FAF8F5] border border-[#E8E2D6] rounded-2xl p-4 sm:p-5 flex items-start justify-between gap-3 group hover:border-[#C5A059]/60 transition-all">
-                <div className="flex items-start gap-3.5 flex-1 min-w-0">
-                  <div className="w-10 h-10 rounded-full bg-[#183626]/8 border border-[#C5A059]/40 flex items-center justify-center shrink-0 mt-0.5 text-[#142E20]">
-                    <MapPin className="w-4 h-4 text-[#C5A059]" />
+              <div className="space-y-6">
+                
+                {/* 1. Business Address with Google Maps link */}
+                <div className="flex items-start gap-4 pb-6 border-b border-[#EFEBE3]">
+                  <div className="w-9 h-9 rounded-lg border border-[#E5DFD4] bg-[#FAF8F5] flex items-center justify-center shrink-0 text-[#142E20] mt-0.5">
+                    <MapPin className="w-4 h-4 text-[#B8934A] stroke-[1.5]" />
                   </div>
-                  <div className="space-y-1 min-w-0 flex-1">
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#B8934A] font-bold block">
-                      OUR STUDIO
+                  <div className="space-y-1.5 flex-1 min-w-0">
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#73736E] font-semibold block">
+                      BUSINESS ADDRESS
                     </span>
-                    <p className="text-xs sm:text-sm text-[#274232] leading-relaxed">
+                    <p className="text-sm text-[#242422] leading-relaxed">
                       {businessConfig.addressLine1},<br />
                       {businessConfig.addressLine2},<br />
-                      {businessConfig.city}, {businessConfig.state} – {businessConfig.pincode}
+                      {businessConfig.city}, {businessConfig.state} – {businessConfig.pincode}, India
                     </p>
                     <a
                       href={mapsSearchUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-[11px] font-mono text-[#B8934A] hover:text-[#142E20] pt-1 transition-colors"
+                      className="inline-flex items-center gap-1 text-xs font-mono text-[#B8934A] hover:text-[#142E20] transition-colors pt-1 group"
                     >
                       <span>View on Google Maps</span>
-                      <ExternalLink className="w-3 h-3" />
+                      <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                     </a>
                   </div>
                 </div>
 
-                {/* 3D Miniature Studio Building from Reference Mockup */}
-                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border border-[#DDD5C7] bg-[#EDE6DC] shrink-0 shadow-xs">
-                  <img
-                    src="/assets/reach-us/card-studio-building.jpg"
-                    alt="Classic Fashions Studio Building"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    onError={(e) => {
-                      (e.currentTarget as HTMLElement).style.display = 'none';
-                    }}
-                  />
-                </div>
-              </div>
-
-              {/* 2. Call Our Team Tile with Miniature Vintage Phone */}
-              <div className="bg-[#FAF8F5] border border-[#E8E2D6] rounded-2xl p-4 sm:p-5 flex items-start justify-between gap-3 group hover:border-[#C5A059]/60 transition-all">
-                <div className="flex items-start gap-3.5 flex-1 min-w-0">
-                  <div className="w-10 h-10 rounded-full bg-[#183626]/8 border border-[#C5A059]/40 flex items-center justify-center shrink-0 mt-0.5 text-[#142E20]">
-                    <Phone className="w-4 h-4 text-[#C5A059]" />
+                {/* 2. Phone / WhatsApp with working contact links */}
+                <div className="flex items-start gap-4 pb-6 border-b border-[#EFEBE3]">
+                  <div className="w-9 h-9 rounded-lg border border-[#E5DFD4] bg-[#FAF8F5] flex items-center justify-center shrink-0 text-[#142E20] mt-0.5">
+                    <Phone className="w-4 h-4 text-[#B8934A] stroke-[1.5]" />
                   </div>
-                  <div className="space-y-1 min-w-0 flex-1">
+                  <div className="space-y-1.5 flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-mono uppercase tracking-widest text-[#B8934A] font-bold block">
-                        CALL OUR TEAM
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-[#73736E] font-semibold">
+                        PHONE / WHATSAPP
                       </span>
                       <button
                         type="button"
@@ -230,8 +219,8 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
                       >
                         {copiedPhone ? (
                           <>
-                            <Check className="w-3 h-3 text-[#183626]" />
-                            <span className="text-[#183626]">Copied</span>
+                            <Check className="w-3 h-3 text-[#142E20]" />
+                            <span className="text-[#142E20]">Copied</span>
                           </>
                         ) : (
                           <>
@@ -244,20 +233,17 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
 
                     <a
                       href={`tel:${VERIFIED_PHONE}`}
-                      className="font-mono text-sm sm:text-base font-bold text-[#142E20] hover:text-[#C5A059] transition-colors block truncate"
+                      className="font-mono text-base font-semibold text-[#142E20] hover:text-[#B8934A] transition-colors block"
                     >
                       {VERIFIED_PHONE}
                     </a>
-                    <span className="text-[11px] text-[#526B5C] block">
-                      Direct Wholesale Desk
-                    </span>
 
-                    <div className="flex items-center gap-2 pt-1.5">
+                    <div className="flex items-center gap-3 pt-1">
                       <a
                         href={`tel:${VERIFIED_PHONE}`}
-                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white hover:bg-[#F2ECE2] border border-[#DDD5C7] text-[11px] font-mono text-[#142E20] transition-colors"
+                        className="inline-flex items-center gap-1 px-3 py-1 rounded-md bg-[#FAF8F5] hover:bg-[#F2ECE2] border border-[#E2DBD0] text-xs font-mono text-[#142E20] transition-colors"
                       >
-                        <Phone className="w-3 h-3 text-[#C5A059]" />
+                        <Phone className="w-3 h-3 text-[#B8934A]" />
                         <span>Call</span>
                       </a>
                       <a
@@ -266,38 +252,24 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
                         )}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white hover:bg-[#F2ECE2] border border-[#DDD5C7] text-[11px] font-mono text-[#183626] font-medium transition-colors"
+                        className="inline-flex items-center gap-1 px-3 py-1 rounded-md bg-[#FAF8F5] hover:bg-[#F2ECE2] border border-[#E2DBD0] text-xs font-mono text-[#142E20] transition-colors"
                       >
                         <span>WhatsApp</span>
-                        <ExternalLink className="w-3 h-3 text-[#C5A059]" />
+                        <ExternalLink className="w-3 h-3 text-[#B8934A]" />
                       </a>
                     </div>
                   </div>
                 </div>
 
-                {/* 3D Miniature Vintage Phone from Reference Mockup */}
-                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border border-[#DDD5C7] bg-[#EDE6DC] shrink-0 shadow-xs">
-                  <img
-                    src="/assets/reach-us/card-vintage-phone.jpg"
-                    alt="Call Classic Fashions"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    onError={(e) => {
-                      (e.currentTarget as HTMLElement).style.display = 'none';
-                    }}
-                  />
-                </div>
-              </div>
-
-              {/* 3. Business Enquiries Tile with Miniature Wax Envelope */}
-              <div className="bg-[#FAF8F5] border border-[#E8E2D6] rounded-2xl p-4 sm:p-5 flex items-start justify-between gap-3 group hover:border-[#C5A059]/60 transition-all">
-                <div className="flex items-start gap-3.5 flex-1 min-w-0">
-                  <div className="w-10 h-10 rounded-full bg-[#183626]/8 border border-[#C5A059]/40 flex items-center justify-center shrink-0 mt-0.5 text-[#142E20]">
-                    <Mail className="w-4 h-4 text-[#C5A059]" />
+                {/* 3. Business Email with working email link */}
+                <div className="flex items-start gap-4 pb-6 border-b border-[#EFEBE3]">
+                  <div className="w-9 h-9 rounded-lg border border-[#E5DFD4] bg-[#FAF8F5] flex items-center justify-center shrink-0 text-[#142E20] mt-0.5">
+                    <Mail className="w-4 h-4 text-[#B8934A] stroke-[1.5]" />
                   </div>
-                  <div className="space-y-1 min-w-0 flex-1">
+                  <div className="space-y-1.5 flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-mono uppercase tracking-widest text-[#B8934A] font-bold block">
-                        BUSINESS ENQUIRIES
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-[#73736E] font-semibold">
+                        BUSINESS EMAIL
                       </span>
                       <button
                         type="button"
@@ -307,8 +279,8 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
                       >
                         {copiedEmail ? (
                           <>
-                            <Check className="w-3 h-3 text-[#183626]" />
-                            <span className="text-[#183626]">Copied</span>
+                            <Check className="w-3 h-3 text-[#142E20]" />
+                            <span className="text-[#142E20]">Copied</span>
                           </>
                         ) : (
                           <>
@@ -321,121 +293,92 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
 
                     <a
                       href={`mailto:${VERIFIED_EMAIL}`}
-                      className="font-mono text-xs sm:text-sm font-semibold text-[#142E20] hover:text-[#C5A059] transition-colors block truncate"
+                      className="font-mono text-sm sm:text-[15px] font-medium text-[#142E20] hover:text-[#B8934A] transition-colors block truncate"
                     >
                       {VERIFIED_EMAIL}
                     </a>
-                    <span className="text-[11px] text-[#526B5C] block">
-                      We reply within 24 hours
-                    </span>
 
-                    <div className="pt-1.5">
+                    <div className="pt-0.5">
                       <a
                         href={`mailto:${VERIFIED_EMAIL}?subject=${encodeURIComponent(
                           'Sourcing Inquiry — Classic Fashions'
                         )}`}
-                        className="inline-flex items-center gap-1.5 text-[11px] font-mono text-[#B8934A] hover:text-[#142E20] transition-colors"
+                        className="inline-flex items-center gap-1 text-xs font-mono text-[#B8934A] hover:text-[#142E20] transition-colors group"
                       >
-                        <span>Send Direct Mail</span>
-                        <ExternalLink className="w-3 h-3" />
+                        <span>Send Direct Email</span>
+                        <ArrowUpRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                       </a>
                     </div>
                   </div>
                 </div>
 
-                {/* 3D Miniature Wax-Sealed Envelope from Reference Mockup */}
-                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border border-[#DDD5C7] bg-[#EDE6DC] shrink-0 shadow-xs">
-                  <img
-                    src="/assets/reach-us/card-wax-envelope.jpg"
-                    alt="Email Classic Fashions"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    onError={(e) => {
-                      (e.currentTarget as HTMLElement).style.display = 'none';
-                    }}
-                  />
-                </div>
-              </div>
-
-              {/* 4. Working Hours Tile (Required by Prompt) */}
-              <div className="bg-[#FAF8F5] border border-[#E8E2D6] rounded-2xl p-4 sm:p-5 flex items-start gap-3.5 group hover:border-[#C5A059]/60 transition-all">
-                <div className="w-10 h-10 rounded-full bg-[#183626]/8 border border-[#C5A059]/40 flex items-center justify-center shrink-0 mt-0.5 text-[#142E20]">
-                  <Clock className="w-4 h-4 text-[#C5A059]" />
-                </div>
-                <div className="space-y-1 flex-1">
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#B8934A] font-bold block">
-                    WORKING HOURS
-                  </span>
-                  <div className="text-xs sm:text-sm text-[#274232] space-y-1">
-                    <div className="flex items-center justify-between">
-                      <span>Monday – Saturday</span>
-                      <span className="font-mono text-xs font-semibold text-[#142E20]">9:30 AM – 7:30 PM IST</span>
-                    </div>
-                    <div className="flex items-center justify-between text-[#6B8274] text-xs">
-                      <span>Sunday</span>
-                      <span className="font-mono text-[11px]">Closed</span>
+                {/* 4. Working Hours */}
+                <div className="flex items-start gap-4">
+                  <div className="w-9 h-9 rounded-lg border border-[#E5DFD4] bg-[#FAF8F5] flex items-center justify-center shrink-0 text-[#142E20] mt-0.5">
+                    <Clock className="w-4 h-4 text-[#B8934A] stroke-[1.5]" />
+                  </div>
+                  <div className="space-y-1.5 flex-1 min-w-0">
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#73736E] font-semibold block">
+                      WORKING HOURS
+                    </span>
+                    <div className="text-sm text-[#242422] space-y-1">
+                      <div className="flex items-center justify-between">
+                        <span>Monday – Saturday</span>
+                        <span className="font-mono text-xs font-medium text-[#142E20]">9:30 AM – 7:30 PM IST</span>
+                      </div>
+                      <div className="flex items-center justify-between text-xs text-[#73736E]">
+                        <span>Sunday</span>
+                        <span className="font-mono text-[11px]">Closed</span>
+                      </div>
                     </div>
                   </div>
                 </div>
+
               </div>
 
             </div>
           </div>
 
           {/* ─────────────────────────────────────────────────────────────────────── */}
-          {/* RIGHT COLUMN: SIMPLE ENQUIRY FORM (Matched to Reference Mockup) (~56%)  */}
+          {/* RIGHT — ENQUIRY FORM: Clean, Lightly Bordered Panel                     */}
           {/* ─────────────────────────────────────────────────────────────────────── */}
           <div className="lg:col-span-7">
-            <div className="bg-white border border-[#E6DFD3] rounded-[28px] p-6 sm:p-9 lg:p-10 shadow-[0_8px_30px_rgba(20,46,32,0.03)] space-y-6 relative overflow-hidden">
+            <div className="bg-white border border-[#E8E2D8] rounded-2xl p-7 sm:p-9 lg:p-10 shadow-[0_2px_16px_rgba(20,46,32,0.02)] space-y-6">
               
-              {/* Header with Title and "We are here to help you!" Script Note */}
-              <div className="flex items-start justify-between gap-4 pb-4 border-b border-[#EFEBE1]">
-                <div>
-                  <h3 className="font-serif text-2xl sm:text-3xl font-medium text-[#142E20] tracking-tight">
-                    Send Us an Enquiry
-                  </h3>
-                  <p className="text-xs text-[#526B5C] mt-1">
-                    Share your requirements below and our textile sourcing desk will respond promptly.
-                  </p>
-                </div>
-
-                {/* Hand-drawn Script Touch from Reference Mockup */}
-                <div className="hidden sm:flex flex-col items-end text-right select-none pt-1">
-                  <span
-                    className="font-serif italic text-sm text-[#B8934A] tracking-wide"
-                    style={{ fontFamily: 'Georgia, serif' }}
-                  >
-                    We are here to help you!
-                  </span>
-                  <span className="text-base text-[#C5A059] leading-none -rotate-12 mt-0.5">
-                    ⤷
-                  </span>
-                </div>
+              {/* Header */}
+              <div className="space-y-1 pb-4 border-b border-[#EFEBE3]">
+                <h3 className="font-serif text-2xl sm:text-3xl font-normal text-[#142E20] tracking-tight">
+                  Share Your Requirements
+                </h3>
+                <p className="text-xs sm:text-sm text-[#5C5C57] leading-relaxed">
+                  Tell us what you need, and our team will get back to you.
+                </p>
               </div>
 
               {isSubmitted ? (
-                /* Success State */
+                /* Success Confirmation State */
                 <div className="py-8 text-center space-y-5 animate-in fade-in duration-300">
-                  <div className="w-14 h-14 rounded-full bg-[#FAF7F2] text-[#142E20] border border-[#C5A059]/40 flex items-center justify-center mx-auto">
-                    <CheckCircle2 className="w-7 h-7 text-[#183626]" />
+                  <div className="w-12 h-12 rounded-full bg-[#FAF8F5] text-[#142E20] border border-[#C5A059]/40 flex items-center justify-center mx-auto">
+                    <CheckCircle2 className="w-6 h-6 text-[#142E20]" />
                   </div>
 
                   <div className="space-y-1.5">
-                    <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#B8934A] font-bold block">
-                      ENQUIRY RECEIVED
+                    <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#B8934A] font-semibold block">
+                      REQUIREMENT RECEIVED
                     </span>
-                    <h4 className="font-serif text-2xl font-medium text-[#142E20]">
+                    <h4 className="font-serif text-2xl font-normal text-[#142E20]">
                       Thank you, {formData.name}
                     </h4>
-                    <p className="text-xs sm:text-sm text-[#3A5344] max-w-md mx-auto leading-relaxed">
-                      Your inquiry has been registered. Our team will reach out to you via {formData.phone}.
+                    <p className="text-xs sm:text-sm text-[#5C5C57] max-w-md mx-auto leading-relaxed">
+                      We have received your requirement. Our Tiruppur sourcing desk will contact you via {formData.phone}.
                     </p>
                   </div>
 
-                  <div className="inline-block bg-[#FAF7F2] border border-[#E6DFD3] rounded-xl px-5 py-2.5">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#6B8274] block">
-                      Reference Number
+                  <div className="inline-block bg-[#FAF8F5] border border-[#E8E2D8] rounded-xl px-5 py-2.5">
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#73736E] block">
+                      Enquiry Reference ID
                     </span>
-                    <span className="font-mono text-base font-bold text-[#142E20]">
+                    <span className="font-mono text-base font-semibold text-[#142E20]">
                       {referenceCode}
                     </span>
                   </div>
@@ -445,7 +388,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
                       href={getWhatsAppEnquiryUrl()}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#183626] hover:bg-[#142E20] text-[#FAF7F2] px-6 py-2.5 rounded-xl text-xs font-mono font-medium tracking-wider transition-colors cursor-pointer shadow-xs"
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#142E20] hover:bg-[#1A3828] text-[#FAF8F5] px-6 py-2.5 rounded-xl text-xs font-mono font-medium tracking-wider transition-colors cursor-pointer"
                     >
                       <span>Share on WhatsApp</span>
                       <ExternalLink className="w-3.5 h-3.5 text-[#C5A059]" />
@@ -463,134 +406,113 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
                         });
                         setReferenceCode('');
                       }}
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl border border-[#DDD5C7] bg-[#FAF7F2] text-xs font-mono text-[#3A5344] hover:text-[#142E20] hover:border-[#142E20] transition-colors cursor-pointer"
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl border border-[#DDD6C8] bg-white text-xs font-mono text-[#5C5C57] hover:text-[#142E20] hover:border-[#142E20] transition-colors cursor-pointer"
                     >
                       <RotateCcw className="w-3.5 h-3.5" />
-                      <span>Send Another Enquiry</span>
+                      <span>Send Another Requirement</span>
                     </button>
                   </div>
                 </div>
               ) : (
-                /* Simple Enquiry Form matching Reference Mockup */
-                <form onSubmit={handleSubmit} className="space-y-4">
+                /* Clean Functional Enquiry Form */
+                <form onSubmit={handleSubmit} className="space-y-5">
                   
-                  {/* Row 1: Name & Phone */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {/* 1. Name (Required) */}
-                    <div>
-                      <label className="block text-[11px] font-mono uppercase tracking-wider text-[#142E20] font-semibold mb-1.5">
-                        NAME <span className="text-[#C5A059]">*</span>
-                      </label>
-                      <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#8A9E92]">
-                          <User className="w-4 h-4" />
-                        </div>
-                        <input
-                          type="text"
-                          required
-                          value={formData.name}
-                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          placeholder="e.g. S. Murugan"
-                          className="w-full pl-10 pr-3.5 py-3 text-sm bg-[#FAF8F5] border border-[#DDD5C7] rounded-xl text-[#142E20] placeholder-[#8A9E92] focus:bg-white focus:outline-none focus:border-[#183626] focus:ring-1 focus:ring-[#183626] transition-all"
-                        />
-                      </div>
-                      {errors.name && (
-                        <p className="text-[11px] text-[#A63624] mt-1 font-mono">{errors.name}</p>
-                      )}
-                    </div>
-
-                    {/* 2. Phone / WhatsApp (Required) */}
-                    <div>
-                      <label className="block text-[11px] font-mono uppercase tracking-wider text-[#142E20] font-semibold mb-1.5">
-                        PHONE / WHATSAPP <span className="text-[#C5A059]">*</span>
-                      </label>
-                      <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#8A9E92]">
-                          <Phone className="w-4 h-4" />
-                        </div>
-                        <input
-                          type="tel"
-                          required
-                          value={formData.phone}
-                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                          placeholder="e.g. 98420 12345"
-                          className="w-full pl-10 pr-3.5 py-3 text-sm bg-[#FAF8F5] border border-[#DDD5C7] rounded-xl text-[#142E20] placeholder-[#8A9E92] focus:bg-white focus:outline-none focus:border-[#183626] focus:ring-1 focus:ring-[#183626] transition-all"
-                        />
-                      </div>
-                      {errors.phone && (
-                        <p className="text-[11px] text-[#A63624] mt-1 font-mono">{errors.phone}</p>
-                      )}
-                    </div>
+                  {/* Name — Required */}
+                  <div>
+                    <label className="block text-[11px] font-mono uppercase tracking-wider text-[#3D3D3A] font-semibold mb-1.5">
+                      Name <span className="text-[#C5A059]">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      placeholder="Your full name"
+                      className="w-full px-4 py-3 text-sm bg-[#FAF8F5] border border-[#E2DBD0] rounded-xl text-[#142E20] placeholder-[#8F8F8A] focus:bg-white focus:outline-none focus:border-[#142E20] focus:ring-1 focus:ring-[#142E20] transition-all"
+                    />
+                    {errors.name && (
+                      <p className="text-[11px] text-[#A63624] mt-1 font-mono">{errors.name}</p>
+                    )}
                   </div>
 
-                  {/* Row 2: Email (Optional) */}
+                  {/* Phone / WhatsApp — Required */}
                   <div>
-                    <label className="block text-[11px] font-mono uppercase tracking-wider text-[#142E20] font-semibold mb-1.5">
-                      EMAIL <span className="font-normal text-[10px] text-[#6B8274]">(Optional)</span>
+                    <label className="block text-[11px] font-mono uppercase tracking-wider text-[#3D3D3A] font-semibold mb-1.5">
+                      Phone / WhatsApp <span className="text-[#C5A059]">*</span>
                     </label>
-                    <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#8A9E92]">
-                        <Mail className="w-4 h-4" />
-                      </div>
-                      <input
-                        type="email"
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        placeholder="buyer@domain.com"
-                        className="w-full pl-10 pr-3.5 py-3 text-sm bg-[#FAF8F5] border border-[#DDD5C7] rounded-xl text-[#142E20] placeholder-[#8A9E92] focus:bg-white focus:outline-none focus:border-[#183626] focus:ring-1 focus:ring-[#183626] transition-all"
-                      />
-                    </div>
+                    <input
+                      type="tel"
+                      required
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      placeholder="+91 98420 12345"
+                      className="w-full px-4 py-3 text-sm bg-[#FAF8F5] border border-[#E2DBD0] rounded-xl text-[#142E20] placeholder-[#8F8F8A] focus:bg-white focus:outline-none focus:border-[#142E20] focus:ring-1 focus:ring-[#142E20] transition-all"
+                    />
+                    {errors.phone && (
+                      <p className="text-[11px] text-[#A63624] mt-1 font-mono">{errors.phone}</p>
+                    )}
+                  </div>
+
+                  {/* Email — Optional */}
+                  <div>
+                    <label className="block text-[11px] font-mono uppercase tracking-wider text-[#3D3D3A] font-semibold mb-1.5">
+                      Email <span className="font-normal text-[10px] text-[#73736E]">(Optional)</span>
+                    </label>
+                    <input
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      placeholder="name@company.com"
+                      className="w-full px-4 py-3 text-sm bg-[#FAF8F5] border border-[#E2DBD0] rounded-xl text-[#142E20] placeholder-[#8F8F8A] focus:bg-white focus:outline-none focus:border-[#142E20] focus:ring-1 focus:ring-[#142E20] transition-all"
+                    />
                     {errors.email && (
                       <p className="text-[11px] text-[#A63624] mt-1 font-mono">{errors.email}</p>
                     )}
                   </div>
 
-                  {/* Row 3: Message */}
+                  {/* Message — Required */}
                   <div>
-                    <label className="block text-[11px] font-mono uppercase tracking-wider text-[#142E20] font-semibold mb-1.5">
-                      MESSAGE <span className="font-normal text-[10px] text-[#6B8274]">(Optional)</span>
+                    <label className="block text-[11px] font-mono uppercase tracking-wider text-[#3D3D3A] font-semibold mb-1.5">
+                      Message <span className="text-[#C5A059]">*</span>
                     </label>
-                    <div className="relative">
-                      <div className="absolute top-3 left-3.5 pointer-events-none text-[#8A9E92]">
-                        <MessageSquare className="w-4 h-4" />
-                      </div>
-                      <textarea
-                        rows={4}
-                        value={formData.message}
-                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                        placeholder="Tell us about your material needs, specification or any other details..."
-                        className="w-full pl-10 pr-3.5 py-3 text-sm bg-[#FAF8F5] border border-[#DDD5C7] rounded-xl text-[#142E20] placeholder-[#8A9E92] focus:bg-white focus:outline-none focus:border-[#183626] focus:ring-1 focus:ring-[#183626] transition-all resize-none"
-                      />
-                    </div>
+                    <textarea
+                      rows={4}
+                      required
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                      placeholder="Tell us about your fabric type, accessory specifications, volume, or sample requirements..."
+                      className="w-full px-4 py-3 text-sm bg-[#FAF8F5] border border-[#E2DBD0] rounded-xl text-[#142E20] placeholder-[#8F8F8A] focus:bg-white focus:outline-none focus:border-[#142E20] focus:ring-1 focus:ring-[#142E20] transition-all resize-none"
+                    />
+                    {errors.message && (
+                      <p className="text-[11px] text-[#A63624] mt-1 font-mono">{errors.message}</p>
+                    )}
                   </div>
 
                   {errors.form && (
                     <p className="text-xs text-[#A63624] font-mono">{errors.form}</p>
                   )}
 
-                  {/* Row 4: One Send Enquiry Button (Pill with Circular Send Icon as in Mockup) */}
-                  <div className="pt-3 flex justify-end">
+                  {/* One Clear "Send Enquiry" Button (Dark forest-green button with a subtle gold arrow) */}
+                  <div className="pt-2">
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-3.5 rounded-full bg-[#183626] hover:bg-[#122A1E] text-[#FAF7F2] border border-[#C5A059]/40 text-xs font-mono font-bold uppercase tracking-[0.18em] shadow-[0_4px_16px_rgba(24,54,38,0.18)] hover:shadow-[0_6px_22px_rgba(24,54,38,0.28)] transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer disabled:opacity-50"
+                      className="group w-full inline-flex items-center justify-center gap-2.5 py-3.5 px-8 rounded-xl bg-[#142E20] hover:bg-[#1A3828] text-[#FAF8F5] border border-[#C5A059]/40 text-xs font-mono font-semibold uppercase tracking-[0.2em] shadow-xs hover:shadow-md transition-all active:scale-[0.99] cursor-pointer disabled:opacity-50"
                     >
                       {isSubmitting ? (
                         <span>Sending Enquiry...</span>
                       ) : (
                         <>
                           <span>Send Enquiry</span>
-                          <div className="w-6 h-6 rounded-full bg-[#FAF7F2]/10 border border-[#C5A059]/50 flex items-center justify-center">
-                            <Send className="w-3 h-3 text-[#C5A059]" />
-                          </div>
+                          <ArrowRight className="w-3.5 h-3.5 text-[#C5A059] transition-transform group-hover:translate-x-1" />
                         </>
                       )}
                     </button>
                   </div>
 
-                  <div className="text-center sm:text-right pt-1">
-                    <span className="text-[11px] text-[#6B8274] font-light">
-                      We respect your privacy. Details are used solely to reply to your inquiry.
+                  <div className="text-center pt-1">
+                    <span className="text-[11px] text-[#73736E] font-light">
+                      We respect your privacy. Details are used solely to respond to your requirement.
                     </span>
                   </div>
                 </form>

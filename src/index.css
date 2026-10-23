@@ -2,8 +2,6 @@
 
 @theme {
   --font-serif: 'Syne', 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-editorial: 'Playfair Display', 'Cormorant Garamond', 'Marcellus', Georgia, serif;
-  --font-handwritten: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
   --font-display: 'Cinzel', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-luxury: 'Cinzel', Georgia, serif;
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;

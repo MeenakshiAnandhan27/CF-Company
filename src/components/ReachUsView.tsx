@@ -32,7 +32,7 @@ const VERIFIED_PHONE_RAW = '918826415868';
 const VERIFIED_EMAIL = 'material@classicfashions.com';
 const STORAGE_ENQUIRIES_KEY = 'cf_reach_us_enquiries_v1';
 
-// Five Enquiry Categories matching reference image
+// Five Enquiry Categories matching reference structure
 type EnquiryCategoryKey =
   | 'fabric'
   | 'accessories'
@@ -87,7 +87,7 @@ const ENQUIRY_CATEGORIES: EnquiryCategory[] = [
     label: 'Other Enquiry',
     tagline: 'General queries & showroom consultation',
     icon: HelpCircle,
-    promptHeadline: 'How can our Tiruppur sourcing atelier assist you today?',
+    promptHeadline: 'How can our sourcing team assist you today?',
     placeholder: 'e.g. We would like to schedule a visit to your Boyampalayam office to inspect swatch catalogues...',
   },
 ];
@@ -233,7 +233,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
   };
 
   return (
-    <div className="bg-[#FAF7F2] text-[#242422] min-h-screen relative overflow-hidden font-sans selection:bg-[#B8934A]/20 selection:text-[#142E20]">
+    <div className="bg-[#FAF7F2] text-[#181715] min-h-screen relative overflow-hidden font-sans selection:bg-[#B8934A]/20 selection:text-[#181715]">
       {/* ========================================================================= */}
       {/* BACKGROUND DECORATIVE ELEMENTS — Fine Gold Arcs & Subtle Textile Peek     */}
       {/* ========================================================================= */}
@@ -273,21 +273,28 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
       </div>
 
       {/* ========================================================================= */}
-      {/* HERO SECTION — Centered, Generous Proportions, Editorial Accent           */}
+      {/* HERO SECTION — Consistent Website Typography & Single-Line Diamond Motif  */}
       {/* ========================================================================= */}
       <section className="pt-20 sm:pt-28 lg:pt-32 pb-12 sm:pb-16 text-center px-4 sm:px-6 relative z-10">
         <div className="max-w-2xl mx-auto space-y-3.5">
-          <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.3em] text-[#B8934A] font-semibold block">
+          <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.22em] text-[#B8934A] font-semibold block">
             REACH US
           </span>
 
-          <h1 className="font-editorial text-4xl sm:text-5xl lg:text-6xl font-normal tracking-tight text-[#142E20] leading-[1.12]">
-            Let’s Get <span className="italic font-editorial text-[#B8934A]">in</span> Touch
+          <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#142E20] leading-[1.12]">
+            Let’s Get <span className="italic font-serif text-[#B8934A]">in</span> Touch
           </h1>
 
-          <div className="w-12 h-px bg-[#B8934A]/50 mx-auto my-2" />
+          {/* Subtle Single-Line Diamond Motif Divider */}
+          <div className="relative flex items-center justify-center w-full max-w-xs mx-auto my-3.5">
+            <div className="h-[1px] w-20 bg-gradient-to-r from-transparent via-[#B8934A]/50 to-[#B8934A]" />
+            <div className="relative mx-3 flex items-center justify-center">
+              <div className="w-2.5 h-2.5 border border-[#B8934A] rotate-45 shrink-0 shadow-[0_0_8px_rgba(184,147,74,0.3)]" />
+            </div>
+            <div className="h-[1px] w-20 bg-gradient-to-r from-[#B8934A] via-[#B8934A]/50 to-transparent" />
+          </div>
 
-          <p className="text-sm sm:text-base text-[#5C5A55] font-normal leading-relaxed max-w-lg mx-auto">
+          <p className="text-base sm:text-lg text-[#55514B] font-normal leading-relaxed max-w-lg mx-auto">
             Have a question or a business requirement? We’re here to help.
           </p>
         </div>
@@ -303,12 +310,12 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
           {/* LEFT SIDE (5 cols): Large Suspended Contact Panel Layered on Textile  */}
           {/* ═══════════════════════════════════════════════════════════════════════ */}
           <div className="lg:col-span-5 relative pt-10">
-            {/* Suspended Hanging Thread & Gold Ring */}
+            {/* Suspended Hanging Thread & Gold Ring with soft golden glow */}
             <div className="absolute top-0 left-12 sm:left-16 flex flex-col items-center z-20" aria-hidden="true">
-              {/* Subtle gold attachment ring */}
-              <div className="w-4 h-4 rounded-full border-2 border-[#B8934A] bg-[#FAF7F2] ring-4 ring-[#FAF7F2] shadow-xs" />
+              {/* Subtle gold attachment ring with gentle glow */}
+              <div className="w-4 h-4 rounded-full border-2 border-[#B8934A] bg-[#FFFDF9] ring-4 ring-[#FAF7F2] shadow-[0_0_10px_rgba(184,147,74,0.35)]" />
               {/* Fine vertical hanging thread */}
-              <div className="w-px h-10 bg-gradient-to-b from-[#B8934A] to-[#DCD5C8]" />
+              <div className="w-px h-10 bg-gradient-to-b from-[#B8934A] via-[#D4AF37] to-[#DCD5C8]" />
             </div>
 
             {/* Behind Layer: Real Vertical Textile Photograph providing layered fabric depth */}
@@ -324,39 +331,39 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
               <div className="absolute inset-0 bg-[#FAF7F2]/80 backdrop-blur-[2px]" />
             </div>
 
-            {/* Front Panel: Tall elegant ivory panel with softly rounded lower silhouette */}
-            <div className="relative z-10 bg-[#FFFDF9]/95 border border-[#E8E1D5] rounded-2xl rounded-b-[2.6rem] p-6 sm:p-8 shadow-[0_20px_50px_rgba(20,46,32,0.06)] backdrop-blur-xs space-y-6">
+            {/* Front Panel: Tall elegant ivory panel with softly rounded lower silhouette & reference card glow */}
+            <div className="relative z-10 bg-gradient-to-b from-[#FFFDF9] via-[#FAF6EE] to-[#F7F2E8] border border-[#E2D8C3] hover:border-[#C5A059]/60 rounded-2xl rounded-b-[2.6rem] p-6 sm:p-8 shadow-[0_18px_50px_rgba(20,46,32,0.05),0_0_30px_rgba(184,147,74,0.08)] hover:shadow-[0_22px_55px_rgba(20,46,32,0.07),0_0_38px_rgba(184,147,74,0.13)] backdrop-blur-xs space-y-6 transition-all duration-300">
               
               {/* Panel Header */}
               <div className="border-b border-[#F0EBE2] pb-5">
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-[9px] font-mono uppercase tracking-[0.22em] text-[#B8934A] font-semibold">
-                    ATELIER CONTACT DESK
-                  </span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#B8934A]" />
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 border border-[#B8934A] rotate-45 shrink-0 shadow-[0_0_6px_rgba(184,147,74,0.25)]" />
+                    <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.2em] text-[#B8934A] font-semibold">
+                      CONTACT DESK
+                    </span>
+                  </div>
+                  <div className="w-2 h-2 border border-[#B8934A] rotate-45 shrink-0 opacity-40" />
                 </div>
-                <h2 className="font-editorial text-2xl sm:text-[26px] font-normal text-[#142E20] tracking-tight">
+                <h2 className="font-serif text-2xl sm:text-[26px] font-bold text-[#142E20] tracking-tight">
                   We’d Love to Hear from You
                 </h2>
-                <p className="text-xs text-[#6B6862] font-light leading-relaxed mt-1.5">
-                  Direct contact with our Tiruppur material coordinators for fabric swatches, mill schedules, and volume sourcing.
-                </p>
               </div>
 
-              {/* Four Contact Sections with Minimal Circular Outline Icons */}
-              <div className="space-y-5">
+              {/* Four Contact Sections with Minimal Circular Outline Icons and Refined Hover Glow */}
+              <div className="space-y-4">
                 
                 {/* 1. Location */}
-                <div className="group flex items-start gap-4">
-                  <div className="w-9 h-9 rounded-full border border-[#DCD5C8] bg-[#FAF7F2] flex items-center justify-center shrink-0 text-[#B8934A] group-hover:border-[#B8934A] group-hover:scale-105 transition-all">
+                <div className="group p-2.5 rounded-xl border border-transparent hover:border-[#E8DFD0] hover:bg-white/60 hover:shadow-[0_4px_16px_rgba(184,147,74,0.08)] transition-all duration-200 flex items-start gap-3.5">
+                  <div className="w-9 h-9 rounded-full border border-[#D5C9B3] bg-gradient-to-b from-[#FFFDF9] to-[#F5EFE3] flex items-center justify-center shrink-0 text-[#B8934A] group-hover:border-[#B8934A] group-hover:scale-105 group-hover:shadow-[0_0_12px_rgba(184,147,74,0.25)] transition-all">
                     <MapPin className="w-4 h-4 stroke-[1.5]" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <h3 className="font-editorial text-base font-medium text-[#142E20]">Our Location</h3>
+                      <h3 className="font-serif text-base font-semibold text-[#142E20]">Our Location</h3>
                       <span className="text-[9px] font-mono text-[#8C8478] uppercase">TIRUPPUR</span>
                     </div>
-                    <p className="text-xs text-[#5C5A55] leading-relaxed mt-1 font-light">
+                    <p className="text-xs text-[#55514B] leading-relaxed mt-1 font-normal">
                       {businessConfig.addressLine1}, {businessConfig.addressLine2}, {businessConfig.city}, {businessConfig.state} – {businessConfig.pincode}
                     </p>
                     <a
@@ -374,13 +381,13 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
                 <div className="h-px bg-[#F0EBE2]" />
 
                 {/* 2. Phone / WhatsApp */}
-                <div className="group flex items-start gap-4">
-                  <div className="w-9 h-9 rounded-full border border-[#DCD5C8] bg-[#FAF7F2] flex items-center justify-center shrink-0 text-[#B8934A] group-hover:border-[#B8934A] group-hover:scale-105 transition-all">
+                <div className="group p-2.5 rounded-xl border border-transparent hover:border-[#E8DFD0] hover:bg-white/60 hover:shadow-[0_4px_16px_rgba(184,147,74,0.08)] transition-all duration-200 flex items-start gap-3.5">
+                  <div className="w-9 h-9 rounded-full border border-[#D5C9B3] bg-gradient-to-b from-[#FFFDF9] to-[#F5EFE3] flex items-center justify-center shrink-0 text-[#B8934A] group-hover:border-[#B8934A] group-hover:scale-105 group-hover:shadow-[0_0_12px_rgba(184,147,74,0.25)] transition-all">
                     <Phone className="w-4 h-4 stroke-[1.5]" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <h3 className="font-editorial text-base font-medium text-[#142E20]">Call / WhatsApp</h3>
+                      <h3 className="font-serif text-base font-semibold text-[#142E20]">Call / WhatsApp</h3>
                       <button
                         type="button"
                         onClick={() => handleCopy(VERIFIED_PHONE, 'phone')}
@@ -425,13 +432,13 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
                 <div className="h-px bg-[#F0EBE2]" />
 
                 {/* 3. Business Email */}
-                <div className="group flex items-start gap-4">
-                  <div className="w-9 h-9 rounded-full border border-[#DCD5C8] bg-[#FAF7F2] flex items-center justify-center shrink-0 text-[#B8934A] group-hover:border-[#B8934A] group-hover:scale-105 transition-all">
+                <div className="group p-2.5 rounded-xl border border-transparent hover:border-[#E8DFD0] hover:bg-white/60 hover:shadow-[0_4px_16px_rgba(184,147,74,0.08)] transition-all duration-200 flex items-start gap-3.5">
+                  <div className="w-9 h-9 rounded-full border border-[#D5C9B3] bg-gradient-to-b from-[#FFFDF9] to-[#F5EFE3] flex items-center justify-center shrink-0 text-[#B8934A] group-hover:border-[#B8934A] group-hover:scale-105 group-hover:shadow-[0_0_12px_rgba(184,147,74,0.25)] transition-all">
                     <Mail className="w-4 h-4 stroke-[1.5]" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <h3 className="font-editorial text-base font-medium text-[#142E20]">Business Email</h3>
+                      <h3 className="font-serif text-base font-semibold text-[#142E20]">Business Email</h3>
                       <button
                         type="button"
                         onClick={() => handleCopy(VERIFIED_EMAIL, 'email')}
@@ -469,13 +476,13 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
                 <div className="h-px bg-[#F0EBE2]" />
 
                 {/* 4. Working Hours */}
-                <div className="group flex items-start gap-4">
-                  <div className="w-9 h-9 rounded-full border border-[#DCD5C8] bg-[#FAF7F2] flex items-center justify-center shrink-0 text-[#B8934A] group-hover:border-[#B8934A] group-hover:scale-105 transition-all">
+                <div className="group p-2.5 rounded-xl border border-transparent hover:border-[#E8DFD0] hover:bg-white/60 hover:shadow-[0_4px_16px_rgba(184,147,74,0.08)] transition-all duration-200 flex items-start gap-3.5">
+                  <div className="w-9 h-9 rounded-full border border-[#D5C9B3] bg-gradient-to-b from-[#FFFDF9] to-[#F5EFE3] flex items-center justify-center shrink-0 text-[#B8934A] group-hover:border-[#B8934A] group-hover:scale-105 group-hover:shadow-[0_0_12px_rgba(184,147,74,0.25)] transition-all">
                     <Clock className="w-4 h-4 stroke-[1.5]" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-editorial text-base font-medium text-[#142E20]">Working Hours</h3>
-                    <div className="text-xs text-[#5C5A55] space-y-1 mt-1.5">
+                    <h3 className="font-serif text-base font-semibold text-[#142E20]">Working Hours</h3>
+                    <div className="text-xs text-[#55514B] space-y-1 mt-1.5">
                       <div className="flex items-center justify-between">
                         <span>Monday – Saturday</span>
                         <span className="font-mono text-[11px] font-semibold text-[#142E20]">9:30 AM – 7:30 PM IST</span>
@@ -490,10 +497,11 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
 
               </div>
 
-              {/* Handwritten-Style Brand Phrase in Lower-Left Area */}
-              <div className="pt-4 border-t border-[#F0EBE2]">
-                <p className="font-editorial italic text-xs text-[#827D73] leading-relaxed">
-                  “Fine textiles woven with integrity & craft — Boyampalayam, Tiruppur”
+              {/* Exact Tagline with Subtle Muted-Gold Single-Line Diamond Motif & Warm Tone */}
+              <div className="pt-4 border-t border-[#F0EBE2] flex items-center gap-2.5">
+                <div className="w-2 h-2 border border-[#B8934A] rotate-45 shrink-0 opacity-80 shadow-[0_0_6px_rgba(184,147,74,0.3)]" />
+                <p className="font-serif italic text-xs sm:text-[13px] text-[#B8934A] leading-relaxed tracking-wide">
+                  “Fine textiles woven with integrity &amp; craft.”
                 </p>
               </div>
 
@@ -507,18 +515,21 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
             
             {/* Section Header */}
             <div className="space-y-2">
-              <span className="text-[10px] font-mono uppercase tracking-[0.24em] text-[#B8934A] font-semibold block">
-                ATELIER ENQUIRY
-              </span>
-              <h2 className="font-editorial text-3xl sm:text-4xl font-normal text-[#142E20] tracking-tight">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 border border-[#B8934A] rotate-45 shrink-0 shadow-[0_0_6px_rgba(184,147,74,0.25)]" />
+                <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.2em] text-[#B8934A] font-semibold">
+                  ENQUIRY DESK
+                </span>
+              </div>
+              <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#142E20] tracking-tight">
                 Let’s Work Together
               </h2>
-              <p className="text-xs sm:text-sm text-[#5C5A55] leading-relaxed max-w-xl font-light">
+              <p className="text-sm text-[#55514B] leading-relaxed max-w-xl font-normal">
                 Tell us what you need — fabric, accessories, bulk orders or custom development. We’ll get back to you soon.
               </p>
             </div>
 
-            {/* Five Elegant Interactive Enquiry Tiles */}
+            {/* Five Elegant Interactive Enquiry Tiles Styled with Soft Gold Glow & Cream Surfaces */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
               {ENQUIRY_CATEGORIES.map((cat, idx) => {
                 const Icon = cat.icon;
@@ -541,16 +552,16 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
                       isFullWidth ? 'sm:col-span-2' : ''
                     } ${
                       isSelected
-                        ? 'bg-[#FAF6EE] border-[#B8934A] ring-1 ring-[#B8934A]/50 shadow-xs'
-                        : 'bg-white/90 border-[#E8E1D5] hover:border-[#B8934A]/70 hover:bg-[#FAF8F5]'
+                        ? 'bg-gradient-to-b from-[#FAF4E8] via-[#F7EFE0] to-[#F4E9D8] border-[#B8934A] ring-1 ring-[#B8934A]/50 shadow-[0_0_22px_rgba(184,147,74,0.16),0_6px_20px_rgba(20,46,32,0.04)]'
+                        : 'bg-gradient-to-b from-white via-[#FDFBF7] to-[#FAF6EE] border-[#E5DDD0] hover:border-[#C5A059]/80 hover:bg-gradient-to-b hover:from-[#FFFDF9] hover:to-[#FAF3E6] hover:shadow-[0_8px_24px_rgba(184,147,74,0.12)] hover:-translate-y-0.5'
                     }`}
                   >
                     {/* Outline Icon */}
                     <div
-                      className={`w-9 h-9 rounded-lg border flex items-center justify-center shrink-0 transition-colors ${
+                      className={`w-9 h-9 rounded-lg border flex items-center justify-center shrink-0 transition-all ${
                         isSelected
-                          ? 'border-[#B8934A] bg-[#B8934A]/10 text-[#142E20]'
-                          : 'border-[#E2DBD0] bg-[#FAF7F2] text-[#B8934A] group-hover:border-[#B8934A]/60'
+                          ? 'border-[#B8934A] bg-[#B8934A]/15 text-[#142E20] shadow-[0_0_10px_rgba(184,147,74,0.25)]'
+                          : 'border-[#E2DBD0] bg-white text-[#B8934A] group-hover:border-[#B8934A]/70 group-hover:shadow-[0_0_8px_rgba(184,147,74,0.18)]'
                       }`}
                     >
                       <Icon className="w-4 h-4 stroke-[1.5]" />
@@ -560,8 +571,8 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
                         <span
-                          className={`font-editorial text-sm sm:text-base font-normal tracking-tight transition-colors ${
-                            isSelected ? 'text-[#142E20] font-medium' : 'text-[#142E20] group-hover:text-[#B8934A]'
+                          className={`font-serif text-sm sm:text-base font-semibold tracking-tight transition-colors ${
+                            isSelected ? 'text-[#142E20]' : 'text-[#142E20] group-hover:text-[#B8934A]'
                           }`}
                         >
                           {cat.label}
@@ -569,19 +580,19 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
                         <ArrowRight
                           className={`w-3.5 h-3.5 transition-all ${
                             isSelected
-                              ? 'text-[#B8934A] translate-x-0.5'
+                              ? 'text-[#B8934A] translate-x-0.5 drop-shadow-[0_0_4px_rgba(184,147,74,0.4)]'
                               : 'text-[#C5BEB2] opacity-70 group-hover:text-[#B8934A] group-hover:translate-x-1 group-hover:opacity-100'
                           }`}
                         />
                       </div>
-                      <p className="text-[11px] text-[#737068] mt-0.5 font-light leading-snug">
+                      <p className="text-[11px] text-[#737068] mt-0.5 font-normal leading-snug">
                         {cat.tagline}
                       </p>
                     </div>
 
-                    {/* Selected Indicator Edge Stripe */}
+                    {/* Selected Indicator Edge Stripe with Gold Gradient */}
                     {isSelected && (
-                      <div aria-hidden="true" className="absolute top-0 left-0 bottom-0 w-1 bg-[#B8934A]" />
+                      <div aria-hidden="true" className="absolute top-0 left-0 bottom-0 w-1 bg-gradient-to-b from-[#B8934A] via-[#D4AF37] to-[#B8934A] shadow-[0_0_8px_rgba(184,147,74,0.4)]" />
                     )}
                   </button>
                 );
@@ -589,39 +600,40 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
             </div>
 
             {/* ═══════════════════════════════════════════════════════════════════ */}
-            {/* PROGRESSIVE ENQUIRY AREA — Spacious Panel with "Drop us a message"   */}
+            {/* PROGRESSIVE ENQUIRY AREA — Soft Ivory Surface with Faint Gold Edge  */}
             {/* ═══════════════════════════════════════════════════════════════════ */}
-            <div className="bg-[#FFFDF9]/95 border border-[#E8E1D5] rounded-2xl p-6 sm:p-8 shadow-[0_12px_40px_rgba(20,46,32,0.04)] relative overflow-hidden transition-all duration-300">
+            <div className="bg-gradient-to-b from-[#FFFDF9] via-[#FAF7F0] to-[#F7F2E8] border border-[#E2D8C3] hover:border-[#C5A059]/50 rounded-2xl p-6 sm:p-8 shadow-[0_16px_45px_rgba(20,46,32,0.04),0_0_30px_rgba(184,147,74,0.06)] relative overflow-hidden transition-all duration-300">
               
-              {/* Corner Fine Gold Accents */}
-              <div aria-hidden="true" className="absolute top-3 left-3 w-2 h-2 border-t border-l border-[#B8934A]/30" />
-              <div aria-hidden="true" className="absolute top-3 right-3 w-2 h-2 border-t border-r border-[#B8934A]/30" />
-              <div aria-hidden="true" className="absolute bottom-3 left-3 w-2 h-2 border-b border-l border-[#B8934A]/30" />
-              <div aria-hidden="true" className="absolute bottom-3 right-3 w-2 h-2 border-b border-r border-[#B8934A]/30" />
+              {/* Corner Fine Gold Accents with Subtle Warm Glow */}
+              <div aria-hidden="true" className="absolute top-3 left-3 w-2 h-2 border-t border-l border-[#B8934A]/40" />
+              <div aria-hidden="true" className="absolute top-3 right-3 w-2 h-2 border-t border-r border-[#B8934A]/40" />
+              <div aria-hidden="true" className="absolute bottom-3 left-3 w-2 h-2 border-b border-l border-[#B8934A]/40" />
+              <div aria-hidden="true" className="absolute bottom-3 right-3 w-2 h-2 border-b border-r border-[#B8934A]/40" />
 
               {/* --------------------------------------------------------------- */}
-              {/* STATE A: SUBMITTED SUCCESS CONFIRMATION                          */}
+              {/* STATE A: SIMPLIFIED SUBMITTED SUCCESS CONFIRMATION               */}
               {/* --------------------------------------------------------------- */}
               {isSubmitted ? (
                 <div className="text-center py-6 space-y-5 animate-in fade-in duration-300">
-                  <div className="w-12 h-12 rounded-full bg-[#FAF7F2] border border-[#B8934A] flex items-center justify-center mx-auto text-[#142E20]">
+                  <div className="w-12 h-12 rounded-full bg-[#FAF7F2] border border-[#B8934A] shadow-[0_0_14px_rgba(184,147,74,0.25)] flex items-center justify-center mx-auto text-[#142E20]">
                     <CheckCircle2 className="w-6 h-6 text-[#142E20]" />
                   </div>
 
-                  <div className="space-y-1.5">
-                    <span className="text-[10px] font-mono uppercase tracking-[0.22em] text-[#B8934A] font-semibold block">
-                      ENQUIRY CONFIRMED
+                  {/* Concise confirmation matching exact user requirement */}
+                  <div className="space-y-2">
+                    <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#B8934A] font-semibold block">
+                      ENQUIRY RECEIVED
                     </span>
-                    <h3 className="font-editorial text-2xl font-normal text-[#142E20]">
-                      Thank you, {formData.name}
+                    <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#142E20] tracking-tight">
+                      Thank You!
                     </h3>
-                    <p className="text-xs text-[#5C5A55] max-w-md mx-auto leading-relaxed">
-                      We have received your <strong className="text-[#142E20] font-medium">{currentCategory.label}</strong> enquiry. Our Tiruppur team will review your specifications and reach out via <strong className="text-[#142E20] font-medium">{formData.phone}</strong>.
+                    <p className="text-sm text-[#55514B] max-w-md mx-auto leading-relaxed">
+                      We’ve received your enquiry and will be in touch soon.
                     </p>
                   </div>
 
                   {/* Reference code */}
-                  <div className="inline-block bg-[#FAF7F2] border border-[#E6DFD3] rounded-xl px-5 py-2.5">
+                  <div className="inline-block bg-[#FAF7F2] border border-[#E2D8C3] shadow-[0_0_12px_rgba(184,147,74,0.08)] rounded-xl px-5 py-2.5">
                     <span className="text-[9px] font-mono uppercase tracking-wider text-[#737068] block">
                       Reference Code
                     </span>
@@ -635,7 +647,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
                       href={getWhatsAppUrl()}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#142E20] hover:bg-[#1B3B2B] text-[#FAF7F2] px-6 py-3 rounded-xl text-xs font-mono font-medium tracking-wider transition-colors cursor-pointer shadow-xs"
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#142E20] hover:bg-[#1B3B2B] text-[#FAF7F2] px-6 py-3 rounded-xl text-xs font-mono font-medium tracking-wider transition-all cursor-pointer shadow-xs border border-[#B8934A]/50 hover:shadow-[0_6px_22px_rgba(184,147,74,0.26)] active:scale-[0.99]"
                     >
                       <span>Share on WhatsApp</span>
                       <ArrowUpRight className="w-3.5 h-3.5 text-[#B8934A]" />
@@ -644,7 +656,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
                     <button
                       type="button"
                       onClick={handleReset}
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl border border-[#DDD6C8] bg-white text-xs font-mono text-[#5C5A55] hover:text-[#142E20] hover:border-[#142E20] transition-colors cursor-pointer"
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl border border-[#DDD6C8] bg-white text-xs font-mono text-[#55514B] hover:text-[#142E20] hover:border-[#B8934A] hover:shadow-[0_4px_16px_rgba(184,147,74,0.12)] transition-all cursor-pointer"
                     >
                       <RotateCcw className="w-3 h-3" />
                       <span>Submit Another Enquiry</span>
@@ -661,21 +673,21 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
                       <span className="text-[10px] font-mono uppercase tracking-wider text-[#B8934A] font-semibold">
                         SELECTED:
                       </span>
-                      <span className="text-xs font-mono font-semibold text-[#142E20] bg-[#FAF6EE] px-2 py-0.5 rounded border border-[#B8934A]/30">
+                      <span className="text-xs font-mono font-semibold text-[#142E20] bg-white px-2.5 py-0.5 rounded border border-[#B8934A]/40 shadow-[0_0_8px_rgba(184,147,74,0.12)]">
                         {currentCategory.label}
                       </span>
                     </div>
-                    {/* Handwritten-style detail */}
-                    <p className="font-editorial italic text-base sm:text-lg text-[#524F4A] pt-0.5">
+                    {/* Consistent serif italic detail */}
+                    <p className="font-serif italic text-base sm:text-lg text-[#524F4A] pt-0.5">
                       Drop us a message with your requirements...
                     </p>
                   </div>
 
-                  {/* Prominent Forest-Green Open Enquiry Button */}
+                  {/* Forest-Green Open Enquiry Button with Restrained Hover Glow */}
                   <button
                     type="button"
                     onClick={() => setIsEnquiryExpanded(true)}
-                    className="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-[#142E20] hover:bg-[#1B3B2B] text-[#FAF7F2] text-xs font-mono font-medium uppercase tracking-[0.16em] shadow-sm hover:shadow transition-all active:scale-[0.99] cursor-pointer shrink-0"
+                    className="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-[#142E20] hover:bg-[#1B3B2B] text-[#FAF7F2] text-xs font-mono font-semibold uppercase tracking-[0.16em] border border-[#B8934A]/40 hover:border-[#D4AF37] hover:shadow-[0_6px_22px_rgba(184,147,74,0.26)] transition-all active:scale-[0.99] cursor-pointer shrink-0"
                   >
                     <span>Open Enquiry</span>
                     <ArrowRight className="w-3.5 h-3.5 text-[#B8934A]" />
@@ -693,11 +705,11 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
                         <span className="text-[10px] font-mono uppercase tracking-wider text-[#B8934A] font-semibold">
                           ENQUIRY FOR:
                         </span>
-                        <span className="text-xs font-mono font-semibold text-[#142E20] bg-[#FAF6EE] px-2 py-0.5 rounded border border-[#B8934A]/30">
+                        <span className="text-xs font-mono font-semibold text-[#142E20] bg-white px-2.5 py-0.5 rounded border border-[#B8934A]/40 shadow-[0_0_8px_rgba(184,147,74,0.12)]">
                           {currentCategory.label}
                         </span>
                       </div>
-                      <p className="font-editorial italic text-sm text-[#737068] mt-0.5">
+                      <p className="font-serif italic text-sm text-[#737068] mt-0.5">
                         Drop us a message — our coordinators reply within hours
                       </p>
                     </div>
@@ -713,7 +725,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
                             key={step}
                             className={`h-1.5 rounded-full transition-all duration-300 ${
                               step === stepperStep
-                                ? 'w-5 bg-[#B8934A]'
+                                ? 'w-5 bg-[#B8934A] shadow-[0_0_6px_rgba(184,147,74,0.4)]'
                                 : step < stepperStep
                                 ? 'w-1.5 bg-[#142E20]'
                                 : 'w-1.5 bg-[#E2DBD0]'
@@ -730,7 +742,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
                   {stepperStep === 1 && (
                     <div className="space-y-4 animate-in fade-in duration-200">
                       <div>
-                        <h4 className="font-editorial text-base font-medium text-[#142E20]">
+                        <h4 className="font-serif text-base font-semibold text-[#142E20]">
                           {currentCategory.promptHeadline}
                         </h4>
                         <p className="text-xs text-[#737068] mt-0.5">
@@ -748,7 +760,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
                             if (fieldErrors.message) setFieldErrors({});
                           }}
                           placeholder={currentCategory.placeholder}
-                          className="w-full px-4 py-3 text-xs sm:text-sm bg-[#FAF8F5] border border-[#E2DBD0] rounded-xl text-[#142E20] placeholder-[#99948A] focus:bg-white focus:outline-none focus:border-[#142E20] focus:ring-1 focus:ring-[#142E20] transition-all resize-none leading-relaxed"
+                          className="w-full px-4 py-3 text-xs sm:text-sm bg-[#FAF8F5] border border-[#E0D7C6] rounded-xl text-[#181715] placeholder-[#99948A] focus:bg-white focus:outline-none focus:border-[#B8934A] focus:ring-1 focus:ring-[#B8934A]/40 focus:shadow-[0_0_14px_rgba(184,147,74,0.12)] transition-all resize-none leading-relaxed font-sans"
                         />
                         {fieldErrors.message && (
                           <p className="text-[11px] text-[#A63624] font-mono">{fieldErrors.message}</p>
@@ -775,7 +787,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
                               setStepperStep(2);
                             }
                           }}
-                          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#142E20] hover:bg-[#1B3B2B] text-[#FAF7F2] text-xs font-mono font-medium uppercase tracking-wider transition-colors cursor-pointer"
+                          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#142E20] hover:bg-[#1B3B2B] text-[#FAF7F2] text-xs font-mono font-semibold uppercase tracking-wider border border-[#B8934A]/40 hover:border-[#D4AF37] hover:shadow-[0_6px_22px_rgba(184,147,74,0.26)] transition-all active:scale-[0.99] cursor-pointer"
                         >
                           <span>Continue to Contact</span>
                           <ArrowRight className="w-3.5 h-3.5 text-[#B8934A]" />
@@ -790,7 +802,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
                   {stepperStep === 2 && (
                     <div className="space-y-4 animate-in fade-in duration-200">
                       <div>
-                        <h4 className="font-editorial text-base font-medium text-[#142E20]">
+                        <h4 className="font-serif text-base font-semibold text-[#142E20]">
                           Where should we send your quotation or swatch response?
                         </h4>
                         <p className="text-xs text-[#737068] mt-0.5">
@@ -813,7 +825,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
                               if (fieldErrors.name) setFieldErrors((prev) => ({ ...prev, name: '' }));
                             }}
                             placeholder="e.g. Anandhan / Murugan"
-                            className="w-full px-4 py-2.5 text-xs sm:text-sm bg-[#FAF8F5] border border-[#E2DBD0] rounded-xl text-[#142E20] placeholder-[#99948A] focus:bg-white focus:outline-none focus:border-[#142E20] focus:ring-1 focus:ring-[#142E20] transition-all"
+                            className="w-full px-4 py-2.5 text-xs sm:text-sm bg-[#FAF8F5] border border-[#E0D7C6] rounded-xl text-[#181715] placeholder-[#99948A] focus:bg-white focus:outline-none focus:border-[#B8934A] focus:ring-1 focus:ring-[#B8934A]/40 focus:shadow-[0_0_14px_rgba(184,147,74,0.12)] transition-all font-sans"
                           />
                           {fieldErrors.name && (
                             <p className="text-[11px] text-[#A63624] mt-1 font-mono">{fieldErrors.name}</p>
@@ -834,7 +846,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
                               if (fieldErrors.phone) setFieldErrors((prev) => ({ ...prev, phone: '' }));
                             }}
                             placeholder="e.g. +91 98420 12345"
-                            className="w-full px-4 py-2.5 text-xs sm:text-sm bg-[#FAF8F5] border border-[#E2DBD0] rounded-xl text-[#142E20] placeholder-[#99948A] focus:bg-white focus:outline-none focus:border-[#142E20] focus:ring-1 focus:ring-[#142E20] transition-all"
+                            className="w-full px-4 py-2.5 text-xs sm:text-sm bg-[#FAF8F5] border border-[#E0D7C6] rounded-xl text-[#181715] placeholder-[#99948A] focus:bg-white focus:outline-none focus:border-[#B8934A] focus:ring-1 focus:ring-[#B8934A]/40 focus:shadow-[0_0_14px_rgba(184,147,74,0.12)] transition-all font-sans"
                           />
                           {fieldErrors.phone && (
                             <p className="text-[11px] text-[#A63624] mt-1 font-mono">{fieldErrors.phone}</p>
@@ -854,7 +866,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
                               if (fieldErrors.email) setFieldErrors((prev) => ({ ...prev, email: '' }));
                             }}
                             placeholder="e.g. sourcing@garments.com"
-                            className="w-full px-4 py-2.5 text-xs sm:text-sm bg-[#FAF8F5] border border-[#E2DBD0] rounded-xl text-[#142E20] placeholder-[#99948A] focus:bg-white focus:outline-none focus:border-[#142E20] focus:ring-1 focus:ring-[#142E20] transition-all"
+                            className="w-full px-4 py-2.5 text-xs sm:text-sm bg-[#FAF8F5] border border-[#E0D7C6] rounded-xl text-[#181715] placeholder-[#99948A] focus:bg-white focus:outline-none focus:border-[#B8934A] focus:ring-1 focus:ring-[#B8934A]/40 focus:shadow-[0_0_14px_rgba(184,147,74,0.12)] transition-all font-sans"
                           />
                           {fieldErrors.email && (
                             <p className="text-[11px] text-[#A63624] mt-1 font-mono">{fieldErrors.email}</p>
@@ -878,7 +890,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
                               setStepperStep(3);
                             }
                           }}
-                          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#142E20] hover:bg-[#1B3B2B] text-[#FAF7F2] text-xs font-mono font-medium uppercase tracking-wider transition-colors cursor-pointer"
+                          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#142E20] hover:bg-[#1B3B2B] text-[#FAF7F2] text-xs font-mono font-semibold uppercase tracking-wider border border-[#B8934A]/40 hover:border-[#D4AF37] hover:shadow-[0_6px_22px_rgba(184,147,74,0.26)] transition-all active:scale-[0.99] cursor-pointer"
                         >
                           <span>Review Enquiry</span>
                           <ArrowRight className="w-3.5 h-3.5 text-[#B8934A]" />
@@ -893,27 +905,27 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
                   {stepperStep === 3 && (
                     <div className="space-y-5 animate-in fade-in duration-200">
                       <div>
-                        <h4 className="font-editorial text-base font-medium text-[#142E20]">
+                        <h4 className="font-serif text-base font-semibold text-[#142E20]">
                           Confirm Your Enquiry Details
                         </h4>
                         <p className="text-xs text-[#737068] mt-0.5">
-                          Review your summary before dispatching to our Tiruppur team.
+                          Review your summary before dispatching to our sourcing team.
                         </p>
                       </div>
 
-                      {/* Concise Summary Slip */}
-                      <div className="bg-[#FAF7F2] border border-[#E6DFD3] rounded-xl p-4 sm:p-5 space-y-3.5 text-xs">
+                      {/* Concise Summary Slip with Soft Card Lighting */}
+                      <div className="bg-[#FAF7F2] border border-[#E2D8C3] shadow-[0_0_14px_rgba(184,147,74,0.06)] rounded-xl p-4 sm:p-5 space-y-3.5 text-xs">
                         {/* Category */}
                         <div className="flex items-center justify-between pb-2.5 border-b border-[#ECE5D8]">
                           <div>
                             <span className="text-[10px] font-mono uppercase tracking-wider text-[#737068] block">
                               Enquiry Topic
                             </span>
-                            <span className="font-editorial text-sm font-medium text-[#142E20] mt-0.5 block">
+                            <span className="font-serif text-sm font-semibold text-[#142E20] mt-0.5 block">
                               {currentCategory.label}
                             </span>
                           </div>
-                          <span className="text-[10px] font-mono text-[#B8934A]">Preselected</span>
+                          <span className="text-[10px] font-mono text-[#B8934A] font-medium">Preselected</span>
                         </div>
 
                         {/* Message */}
@@ -922,7 +934,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
                             <span className="text-[10px] font-mono uppercase tracking-wider text-[#737068] block">
                               Requirement Details
                             </span>
-                            <p className="font-light italic text-[#33312E] mt-1 leading-relaxed">
+                            <p className="font-normal italic text-[#33312E] mt-1 leading-relaxed">
                               "{formData.message}"
                             </p>
                           </div>
@@ -965,13 +977,13 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
                         <p className="text-xs text-[#A63624] font-mono">{fieldErrors.form}</p>
                       )}
 
-                      {/* Single Prominent Action: Send Enquiry */}
+                      {/* Single Action: Send Enquiry with Restrained Golden Glow */}
                       <div className="pt-2">
                         <button
                           type="button"
                           disabled={isSubmitting}
                           onClick={() => handleSubmitEnquiry()}
-                          className="group w-full inline-flex items-center justify-center gap-2.5 py-3.5 px-6 rounded-xl bg-[#142E20] hover:bg-[#1B3B2B] text-[#FAF7F2] border border-[#B8934A]/40 text-xs font-mono font-medium uppercase tracking-[0.2em] shadow-sm hover:shadow transition-all active:scale-[0.99] cursor-pointer disabled:opacity-50"
+                          className="group w-full inline-flex items-center justify-center gap-2.5 py-3.5 px-6 rounded-xl bg-[#142E20] hover:bg-[#1B3B2B] text-[#FAF7F2] border border-[#B8934A]/40 hover:border-[#D4AF37] hover:shadow-[0_6px_22px_rgba(184,147,74,0.26)] text-xs font-mono font-semibold uppercase tracking-[0.2em] shadow-sm transition-all active:scale-[0.99] cursor-pointer disabled:opacity-50"
                         >
                           {isSubmitting ? (
                             <span>Sending Your Enquiry...</span>
@@ -997,21 +1009,23 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
             <div className="pt-2">
               <div className="relative my-6 text-center">
                 <div className="border-t border-[#E8E1D5] absolute inset-x-0 top-1/2" />
-                <span className="relative bg-[#FAF7F2] px-3 font-mono text-[11px] text-[#B8934A] tracking-widest font-semibold uppercase">
+                <span className="relative bg-[#FAF7F2] px-3 font-mono text-[11px] text-[#B8934A] tracking-widest font-semibold uppercase inline-flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 border border-[#B8934A] rotate-45 inline-block shadow-[0_0_4px_rgba(184,147,74,0.25)]" />
                   OR
+                  <span className="w-1.5 h-1.5 border border-[#B8934A] rotate-45 inline-block shadow-[0_0_4px_rgba(184,147,74,0.25)]" />
                 </span>
               </div>
 
-              {/* Three Minimal Direct Contact Options */}
+              {/* Three Minimal Direct Contact Options with Soft Glow on Hover */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 
                 {/* 1. Call / WhatsApp */}
                 <a
                   href={`tel:${VERIFIED_PHONE}`}
-                  className="p-3.5 rounded-xl border border-[#E8E1D5] bg-white/80 hover:bg-[#FAF8F5] hover:border-[#B8934A]/60 transition-all text-center group block"
+                  className="p-3.5 rounded-xl border border-[#E2D8C3] bg-gradient-to-b from-white via-[#FDFBF7] to-[#FAF6EE] hover:from-[#FFFDF9] hover:to-[#FAF3E6] hover:border-[#B8934A]/70 hover:shadow-[0_6px_20px_rgba(184,147,74,0.12)] hover:-translate-y-0.5 transition-all text-center group block"
                 >
-                  <Phone className="w-4 h-4 text-[#B8934A] mx-auto mb-1.5 group-hover:scale-110 transition-transform" />
-                  <span className="font-editorial text-xs font-medium text-[#142E20] block">
+                  <Phone className="w-4 h-4 text-[#B8934A] mx-auto mb-1.5 group-hover:scale-110 group-hover:drop-shadow-[0_0_6px_rgba(184,147,74,0.35)] transition-all" />
+                  <span className="font-serif text-xs font-semibold text-[#142E20] block">
                     Call / WhatsApp
                   </span>
                   <span className="font-mono text-[11px] text-[#737068] block mt-0.5">
@@ -1022,10 +1036,10 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
                 {/* 2. Email Us */}
                 <a
                   href={`mailto:${VERIFIED_EMAIL}?subject=${encodeURIComponent('Material Enquiry — Classic Fashions')}`}
-                  className="p-3.5 rounded-xl border border-[#E8E1D5] bg-white/80 hover:bg-[#FAF8F5] hover:border-[#B8934A]/60 transition-all text-center group block"
+                  className="p-3.5 rounded-xl border border-[#E2D8C3] bg-gradient-to-b from-white via-[#FDFBF7] to-[#FAF6EE] hover:from-[#FFFDF9] hover:to-[#FAF3E6] hover:border-[#B8934A]/70 hover:shadow-[0_6px_20px_rgba(184,147,74,0.12)] hover:-translate-y-0.5 transition-all text-center group block"
                 >
-                  <Mail className="w-4 h-4 text-[#B8934A] mx-auto mb-1.5 group-hover:scale-110 transition-transform" />
-                  <span className="font-editorial text-xs font-medium text-[#142E20] block">
+                  <Mail className="w-4 h-4 text-[#B8934A] mx-auto mb-1.5 group-hover:scale-110 group-hover:drop-shadow-[0_0_6px_rgba(184,147,74,0.35)] transition-all" />
+                  <span className="font-serif text-xs font-semibold text-[#142E20] block">
                     Email Us
                   </span>
                   <span className="font-mono text-[11px] text-[#737068] block mt-0.5 truncate px-1">
@@ -1038,10 +1052,10 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
                   href={mapsSearchUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-3.5 rounded-xl border border-[#E8E1D5] bg-white/80 hover:bg-[#FAF8F5] hover:border-[#B8934A]/60 transition-all text-center group block"
+                  className="p-3.5 rounded-xl border border-[#E2D8C3] bg-gradient-to-b from-white via-[#FDFBF7] to-[#FAF6EE] hover:from-[#FFFDF9] hover:to-[#FAF3E6] hover:border-[#B8934A]/70 hover:shadow-[0_6px_20px_rgba(184,147,74,0.12)] hover:-translate-y-0.5 transition-all text-center group block"
                 >
-                  <MapPin className="w-4 h-4 text-[#B8934A] mx-auto mb-1.5 group-hover:scale-110 transition-transform" />
-                  <span className="font-editorial text-xs font-medium text-[#142E20] block">
+                  <MapPin className="w-4 h-4 text-[#B8934A] mx-auto mb-1.5 group-hover:scale-110 group-hover:drop-shadow-[0_0_6px_rgba(184,147,74,0.35)] transition-all" />
+                  <span className="font-serif text-xs font-semibold text-[#142E20] block">
                     Find Us
                   </span>
                   <span className="font-mono text-[11px] text-[#737068] block mt-0.5">
@@ -1060,20 +1074,20 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
       {/* ========================================================================= */}
       {/* 7. BOTTOM BRAND STRIP — Slim Footer Strip with Minimal Outline Icons      */}
       {/* ========================================================================= */}
-      <footer className="border-t border-[#E8E1D5] bg-[#FAF8F5]/90 py-8 px-4 sm:px-6 relative z-10">
+      <footer className="border-t border-[#E8E1D5] bg-gradient-to-b from-[#FAF8F5]/90 to-[#F5EFE3]/80 py-8 px-4 sm:px-6 relative z-10">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-center text-center md:text-left">
             
             {/* Item 1 */}
             <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-3.5">
-              <div className="w-10 h-10 rounded-full border border-[#DCD5C8] bg-white flex items-center justify-center text-[#B8934A] shrink-0">
+              <div className="w-10 h-10 rounded-full border border-[#D5C9B3] bg-white flex items-center justify-center text-[#B8934A] shrink-0 shadow-[0_2px_10px_rgba(184,147,74,0.08)]">
                 <ShieldCheck className="w-5 h-5 stroke-[1.5]" />
               </div>
               <div>
-                <h4 className="font-editorial text-sm font-medium text-[#142E20]">
+                <h4 className="font-serif text-sm font-semibold text-[#142E20]">
                   Premium Textiles
                 </h4>
-                <p className="text-xs text-[#737068] font-light mt-0.5">
+                <p className="text-xs text-[#737068] font-normal mt-0.5">
                   World-class quality
                 </p>
               </div>
@@ -1081,14 +1095,14 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
 
             {/* Item 2 */}
             <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-3.5 border-y md:border-y-0 md:border-x border-[#EAE4D8] py-4 md:py-0 md:px-6">
-              <div className="w-10 h-10 rounded-full border border-[#DCD5C8] bg-white flex items-center justify-center text-[#B8934A] shrink-0">
+              <div className="w-10 h-10 rounded-full border border-[#D5C9B3] bg-white flex items-center justify-center text-[#B8934A] shrink-0 shadow-[0_2px_10px_rgba(184,147,74,0.08)]">
                 <Award className="w-5 h-5 stroke-[1.5]" />
               </div>
               <div>
-                <h4 className="font-editorial text-sm font-medium text-[#142E20]">
+                <h4 className="font-serif text-sm font-semibold text-[#142E20]">
                   Trusted Partner
                 </h4>
-                <p className="text-xs text-[#737068] font-light mt-0.5">
+                <p className="text-xs text-[#737068] font-normal mt-0.5">
                   For your business
                 </p>
               </div>
@@ -1096,14 +1110,14 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
 
             {/* Item 3 */}
             <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-3.5">
-              <div className="w-10 h-10 rounded-full border border-[#DCD5C8] bg-white flex items-center justify-center text-[#B8934A] shrink-0">
+              <div className="w-10 h-10 rounded-full border border-[#D5C9B3] bg-white flex items-center justify-center text-[#B8934A] shrink-0 shadow-[0_2px_10px_rgba(184,147,74,0.08)]">
                 <Clock className="w-5 h-5 stroke-[1.5]" />
               </div>
               <div>
-                <h4 className="font-editorial text-sm font-medium text-[#142E20]">
+                <h4 className="font-serif text-sm font-semibold text-[#142E20]">
                   Reliable Supply
                 </h4>
-                <p className="text-xs text-[#737068] font-light mt-0.5">
+                <p className="text-xs text-[#737068] font-normal mt-0.5">
                   Always on time
                 </p>
               </div>

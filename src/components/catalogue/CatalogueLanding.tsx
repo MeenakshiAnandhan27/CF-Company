@@ -385,32 +385,6 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
                 },
               ]}
             />
-          ) : activeFilter === 'GARMENT ACCESSORIES' && !searchQuery ? (
-            /* Specific ACCESSORIES View */
-            <MaterialGrid
-              title="Garment Accessories"
-              subtitle="Precision zippers, buttons and drawcord tipping components for apparel assembly."
-              materials={filteredMaterials}
-              onSelectMaterial={setSelectedMaterial}
-              onOpen360={handleOpen360Viewer}
-              subsections={[
-                {
-                  title: 'Zippers',
-                  description: 'Heavy interlocking metal tooth chains and molded lightweight vislon zippers.',
-                  filterSection: 'ZIPPERS',
-                },
-                {
-                  title: 'Buttons',
-                  description: 'Stamped metal, press snaps, cut crystal glass, resin plastic, turned hardwood, mother-of-pearl and natural shell.',
-                  filterSection: 'BUTTONS',
-                },
-                {
-                  title: 'Tipping Components',
-                  description: 'Thermal acetate film tipping and solid crimped brass drawcord ends.',
-                  filterSection: 'TIPPING',
-                },
-              ]}
-            />
           ) : (
             /* Search results or filtered single-category */
             <MaterialGrid

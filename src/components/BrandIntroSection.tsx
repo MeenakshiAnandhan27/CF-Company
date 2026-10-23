@@ -40,7 +40,7 @@ export const BrandIntroSection: React.FC<BrandIntroSectionProps> = ({
         className="absolute inset-0 pointer-events-none z-0"
         style={{
           background:
-            'radial-gradient(ellipse 80% 70% at 50% 38%, rgba(255, 253, 249, 0.95) 0%, rgba(248, 245, 238, 0.85) 60%, rgba(244, 239, 230, 0.95) 100%)',
+            'radial-gradient(ellipse 95% 90% at 50% 45%, #FAF8F5 0%, #F8F5EE 100%)',
         }}
       />
 

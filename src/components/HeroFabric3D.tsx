@@ -3,6 +3,7 @@ import * as THREE from 'three';
 
 /**
  * Procedural open-weave combed linen/cotton canvas bump texture
+ * Captures tactile warp and weft yarn structures
  */
 function createWovenFabricTexture(): THREE.CanvasTexture {
   const size = 512;
@@ -26,7 +27,7 @@ function createWovenFabricTexture(): THREE.CanvasTexture {
         ctx.fillStyle = `rgb(${val},${val},${val})`;
         ctx.fillRect(x, y, step, step);
 
-        // Micro-fiber weave highlight
+        // Fine thread fiber highlight
         ctx.strokeStyle = 'rgba(255,255,255,0.09)';
         ctx.lineWidth = 1;
         ctx.beginPath();
@@ -52,6 +53,7 @@ function createWovenFabricTexture(): THREE.CanvasTexture {
 
 /**
  * Procedural liquid silk satin micro-grain texture
+ * Captures smooth directional sheen of high-luster satin
  */
 function createSatinSilkTexture(): THREE.CanvasTexture {
   const size = 512;
@@ -96,7 +98,8 @@ export const HeroFabric3D: React.FC = () => {
 
     // 1. Scene, Camera, Renderer
     const scene = new THREE.Scene();
-    scene.background = null;
+    // Warm ivory solid background matches exact site ambience (#FAF8F5)
+    scene.background = new THREE.Color(0xfaf8f5);
 
     const camera = new THREE.PerspectiveCamera(36, width / height, 0.1, 100);
     camera.position.set(0, 0, 9.5);
@@ -105,7 +108,7 @@ export const HeroFabric3D: React.FC = () => {
     try {
       renderer = new THREE.WebGLRenderer({
         antialias: true,
-        alpha: true,
+        alpha: false,
         powerPreference: 'high-performance',
       });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -120,202 +123,119 @@ export const HeroFabric3D: React.FC = () => {
     }
 
     // 2. Studio Lighting: Luxury Luminous Ambient & Warm Highlights
-    // Soft warm ambient base calibrated so unlit cloth seamlessly matches ivory background
-    const hemiLight = new THREE.HemisphereLight(0xfffef9, 0xf6f0e6, 1.6);
+    // Soft luminous ambient base
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0xf6f0e4, 1.25);
     scene.add(hemiLight);
 
     // Warm Key Light highlighting silk sheen and woven crests
-    const keyLight = new THREE.DirectionalLight(0xfffbee, 1.25);
-    keyLight.position.set(4.5, 6.0, 5.5);
+    const keyLight = new THREE.DirectionalLight(0xfffaec, 1.05);
+    keyLight.position.set(4.5, 6.0, 5.0);
     scene.add(keyLight);
 
     // Left Studio Fill: Soft warm ivory
-    const leftFillLight = new THREE.DirectionalLight(0xfef9f0, 0.95);
-    leftFillLight.position.set(-5.5, 4.0, 5.0);
+    const leftFillLight = new THREE.DirectionalLight(0xfef9f2, 0.85);
+    leftFillLight.position.set(-5.0, 4.5, 4.5);
     scene.add(leftFillLight);
 
     // Subtle grazing rim light
-    const rimLight = new THREE.DirectionalLight(0xfff6e8, 0.6);
-    rimLight.position.set(-2.5, 4.5, -2.0);
+    const rimLight = new THREE.DirectionalLight(0xfff6e8, 0.5);
+    rimLight.position.set(-2.0, 4.0, -2.5);
     scene.add(rimLight);
+
+    // Low fill light for depth foundation
+    const lowerFill = new THREE.DirectionalLight(0xfff9f2, 0.45);
+    lowerFill.position.set(0.0, -2.5, 3.0);
+    scene.add(lowerFill);
 
     const wovenTexture = createWovenFabricTexture();
     const satinTexture = createSatinSilkTexture();
 
-    // Responsive spread factor
+    // Responsive spread factor: opens center space wider on smaller screens
     const isMobile = width < 768;
     const isTablet = width >= 768 && width < 1024;
-    const edgeSpread = isMobile ? 1.5 : isTablet ? 1.25 : 1.0;
+    const edgeSpread = isMobile ? 1.45 : isTablet ? 1.25 : 1.0;
 
     // -------------------------------------------------------------------------
-    // 3. LEFT FABRIC: Natural Combed Linen/Cotton Drapes (Warm Ivory Weave)
+    // 3. FABRIC 1 (LEFT SIDE): Soft Ivory Woven Fabric
+    // Enters diagonally from upper-left, natural S-shaped curves & layered folds,
+    // flows downwards and gently curls towards bottom-left corner
     // -------------------------------------------------------------------------
-    const leftWidth = 4.4;
-    const leftHeight = 8.8;
-    const leftSegsX = 96;
-    const leftSegsY = 96;
-    const leftGeo = new THREE.PlaneGeometry(leftWidth, leftHeight, leftSegsX, leftSegsY);
-
+    const leftSegsU = 80;
+    const leftSegsV = 100;
+    const leftGeo = new THREE.PlaneGeometry(1, 1, leftSegsU, leftSegsV);
+    const leftCount = leftGeo.attributes.position.count;
     const leftPos = leftGeo.attributes.position;
-    const leftCount = leftPos.count;
-    const leftBaseX = new Float32Array(leftCount);
-    const leftBaseY = new Float32Array(leftCount);
-    const leftBaseZ = new Float32Array(leftCount);
-
-    for (let i = 0; i < leftCount; i++) {
-      const i3 = i * 3;
-      leftBaseX[i] = leftPos.array[i3];
-      leftBaseY[i] = leftPos.array[i3 + 1];
-      leftBaseZ[i] = leftPos.array[i3 + 2];
-    }
 
     const leftMat = new THREE.MeshPhysicalMaterial({
-      color: 0xfffaf3, // Luminous warm ivory/cream
-      roughness: 0.44, // Tactile combed organic linen weave
-      metalness: 0.01,
-      sheen: 1.0,
-      sheenColor: new THREE.Color(0xfffcf5),
-      sheenRoughness: 0.3,
+      color: 0xfffcf7, // Pure warm ivory matching showroom ambience
+      roughness: 0.52, // Tactile combed organic linen weave
+      metalness: 0.0,
+      sheen: 0.95,
+      sheenColor: new THREE.Color(0xfffdf8),
+      sheenRoughness: 0.72, // Broad, soft rim characteristic of cotton/linen
       bumpMap: wovenTexture,
-      bumpScale: 0.055,
+      bumpScale: 0.045,
       side: THREE.DoubleSide,
     });
 
     const leftMesh = new THREE.Mesh(leftGeo, leftMat);
-    leftMesh.position.set(-4.6 * edgeSpread, 0.1, 0.2);
-    leftMesh.rotation.set(-0.06, 0.28, -0.06);
     scene.add(leftMesh);
 
     // -------------------------------------------------------------------------
-    // 4. RIGHT FABRIC: Flowing Champagne Silk / Satin Cascades
+    // 4. FABRIC 2 (RIGHT SIDE): Lightweight Champagne-Cream Satin / Silk Fabric
+    // Broad flowing wave curving inward and sweeping back towards right edge,
+    // lighter softer shade than gold, realistic highlights without metallic look
     // -------------------------------------------------------------------------
-    const rightWidth = 4.4;
-    const rightHeight = 9.0;
-    const rightSegsX = 96;
-    const rightSegsY = 96;
-    const rightGeo = new THREE.PlaneGeometry(rightWidth, rightHeight, rightSegsX, rightSegsY);
-
+    const rightSegsU = 80;
+    const rightSegsV = 100;
+    const rightGeo = new THREE.PlaneGeometry(1, 1, rightSegsU, rightSegsV);
+    const rightCount = rightGeo.attributes.position.count;
     const rightPos = rightGeo.attributes.position;
-    const rightCount = rightPos.count;
-    const rightBaseX = new Float32Array(rightCount);
-    const rightBaseY = new Float32Array(rightCount);
-    const rightBaseZ = new Float32Array(rightCount);
-
-    for (let i = 0; i < rightCount; i++) {
-      const i3 = i * 3;
-      rightBaseX[i] = rightPos.array[i3];
-      rightBaseY[i] = rightPos.array[i3 + 1];
-      rightBaseZ[i] = rightPos.array[i3 + 2];
-    }
 
     const rightMat = new THREE.MeshPhysicalMaterial({
-      color: 0xfcf6ed, // Pale champagne-cream silk
+      color: 0xfefbf4, // Delicate soft champagne-cream
       roughness: 0.22, // Liquid silk luster
-      metalness: 0.03,
-      clearcoat: 0.42,
-      clearcoatRoughness: 0.18,
+      metalness: 0.01,
+      clearcoat: 0.35,
+      clearcoatRoughness: 0.2,
       sheen: 1.0,
-      sheenColor: new THREE.Color(0xfffbee),
-      sheenRoughness: 0.18,
+      sheenColor: new THREE.Color(0xfffaed),
+      sheenRoughness: 0.22, // Narrow bright satin rim
       bumpMap: satinTexture,
-      bumpScale: 0.016,
+      bumpScale: 0.015,
       side: THREE.DoubleSide,
     });
 
     const rightMesh = new THREE.Mesh(rightGeo, rightMat);
-    rightMesh.position.set(4.7 * edgeSpread, -0.05, 0.25);
-    rightMesh.rotation.set(-0.05, -0.28, 0.05);
     scene.add(rightMesh);
 
     // -------------------------------------------------------------------------
-    // 5. FLOATING SATIN PEARLS & DELICATE GOLD ACCENTS
+    // 5. FABRIC 3 (LOWER EDGE): Subtle Third Fabric Layer (Layered Foundation)
+    // Resting behind central text area, gentle horizontal wave creating depth
     // -------------------------------------------------------------------------
-    const pearlMat = new THREE.MeshPhysicalMaterial({
-      color: 0xffffff,
-      roughness: 0.26,
-      metalness: 0.02,
-      clearcoat: 0.3,
-      clearcoatRoughness: 0.25,
-      sheen: 0.8,
-      sheenColor: new THREE.Color(0xfffdf6),
+    const lowerSegsU = 100;
+    const lowerSegsV = 32;
+    const lowerGeo = new THREE.PlaneGeometry(1, 1, lowerSegsU, lowerSegsV);
+    const lowerCount = lowerGeo.attributes.position.count;
+    const lowerPos = lowerGeo.attributes.position;
+
+    const lowerMat = new THREE.MeshPhysicalMaterial({
+      color: 0xfbf6ee, // Warm ivory sheer foundation
+      roughness: 0.62,
+      metalness: 0.0,
+      sheen: 0.7,
+      sheenColor: new THREE.Color(0xfffcf7),
+      sheenRoughness: 0.75,
+      bumpMap: wovenTexture,
+      bumpScale: 0.02,
+      side: THREE.DoubleSide,
     });
 
-    const goldMat = new THREE.MeshStandardMaterial({
-      color: 0xd4af37,
-      roughness: 0.2,
-      metalness: 0.92,
-    });
-
-    interface FloatingItem {
-      mesh: THREE.Mesh;
-      baseX: number;
-      baseY: number;
-      baseZ: number;
-      freq: number;
-      phase: number;
-      amp: number;
-    }
-
-    const floatingItems: FloatingItem[] = [];
-
-    const addSphere = (
-      radius: number,
-      pos: [number, number, number],
-      mat: THREE.Material,
-      amp = 0.04,
-      freq = 0.75
-    ) => {
-      const geo = new THREE.SphereGeometry(radius, 40, 40);
-      const mesh = new THREE.Mesh(geo, mat);
-      const px = pos[0] * edgeSpread;
-      mesh.position.set(px, pos[1], pos[2]);
-      scene.add(mesh);
-
-      floatingItems.push({
-        mesh,
-        baseX: px,
-        baseY: pos[1],
-        baseZ: pos[2],
-        freq,
-        phase: Math.random() * Math.PI * 2,
-        amp,
-      });
-      return mesh;
-    };
-
-    // Satin pearls and gold beads matching reference layout
-    addSphere(0.70, [-3.4, -1.8, 2.2], pearlMat, 0.035, 0.65); // Large foreground pearl (sitting in front of cloth)
-    addSphere(0.36, [-3.0, 2.2, 1.2], pearlMat, 0.045, 0.8);   // Upper-left pearl
-    addSphere(0.16, [3.6, 2.7, 0.5], pearlMat, 0.04, 0.75);    // Tiny pearl (top-right)
-    addSphere(0.11, [3.1, 2.0, 0.6], goldMat, 0.03, 1.1);      // Gold bead (top-right)
-    addSphere(0.08, [-2.3, 1.5, 0.6], goldMat, 0.03, 1.0);     // Gold bead on upper arc
-    addSphere(0.08, [1.7, -1.9, 0.5], goldMat, 0.025, 0.95);   // Gold bead on lower arc
+    const lowerMesh = new THREE.Mesh(lowerGeo, lowerMat);
+    scene.add(lowerMesh);
 
     // -------------------------------------------------------------------------
-    // 6. FINE GOLD DECORATIVE 3D WIRE ARCS
-    // -------------------------------------------------------------------------
-    const upperCurve = new THREE.CubicBezierCurve3(
-      new THREE.Vector3(-4.8 * edgeSpread, 1.6, -0.2),
-      new THREE.Vector3(-2.6, 3.3, 0.2),
-      new THREE.Vector3(0.5, 3.0, 0.2),
-      new THREE.Vector3(3.8 * edgeSpread, 2.1, -0.2)
-    );
-    const upperArcGeo = new THREE.TubeGeometry(upperCurve, 72, 0.011, 10, false);
-    const upperArcMesh = new THREE.Mesh(upperArcGeo, goldMat);
-    scene.add(upperArcMesh);
-
-    const lowerCurve = new THREE.CubicBezierCurve3(
-      new THREE.Vector3(-3.2 * edgeSpread, -2.5, 0.3),
-      new THREE.Vector3(-1.3, -1.8, 0.4),
-      new THREE.Vector3(1.3, -1.8, 0.4),
-      new THREE.Vector3(3.2 * edgeSpread, -2.5, 0.3)
-    );
-    const lowerArcGeo = new THREE.TubeGeometry(lowerCurve, 72, 0.011, 10, false);
-    const lowerArcMesh = new THREE.Mesh(lowerArcGeo, goldMat);
-    scene.add(lowerArcMesh);
-
-    // -------------------------------------------------------------------------
-    // 7. REAL-TIME ORGANIC FABRIC FOLDS DEFORMATION
+    // 6. REAL-TIME TRAVELING WAVE PROPAGATION & SUBTLE INTERACTIVITY
     // -------------------------------------------------------------------------
     let mouseX = 0;
     let mouseY = 0;
@@ -336,95 +256,127 @@ export const HeroFabric3D: React.FC = () => {
     const handleVisibilityChange = () => {
       isPageVisible = !document.hidden;
       if (isPageVisible) lastTime = performance.now();
-
     };
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
-    // Advanced Trochoid / Gerstner-like Cloth Fold Dynamics
+    // Continuous wave propagation with traveling deformation along cloth
     const updateFabricFolds = (time: number) => {
-      // --- LEFT CLOTH: Natural Organic Linen Drapes ---
+      // Interpolated pointer distance ripples (subtle, restrained depth shift)
+      const leftPointerDist = Math.hypot(mouseX - (-0.6), mouseY - 0.1);
+      const leftRipple = Math.exp(-leftPointerDist * 2.2) * Math.sin(time * 3.0) * 0.1;
+
+      const rightPointerDist = Math.hypot(mouseX - 0.6, mouseY - 0.1);
+      const rightRipple = Math.exp(-rightPointerDist * 2.2) * Math.sin(time * 3.0 + 1.5) * 0.1;
+
+      // --- FABRIC 1 (LEFT SIDE): Soft Ivory Woven Drape ---
+      // Enters diagonally from upper-left, sweeps inward, curls to bottom-left
       const lPosArr = leftGeo.attributes.position.array as Float32Array;
+      const leftDepthScale = 1.0 + 0.12 * Math.sin(time * 0.18);
 
-      for (let i = 0; i < leftCount; i++) {
-        const i3 = i * 3;
-        const bx = leftBaseX[i];
-        const by = leftBaseY[i];
+      let idx = 0;
+      for (let iv = 0; iv <= leftSegsV; iv++) {
+        const v = 1 - iv / leftSegsV; // 1 at top, 0 at bottom
+        // Centerline in X entering from upper-left, swooping inward, curling to bottom-left
+        const cx = (-4.6 + 1.2 * Math.sin(v * Math.PI * 1.1) - 0.8 * (1 - v)) * edgeSpread;
+        const cy = (v - 0.5) * 8.6;
+        const ribWidth = 3.2 + 0.8 * (1 - v); // Slightly gathers towards bottom
 
-        // u: 0 (outer left) to 1 (inner center edge); v: 0 (bottom) to 1 (top)
-        const u = (bx + leftWidth * 0.5) / leftWidth;
-        const v = (by + leftHeight * 0.5) / leftHeight;
+        for (let iu = 0; iu <= leftSegsU; iu++) {
+          const u = iu / leftSegsU; // 0 (outer left) to 1 (inner crest)
+          const i3 = idx * 3;
 
-        // Diagonal catenary drape wave with organic harmonics
-        const phase1 = v * 2.8 + u * 2.2 + time * 0.4;
-        const fold1 = (Math.sin(phase1 * 1.6) + 0.35 * Math.sin(phase1 * 3.2)) * (1.1 + 0.3 * (1 - v));
+          // Natural S-curve contour
+          const sContour = Math.sin(v * Math.PI * 1.2) * 0.25 * u;
+          const lateralSway = Math.sin(v * 2.2 + time * 0.24) * 0.08;
 
-        // Cross-tension draping folds
-        const fold2 = Math.cos(v * 5.4 - u * 3.0 - time * 0.22) * 0.4;
+          // Diagonal traveling wave
+          const diagPhase = v * 2.8 + u * 1.8 - time * 0.42;
+          const fold1 = (Math.sin(diagPhase * 1.5) + 0.3 * Math.sin(diagPhase * 3.0)) * (0.8 + 0.25 * (1 - v));
+          const fold2 = Math.cos(v * 4.6 - u * 2.4 - time * 0.28) * 0.28;
+          const fold3 = Math.sin(u * 9.0 + v * 6.0 + time * 0.45) * 0.07;
 
-        // Subtle textile weave ripples
-        const fold3 = Math.sin(u * 8.5 + v * 7.0 + time * 0.48) * 0.12;
+          // Curled rolled hem on both edges of the ribbon for full 3D volume
+          const edgeDist = Math.abs(u - 0.5) * 2;
+          const edgeHem = -Math.pow(Math.max(0, edgeDist - 0.6) / 0.4, 2.0) * 0.65;
 
-        // Inner rolled hem: curl backwards smoothly into Z depth and tuck inward in X
-        const edgeFactor = Math.max(0, (u - 0.72) / 0.28);
-        const edgeCurve = Math.sin(edgeFactor * Math.PI);
-        const edgeCurl = Math.pow(edgeFactor, 1.8);
-        const xTuck = -edgeCurl * 0.5;
-        const zTuck = -edgeCurve * 0.95 - edgeCurl * 0.85;
-
-        // Broad billow along the drape center
-        const billow = Math.sin(u * Math.PI * 0.85) * Math.cos(v * 2.4) * 0.45;
-
-        lPosArr[i3 + 2] = fold1 + fold2 + fold3 + billow + zTuck;
-
-        // Organic silhouette contouring: curve the inner edge naturally like gathered fabric
-        const silhouetteCurve = Math.sin(v * Math.PI * 1.2 + 0.2) * 0.32 * u;
-        const lateralSway = Math.sin(v * 2.5 + time * 0.26) * 0.12;
-        lPosArr[i3] = bx + silhouetteCurve + lateralSway + xTuck;
+          lPosArr[i3] = cx + (u - 0.5) * ribWidth + sContour + lateralSway;
+          lPosArr[i3 + 1] = cy + Math.cos(u * Math.PI) * 0.12;
+          lPosArr[i3 + 2] = (fold1 + fold2 + fold3) * leftDepthScale + edgeHem + 0.3 + leftRipple * u;
+          idx++;
+        }
       }
       leftGeo.attributes.position.needsUpdate = true;
       leftGeo.computeVertexNormals();
 
-      // --- RIGHT CLOTH: Liquid Silk Cascades ---
+      // --- FABRIC 2 (RIGHT SIDE): Champagne Silk / Satin Waves ---
+      // Broad flowing wave curving inward and sweeping back towards right edge
       const rPosArr = rightGeo.attributes.position.array as Float32Array;
+      const rightDepthScale = 1.0 + 0.14 * Math.cos(time * 0.22);
 
-      for (let i = 0; i < rightCount; i++) {
-        const i3 = i * 3;
-        const bx = rightBaseX[i];
-        const by = rightBaseY[i];
+      idx = 0;
+      for (let iv = 0; iv <= rightSegsV; iv++) {
+        const v = 1 - iv / rightSegsV; // 1 at top, 0 at bottom
+        // Broad flowing wave: curves inward at mid-upper and sweeps back towards right edge at bottom
+        const cx = (4.5 - 1.2 * Math.sin(v * Math.PI * 0.95) + 0.85 * Math.pow(1 - v, 1.4)) * edgeSpread;
+        const cy = (v - 0.5) * 8.8;
+        const ribWidth = 3.2 + 0.6 * v;
 
-        // u: 0 (inner center edge) to 1 (outer right); v: 0 (bottom) to 1 (top)
-        const u = (bx + rightWidth * 0.5) / rightWidth;
-        const v = (by + rightHeight * 0.5) / rightHeight;
+        for (let iu = 0; iu <= rightSegsU; iu++) {
+          const u = iu / rightSegsU; // 0 (inner hem) to 1 (outer right edge)
+          const i3 = idx * 3;
 
-        // Liquid silk sweeping cascades
-        const silkPhase = v * 2.6 - (1 - u) * 2.0 + time * 0.36 + 1.2;
-        const silkFold1 = (Math.sin(silkPhase * 1.8) + 0.3 * Math.cos(silkPhase * 3.4)) * (1.2 + 0.28 * (1 - v));
+          const sweepContour = -Math.sin(v * Math.PI * 1.1) * 0.25 * (1 - u);
+          const silkSway = -Math.sin(v * 2.2 + time * 0.22) * 0.08;
 
-        // Secondary liquid waves
-        const silkFold2 = Math.cos(v * 5.2 + (1 - u) * 2.5 - time * 0.2 + 0.7) * 0.42;
+          // Liquid silk traveling cascade
+          const silkPhase = v * 2.8 - (1 - u) * 2.2 + time * 0.36;
+          const silkFold1 = (Math.sin(silkPhase * 1.7) + 0.26 * Math.sin(silkPhase * 3.4)) * (0.9 + 0.24 * (1 - v));
+          const silkFold2 = Math.cos(v * 5.2 + (1 - u) * 2.4 - time * 0.24) * 0.32;
+          const silkFold3 = Math.sin((1 - u) * 8.0 - v * 3.5 + time * 0.4) * 0.08;
 
-        // Micro-flutter
-        const silkFold3 = Math.sin((1 - u) * 7.5 - v * 3.8 + time * 0.42) * 0.1;
+          // Curled rolled hem on both edges of the silk ribbon
+          const silkEdgeDist = Math.abs(u - 0.5) * 2;
+          const silkEdgeHem = -Math.pow(Math.max(0, silkEdgeDist - 0.6) / 0.4, 2.0) * 0.65;
 
-        // Inner rolled hem: curl backwards into Z depth and tuck outward in X
-        const silkEdgeFactor = Math.max(0, (0.28 - u) / 0.28);
-        const silkEdgeCurve = Math.sin(silkEdgeFactor * Math.PI);
-        const silkEdgeCurl = Math.pow(silkEdgeFactor, 1.8);
-        const silkXTuck = silkEdgeCurl * 0.5;
-        const silkZTuck = -silkEdgeCurve * 0.95 - silkEdgeCurl * 0.85;
-
-        // Silk cascade billow
-        const silkBillow = Math.sin((1 - u) * Math.PI * 0.85) * Math.sin(v * 2.2) * 0.5;
-
-        rPosArr[i3 + 2] = silkFold1 + silkFold2 + silkFold3 + silkBillow + silkZTuck;
-
-        // Organic silhouette contouring
-        const rSilhouette = -Math.sin(v * Math.PI * 1.1) * 0.32 * (1 - u);
-        const rSway = -Math.sin(v * 2.2 + time * 0.24) * 0.12;
-        rPosArr[i3] = bx + rSilhouette + rSway + silkXTuck;
+          rPosArr[i3] = cx + (u - 0.5) * ribWidth + sweepContour + silkSway;
+          rPosArr[i3 + 1] = cy + Math.cos(u * Math.PI) * 0.12;
+          rPosArr[i3 + 2] = (silkFold1 + silkFold2 + silkFold3) * rightDepthScale + silkEdgeHem + 0.35 + rightRipple * (1 - u);
+          idx++;
+        }
       }
       rightGeo.attributes.position.needsUpdate = true;
       rightGeo.computeVertexNormals();
+
+      // --- FABRIC 3 (LOWER EDGE): Subtle Third Fabric Layer ---
+      // Gentle horizontal wave layer providing layered textile depth across the foundation
+      const lowPosArr = lowerGeo.attributes.position.array as Float32Array;
+
+      idx = 0;
+      for (let iv = 0; iv <= lowerSegsV; iv++) {
+        const v = iv / lowerSegsV; // 0 at bottom, 1 at top
+        const cy = -2.8 + (v - 0.5) * 2.0;
+
+        for (let iu = 0; iu <= lowerSegsU; iu++) {
+          const u = iu / lowerSegsU; // 0 at left, 1 at right
+          const i3 = idx * 3;
+
+          const cx = (u - 0.5) * 15.0;
+
+          const lowerPhase = u * 3.4 - time * 0.2;
+          const lowerFold = (Math.sin(lowerPhase) * 0.22 + 0.1 * Math.cos(u * 6.5 + time * 0.15)) * (0.6 + 0.4 * (1 - v));
+
+          // Soft rolled hem on upper and lower edges
+          const vDist = Math.abs(v - 0.5) * 2;
+          const lowHem = -Math.pow(Math.max(0, vDist - 0.5) / 0.5, 2.0) * 0.4;
+
+          lowPosArr[i3] = cx;
+          lowPosArr[i3 + 1] = cy + Math.sin(u * Math.PI) * 0.18;
+          lowPosArr[i3 + 2] = -0.9 + lowerFold + lowHem;
+          idx++;
+        }
+      }
+      lowerGeo.attributes.position.needsUpdate = true;
+      lowerGeo.computeVertexNormals();
     };
 
     // Render loop
@@ -438,26 +390,16 @@ export const HeroFabric3D: React.FC = () => {
       accumulatedTime += delta;
       const time = accumulatedTime;
 
-      // Smooth mouse parallax
-      mouseX += (targetMouseX - mouseX) * 0.04;
-      mouseY += (targetMouseY - mouseY) * 0.04;
+      // Smooth mouse parallax (restrained)
+      mouseX += (targetMouseX - mouseX) * 0.035;
+      mouseY += (targetMouseY - mouseY) * 0.035;
 
-      camera.position.x = mouseX * 0.3;
-      camera.position.y = -mouseY * 0.2;
+      camera.position.x = mouseX * 0.22;
+      camera.position.y = -mouseY * 0.15;
       camera.lookAt(0, 0, 0);
 
       if (!prefersReducedMotion) {
         updateFabricFolds(time);
-
-        // Floating pearls gentle bobbing
-        for (const item of floatingItems) {
-          item.mesh.position.y = item.baseY + Math.sin(time * item.freq + item.phase) * item.amp;
-          item.mesh.position.x = item.baseX + Math.cos(time * item.freq * 0.5 + item.phase) * (item.amp * 0.35);
-        }
-
-        // Subtle gold arc breathing
-        upperArcMesh.rotation.z = Math.sin(time * 0.2) * 0.012;
-        lowerArcMesh.rotation.z = Math.cos(time * 0.18) * 0.01;
       }
 
       renderer.render(scene, camera);
@@ -477,17 +419,6 @@ export const HeroFabric3D: React.FC = () => {
 
       renderer.setSize(width, height);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-      const newMobile = width < 768;
-      const newTablet = width >= 768 && width < 1024;
-      const newSpread = newMobile ? 1.5 : newTablet ? 1.25 : 1.0;
-
-      leftMesh.position.x = -4.5 * newSpread;
-      rightMesh.position.x = 4.6 * newSpread;
-
-      for (const item of floatingItems) {
-        item.mesh.position.x = (item.baseX / edgeSpread) * newSpread;
-      }
     };
     window.addEventListener('resize', handleResize);
 
@@ -505,10 +436,8 @@ export const HeroFabric3D: React.FC = () => {
       leftMat.dispose();
       rightGeo.dispose();
       rightMat.dispose();
-      pearlMat.dispose();
-      goldMat.dispose();
-      upperArcGeo.dispose();
-      lowerArcGeo.dispose();
+      lowerGeo.dispose();
+      lowerMat.dispose();
       wovenTexture.dispose();
       satinTexture.dispose();
       renderer.dispose();

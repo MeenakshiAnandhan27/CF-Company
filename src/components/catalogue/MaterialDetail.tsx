@@ -287,7 +287,7 @@ export const MaterialDetail: React.FC<MaterialDetailProps> = ({
               {/* ─────────────────────────────────────────────────────── */}
               {/* 2. MAKE THE 360° INTERACTION STAND OUT: Breathing Gold Halo */}
               {/* ─────────────────────────────────────────────────────── */}
-              {onOpen360 && (
+              {onOpen360 && (material.category === 'FABRICS' || material.category === 'DENIM & CHAMBRAY') && (
                 <div className="mt-3 w-full max-w-sm">
                   <button
                     type="button"

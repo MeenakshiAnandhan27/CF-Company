@@ -46,7 +46,8 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
     if (upper.includes('FABRIC')) return 'FABRICS';
     if (upper.includes('DENIM')) return 'DENIM & CHAMBRAY';
     if (upper.includes('LACE')) return 'LACES';
-        return 'ALL';
+    if (upper.includes('ACCESS')) return 'GARMENT ACCESSORIES';
+    return 'ALL';
   });
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -194,7 +195,7 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
           </h1>
 
           <p className="text-sm sm:text-base md:text-lg text-[#666057] max-w-2xl mx-auto leading-relaxed font-sans">
-            Explore fabrics, denim, chambray and laces sourced for apparel production.
+            Explore fabrics, denim, chambray, laces and garment accessories sourced for apparel production.
           </p>
 
           <div className="pt-2 flex flex-wrap items-center justify-center gap-3">

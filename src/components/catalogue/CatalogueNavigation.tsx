@@ -1,7 +1,7 @@
 import React from 'react';
 import { Search, X, BookOpen, Sparkles, Filter, RotateCw, Layers } from 'lucide-react';
 
-export type NavFilter = 'ALL' | 'FABRICS' | 'DENIM & CHAMBRAY' | 'LACES';
+export type NavFilter = 'ALL' | 'FABRICS' | 'DENIM & CHAMBRAY' | 'LACES' | 'GARMENT ACCESSORIES';
 
 interface CatalogueNavigationProps {
   activeFilter: NavFilter;
@@ -29,6 +29,7 @@ export const CatalogueNavigation: React.FC<CatalogueNavigationProps> = ({
     { id: 'FABRICS', label: 'Fabrics' },
     { id: 'DENIM & CHAMBRAY', label: 'Denim & Chambray' },
     { id: 'LACES', label: 'Laces' },
+    { id: 'GARMENT ACCESSORIES', label: 'Accessories' },
   ];
 
   return (

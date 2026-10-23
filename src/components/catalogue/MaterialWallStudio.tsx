@@ -30,7 +30,7 @@ import {
 } from '../../data/catalogueDiscoveryData.ts';
 import { FABRIC_PACK_4K } from '../../data/fabricPack4KData.ts';
 
-type WallCategory = 'ALL' | 'FABRICS' | 'DENIM & CHAMBRAY' | 'LACES';
+type WallCategory = 'ALL' | 'FABRICS' | 'DENIM & CHAMBRAY' | 'LACES' | 'GARMENT ACCESSORIES';
 type GridSize = 'large' | 'medium' | 'small';
 
 interface MaterialWallStudioProps {
@@ -376,7 +376,7 @@ const TextureCloseUp: React.FC<{
           </button>
 
           {/* 360° Studio inspection trigger */}
-          {onOpen360 && (
+          {onOpen360 && (material.category === 'FABRICS' || material.category === 'DENIM & CHAMBRAY') && (
             <button
               type="button"
               onClick={() => onOpen360(material)}

@@ -329,13 +329,14 @@ export const HeroFabric3D: React.FC = () => {
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
 
     let animationFrameId: number;
-    let clock = new THREE.Clock();
+    let accumulatedTime = 0;
+    let lastTime = performance.now();
     let isPageVisible = true;
 
     const handleVisibilityChange = () => {
       isPageVisible = !document.hidden;
-      if (isPageVisible) clock.start();
-      else clock.stop();
+      if (isPageVisible) lastTime = performance.now();
+
     };
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
@@ -431,7 +432,11 @@ export const HeroFabric3D: React.FC = () => {
       animationFrameId = requestAnimationFrame(animate);
       if (!isPageVisible) return;
 
-      const time = clock.getElapsedTime();
+      const now = performance.now();
+      const delta = Math.min((now - lastTime) / 1000, 0.1);
+      lastTime = now;
+      accumulatedTime += delta;
+      const time = accumulatedTime;
 
       // Smooth mouse parallax
       mouseX += (targetMouseX - mouseX) * 0.04;

@@ -26,7 +26,8 @@ interface CatalogueLandingProps {
   onAddToCollection?: (product: Product, quantity?: number, colour?: string, size?: string) => void;
   collection?: CollectionItem[];
   onViewCollection?: () => void;
-  onRequestMaterial?: (category?: any) => void;
+  onRequestMaterial?: (category?: any, similarProduct?: Product) => void;
+  onReachUs?: (materialContext?: string) => void;
 }
 
 export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
@@ -36,6 +37,7 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
   onAddToCollection,
   collection = [],
   onRequestMaterial,
+  onReachUs,
 }) => {
   // Navigation filter state
   const [activeFilter, setActiveFilter] = useState<NavFilter>(() => {
@@ -108,9 +110,46 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
   };
 
   // Convert DiscoveryMaterial to Product for parent handlers
-  const handleEnquireMaterial = (material: DiscoveryMaterial) => {
+  const handleEnquireMaterial = (material: DiscoveryMaterial, selectedVariant?: string) => {
     const product = getProductForDiscoveryMaterial(material);
+    if (selectedVariant) {
+      product.name = `${material.name} (${selectedVariant})`;
+    }
     onEnquire(product);
+  };
+
+  const handleRequestMaterialDirect = (material: DiscoveryMaterial, selectedVariant?: string) => {
+    const product = getProductForDiscoveryMaterial(material);
+    if (selectedVariant) {
+      product.name = `${material.name} (${selectedVariant})`;
+    }
+    if (onRequestMaterial) {
+      const mappedCategory =
+        material.category === 'LACES'
+          ? 'laces'
+          : material.category === 'DENIM & CHAMBRAY'
+          ? 'denim'
+          : 'fabrics';
+      onRequestMaterial(mappedCategory, product);
+    } else {
+      onEnquire(product);
+    }
+    setSelectedMaterial(null);
+  };
+
+  const handleReachUsDirect = (material: DiscoveryMaterial, selectedVariant?: string) => {
+    const context = `${material.name}${selectedVariant ? ` (${selectedVariant})` : ''} [${material.category}]`;
+    try {
+      sessionStorage.setItem('cf_reach_us_material_context', context);
+    } catch {
+      // ignore storage error
+    }
+    if (onReachUs) {
+      onReachUs(context);
+    } else {
+      window.location.hash = '#reach-us';
+    }
+    setSelectedMaterial(null);
   };
 
   const handleDeepDetailsMaterial = (material: DiscoveryMaterial) => {
@@ -118,9 +157,12 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
     onViewDetails(product);
   };
 
-  const handleAddToCollectionMaterial = (material: DiscoveryMaterial) => {
+  const handleAddToCollectionMaterial = (material: DiscoveryMaterial, selectedVariant?: string) => {
     if (!onAddToCollection) return;
     const product = getProductForDiscoveryMaterial(material);
+    if (selectedVariant) {
+      product.name = `${material.name} (${selectedVariant})`;
+    }
     onAddToCollection(product, 1);
   };
 
@@ -439,6 +481,8 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
         material={selectedMaterial}
         onClose={() => setSelectedMaterial(null)}
         onEnquire={handleEnquireMaterial}
+        onRequestMaterial={handleRequestMaterialDirect}
+        onReachUs={handleReachUsDirect}
         onOpen360={handleOpen360Viewer}
         onViewDeepDetails={handleDeepDetailsMaterial}
         onAddToCollection={handleAddToCollectionMaterial}

@@ -67,6 +67,7 @@ export default function App() {
   const [enquiryProduct, setEnquiryProduct] = useState<Product | null>(null);
   const [isEnquiryOpen, setIsEnquiryOpen] = useState(false);
   const [isCollectionEnquiry, setIsCollectionEnquiry] = useState(false);
+  const [reachUsContext, setReachUsContext] = useState<string | undefined>(undefined);
 
   // Listen for hash navigation (#3d-fabric-viewer)
   useEffect(() => {
@@ -357,7 +358,11 @@ export default function App() {
             onAddToCollection={handleAddToCollection}
             collection={collection}
             onViewCollection={() => handleNavigate('collection')}
-            onRequestMaterial={(cat) => handleRequestMaterial(cat)}
+            onRequestMaterial={(cat, similarProd) => handleRequestMaterial(cat, similarProd)}
+            onReachUs={(ctx) => {
+              setReachUsContext(ctx);
+              handleNavigate('reach-us');
+            }}
           />
         )}
 
@@ -390,7 +395,10 @@ export default function App() {
         )}
 
         {currentTab === 'reach-us' && (
-          <ReachUsView onExploreCatalogue={() => handleNavigate('catalogue')} />
+          <ReachUsView
+            onExploreCatalogue={() => handleNavigate('catalogue')}
+            initialMaterialContext={reachUsContext}
+          />
         )}
       </main>
 

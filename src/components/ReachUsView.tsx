@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { businessConfig } from '../data/businessConfig.ts';
 import {
   MapPin,
@@ -24,6 +24,7 @@ import {
 
 interface ReachUsViewProps {
   onExploreCatalogue?: () => void;
+  initialMaterialContext?: string;
 }
 
 // Verified Business Contact Information
@@ -92,21 +93,54 @@ const ENQUIRY_CATEGORIES: EnquiryCategory[] = [
   },
 ];
 
-export const ReachUsView: React.FC<ReachUsViewProps> = () => {
+export const ReachUsView: React.FC<ReachUsViewProps> = ({
+  initialMaterialContext,
+}) => {
+  const getInitialContext = () => {
+    if (initialMaterialContext) return initialMaterialContext;
+    try {
+      return sessionStorage.getItem('cf_reach_us_material_context') || '';
+    } catch {
+      return '';
+    }
+  };
+
+  const storedContext = getInitialContext();
+
   // Enquiry Category Selection
-  const [selectedCategoryKey, setSelectedCategoryKey] = useState<EnquiryCategoryKey>('fabric');
-  const [isEnquiryExpanded, setIsEnquiryExpanded] = useState<boolean>(false);
+  const [selectedCategoryKey, setSelectedCategoryKey] = useState<EnquiryCategoryKey>(() => {
+    if (storedContext.toLowerCase().includes('lace') || storedContext.toLowerCase().includes('accessor')) {
+      return 'accessories';
+    }
+    return 'fabric';
+  });
+  const [isEnquiryExpanded, setIsEnquiryExpanded] = useState<boolean>(Boolean(storedContext));
 
   // Progressive Enquiry Stepper: 1 = Requirement/Message, 2 = Contact Details, 3 = Review & Send
   const [stepperStep, setStepperStep] = useState<1 | 2 | 3>(1);
 
   // Form Fields
   const [formData, setFormData] = useState({
-    message: '',
+    message: storedContext
+      ? `Inquiry regarding ${storedContext}: We would like to explore available specifications, custom development options, and minimum order quantities.`
+      : '',
     name: '',
     phone: '',
     email: '',
   });
+
+  useEffect(() => {
+    if (initialMaterialContext) {
+      setFormData((prev) => ({
+        ...prev,
+        message: `Inquiry regarding ${initialMaterialContext}: We would like to explore available specifications, custom development options, and minimum order quantities.`,
+      }));
+      setIsEnquiryExpanded(true);
+      if (initialMaterialContext.toLowerCase().includes('lace') || initialMaterialContext.toLowerCase().includes('accessor')) {
+        setSelectedCategoryKey('accessories');
+      }
+    }
+  }, [initialMaterialContext]);
 
   // UI Feedback States
   const [copiedEmail, setCopiedEmail] = useState(false);

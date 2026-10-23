@@ -17,6 +17,7 @@ const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, '..');
 
 const SOURCE_DIRS = [
+  { path: 'D:/CF/fabric-images3', defaultCategory: 'fabric' },
   { path: 'D:/CF/fabric-images', defaultCategory: 'fabric' },
   { path: 'D:/CF/fabric-images2', defaultCategory: 'detect' },
 ];
@@ -341,7 +342,7 @@ const METADATA_DICTIONARY = {
     sheenColor: '#E6EFF8',
     description: 'Classic lightweight shirting fabric woven with authentic indigo-dyed warp threads and natural ecru fill yarn, offering a frosted heathered visual depth.',
   },
-  'chiffon.jpg': {
+  'chiffon.png': {
     name: 'Silk Georgette Chiffon',
     category: 'fabric',
     subcategory: 'Synthetics & Sheers',
@@ -439,7 +440,7 @@ const METADATA_DICTIONARY = {
     sheenColor: '#EBF4FC',
     description: 'Crisp Italian-style poplin shirting fabric with razor-sharp yarn-dyed vertical stripes, silky smooth hand-feel, and structured drape.',
   },
-  'taffeta.jpg': {
+  'taffeta.png': {
     name: 'High-Luster Crisp Taffeta',
     category: 'fabric',
     subcategory: 'Synthetics & Sheers',
@@ -694,6 +695,7 @@ async function run() {
   // Clean up any excluded non-fabric files (buttons, accessories, taffeta) from served public directories
   const excludedFiles = [
     'taffeta.jpg',
+    'chiffon.jpg',
     'glass button.jpg',
     'metal buttton.jpg',
     'pearl button.jpg',
@@ -747,7 +749,7 @@ async function run() {
       if (detectedCategory === 'button' || detectedCategory === 'accessory') {
         continue;
       }
-      if (file.toLowerCase().includes('taffeta')) {
+      if (file.toLowerCase() === 'taffeta.jpg' || file.toLowerCase() === 'chiffon.jpg') {
         continue;
       }
 

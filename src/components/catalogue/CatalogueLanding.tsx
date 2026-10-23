@@ -315,7 +315,7 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
                   },
                   {
                     title: 'Specialty Fabrics',
-                    description: 'Textured seersucker, traditional putta, napped flannel, chiffon, velvet, fur and pure linen.',
+                    description: 'Textured seersucker, traditional putta, napped flannel, taffeta, chiffon, velvet, fur and pure linen.',
                     filterSection: 'SPECIALTY',
                   },
                   {
@@ -370,7 +370,7 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
                 },
                 {
                   title: 'Specialty Fabrics',
-                  description: 'Textured seersucker, traditional putta, napped flannel, chiffon, velvet, fur and pure linen.',
+                  description: 'Textured seersucker, traditional putta, napped flannel, taffeta, chiffon, velvet, fur and pure linen.',
                   filterSection: 'SPECIALTY',
                 },
                 {

@@ -283,7 +283,7 @@ export default function App() {
       />
 
       {/* Main Content Areas based on currentTab */}
-      <main className="flex-1">
+      <main className="flex-1 pb-12">
         {currentTab === 'home' && (
           <div>
             {/* Brand Intro Section */}

@@ -20,16 +20,16 @@ interface CategoryItem {
 }
 
 const CATEGORIES: CategoryItem[] = [
-  { id: 'ALL', name: 'ALL MATERIALS', image: '/assets/materials/fabrics.jpg', rotation: 0 },
-  { id: 'LACES', name: 'LACES', image: '/assets/materials/laces.jpg', rotation: -2 },
-  { id: 'FABRICS', name: 'FABRICS', image: '/assets/materials/fabrics.jpg', rotation: 1.5 },
-  { id: 'DENIM', name: 'DENIM', image: '/assets/materials/denim.jpg', rotation: -1.8 },
-  { id: 'MESH', name: 'MESH', image: '/assets/materials/mesh.jpg', rotation: 2 },
-  { id: 'LYCRA / LYCRA MESH', name: 'LYCRA / LYCRA MESH', image: '/assets/materials/mesh.jpg', rotation: -1.4 },
-  { id: 'TAPES', name: 'TAPES', image: '/assets/materials/tapes.jpg', rotation: -2.2 },
-  { id: 'TAGS', name: 'TAGS', image: '/assets/materials/tags.jpg', rotation: 1.8 },
-  { id: 'BUTTONS', name: 'BUTTONS', image: '/assets/materials/buttons.jpg', rotation: 1.6 },
-  { id: 'GARMENT ACCESSORIES', name: 'GARMENT ACCESSORIES', image: '/assets/materials/accessories.jpg', rotation: -1.2 },
+  { id: 'ALL', name: 'ALL MATERIALS', image: '/assets/materials/homepage/fabrics.jpg', rotation: 0 },
+  { id: 'LACES', name: 'LACES', image: '/assets/materials/homepage/laces.jpg', rotation: -2 },
+  { id: 'FABRICS', name: 'FABRICS', image: '/assets/materials/homepage/fabrics.jpg', rotation: 1.5 },
+  { id: 'DENIM', name: 'DENIM', image: '/assets/materials/homepage/denim.jpg', rotation: -1.8 },
+  { id: 'MESH', name: 'MESH', image: '/assets/materials/homepage/mesh.jpg', rotation: 2 },
+  { id: 'LYCRA / LYCRA MESH', name: 'LYCRA / LYCRA MESH', image: '/assets/materials/homepage/lycra-mesh.jpg', rotation: -1.4 },
+  { id: 'TAPES', name: 'TAPES', image: '/assets/materials/homepage/tapes.jpg', rotation: -2.2 },
+  { id: 'TAGS', name: 'TAGS', image: '/assets/materials/homepage/brand-tags.jpg', rotation: 1.8 },
+  { id: 'BUTTONS', name: 'BUTTONS', image: '/assets/materials/homepage/buttons.jpg', rotation: 1.6 },
+  { id: 'GARMENT ACCESSORIES', name: 'GARMENT ACCESSORIES', image: '/assets/materials/homepage/garment-accessories.jpg', rotation: -1.2 },
 ];
 
 interface CategorySelector3DProps {

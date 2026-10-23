@@ -123,6 +123,14 @@ export default function App() {
       setIsCollectionDrawerOpen(true);
       return;
     }
+    if (tab !== 'reach-us') {
+      setIsReachUsFromCollection(false);
+      try {
+        sessionStorage.removeItem('cf_reach_us_source');
+      } catch {
+        // Ignore storage error
+      }
+    }
     setCurrentTab(tab);
     if (category) {
       setCatalogueCategory(category);
@@ -180,11 +188,27 @@ export default function App() {
     setIsEnquiryOpen(true);
   };
 
-  // Collection Enquiry Generation
+  // Collection Enquiry Generation: Navigate directly to Reach Us with materials prefilled (no intermediate modal)
+  const [isReachUsFromCollection, setIsReachUsFromCollection] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        return sessionStorage.getItem('cf_reach_us_source') === 'collection';
+      } catch {
+        return false;
+      }
+    }
+    return false;
+  });
+
   const handleGenerateCollectionEnquiry = () => {
-    setEnquiryProduct(null);
-    setIsCollectionEnquiry(true);
-    setIsEnquiryOpen(true);
+    setIsCollectionDrawerOpen(false);
+    setIsReachUsFromCollection(true);
+    try {
+      sessionStorage.setItem('cf_reach_us_source', 'collection');
+    } catch {
+      // Ignore storage error
+    }
+    handleNavigate('reach-us');
   };
 
   // Collection Management Methods
@@ -416,6 +440,10 @@ export default function App() {
           <ReachUsView
             onExploreCatalogue={() => handleNavigate('catalogue')}
             initialMaterialContext={reachUsContext}
+            collectionMaterials={collection}
+            onRemoveCollectionMaterial={handleRemoveFromCollection}
+            onClearCollection={handleClearCollection}
+            isFromCollection={isReachUsFromCollection}
           />
         )}
       </main>

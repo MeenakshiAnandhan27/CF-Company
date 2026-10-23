@@ -274,7 +274,7 @@ export const CollectionView: React.FC<CollectionViewProps> = ({
                   className="absolute inset-0 pointer-events-none opacity-20 group-hover:opacity-35 transition-opacity bg-[radial-gradient(circle_at_50%_50%,rgba(212,175,55,0.45),transparent_70%)]"
                 />
 
-                <span className="relative">Enquire About Selected Materials</span>
+                <span className="relative">Generate Enquiry</span>
                 <ArrowRight className="w-4 h-4 text-[#D4AF37] group-hover:translate-x-1 transition-transform relative" />
               </button>
 

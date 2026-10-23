@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { businessConfig } from '../data/businessConfig.ts';
+import { CollectionItem, Product } from '../types.ts';
+import { RAW_MATERIAL_IMAGES } from '../data/materialImages.ts';
 import {
   MapPin,
   Phone,
@@ -20,11 +22,17 @@ import {
   ShieldCheck,
   Award,
   Check,
+  X,
+  Plus,
 } from 'lucide-react';
 
-interface ReachUsViewProps {
+export interface ReachUsViewProps {
   onExploreCatalogue?: () => void;
   initialMaterialContext?: string;
+  collectionMaterials?: CollectionItem[];
+  onRemoveCollectionMaterial?: (productId: string) => void;
+  onClearCollection?: () => void;
+  isFromCollection?: boolean;
 }
 
 // Verified Business Contact Information
@@ -95,7 +103,20 @@ const ENQUIRY_CATEGORIES: EnquiryCategory[] = [
 
 export const ReachUsView: React.FC<ReachUsViewProps> = ({
   initialMaterialContext,
+  collectionMaterials,
+  onRemoveCollectionMaterial,
+  onClearCollection,
+  isFromCollection,
+  onExploreCatalogue,
 }) => {
+  // Helper to resolve the highest-resolution swatch texture image
+  const getMaterialImage = (product: Product): string => {
+    const rawConfig = RAW_MATERIAL_IMAGES[product.id];
+    if (rawConfig?.imagePath) return rawConfig.imagePath;
+    if (product.images && product.images.length > 0) return product.images[0];
+    return '/assets/catalogue-3d/plain.png';
+  };
+
   const getInitialContext = () => {
     if (initialMaterialContext) return initialMaterialContext;
     try {
@@ -107,7 +128,44 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
 
   const storedContext = getInitialContext();
 
-  // Enquiry Category Selection
+  // Check if enquiry is powered by Collection materials
+  const [isCollectionMode, setIsCollectionMode] = useState<boolean>(() => {
+    if (isFromCollection) return true;
+    try {
+      return sessionStorage.getItem('cf_reach_us_source') === 'collection';
+    } catch {
+      return false;
+    }
+  });
+
+  // Active materials transferred from Collection
+  const [activeMaterials, setActiveMaterials] = useState<CollectionItem[]>(() => {
+    if (collectionMaterials && collectionMaterials.length > 0) {
+      return collectionMaterials;
+    }
+    try {
+      const saved = localStorage.getItem('cf_dealer_collection_v1');
+      if (saved) return JSON.parse(saved);
+    } catch {
+      // Fallback
+    }
+    return [];
+  });
+
+  // Sync if collectionMaterials prop updates
+  useEffect(() => {
+    if (collectionMaterials) {
+      setActiveMaterials(collectionMaterials);
+    }
+  }, [collectionMaterials]);
+
+  useEffect(() => {
+    if (isFromCollection) {
+      setIsCollectionMode(true);
+    }
+  }, [isFromCollection]);
+
+  // Enquiry Category Selection (for standard mode)
   const [selectedCategoryKey, setSelectedCategoryKey] = useState<EnquiryCategoryKey>(() => {
     if (storedContext.toLowerCase().includes('lace') || storedContext.toLowerCase().includes('accessor')) {
       return 'accessories';
@@ -116,21 +174,19 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
   });
   const [isEnquiryExpanded, setIsEnquiryExpanded] = useState<boolean>(Boolean(storedContext));
 
-  // Progressive Enquiry Stepper: 1 = Requirement/Message, 2 = Contact Details, 3 = Review & Send
+  // Progressive Enquiry Stepper: 1 = Requirement/Message, 2 = Contact Details, 3 = Review & Send (for standard mode)
   const [stepperStep, setStepperStep] = useState<1 | 2 | 3>(1);
 
-  // Form Fields
+  // Form Fields - Strictly empty for customer to fill in their own personal and contact details
   const [formData, setFormData] = useState({
-    message: storedContext
-      ? `Inquiry regarding ${storedContext}: We would like to explore available specifications, custom development options, and minimum order quantities.`
-      : '',
+    message: '',
     name: '',
     phone: '',
     email: '',
   });
 
   useEffect(() => {
-    if (initialMaterialContext) {
+    if (!isCollectionMode && initialMaterialContext) {
       setFormData((prev) => ({
         ...prev,
         message: `Inquiry regarding ${initialMaterialContext}: We would like to explore available specifications, custom development options, and minimum order quantities.`,
@@ -140,7 +196,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
         setSelectedCategoryKey('accessories');
       }
     }
-  }, [initialMaterialContext]);
+  }, [initialMaterialContext, isCollectionMode]);
 
   // UI Feedback States
   const [copiedEmail, setCopiedEmail] = useState(false);
@@ -169,7 +225,34 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
     }
   };
 
-  // Step 1 Validation
+  // Remove material from collection enquiry
+  const handleRemoveMaterial = (productId: string) => {
+    setActiveMaterials((prev) => prev.filter((item) => item.product.id !== productId));
+    if (onRemoveCollectionMaterial) {
+      onRemoveCollectionMaterial(productId);
+    }
+  };
+
+  // Switch between collection requirements and standard enquiry
+  const handleSwitchToGeneral = () => {
+    setIsCollectionMode(false);
+    try {
+      sessionStorage.removeItem('cf_reach_us_source');
+    } catch {
+      // Ignore
+    }
+  };
+
+  const handleSwitchToCollection = () => {
+    setIsCollectionMode(true);
+    try {
+      sessionStorage.setItem('cf_reach_us_source', 'collection');
+    } catch {
+      // Ignore
+    }
+  };
+
+  // Step 1 Validation (Standard Mode)
   const validateStep1 = () => {
     const errors: Record<string, string> = {};
     if (!formData.message.trim() || formData.message.trim().length < 4) {
@@ -179,7 +262,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
     return Object.keys(errors).length === 0;
   };
 
-  // Step 2 Validation
+  // Step 2 Validation (Standard Mode)
   const validateStep2 = () => {
     const errors: Record<string, string> = {};
     if (!formData.name.trim() || formData.name.trim().length < 2) {
@@ -198,11 +281,36 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
     return Object.keys(errors).length === 0;
   };
 
-  // Form Submit Handler
+  // Validation for Collection Mode
+  const validateCollectionMode = () => {
+    const errors: Record<string, string> = {};
+    if (!formData.name.trim() || formData.name.trim().length < 2) {
+      errors.name = 'Please enter your name.';
+    }
+    if (!formData.phone.trim() || formData.phone.trim().length < 7) {
+      errors.phone = 'Please provide a valid phone or WhatsApp number.';
+    }
+    if (
+      formData.email.trim() &&
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())
+    ) {
+      errors.email = 'Please provide a valid email format, or leave it blank.';
+    }
+    if (activeMaterials.length === 0 && !formData.message.trim()) {
+      errors.form = 'Please select at least one material or write your requirement in the notes.';
+    }
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  // Unified Form Submit Handler
   const handleSubmitEnquiry = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    if (!validateStep1() || !validateStep2()) {
-      return;
+
+    if (isCollectionMode) {
+      if (!validateCollectionMode()) return;
+    } else {
+      if (!validateStep1() || !validateStep2()) return;
     }
 
     setIsSubmitting(true);
@@ -213,8 +321,28 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
       const record = {
         id: `reach-us-${timestamp}`,
         referenceCode: code,
-        category: currentCategory.label,
-        message: formData.message.trim(),
+        category: isCollectionMode
+          ? `Material Requirements (${activeMaterials.length} materials)`
+          : currentCategory.label,
+        materials: isCollectionMode
+          ? activeMaterials.map((i) => ({
+              id: i.product.id,
+              name: i.product.name,
+              category: i.product.categoryLabel || i.product.subcategory || i.product.category,
+              specs: [
+                i.product.width ? `Width: ${i.product.width}` : '',
+                i.product.fabric || i.product.quality,
+                i.product.weave || i.product.fabricWeaveType,
+                i.product.gsm ? `${i.product.gsm} GSM` : '',
+                i.selectedColour ? `Colour: ${i.selectedColour}` : '',
+                i.selectedSize ? `Size: ${i.selectedSize}` : '',
+              ]
+                .filter(Boolean)
+                .join(' • '),
+              quantity: i.quantity,
+            }))
+          : undefined,
+        message: formData.message.trim() || undefined,
         name: formData.name.trim(),
         phone: formData.phone.trim(),
         email: formData.email.trim() || undefined,
@@ -226,6 +354,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
         const list = existing ? JSON.parse(existing) : [];
         list.unshift(record);
         localStorage.setItem(STORAGE_ENQUIRIES_KEY, JSON.stringify(list));
+        sessionStorage.removeItem('cf_reach_us_source');
       } catch (err) {
         console.warn('LocalStorage error:', err);
       }
@@ -254,16 +383,81 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
     if (customMsg) {
       return `https://wa.me/${VERIFIED_PHONE_RAW}?text=${encodeURIComponent(customMsg)}`;
     }
+
+    let materialsSection = '';
+    if (isCollectionMode && activeMaterials.length > 0) {
+      materialsSection =
+        `\n*SELECTED MATERIAL REQUIREMENTS (${activeMaterials.length}):*\n` +
+        activeMaterials
+          .map((i, idx) => {
+            const p = i.product;
+            const specs = [
+              p.width ? `Width: ${p.width}` : '',
+              p.fabric || p.quality,
+              p.weave || p.fabricWeaveType,
+              p.gsm ? `${p.gsm} GSM` : '',
+              i.selectedColour ? `Colour: ${i.selectedColour}` : '',
+            ]
+              .filter(Boolean)
+              .join(' • ');
+            return `  ${idx + 1}. *${p.name}* (${p.categoryLabel || p.subcategory || p.category})${
+              specs ? `\n     Specs: ${specs}` : ''
+            }`;
+          })
+          .join('\n');
+    }
+
     const text =
-      `*CLASSIC FASHIONS — REACH US ENQUIRY*\n` +
+      `*CLASSIC FASHIONS — SOURCING ENQUIRY*\n` +
       `• *Reference:* ${referenceCode || 'Direct Sourcing Query'}\n` +
-      `• *Category:* ${currentCategory.label}\n` +
+      `• *Topic:* ${isCollectionMode ? 'Material Requirements' : currentCategory.label}\n` +
       `• *Name:* ${formData.name.trim() || 'Buyer'}\n` +
       `• *Phone:* ${formData.phone.trim() || 'Direct'}\n` +
       (formData.email.trim() ? `• *Email:* ${formData.email.trim()}\n` : '') +
-      `• *Message:* ${formData.message.trim() || 'Please get in touch with me.'}\n`;
+      (materialsSection ? `${materialsSection}\n` : '') +
+      (formData.message.trim() ? `• *Notes:* ${formData.message.trim()}\n` : '');
 
     return `https://wa.me/${VERIFIED_PHONE_RAW}?text=${encodeURIComponent(text)}`;
+  };
+
+  // Pre-formatted Email URL
+  const getEmailMailtoUrl = () => {
+    let materialsSection = '';
+    if (isCollectionMode && activeMaterials.length > 0) {
+      materialsSection =
+        `\nMATERIAL REQUIREMENTS (${activeMaterials.length}):\n` +
+        activeMaterials
+          .map((i, idx) => {
+            const p = i.product;
+            const specs = [
+              p.width ? `Width: ${p.width}` : '',
+              p.fabric || p.quality,
+              p.weave || p.fabricWeaveType,
+              p.gsm ? `${p.gsm} GSM` : '',
+            ]
+              .filter(Boolean)
+              .join(' • ');
+            return `${idx + 1}. ${p.name} (${p.categoryLabel || p.subcategory || p.category})${
+              specs ? ` - ${specs}` : ''
+            }`;
+          })
+          .join('\n');
+    }
+
+    const body =
+      `CLASSIC FASHIONS SOURCING ENQUIRY\n` +
+      `Reference: ${referenceCode || 'Direct Sourcing Query'}\n\n` +
+      `Customer Name: ${formData.name.trim()}\n` +
+      `Phone/WhatsApp: ${formData.phone.trim()}\n` +
+      (formData.email.trim() ? `Email: ${formData.email.trim()}\n` : '') +
+      (materialsSection ? `${materialsSection}\n` : '') +
+      (formData.message.trim() ? `\nAdditional Message:\n${formData.message.trim()}\n` : '');
+
+    const subject = isCollectionMode
+      ? `Material Requirements Enquiry: ${formData.name.trim() || 'Buyer'} (${activeMaterials.length} materials)`
+      : `Sourcing Inquiry — ${formData.name.trim() || 'Classic Fashions'}`;
+
+    return `mailto:${VERIFIED_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 
   return (
@@ -543,308 +737,308 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
           </div>
 
           {/* ═══════════════════════════════════════════════════════════════════════ */}
-          {/* RIGHT SIDE (7 cols): Interactive Enquiry Experience "Let's Work Together" */}
+          {/* RIGHT SIDE (7 cols): Collection Material Requirements OR Standard Desk  */}
           {/* ═══════════════════════════════════════════════════════════════════════ */}
           <div className="lg:col-span-7 space-y-6 pt-2">
             
-            {/* Section Header */}
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 border border-[#B8934A] rotate-45 shrink-0 shadow-[0_0_6px_rgba(184,147,74,0.25)]" />
-                <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.2em] text-[#B8934A] font-semibold">
-                  ENQUIRY DESK
-                </span>
-              </div>
-              <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#142E20] tracking-tight">
-                Let’s Work Together
-              </h2>
-              <p className="text-sm text-[#55514B] leading-relaxed max-w-xl font-normal">
-                Tell us what you need — fabric, accessories, bulk orders or custom development. We’ll get back to you soon.
-              </p>
-            </div>
-
-            {/* Five Elegant Interactive Enquiry Tiles Styled with Soft Gold Glow & Cream Surfaces */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-              {ENQUIRY_CATEGORIES.map((cat, idx) => {
-                const Icon = cat.icon;
-                const isSelected = selectedCategoryKey === cat.key;
-                const isFullWidth = idx === 4; // 5th item spans full row cleanly
-
-                return (
-                  <button
-                    key={cat.key}
-                    type="button"
-                    onClick={() => {
-                      setSelectedCategoryKey(cat.key);
-                      setIsEnquiryExpanded(true);
-                      if (isSubmitted) {
-                        setIsSubmitted(false);
-                        setStepperStep(1);
-                      }
-                    }}
-                    className={`text-left p-4 rounded-xl border transition-all duration-200 cursor-pointer group flex items-start gap-3.5 relative overflow-hidden ${
-                      isFullWidth ? 'sm:col-span-2' : ''
-                    } ${
-                      isSelected
-                        ? 'bg-gradient-to-b from-[#FAF4E8] via-[#F7EFE0] to-[#F4E9D8] border-[#B8934A] ring-1 ring-[#B8934A]/50 shadow-[0_0_22px_rgba(184,147,74,0.16),0_6px_20px_rgba(20,46,32,0.04)]'
-                        : 'bg-gradient-to-b from-white via-[#FDFBF7] to-[#FAF6EE] border-[#E5DDD0] hover:border-[#C5A059]/80 hover:bg-gradient-to-b hover:from-[#FFFDF9] hover:to-[#FAF3E6] hover:shadow-[0_8px_24px_rgba(184,147,74,0.12)] hover:-translate-y-0.5'
-                    }`}
-                  >
-                    {/* Outline Icon */}
-                    <div
-                      className={`w-9 h-9 rounded-lg border flex items-center justify-center shrink-0 transition-all ${
-                        isSelected
-                          ? 'border-[#B8934A] bg-[#B8934A]/15 text-[#142E20] shadow-[0_0_10px_rgba(184,147,74,0.25)]'
-                          : 'border-[#E2DBD0] bg-white text-[#B8934A] group-hover:border-[#B8934A]/70 group-hover:shadow-[0_0_8px_rgba(184,147,74,0.18)]'
-                      }`}
-                    >
-                      <Icon className="w-4 h-4 stroke-[1.5]" />
+            {isCollectionMode ? (
+              /* ─────────────────────────────────────────────────────────────── */
+              /* COLLECTION MODE: PREFILLED MATERIAL REQUIREMENTS & CONTACT FORM  */
+              /* ─────────────────────────────────────────────────────────────── */
+              <div className="space-y-6 animate-in fade-in duration-300">
+                {/* Header */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 border border-[#B8934A] rotate-45 shrink-0 shadow-[0_0_6px_rgba(184,147,74,0.25)]" />
+                      <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.2em] text-[#B8934A] font-semibold">
+                        SOURCING ENQUIRY
+                      </span>
                     </div>
-
-                    {/* Content */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <span
-                          className={`font-serif text-sm sm:text-base font-semibold tracking-tight transition-colors ${
-                            isSelected ? 'text-[#142E20]' : 'text-[#142E20] group-hover:text-[#B8934A]'
-                          }`}
-                        >
-                          {cat.label}
-                        </span>
-                        <ArrowRight
-                          className={`w-3.5 h-3.5 transition-all ${
-                            isSelected
-                              ? 'text-[#B8934A] translate-x-0.5 drop-shadow-[0_0_4px_rgba(184,147,74,0.4)]'
-                              : 'text-[#C5BEB2] opacity-70 group-hover:text-[#B8934A] group-hover:translate-x-1 group-hover:opacity-100'
-                          }`}
-                        />
-                      </div>
-                      <p className="text-[11px] text-[#737068] mt-0.5 font-normal leading-snug">
-                        {cat.tagline}
-                      </p>
-                    </div>
-
-                    {/* Selected Indicator Edge Stripe with Gold Gradient */}
-                    {isSelected && (
-                      <div aria-hidden="true" className="absolute top-0 left-0 bottom-0 w-1 bg-gradient-to-b from-[#B8934A] via-[#D4AF37] to-[#B8934A] shadow-[0_0_8px_rgba(184,147,74,0.4)]" />
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* ═══════════════════════════════════════════════════════════════════ */}
-            {/* PROGRESSIVE ENQUIRY AREA — Soft Ivory Surface with Faint Gold Edge  */}
-            {/* ═══════════════════════════════════════════════════════════════════ */}
-            <div className="bg-gradient-to-b from-[#FFFDF9] via-[#FAF7F0] to-[#F7F2E8] border border-[#E2D8C3] hover:border-[#C5A059]/50 rounded-2xl p-6 sm:p-8 shadow-[0_16px_45px_rgba(20,46,32,0.04),0_0_30px_rgba(184,147,74,0.06)] relative overflow-hidden transition-all duration-300">
-              
-              {/* Corner Fine Gold Accents with Subtle Warm Glow */}
-              <div aria-hidden="true" className="absolute top-3 left-3 w-2 h-2 border-t border-l border-[#B8934A]/40" />
-              <div aria-hidden="true" className="absolute top-3 right-3 w-2 h-2 border-t border-r border-[#B8934A]/40" />
-              <div aria-hidden="true" className="absolute bottom-3 left-3 w-2 h-2 border-b border-l border-[#B8934A]/40" />
-              <div aria-hidden="true" className="absolute bottom-3 right-3 w-2 h-2 border-b border-r border-[#B8934A]/40" />
-
-              {/* --------------------------------------------------------------- */}
-              {/* STATE A: SIMPLIFIED SUBMITTED SUCCESS CONFIRMATION               */}
-              {/* --------------------------------------------------------------- */}
-              {isSubmitted ? (
-                <div className="text-center py-6 space-y-5 animate-in fade-in duration-300">
-                  <div className="w-12 h-12 rounded-full bg-[#FAF7F2] border border-[#B8934A] shadow-[0_0_14px_rgba(184,147,74,0.25)] flex items-center justify-center mx-auto text-[#142E20]">
-                    <CheckCircle2 className="w-6 h-6 text-[#142E20]" />
-                  </div>
-
-                  {/* Concise confirmation matching exact user requirement */}
-                  <div className="space-y-2">
-                    <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#B8934A] font-semibold block">
-                      ENQUIRY RECEIVED
-                    </span>
-                    <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#142E20] tracking-tight">
-                      Thank You!
-                    </h3>
-                    <p className="text-sm text-[#55514B] max-w-md mx-auto leading-relaxed">
-                      We’ve received your enquiry and will be in touch soon.
-                    </p>
-                  </div>
-
-                  {/* Reference code */}
-                  <div className="inline-block bg-[#FAF7F2] border border-[#E2D8C3] shadow-[0_0_12px_rgba(184,147,74,0.08)] rounded-xl px-5 py-2.5">
-                    <span className="text-[9px] font-mono uppercase tracking-wider text-[#737068] block">
-                      Reference Code
-                    </span>
-                    <span className="font-mono text-sm font-semibold text-[#142E20]">
-                      {referenceCode}
-                    </span>
-                  </div>
-
-                  <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
-                    <a
-                      href={getWhatsAppUrl()}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#142E20] hover:bg-[#1B3B2B] text-[#FAF7F2] px-6 py-3 rounded-xl text-xs font-mono font-medium tracking-wider transition-all cursor-pointer shadow-xs border border-[#B8934A]/50 hover:shadow-[0_6px_22px_rgba(184,147,74,0.26)] active:scale-[0.99]"
-                    >
-                      <span>Share on WhatsApp</span>
-                      <ArrowUpRight className="w-3.5 h-3.5 text-[#B8934A]" />
-                    </a>
 
                     <button
                       type="button"
-                      onClick={handleReset}
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl border border-[#DDD6C8] bg-white text-xs font-mono text-[#55514B] hover:text-[#142E20] hover:border-[#B8934A] hover:shadow-[0_4px_16px_rgba(184,147,74,0.12)] transition-all cursor-pointer"
+                      onClick={handleSwitchToGeneral}
+                      className="text-[11px] font-mono text-[#8C8478] hover:text-[#142E20] transition-colors cursor-pointer"
                     >
-                      <RotateCcw className="w-3 h-3" />
-                      <span>Submit Another Enquiry</span>
+                      Switch to general enquiry
                     </button>
                   </div>
-                </div>
-              ) : !isEnquiryExpanded ? (
-                /* ------------------------------------------------------------- */
-                /* STATE B: COLLAPSED PANEL WITH "DROP US A MESSAGE" & BUTTON     */
-                /* ------------------------------------------------------------- */
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-2">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-mono uppercase tracking-wider text-[#B8934A] font-semibold">
-                        SELECTED:
-                      </span>
-                      <span className="text-xs font-mono font-semibold text-[#142E20] bg-white px-2.5 py-0.5 rounded border border-[#B8934A]/40 shadow-[0_0_8px_rgba(184,147,74,0.12)]">
-                        {currentCategory.label}
-                      </span>
-                    </div>
-                    {/* Consistent serif italic detail */}
-                    <p className="font-serif italic text-base sm:text-lg text-[#524F4A] pt-0.5">
-                      Drop us a message with your requirements...
-                    </p>
-                  </div>
 
-                  {/* Forest-Green Open Enquiry Button with Restrained Hover Glow */}
-                  <button
-                    type="button"
-                    onClick={() => setIsEnquiryExpanded(true)}
-                    className="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-[#142E20] hover:bg-[#1B3B2B] text-[#FAF7F2] text-xs font-mono font-semibold uppercase tracking-[0.16em] border border-[#B8934A]/40 hover:border-[#D4AF37] hover:shadow-[0_6px_22px_rgba(184,147,74,0.26)] transition-all active:scale-[0.99] cursor-pointer shrink-0"
-                  >
-                    <span>Open Enquiry</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-[#B8934A]" />
-                  </button>
+                  <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#142E20] tracking-tight">
+                    Your Material Requirements
+                  </h2>
+                  <p className="text-sm text-[#55514B] leading-relaxed max-w-xl font-normal">
+                    Review your prefilled material specifications below and enter your contact details. Our team will verify stock and reach out directly.
+                  </p>
                 </div>
-              ) : (
-                /* ------------------------------------------------------------- */
-                /* STATE C: PROGRESSIVE MULTI-STEP ENQUIRY INTERACTION           */
-                /* ------------------------------------------------------------- */
-                <div className="space-y-6 animate-in fade-in duration-300">
-                  {/* Top Bar with Discreet Step Indicator & Selected Topic */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-[#F0EBE2]">
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-mono uppercase tracking-wider text-[#B8934A] font-semibold">
-                          ENQUIRY FOR:
-                        </span>
-                        <span className="text-xs font-mono font-semibold text-[#142E20] bg-white px-2.5 py-0.5 rounded border border-[#B8934A]/40 shadow-[0_0_8px_rgba(184,147,74,0.12)]">
-                          {currentCategory.label}
-                        </span>
-                      </div>
-                      <p className="font-serif italic text-sm text-[#737068] mt-0.5">
-                        Drop us a message — our coordinators reply within hours
+
+                {isSubmitted ? (
+                  /* SUCCESS CONFIRMATION FOR COLLECTION ENQUIRY */
+                  <div className="bg-gradient-to-b from-[#FFFDF9] via-[#FAF7F0] to-[#F7F2E8] border border-[#E2D8C3] rounded-2xl p-6 sm:p-8 shadow-[0_16px_45px_rgba(20,46,32,0.04),0_0_30px_rgba(184,147,74,0.06)] text-center py-8 space-y-5 animate-in fade-in duration-300 relative overflow-hidden">
+                    <div aria-hidden="true" className="absolute top-3 left-3 w-2 h-2 border-t border-l border-[#B8934A]/40" />
+                    <div aria-hidden="true" className="absolute top-3 right-3 w-2 h-2 border-t border-r border-[#B8934A]/40" />
+                    <div aria-hidden="true" className="absolute bottom-3 left-3 w-2 h-2 border-b border-l border-[#B8934A]/40" />
+                    <div aria-hidden="true" className="absolute bottom-3 right-3 w-2 h-2 border-b border-r border-[#B8934A]/40" />
+
+                    <div className="w-12 h-12 rounded-full bg-[#FAF7F2] border border-[#B8934A] shadow-[0_0_14px_rgba(184,147,74,0.25)] flex items-center justify-center mx-auto text-[#142E20]">
+                      <CheckCircle2 className="w-6 h-6 text-[#142E20]" />
+                    </div>
+
+                    <div className="space-y-2">
+                      <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#B8934A] font-semibold block">
+                        ENQUIRY RECEIVED
+                      </span>
+                      <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#142E20] tracking-tight">
+                        Thank You, {formData.name || 'Valued Buyer'}!
+                      </h3>
+                      <p className="text-sm text-[#55514B] max-w-md mx-auto leading-relaxed">
+                        We’ve received your enquiry with your material requirements and our team will get in touch with you shortly.
                       </p>
                     </div>
 
-                    {/* Step indicator */}
-                    <div className="flex items-center gap-2 self-start sm:self-auto">
-                      <span className="text-[11px] font-mono text-[#737068]">
-                        Step {stepperStep} of 3
+                    {/* Reference code */}
+                    <div className="inline-block bg-[#FAF7F2] border border-[#E2D8C3] shadow-[0_0_12px_rgba(184,147,74,0.08)] rounded-xl px-5 py-2.5">
+                      <span className="text-[9px] font-mono uppercase tracking-wider text-[#737068] block">
+                        Reference Code
                       </span>
-                      <div className="flex items-center gap-1.5" aria-hidden="true">
-                        {[1, 2, 3].map((step) => (
-                          <div
-                            key={step}
-                            className={`h-1.5 rounded-full transition-all duration-300 ${
-                              step === stepperStep
-                                ? 'w-5 bg-[#B8934A] shadow-[0_0_6px_rgba(184,147,74,0.4)]'
-                                : step < stepperStep
-                                ? 'w-1.5 bg-[#142E20]'
-                                : 'w-1.5 bg-[#E2DBD0]'
-                            }`}
-                          />
-                        ))}
+                      <span className="font-mono text-sm font-semibold text-[#142E20]">
+                        {referenceCode}
+                      </span>
+                    </div>
+
+                    {/* Summary of submitted materials */}
+                    {activeMaterials.length > 0 && (
+                      <div className="max-w-md mx-auto bg-white p-4 rounded-xl border border-[#E2D8C3] text-left space-y-2">
+                        <span className="text-[10px] font-mono uppercase tracking-wider text-[#B8934A] font-semibold block">
+                          Submitted Material Requirements ({activeMaterials.length}):
+                        </span>
+                        <ul className="text-xs text-[#142E20] font-sans divide-y divide-[#F0EBE2]">
+                          {activeMaterials.map((item, idx) => (
+                            <li key={idx} className="py-1.5 flex items-center justify-between gap-2">
+                              <span className="font-serif font-medium truncate">{item.product.name}</span>
+                              <span className="text-[10px] font-mono text-[#8C8478] shrink-0">
+                                {item.product.categoryLabel || item.product.subcategory || item.product.category}
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
                       </div>
+                    )}
+
+                    <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+                      <a
+                        href={getWhatsAppUrl()}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#142E20] hover:bg-[#1B3B2B] text-[#FAF7F2] px-6 py-3 rounded-xl text-xs font-mono font-medium tracking-wider transition-all cursor-pointer shadow-xs border border-[#B8934A]/50 hover:shadow-[0_6px_22px_rgba(184,147,74,0.26)] active:scale-[0.99]"
+                      >
+                        <span>Share on WhatsApp</span>
+                        <ArrowUpRight className="w-3.5 h-3.5 text-[#B8934A]" />
+                      </a>
+
+                      <a
+                        href={getEmailMailtoUrl()}
+                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl border border-[#DDD6C8] bg-white text-xs font-mono text-[#55514B] hover:text-[#142E20] hover:border-[#B8934A] hover:shadow-[0_4px_16px_rgba(184,147,74,0.12)] transition-all cursor-pointer"
+                      >
+                        <Mail className="w-3 h-3 text-[#B8934A]" />
+                        <span>Send Direct Email</span>
+                      </a>
+
+                      <button
+                        type="button"
+                        onClick={handleReset}
+                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl border border-[#DDD6C8] bg-white text-xs font-mono text-[#55514B] hover:text-[#142E20] hover:border-[#B8934A] hover:shadow-[0_4px_16px_rgba(184,147,74,0.12)] transition-all cursor-pointer"
+                      >
+                        <RotateCcw className="w-3 h-3" />
+                        <span>Submit Another Enquiry</span>
+                      </button>
                     </div>
                   </div>
+                ) : (
+                  <>
+                    {/* 1. COMPACT PREFILLED "YOUR MATERIAL REQUIREMENTS" CARD */}
+                    <div className="bg-gradient-to-b from-[#FFFDF9] via-[#FAF7F0] to-[#F7F2E8] border border-[#E2D8C3] hover:border-[#C5A059]/50 rounded-2xl p-5 sm:p-7 shadow-[0_12px_36px_rgba(20,46,32,0.04),0_0_24px_rgba(184,147,74,0.06)] relative overflow-hidden transition-all duration-300">
+                      
+                      {/* Corner Accents */}
+                      <div aria-hidden="true" className="absolute top-3 left-3 w-2 h-2 border-t border-l border-[#B8934A]/40" />
+                      <div aria-hidden="true" className="absolute top-3 right-3 w-2 h-2 border-t border-r border-[#B8934A]/40" />
+                      <div aria-hidden="true" className="absolute bottom-3 left-3 w-2 h-2 border-b border-l border-[#B8934A]/40" />
+                      <div aria-hidden="true" className="absolute bottom-3 right-3 w-2 h-2 border-b border-r border-[#B8934A]/40" />
 
-                  {/* ─────────────────────────────────────────────────────────── */}
-                  {/* STEP 1: Message / Requirement Specification                 */}
-                  {/* ─────────────────────────────────────────────────────────── */}
-                  {stepperStep === 1 && (
-                    <div className="space-y-4 animate-in fade-in duration-200">
-                      <div>
-                        <h4 className="font-serif text-base font-semibold text-[#142E20]">
-                          {currentCategory.promptHeadline}
-                        </h4>
-                        <p className="text-xs text-[#737068] mt-0.5">
-                          Include target quantity, construction, lead time, or any reference codes.
-                        </p>
-                      </div>
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 border-b border-[#ECE5D8]">
+                        <div>
+                          <div className="flex items-center gap-2 mb-1">
+                            <div className="w-1.5 h-1.5 border border-[#B8934A] rotate-45 shrink-0" />
+                            <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#B8934A] font-semibold">
+                              SELECTED SWATCHES
+                            </span>
+                          </div>
+                          <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#142E20] tracking-tight">
+                            Your Material Requirements
+                          </h3>
+                        </div>
 
-                      <div className="space-y-1.5">
-                        <textarea
-                          rows={4}
-                          autoFocus
-                          value={formData.message}
-                          onChange={(e) => {
-                            setFormData({ ...formData, message: e.target.value });
-                            if (fieldErrors.message) setFieldErrors({});
-                          }}
-                          placeholder={currentCategory.placeholder}
-                          className="w-full px-4 py-3 text-xs sm:text-sm bg-[#FAF8F5] border border-[#E0D7C6] rounded-xl text-[#181715] placeholder-[#99948A] focus:bg-white focus:outline-none focus:border-[#B8934A] focus:ring-1 focus:ring-[#B8934A]/40 focus:shadow-[0_0_14px_rgba(184,147,74,0.12)] transition-all resize-none leading-relaxed font-sans"
-                        />
-                        {fieldErrors.message && (
-                          <p className="text-[11px] text-[#A63624] font-mono">{fieldErrors.message}</p>
-                        )}
-                        <div className="flex items-center justify-between text-[11px] font-mono text-[#8C8478]">
-                          <span>Feel free to be as detailed or brief as required</span>
-                          <span>{formData.message.trim().length} chars</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono text-xs font-semibold text-[#142E20] bg-white px-3 py-1 rounded-full border border-[#B8934A]/50 shadow-2xs">
+                            {activeMaterials.length} {activeMaterials.length === 1 ? 'Material' : 'Materials'} Selected
+                          </span>
+                          {activeMaterials.length > 0 && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setActiveMaterials([]);
+                                if (onClearCollection) onClearCollection();
+                              }}
+                              className="text-[11px] font-mono text-[#8C8478] hover:text-[#A63C26] transition-colors cursor-pointer px-1"
+                            >
+                              Clear all
+                            </button>
+                          )}
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-between pt-3 border-t border-[#F0EBE2]">
-                        <button
-                          type="button"
-                          onClick={() => setIsEnquiryExpanded(false)}
-                          className="text-xs font-mono text-[#737068] hover:text-[#142E20] transition-colors cursor-pointer"
-                        >
-                          Cancel
-                        </button>
+                      {/* Materials List */}
+                      <div className="mt-4 space-y-3">
+                        {activeMaterials.length === 0 ? (
+                          <div className="py-8 text-center p-4 rounded-xl border border-dashed border-[#DDD5C7] bg-white/60 space-y-3">
+                            <p className="font-serif italic text-sm text-[#737068]">
+                              No materials currently in your requirements list.
+                            </p>
+                            <div className="flex items-center justify-center gap-3">
+                              {onExploreCatalogue && (
+                                <button
+                                  type="button"
+                                  onClick={onExploreCatalogue}
+                                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#142E20] text-[#FAF7F2] text-xs font-mono font-medium hover:bg-[#1B3B2B] transition-colors cursor-pointer"
+                                >
+                                  <span>Explore Fabrics</span>
+                                  <ArrowRight className="w-3 h-3 text-[#B8934A]" />
+                                </button>
+                              )}
+                              <button
+                                type="button"
+                                onClick={handleSwitchToGeneral}
+                                className="text-xs font-mono text-[#8C8478] hover:text-[#142E20] underline cursor-pointer"
+                              >
+                                Switch to standard enquiry
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="space-y-2.5 max-h-[360px] overflow-y-auto pr-1">
+                            {activeMaterials.map((item, idx) => {
+                              const p = item.product;
+                              const imgSrc = getMaterialImage(p);
+                              const specs = [
+                                p.width ? `Width: ${p.width}` : '',
+                                p.fabric || p.quality,
+                                p.weave || p.fabricWeaveType,
+                                p.gsm ? `${p.gsm} GSM` : '',
+                              ].filter(Boolean);
 
-                        <button
-                          type="button"
-                          onClick={() => {
-                            if (validateStep1()) {
-                              setStepperStep(2);
-                            }
-                          }}
-                          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#142E20] hover:bg-[#1B3B2B] text-[#FAF7F2] text-xs font-mono font-semibold uppercase tracking-wider border border-[#B8934A]/40 hover:border-[#D4AF37] hover:shadow-[0_6px_22px_rgba(184,147,74,0.26)] transition-all active:scale-[0.99] cursor-pointer"
-                        >
-                          <span>Continue to Contact</span>
-                          <ArrowRight className="w-3.5 h-3.5 text-[#B8934A]" />
-                        </button>
+                              return (
+                                <div
+                                  key={`${p.id}-${idx}`}
+                                  className="group relative p-3 rounded-xl bg-white border border-[#E5DDD0] hover:border-[#B8934A]/70 hover:shadow-[0_4px_16px_rgba(184,147,74,0.12)] transition-all duration-200 flex items-start gap-3.5"
+                                >
+                                  {/* Swatch Thumbnail */}
+                                  <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-lg overflow-hidden bg-[#ECE6DC] border border-[#DDD5C7] shrink-0 shadow-inner relative">
+                                    <img
+                                      src={imgSrc}
+                                      alt={p.name}
+                                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                    />
+                                    <div
+                                      aria-hidden="true"
+                                      className="absolute inset-0 bg-gradient-to-tr from-black/15 via-transparent to-white/20 pointer-events-none"
+                                    />
+                                  </div>
+
+                                  {/* Material Details */}
+                                  <div className="flex-1 min-w-0">
+                                    <div className="flex items-start justify-between gap-2">
+                                      <div>
+                                        <span className="inline-block text-[9px] font-mono uppercase tracking-widest text-[#B8934A] font-semibold">
+                                          {p.categoryLabel || p.subcategory || p.category}
+                                        </span>
+                                        <h4 className="font-serif text-sm sm:text-base font-bold text-[#142E20] leading-snug">
+                                          {p.name}
+                                        </h4>
+                                      </div>
+
+                                      {/* Remove Button */}
+                                      <button
+                                        type="button"
+                                        onClick={() => handleRemoveMaterial(p.id)}
+                                        className="w-6 h-6 rounded-full bg-white hover:bg-[#FAF1EE] text-[#8C8478] hover:text-[#A63C26] border border-[#DDD5C7] hover:border-[#F0CEC4] flex items-center justify-center transition-all cursor-pointer shadow-2xs shrink-0"
+                                        title={`Remove ${p.name}`}
+                                        aria-label={`Remove ${p.name} from enquiry`}
+                                      >
+                                        <X className="w-3 h-3" />
+                                      </button>
+                                    </div>
+
+                                    {/* Specifications */}
+                                    {specs.length > 0 && (
+                                      <p className="text-[11px] font-mono text-[#666057] mt-1 line-clamp-2 leading-relaxed">
+                                        {specs.join(' • ')}
+                                      </p>
+                                    )}
+
+                                    {/* Selected Variant Attributes */}
+                                    {(item.selectedColour || item.selectedSize || item.quantity > 1) && (
+                                      <div className="flex flex-wrap items-center gap-1.5 mt-1.5 text-[10px] font-mono text-[#737068]">
+                                        {item.selectedColour && (
+                                          <span className="px-2 py-0.5 rounded bg-[#FAF7F2] border border-[#E6E0D2]">
+                                            Colour: {item.selectedColour}
+                                          </span>
+                                        )}
+                                        {item.selectedSize && (
+                                          <span className="px-2 py-0.5 rounded bg-[#FAF7F2] border border-[#E6E0D2]">
+                                            Size: {item.selectedSize}
+                                          </span>
+                                        )}
+                                        {item.quantity > 1 && (
+                                          <span className="px-2 py-0.5 rounded bg-[#FAF7F2] border border-[#E6E0D2] font-semibold text-[#142E20]">
+                                            Qty: {item.quantity}
+                                          </span>
+                                        )}
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
                       </div>
                     </div>
-                  )}
 
-                  {/* ─────────────────────────────────────────────────────────── */}
-                  {/* STEP 2: Contact Details                                     */}
-                  {/* ─────────────────────────────────────────────────────────── */}
-                  {stepperStep === 2 && (
-                    <div className="space-y-4 animate-in fade-in duration-200">
-                      <div>
-                        <h4 className="font-serif text-base font-semibold text-[#142E20]">
-                          Where should we send your quotation or swatch response?
-                        </h4>
-                        <p className="text-xs text-[#737068] mt-0.5">
-                          We do not send marketing spam. We only use your information to reply to this enquiry.
+                    {/* 2. CUSTOMER CONTACT DETAILS FORM (strictly empty for user to fill in) */}
+                    <div className="bg-gradient-to-b from-[#FFFDF9] via-[#FAF7F0] to-[#F7F2E8] border border-[#E2D8C3] hover:border-[#C5A059]/50 rounded-2xl p-5 sm:p-7 shadow-[0_12px_36px_rgba(20,46,32,0.04),0_0_24px_rgba(184,147,74,0.06)] relative overflow-hidden transition-all duration-300">
+                      
+                      <div aria-hidden="true" className="absolute top-3 left-3 w-2 h-2 border-t border-l border-[#B8934A]/40" />
+                      <div aria-hidden="true" className="absolute top-3 right-3 w-2 h-2 border-t border-r border-[#B8934A]/40" />
+                      <div aria-hidden="true" className="absolute bottom-3 left-3 w-2 h-2 border-b border-l border-[#B8934A]/40" />
+                      <div aria-hidden="true" className="absolute bottom-3 right-3 w-2 h-2 border-b border-r border-[#B8934A]/40" />
+
+                      <div className="space-y-1 pb-4 border-b border-[#ECE5D8]">
+                        <div className="flex items-center gap-2">
+                          <div className="w-1.5 h-1.5 border border-[#B8934A] rotate-45 shrink-0" />
+                          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#B8934A] font-semibold">
+                            CONTACT INFORMATION
+                          </span>
+                        </div>
+                        <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#142E20] tracking-tight">
+                          Where Should We Reach You?
+                        </h3>
+                        <p className="text-xs text-[#737068]">
+                          Please enter your details below. Our sourcing coordinators will respond with pricing, stock status, and sampling support.
                         </p>
                       </div>
 
-                      <div className="space-y-3.5">
+                      <form onSubmit={handleSubmitEnquiry} className="mt-5 space-y-4">
                         {/* Name */}
                         <div>
                           <label className="block text-[11px] font-mono uppercase tracking-wider text-[#3D3D3A] font-semibold mb-1">
@@ -858,8 +1052,8 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                               setFormData({ ...formData, name: e.target.value });
                               if (fieldErrors.name) setFieldErrors((prev) => ({ ...prev, name: '' }));
                             }}
-                            placeholder="e.g. Anandhan / Murugan"
-                            className="w-full px-4 py-2.5 text-xs sm:text-sm bg-[#FAF8F5] border border-[#E0D7C6] rounded-xl text-[#181715] placeholder-[#99948A] focus:bg-white focus:outline-none focus:border-[#B8934A] focus:ring-1 focus:ring-[#B8934A]/40 focus:shadow-[0_0_14px_rgba(184,147,74,0.12)] transition-all font-sans"
+                            placeholder="Enter your full name"
+                            className="w-full px-4 py-3 text-xs sm:text-sm bg-[#FAF8F5] border border-[#E0D7C6] rounded-xl text-[#181715] placeholder-[#99948A] focus:bg-white focus:outline-none focus:border-[#B8934A] focus:ring-1 focus:ring-[#B8934A]/40 focus:shadow-[0_0_14px_rgba(184,147,74,0.12)] transition-all font-sans"
                           />
                           {fieldErrors.name && (
                             <p className="text-[11px] text-[#A63624] mt-1 font-mono">{fieldErrors.name}</p>
@@ -880,14 +1074,14 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                               if (fieldErrors.phone) setFieldErrors((prev) => ({ ...prev, phone: '' }));
                             }}
                             placeholder="e.g. +91 98420 12345"
-                            className="w-full px-4 py-2.5 text-xs sm:text-sm bg-[#FAF8F5] border border-[#E0D7C6] rounded-xl text-[#181715] placeholder-[#99948A] focus:bg-white focus:outline-none focus:border-[#B8934A] focus:ring-1 focus:ring-[#B8934A]/40 focus:shadow-[0_0_14px_rgba(184,147,74,0.12)] transition-all font-sans"
+                            className="w-full px-4 py-3 text-xs sm:text-sm bg-[#FAF8F5] border border-[#E0D7C6] rounded-xl text-[#181715] placeholder-[#99948A] focus:bg-white focus:outline-none focus:border-[#B8934A] focus:ring-1 focus:ring-[#B8934A]/40 focus:shadow-[0_0_14px_rgba(184,147,74,0.12)] transition-all font-sans"
                           />
                           {fieldErrors.phone && (
                             <p className="text-[11px] text-[#A63624] mt-1 font-mono">{fieldErrors.phone}</p>
                           )}
                         </div>
 
-                        {/* Email (Optional) */}
+                        {/* Email */}
                         <div>
                           <label className="block text-[11px] font-mono uppercase tracking-wider text-[#3D3D3A] font-semibold mb-1">
                             EMAIL ADDRESS <span className="font-normal text-[10px] text-[#737068]">(Optional)</span>
@@ -900,142 +1094,536 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                               if (fieldErrors.email) setFieldErrors((prev) => ({ ...prev, email: '' }));
                             }}
                             placeholder="e.g. sourcing@garments.com"
-                            className="w-full px-4 py-2.5 text-xs sm:text-sm bg-[#FAF8F5] border border-[#E0D7C6] rounded-xl text-[#181715] placeholder-[#99948A] focus:bg-white focus:outline-none focus:border-[#B8934A] focus:ring-1 focus:ring-[#B8934A]/40 focus:shadow-[0_0_14px_rgba(184,147,74,0.12)] transition-all font-sans"
+                            className="w-full px-4 py-3 text-xs sm:text-sm bg-[#FAF8F5] border border-[#E0D7C6] rounded-xl text-[#181715] placeholder-[#99948A] focus:bg-white focus:outline-none focus:border-[#B8934A] focus:ring-1 focus:ring-[#B8934A]/40 focus:shadow-[0_0_14px_rgba(184,147,74,0.12)] transition-all font-sans"
                           />
                           {fieldErrors.email && (
                             <p className="text-[11px] text-[#A63624] mt-1 font-mono">{fieldErrors.email}</p>
                           )}
                         </div>
-                      </div>
 
-                      <div className="flex items-center justify-between pt-3 border-t border-[#F0EBE2]">
-                        <button
-                          type="button"
-                          onClick={() => setStepperStep(1)}
-                          className="text-xs font-mono text-[#737068] hover:text-[#142E20] transition-colors cursor-pointer"
-                        >
-                          ← Back to Requirement
-                        </button>
+                        {/* Additional Message / Notes */}
+                        <div>
+                          <label className="block text-[11px] font-mono uppercase tracking-wider text-[#3D3D3A] font-semibold mb-1">
+                            ADDITIONAL MESSAGE / NOTES <span className="font-normal text-[10px] text-[#737068]">(Optional)</span>
+                          </label>
+                          <textarea
+                            rows={3}
+                            value={formData.message}
+                            onChange={(e) => {
+                              setFormData({ ...formData, message: e.target.value });
+                              if (fieldErrors.message) setFieldErrors((prev) => ({ ...prev, message: '' }));
+                            }}
+                            placeholder="Target meterage, specific finish, delivery schedule, or any special requests..."
+                            className="w-full px-4 py-3 text-xs sm:text-sm bg-[#FAF8F5] border border-[#E0D7C6] rounded-xl text-[#181715] placeholder-[#99948A] focus:bg-white focus:outline-none focus:border-[#B8934A] focus:ring-1 focus:ring-[#B8934A]/40 focus:shadow-[0_0_14px_rgba(184,147,74,0.12)] transition-all resize-none font-sans"
+                          />
+                        </div>
 
-                        <button
-                          type="button"
-                          onClick={() => {
-                            if (validateStep2()) {
-                              setStepperStep(3);
-                            }
-                          }}
-                          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#142E20] hover:bg-[#1B3B2B] text-[#FAF7F2] text-xs font-mono font-semibold uppercase tracking-wider border border-[#B8934A]/40 hover:border-[#D4AF37] hover:shadow-[0_6px_22px_rgba(184,147,74,0.26)] transition-all active:scale-[0.99] cursor-pointer"
-                        >
-                          <span>Review Enquiry</span>
-                          <ArrowRight className="w-3.5 h-3.5 text-[#B8934A]" />
-                        </button>
-                      </div>
+                        {fieldErrors.form && (
+                          <p className="text-xs text-[#A63624] font-mono">{fieldErrors.form}</p>
+                        )}
+
+                        {/* Submit Button */}
+                        <div className="pt-2">
+                          <button
+                            type="submit"
+                            disabled={isSubmitting}
+                            className="group w-full inline-flex items-center justify-center gap-2.5 py-4 px-6 rounded-xl bg-[#142E20] hover:bg-[#1B3B2B] text-[#FAF7F2] border border-[#B8934A]/50 hover:border-[#D4AF37] hover:shadow-[0_6px_22px_rgba(184,147,74,0.26)] text-xs font-mono font-semibold uppercase tracking-[0.2em] shadow-sm transition-all active:scale-[0.99] cursor-pointer disabled:opacity-50"
+                          >
+                            {isSubmitting ? (
+                              <span>Submitting Your Enquiry...</span>
+                            ) : (
+                              <>
+                                <Send className="w-3.5 h-3.5 text-[#B8934A]" />
+                                <span>Submit Enquiry</span>
+                                <ArrowRight className="w-3.5 h-3.5 text-[#B8934A] transition-transform group-hover:translate-x-1" />
+                              </>
+                            )}
+                          </button>
+                        </div>
+                      </form>
                     </div>
-                  )}
+                  </>
+                )}
+              </div>
+            ) : (
+              /* ─────────────────────────────────────────────────────────────── */
+              /* STANDARD MODE: FIVE CATEGORY TILES & PROGRESSIVE STEPPER        */
+              /* ─────────────────────────────────────────────────────────────── */
+              <div className="space-y-6">
+                {/* Optional notification if user has materials in collection */}
+                {activeMaterials.length > 0 && (
+                  <div className="p-3.5 rounded-xl bg-gradient-to-r from-[#FAF4E8] via-[#FFFDF9] to-[#FAF4E8] border border-[#B8934A]/60 flex items-center justify-between gap-3 text-xs animate-in fade-in">
+                    <div className="flex items-center gap-2 text-[#142E20]">
+                      <Sparkles className="w-4 h-4 text-[#B8934A] shrink-0" />
+                      <span className="font-sans">
+                        You have <strong className="font-semibold text-[#142E20]">{activeMaterials.length}</strong> materials saved in your Collection.
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleSwitchToCollection}
+                      className="font-mono text-[11px] font-semibold text-[#142E20] hover:text-[#B8934A] underline cursor-pointer shrink-0"
+                    >
+                      Enquire about collection materials →
+                    </button>
+                  </div>
+                )}
 
-                  {/* ─────────────────────────────────────────────────────────── */}
-                  {/* STEP 3: Review & Send                                       */}
-                  {/* ─────────────────────────────────────────────────────────── */}
-                  {stepperStep === 3 && (
-                    <div className="space-y-5 animate-in fade-in duration-200">
-                      <div>
-                        <h4 className="font-serif text-base font-semibold text-[#142E20]">
-                          Confirm Your Enquiry Details
-                        </h4>
-                        <p className="text-xs text-[#737068] mt-0.5">
-                          Review your summary before dispatching to our sourcing team.
+                {/* Section Header */}
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 border border-[#B8934A] rotate-45 shrink-0 shadow-[0_0_6px_rgba(184,147,74,0.25)]" />
+                    <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.2em] text-[#B8934A] font-semibold">
+                      ENQUIRY DESK
+                    </span>
+                  </div>
+                  <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#142E20] tracking-tight">
+                    Let’s Work Together
+                  </h2>
+                  <p className="text-sm text-[#55514B] leading-relaxed max-w-xl font-normal">
+                    Tell us what you need — fabric, accessories, bulk orders or custom development. We’ll get back to you soon.
+                  </p>
+                </div>
+
+                {/* Five Interactive Enquiry Tiles */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                  {ENQUIRY_CATEGORIES.map((cat, idx) => {
+                    const Icon = cat.icon;
+                    const isSelected = selectedCategoryKey === cat.key;
+                    const isFullWidth = idx === 4;
+
+                    return (
+                      <button
+                        key={cat.key}
+                        type="button"
+                        onClick={() => {
+                          setSelectedCategoryKey(cat.key);
+                          setIsEnquiryExpanded(true);
+                          if (isSubmitted) {
+                            setIsSubmitted(false);
+                            setStepperStep(1);
+                          }
+                        }}
+                        className={`text-left p-4 rounded-xl border transition-all duration-200 cursor-pointer group flex items-start gap-3.5 relative overflow-hidden ${
+                          isFullWidth ? 'sm:col-span-2' : ''
+                        } ${
+                          isSelected
+                            ? 'bg-gradient-to-b from-[#FAF4E8] via-[#F7EFE0] to-[#F4E9D8] border-[#B8934A] ring-1 ring-[#B8934A]/50 shadow-[0_0_22px_rgba(184,147,74,0.16),0_6px_20px_rgba(20,46,32,0.04)]'
+                            : 'bg-gradient-to-b from-white via-[#FDFBF7] to-[#FAF6EE] border-[#E5DDD0] hover:border-[#C5A059]/80 hover:bg-gradient-to-b hover:from-[#FFFDF9] hover:to-[#FAF3E6] hover:shadow-[0_8px_24px_rgba(184,147,74,0.12)] hover:-translate-y-0.5'
+                        }`}
+                      >
+                        <div
+                          className={`w-9 h-9 rounded-lg border flex items-center justify-center shrink-0 transition-all ${
+                            isSelected
+                              ? 'border-[#B8934A] bg-[#B8934A]/15 text-[#142E20] shadow-[0_0_10px_rgba(184,147,74,0.25)]'
+                              : 'border-[#E2DBD0] bg-white text-[#B8934A] group-hover:border-[#B8934A]/70 group-hover:shadow-[0_0_8px_rgba(184,147,74,0.18)]'
+                          }`}
+                        >
+                          <Icon className="w-4 h-4 stroke-[1.5]" />
+                        </div>
+
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between">
+                            <span
+                              className={`font-serif text-sm sm:text-base font-semibold tracking-tight transition-colors ${
+                                isSelected ? 'text-[#142E20]' : 'text-[#142E20] group-hover:text-[#B8934A]'
+                              }`}
+                            >
+                              {cat.label}
+                            </span>
+                            <ArrowRight
+                              className={`w-3.5 h-3.5 transition-all ${
+                                isSelected
+                                  ? 'text-[#B8934A] translate-x-0.5 drop-shadow-[0_0_4px_rgba(184,147,74,0.4)]'
+                                  : 'text-[#C5BEB2] opacity-70 group-hover:text-[#B8934A] group-hover:translate-x-1 group-hover:opacity-100'
+                              }`}
+                            />
+                          </div>
+                          <p className="text-[11px] text-[#737068] mt-0.5 font-normal leading-snug">
+                            {cat.tagline}
+                          </p>
+                        </div>
+
+                        {isSelected && (
+                          <div aria-hidden="true" className="absolute top-0 left-0 bottom-0 w-1 bg-gradient-to-b from-[#B8934A] via-[#D4AF37] to-[#B8934A] shadow-[0_0_8px_rgba(184,147,74,0.4)]" />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Progressive Enquiry Area */}
+                <div className="bg-gradient-to-b from-[#FFFDF9] via-[#FAF7F0] to-[#F7F2E8] border border-[#E2D8C3] hover:border-[#C5A059]/50 rounded-2xl p-6 sm:p-8 shadow-[0_16px_45px_rgba(20,46,32,0.04),0_0_30px_rgba(184,147,74,0.06)] relative overflow-hidden transition-all duration-300">
+                  <div aria-hidden="true" className="absolute top-3 left-3 w-2 h-2 border-t border-l border-[#B8934A]/40" />
+                  <div aria-hidden="true" className="absolute top-3 right-3 w-2 h-2 border-t border-r border-[#B8934A]/40" />
+                  <div aria-hidden="true" className="absolute bottom-3 left-3 w-2 h-2 border-b border-l border-[#B8934A]/40" />
+                  <div aria-hidden="true" className="absolute bottom-3 right-3 w-2 h-2 border-b border-r border-[#B8934A]/40" />
+
+                  {isSubmitted ? (
+                    <div className="text-center py-6 space-y-5 animate-in fade-in duration-300">
+                      <div className="w-12 h-12 rounded-full bg-[#FAF7F2] border border-[#B8934A] shadow-[0_0_14px_rgba(184,147,74,0.25)] flex items-center justify-center mx-auto text-[#142E20]">
+                        <CheckCircle2 className="w-6 h-6 text-[#142E20]" />
+                      </div>
+
+                      <div className="space-y-2">
+                        <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#B8934A] font-semibold block">
+                          ENQUIRY RECEIVED
+                        </span>
+                        <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#142E20] tracking-tight">
+                          Thank You!
+                        </h3>
+                        <p className="text-sm text-[#55514B] max-w-md mx-auto leading-relaxed">
+                          We’ve received your enquiry and will be in touch soon.
                         </p>
                       </div>
 
-                      {/* Concise Summary Slip with Soft Card Lighting */}
-                      <div className="bg-[#FAF7F2] border border-[#E2D8C3] shadow-[0_0_14px_rgba(184,147,74,0.06)] rounded-xl p-4 sm:p-5 space-y-3.5 text-xs">
-                        {/* Category */}
-                        <div className="flex items-center justify-between pb-2.5 border-b border-[#ECE5D8]">
-                          <div>
-                            <span className="text-[10px] font-mono uppercase tracking-wider text-[#737068] block">
-                              Enquiry Topic
-                            </span>
-                            <span className="font-serif text-sm font-semibold text-[#142E20] mt-0.5 block">
-                              {currentCategory.label}
-                            </span>
-                          </div>
-                          <span className="text-[10px] font-mono text-[#B8934A] font-medium">Preselected</span>
-                        </div>
-
-                        {/* Message */}
-                        <div className="flex items-start justify-between pb-2.5 border-b border-[#ECE5D8]">
-                          <div className="max-w-md">
-                            <span className="text-[10px] font-mono uppercase tracking-wider text-[#737068] block">
-                              Requirement Details
-                            </span>
-                            <p className="font-normal italic text-[#33312E] mt-1 leading-relaxed">
-                              "{formData.message}"
-                            </p>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => setStepperStep(1)}
-                            className="inline-flex items-center gap-1 font-mono text-[11px] text-[#B8934A] hover:text-[#142E20] transition-colors cursor-pointer shrink-0 ml-3"
-                          >
-                            <Edit3 className="w-3 h-3" />
-                            <span>Edit</span>
-                          </button>
-                        </div>
-
-                        {/* Contact details */}
-                        <div className="flex items-start justify-between">
-                          <div>
-                            <span className="text-[10px] font-mono uppercase tracking-wider text-[#737068] block">
-                              Contact Person
-                            </span>
-                            <div className="font-mono text-[#142E20] space-y-0.5 mt-1">
-                              <p><strong className="font-semibold text-neutral-800">Name:</strong> {formData.name}</p>
-                              <p><strong className="font-semibold text-neutral-800">Phone:</strong> {formData.phone}</p>
-                              {formData.email && (
-                                <p><strong className="font-semibold text-neutral-800">Email:</strong> {formData.email}</p>
-                              )}
-                            </div>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => setStepperStep(2)}
-                            className="inline-flex items-center gap-1 font-mono text-[11px] text-[#B8934A] hover:text-[#142E20] transition-colors cursor-pointer shrink-0 ml-3"
-                          >
-                            <Edit3 className="w-3 h-3" />
-                            <span>Edit</span>
-                          </button>
-                        </div>
+                      <div className="inline-block bg-[#FAF7F2] border border-[#E2D8C3] shadow-[0_0_12px_rgba(184,147,74,0.08)] rounded-xl px-5 py-2.5">
+                        <span className="text-[9px] font-mono uppercase tracking-wider text-[#737068] block">
+                          Reference Code
+                        </span>
+                        <span className="font-mono text-sm font-semibold text-[#142E20]">
+                          {referenceCode}
+                        </span>
                       </div>
 
-                      {fieldErrors.form && (
-                        <p className="text-xs text-[#A63624] font-mono">{fieldErrors.form}</p>
-                      )}
+                      <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+                        <a
+                          href={getWhatsAppUrl()}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#142E20] hover:bg-[#1B3B2B] text-[#FAF7F2] px-6 py-3 rounded-xl text-xs font-mono font-medium tracking-wider transition-all cursor-pointer shadow-xs border border-[#B8934A]/50 hover:shadow-[0_6px_22px_rgba(184,147,74,0.26)] active:scale-[0.99]"
+                        >
+                          <span>Share on WhatsApp</span>
+                          <ArrowUpRight className="w-3.5 h-3.5 text-[#B8934A]" />
+                        </a>
 
-                      {/* Single Action: Send Enquiry with Restrained Golden Glow */}
-                      <div className="pt-2">
                         <button
                           type="button"
-                          disabled={isSubmitting}
-                          onClick={() => handleSubmitEnquiry()}
-                          className="group w-full inline-flex items-center justify-center gap-2.5 py-3.5 px-6 rounded-xl bg-[#142E20] hover:bg-[#1B3B2B] text-[#FAF7F2] border border-[#B8934A]/40 hover:border-[#D4AF37] hover:shadow-[0_6px_22px_rgba(184,147,74,0.26)] text-xs font-mono font-semibold uppercase tracking-[0.2em] shadow-sm transition-all active:scale-[0.99] cursor-pointer disabled:opacity-50"
+                          onClick={handleReset}
+                          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl border border-[#DDD6C8] bg-white text-xs font-mono text-[#55514B] hover:text-[#142E20] hover:border-[#B8934A] hover:shadow-[0_4px_16px_rgba(184,147,74,0.12)] transition-all cursor-pointer"
                         >
-                          {isSubmitting ? (
-                            <span>Sending Your Enquiry...</span>
-                          ) : (
-                            <>
-                              <Send className="w-3.5 h-3.5 text-[#B8934A]" />
-                              <span>Send Enquiry</span>
-                              <ArrowRight className="w-3.5 h-3.5 text-[#B8934A] transition-transform group-hover:translate-x-1" />
-                            </>
-                          )}
+                          <RotateCcw className="w-3 h-3" />
+                          <span>Submit Another Enquiry</span>
                         </button>
                       </div>
                     </div>
+                  ) : !isEnquiryExpanded ? (
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-2">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] font-mono uppercase tracking-wider text-[#B8934A] font-semibold">
+                            SELECTED:
+                          </span>
+                          <span className="text-xs font-mono font-semibold text-[#142E20] bg-white px-2.5 py-0.5 rounded border border-[#B8934A]/40 shadow-[0_0_8px_rgba(184,147,74,0.12)]">
+                            {currentCategory.label}
+                          </span>
+                        </div>
+                        <p className="font-serif italic text-base sm:text-lg text-[#524F4A] pt-0.5">
+                          Drop us a message with your requirements...
+                        </p>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => setIsEnquiryExpanded(true)}
+                        className="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-[#142E20] hover:bg-[#1B3B2B] text-[#FAF7F2] text-xs font-mono font-semibold uppercase tracking-[0.16em] border border-[#B8934A]/40 hover:border-[#D4AF37] hover:shadow-[0_6px_22px_rgba(184,147,74,0.26)] transition-all active:scale-[0.99] cursor-pointer shrink-0"
+                      >
+                        <span>Open Enquiry</span>
+                        <ArrowRight className="w-3.5 h-3.5 text-[#B8934A]" />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="space-y-6 animate-in fade-in duration-300">
+                      {/* Top Bar */}
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-[#F0EBE2]">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-[10px] font-mono uppercase tracking-wider text-[#B8934A] font-semibold">
+                              ENQUIRY FOR:
+                            </span>
+                            <span className="text-xs font-mono font-semibold text-[#142E20] bg-white px-2.5 py-0.5 rounded border border-[#B8934A]/40 shadow-[0_0_8px_rgba(184,147,74,0.12)]">
+                              {currentCategory.label}
+                            </span>
+                          </div>
+                          <p className="font-serif italic text-sm text-[#737068] mt-0.5">
+                            Drop us a message — our coordinators reply within hours
+                          </p>
+                        </div>
+
+                        <div className="flex items-center gap-2 self-start sm:self-auto">
+                          <span className="text-[11px] font-mono text-[#737068]">
+                            Step {stepperStep} of 3
+                          </span>
+                          <div className="flex items-center gap-1.5" aria-hidden="true">
+                            {[1, 2, 3].map((step) => (
+                              <div
+                                key={step}
+                                className={`h-1.5 rounded-full transition-all duration-300 ${
+                                  step === stepperStep
+                                    ? 'w-5 bg-[#B8934A] shadow-[0_0_6px_rgba(184,147,74,0.4)]'
+                                    : step < stepperStep
+                                    ? 'w-1.5 bg-[#142E20]'
+                                    : 'w-1.5 bg-[#E2DBD0]'
+                                }`}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* STEP 1 */}
+                      {stepperStep === 1 && (
+                        <div className="space-y-4 animate-in fade-in duration-200">
+                          <div>
+                            <h4 className="font-serif text-base font-semibold text-[#142E20]">
+                              {currentCategory.promptHeadline}
+                            </h4>
+                            <p className="text-xs text-[#737068] mt-0.5">
+                              Include target quantity, construction, lead time, or any reference codes.
+                            </p>
+                          </div>
+
+                          <div className="space-y-1.5">
+                            <textarea
+                              rows={4}
+                              autoFocus
+                              value={formData.message}
+                              onChange={(e) => {
+                                setFormData({ ...formData, message: e.target.value });
+                                if (fieldErrors.message) setFieldErrors({});
+                              }}
+                              placeholder={currentCategory.placeholder}
+                              className="w-full px-4 py-3 text-xs sm:text-sm bg-[#FAF8F5] border border-[#E0D7C6] rounded-xl text-[#181715] placeholder-[#99948A] focus:bg-white focus:outline-none focus:border-[#B8934A] focus:ring-1 focus:ring-[#B8934A]/40 focus:shadow-[0_0_14px_rgba(184,147,74,0.12)] transition-all resize-none leading-relaxed font-sans"
+                            />
+                            {fieldErrors.message && (
+                              <p className="text-[11px] text-[#A63624] font-mono">{fieldErrors.message}</p>
+                            )}
+                            <div className="flex items-center justify-between text-[11px] font-mono text-[#8C8478]">
+                              <span>Feel free to be as detailed or brief as required</span>
+                              <span>{formData.message.trim().length} chars</span>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center justify-between pt-3 border-t border-[#F0EBE2]">
+                            <button
+                              type="button"
+                              onClick={() => setIsEnquiryExpanded(false)}
+                              className="text-xs font-mono text-[#737068] hover:text-[#142E20] transition-colors cursor-pointer"
+                            >
+                              Cancel
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (validateStep1()) {
+                                  setStepperStep(2);
+                                }
+                              }}
+                              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#142E20] hover:bg-[#1B3B2B] text-[#FAF7F2] text-xs font-mono font-semibold uppercase tracking-wider border border-[#B8934A]/40 hover:border-[#D4AF37] hover:shadow-[0_6px_22px_rgba(184,147,74,0.26)] transition-all active:scale-[0.99] cursor-pointer"
+                            >
+                              <span>Continue to Contact</span>
+                              <ArrowRight className="w-3.5 h-3.5 text-[#B8934A]" />
+                            </button>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* STEP 2 */}
+                      {stepperStep === 2 && (
+                        <div className="space-y-4 animate-in fade-in duration-200">
+                          <div>
+                            <h4 className="font-serif text-base font-semibold text-[#142E20]">
+                              Where should we send your response?
+                            </h4>
+                            <p className="text-xs text-[#737068] mt-0.5">
+                              We only use your information to reply to this enquiry.
+                            </p>
+                          </div>
+
+                          <div className="space-y-3.5">
+                            <div>
+                              <label className="block text-[11px] font-mono uppercase tracking-wider text-[#3D3D3A] font-semibold mb-1">
+                                YOUR NAME <span className="text-[#B8934A]">*</span>
+                              </label>
+                              <input
+                                type="text"
+                                required
+                                value={formData.name}
+                                onChange={(e) => {
+                                  setFormData({ ...formData, name: e.target.value });
+                                  if (fieldErrors.name) setFieldErrors((prev) => ({ ...prev, name: '' }));
+                                }}
+                                placeholder="Enter your full name"
+                                className="w-full px-4 py-2.5 text-xs sm:text-sm bg-[#FAF8F5] border border-[#E0D7C6] rounded-xl text-[#181715] placeholder-[#99948A] focus:bg-white focus:outline-none focus:border-[#B8934A] focus:ring-1 focus:ring-[#B8934A]/40 focus:shadow-[0_0_14px_rgba(184,147,74,0.12)] transition-all font-sans"
+                              />
+                              {fieldErrors.name && (
+                                <p className="text-[11px] text-[#A63624] mt-1 font-mono">{fieldErrors.name}</p>
+                              )}
+                            </div>
+
+                            <div>
+                              <label className="block text-[11px] font-mono uppercase tracking-wider text-[#3D3D3A] font-semibold mb-1">
+                                PHONE / WHATSAPP NUMBER <span className="text-[#B8934A]">*</span>
+                              </label>
+                              <input
+                                type="tel"
+                                required
+                                value={formData.phone}
+                                onChange={(e) => {
+                                  setFormData({ ...formData, phone: e.target.value });
+                                  if (fieldErrors.phone) setFieldErrors((prev) => ({ ...prev, phone: '' }));
+                                }}
+                                placeholder="e.g. +91 98420 12345"
+                                className="w-full px-4 py-2.5 text-xs sm:text-sm bg-[#FAF8F5] border border-[#E0D7C6] rounded-xl text-[#181715] placeholder-[#99948A] focus:bg-white focus:outline-none focus:border-[#B8934A] focus:ring-1 focus:ring-[#B8934A]/40 focus:shadow-[0_0_14px_rgba(184,147,74,0.12)] transition-all font-sans"
+                              />
+                              {fieldErrors.phone && (
+                                <p className="text-[11px] text-[#A63624] mt-1 font-mono">{fieldErrors.phone}</p>
+                              )}
+                            </div>
+
+                            <div>
+                              <label className="block text-[11px] font-mono uppercase tracking-wider text-[#3D3D3A] font-semibold mb-1">
+                                EMAIL ADDRESS <span className="font-normal text-[10px] text-[#737068]">(Optional)</span>
+                              </label>
+                              <input
+                                type="email"
+                                value={formData.email}
+                                onChange={(e) => {
+                                  setFormData({ ...formData, email: e.target.value });
+                                  if (fieldErrors.email) setFieldErrors((prev) => ({ ...prev, email: '' }));
+                                }}
+                                placeholder="e.g. sourcing@garments.com"
+                                className="w-full px-4 py-2.5 text-xs sm:text-sm bg-[#FAF8F5] border border-[#E0D7C6] rounded-xl text-[#181715] placeholder-[#99948A] focus:bg-white focus:outline-none focus:border-[#B8934A] focus:ring-1 focus:ring-[#B8934A]/40 focus:shadow-[0_0_14px_rgba(184,147,74,0.12)] transition-all font-sans"
+                              />
+                              {fieldErrors.email && (
+                                <p className="text-[11px] text-[#A63624] mt-1 font-mono">{fieldErrors.email}</p>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="flex items-center justify-between pt-3 border-t border-[#F0EBE2]">
+                            <button
+                              type="button"
+                              onClick={() => setStepperStep(1)}
+                              className="text-xs font-mono text-[#737068] hover:text-[#142E20] transition-colors cursor-pointer"
+                            >
+                              ← Back to Requirement
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (validateStep2()) {
+                                  setStepperStep(3);
+                                }
+                              }}
+                              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#142E20] hover:bg-[#1B3B2B] text-[#FAF7F2] text-xs font-mono font-semibold uppercase tracking-wider border border-[#B8934A]/40 hover:border-[#D4AF37] hover:shadow-[0_6px_22px_rgba(184,147,74,0.26)] transition-all active:scale-[0.99] cursor-pointer"
+                            >
+                              <span>Review Enquiry</span>
+                              <ArrowRight className="w-3.5 h-3.5 text-[#B8934A]" />
+                            </button>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* STEP 3 */}
+                      {stepperStep === 3 && (
+                        <div className="space-y-5 animate-in fade-in duration-200">
+                          <div>
+                            <h4 className="font-serif text-base font-semibold text-[#142E20]">
+                              Confirm Your Enquiry Details
+                            </h4>
+                            <p className="text-xs text-[#737068] mt-0.5">
+                              Review your summary before dispatching to our sourcing team.
+                            </p>
+                          </div>
+
+                          <div className="bg-[#FAF7F2] border border-[#E2D8C3] shadow-[0_0_14px_rgba(184,147,74,0.06)] rounded-xl p-4 sm:p-5 space-y-3.5 text-xs">
+                            <div className="flex items-center justify-between pb-2.5 border-b border-[#ECE5D8]">
+                              <div>
+                                <span className="text-[10px] font-mono uppercase tracking-wider text-[#737068] block">
+                                  Enquiry Topic
+                                </span>
+                                <span className="font-serif text-sm font-semibold text-[#142E20] mt-0.5 block">
+                                  {currentCategory.label}
+                                </span>
+                              </div>
+                              <span className="text-[10px] font-mono text-[#B8934A] font-medium">Preselected</span>
+                            </div>
+
+                            <div className="flex items-start justify-between pb-2.5 border-b border-[#ECE5D8]">
+                              <div className="max-w-md">
+                                <span className="text-[10px] font-mono uppercase tracking-wider text-[#737068] block">
+                                  Requirement Details
+                                </span>
+                                <p className="font-normal italic text-[#33312E] mt-1 leading-relaxed">
+                                  "{formData.message}"
+                                </p>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => setStepperStep(1)}
+                                className="inline-flex items-center gap-1 font-mono text-[11px] text-[#B8934A] hover:text-[#142E20] transition-colors cursor-pointer shrink-0 ml-3"
+                              >
+                                <Edit3 className="w-3 h-3" />
+                                <span>Edit</span>
+                              </button>
+                            </div>
+
+                            <div className="flex items-start justify-between">
+                              <div>
+                                <span className="text-[10px] font-mono uppercase tracking-wider text-[#737068] block">
+                                  Contact Person
+                                </span>
+                                <div className="font-mono text-[#142E20] space-y-0.5 mt-1">
+                                  <p><strong className="font-semibold text-neutral-800">Name:</strong> {formData.name}</p>
+                                  <p><strong className="font-semibold text-neutral-800">Phone:</strong> {formData.phone}</p>
+                                  {formData.email && (
+                                    <p><strong className="font-semibold text-neutral-800">Email:</strong> {formData.email}</p>
+                                  )}
+                                </div>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => setStepperStep(2)}
+                                className="inline-flex items-center gap-1 font-mono text-[11px] text-[#B8934A] hover:text-[#142E20] transition-colors cursor-pointer shrink-0 ml-3"
+                              >
+                                <Edit3 className="w-3 h-3" />
+                                <span>Edit</span>
+                              </button>
+                            </div>
+                          </div>
+
+                          {fieldErrors.form && (
+                            <p className="text-xs text-[#A63624] font-mono">{fieldErrors.form}</p>
+                          )}
+
+                          <div className="pt-2">
+                            <button
+                              type="button"
+                              disabled={isSubmitting}
+                              onClick={() => handleSubmitEnquiry()}
+                              className="group w-full inline-flex items-center justify-center gap-2.5 py-3.5 px-6 rounded-xl bg-[#142E20] hover:bg-[#1B3B2B] text-[#FAF7F2] border border-[#B8934A]/40 hover:border-[#D4AF37] hover:shadow-[0_6px_22px_rgba(184,147,74,0.26)] text-xs font-mono font-semibold uppercase tracking-[0.2em] shadow-sm transition-all active:scale-[0.99] cursor-pointer disabled:opacity-50"
+                            >
+                              {isSubmitting ? (
+                                <span>Sending Your Enquiry...</span>
+                              ) : (
+                                <>
+                                  <Send className="w-3.5 h-3.5 text-[#B8934A]" />
+                                  <span>Send Enquiry</span>
+                                  <ArrowRight className="w-3.5 h-3.5 text-[#B8934A] transition-transform group-hover:translate-x-1" />
+                                </>
+                              )}
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   )}
                 </div>
-              )}
-
-            </div>
+              </div>
+            )}
 
             {/* ═══════════════════════════════════════════════════════════════════ */}
             {/* SUBTLE DIVIDER "OR" & THREE MINIMAL DIRECT CONTACT OPTIONS          */}

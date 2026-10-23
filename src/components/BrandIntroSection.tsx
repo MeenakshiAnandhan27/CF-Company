@@ -34,14 +34,10 @@ export const BrandIntroSection: React.FC<BrandIntroSectionProps> = ({
       aria-label="Classic Fashions Brand Introduction"
       className="relative w-full min-h-[calc(100vh-5rem)] flex flex-col justify-between items-center text-[#181715] bg-[#FAF8F5] border-b border-[#E8E6E0] overflow-hidden select-none"
     >
-      {/* Background Ambience: Warm luxury ivory spotlight */}
+      {/* Subtle luxury warm studio ambient gradient backdrop */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 pointer-events-none z-0"
-        style={{
-          background:
-            'radial-gradient(ellipse 95% 90% at 50% 45%, #FAF8F5 0%, #F8F5EE 100%)',
-        }}
+        className="absolute inset-0 pointer-events-none z-0 overflow-hidden select-none bg-gradient-to-b from-[#FAF8F5] via-[#F8F5EE] to-[#F3EEE5]"
       />
 
       {/* Subtle architectural textile warp-weft weave grid watermark */}

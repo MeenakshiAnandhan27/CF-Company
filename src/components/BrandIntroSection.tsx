@@ -1,5 +1,6 @@
 import React from 'react';
 import { ArrowDown } from 'lucide-react';
+import { HeroFabric3D } from './HeroFabric3D.tsx';
 
 interface BrandIntroSectionProps {
   onScrollToDiscover?: () => void;
@@ -31,22 +32,22 @@ export const BrandIntroSection: React.FC<BrandIntroSectionProps> = ({
   return (
     <section
       aria-label="Classic Fashions Brand Introduction"
-      className="relative w-full min-h-[calc(100vh-5rem)] flex flex-col justify-between items-center text-[#181715] bg-[#FFFFFF] border-b border-[#E8E6E0] overflow-hidden select-none"
+      className="relative w-full min-h-[calc(100vh-5rem)] flex flex-col justify-between items-center text-[#181715] bg-[#FAF8F5] border-b border-[#E8E6E0] overflow-hidden select-none"
     >
-      {/* Background Ambience: Subtle luxury warm spotlight on pure white canvas */}
+      {/* Background Ambience: Warm luxury ivory spotlight */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 pointer-events-none"
+        className="absolute inset-0 pointer-events-none z-0"
         style={{
           background:
-            'radial-gradient(ellipse 75% 65% at 50% 35%, rgba(248, 246, 240, 0.8) 0%, rgba(255, 255, 255, 1) 100%)',
+            'radial-gradient(ellipse 80% 70% at 50% 38%, rgba(255, 253, 249, 0.95) 0%, rgba(248, 245, 238, 0.85) 60%, rgba(244, 239, 230, 0.95) 100%)',
         }}
       />
 
       {/* Subtle architectural textile warp-weft weave grid watermark */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 opacity-[0.03] pointer-events-none"
+        className="absolute inset-0 opacity-[0.025] pointer-events-none z-0"
         style={{
           backgroundImage:
             'radial-gradient(circle at 1px 1px, #181715 1px, transparent 0)',
@@ -54,8 +55,11 @@ export const BrandIntroSection: React.FC<BrandIntroSectionProps> = ({
         }}
       />
 
+      {/* Real-time 3D Interactive Fabric Hero powered by Three.js */}
+      <HeroFabric3D />
+
       {/* Top spacing */}
-      <div className="pt-8 sm:pt-12" />
+      <div className="pt-8 sm:pt-12 relative z-20" />
 
       {/* Center Hero Block: Typography, Slogan, and Subtitle */}
       <div className="relative z-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center my-auto py-6">

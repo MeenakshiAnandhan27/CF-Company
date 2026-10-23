@@ -47,6 +47,7 @@ const CATEGORY_FILTERS: { id: WallCategory; label: string; emoji: string }[] = [
   { id: 'FABRICS', label: 'Fabrics', emoji: '🧵' },
   { id: 'DENIM & CHAMBRAY', label: 'Denim & Chambray', emoji: '👖' },
   { id: 'LACES', label: 'Laces & Trims', emoji: '🎀' },
+  { id: 'GARMENT ACCESSORIES', label: 'Accessories', emoji: '🔘' },
 ];
 
 /* ── Texture Close-Up Panel with Image Switching & Material Cycling ── */

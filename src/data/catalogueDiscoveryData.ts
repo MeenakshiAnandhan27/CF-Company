@@ -23,7 +23,7 @@ export interface DiscoveryMaterial {
 }
 
 export interface CategoryPanel {
-  id: 'FABRICS' | 'DENIM & CHAMBRAY' | 'LACES';
+  id: 'FABRICS' | 'DENIM & CHAMBRAY' | 'LACES' | 'GARMENT ACCESSORIES';
   index: string;
   title: string;
   tagline: string;

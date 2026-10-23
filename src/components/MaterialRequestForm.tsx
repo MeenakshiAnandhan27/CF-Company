@@ -104,7 +104,7 @@ const SUB_SWATCHES: Record<
         id: 'cotton',
         name: 'Organic Cotton',
         categoryLabel: 'Fabric',
-        image: '/assets/fabric-pack-4k/studio/01_Organic_Cotton_4K.jpg',
+        image: '/assets/materials/material-brief/organic-cotton.jpg',
         category: 'fabric',
         defaultSpecs: { composition: '100% Combed Organic Cotton', typeVariant: 'GOTS Certified Combed Cotton' },
       },
@@ -112,7 +112,7 @@ const SUB_SWATCHES: Record<
         id: 'silk-satin',
         name: 'Silk Satin',
         categoryLabel: 'Fabric',
-        image: '/assets/fabric-pack-4k/studio/02_Emerald_Mulberry_Silk_Satin_4K.jpg',
+        image: '/assets/materials/material-brief/silk-satin.jpg',
         category: 'fabric',
         defaultSpecs: { composition: '100% Pure Mulberry Silk (Grade 6A)', typeVariant: 'Liquid Drape Satin' },
       },
@@ -120,15 +120,15 @@ const SUB_SWATCHES: Record<
         id: 'linen',
         name: 'Belgian Linen',
         categoryLabel: 'Fabric',
-        image: '/assets/fabric-pack-4k/studio/03_Natural_Belgian_Linen_4K.jpg',
+        image: '/assets/materials/material-brief/belgian-linen.jpg',
         category: 'fabric',
         defaultSpecs: { composition: '100% Pure Flax Linen', typeVariant: 'Natural Slub Plain Weave' },
       },
       {
         id: 'denim',
-        name: 'Indigo Denim',
+        name: 'Denim',
         categoryLabel: 'Fabric',
-        image: '/assets/fabric-pack-4k/studio/04_Deep_Indigo_Twill_Denim_4K.jpg',
+        image: '/assets/materials/material-brief/denim.jpg',
         category: 'denim',
         defaultSpecs: { composition: 'Cotton Indigo Twill', gsmOrWeight: '12.5 Oz', typeVariant: '3/1 Diagonal Twill' },
       },
@@ -136,7 +136,7 @@ const SUB_SWATCHES: Record<
         id: 'velvet',
         name: 'Plush Velvet',
         categoryLabel: 'Fabric',
-        image: '/assets/fabric-pack-4k/studio/05_Royal_Burgundy_Plush_Velvet_4K.jpg',
+        image: '/assets/materials/material-brief/plush-velvet.jpg',
         category: 'fabric',
         defaultSpecs: { composition: 'Royal Burgundy Cut-Pile', typeVariant: 'Plush Velvet' },
       },
@@ -144,7 +144,7 @@ const SUB_SWATCHES: Record<
         id: 'wool',
         name: 'Merino Wool',
         categoryLabel: 'Fabric',
-        image: '/assets/fabric-pack-4k/studio/06_Charcoal_Herringbone_Merino_Wool_4K.jpg',
+        image: '/assets/materials/material-brief/merino-wool.jpg',
         category: 'fabric',
         defaultSpecs: { composition: 'Super 130s Australian Merino Wool', typeVariant: 'Charcoal Herringbone' },
       },
@@ -152,7 +152,7 @@ const SUB_SWATCHES: Record<
         id: 'jacquard',
         name: 'Jacquard Brocade',
         categoryLabel: 'Fabric',
-        image: '/assets/fabric-pack-4k/studio/07_Gold_Ivory_Jacquard_Brocade_4K.jpg',
+        image: '/assets/materials/material-brief/jacquard-brocade.jpg',
         category: 'fabric',
         defaultSpecs: { composition: 'Gold Ivory Figured Brocade', typeVariant: 'Multi-Weft Jacquard' },
       },
@@ -160,7 +160,7 @@ const SUB_SWATCHES: Record<
         id: 'pique-knit',
         name: 'Pique Knit',
         categoryLabel: 'Fabric',
-        image: '/assets/fabric-pack-4k/studio/08_Navy_Blue_Cotton_Pique_Knit_4K.jpg',
+        image: '/assets/materials/material-brief/pique-knit.jpg',
         category: 'fabric',
         defaultSpecs: { composition: '100% Combed Cotton Pique', typeVariant: 'Honey-Comb Pique Knit' },
       },
@@ -258,10 +258,10 @@ const INITIAL_REQUEST: MaterialRequestData = {
   urgency: 'flexible',
   targetDate: 'May 2026',
   width: '58 / 60 inches',
-  gsmOrWeight: '180 - 220 GSM',
-  composition: '100% Ring-Spun Combed Cotton',
-  weaveOrFinish: 'Enzyme Washed, Mercerized',
-  colorOrShade: 'Natural Off-White / Lab Dip',
+  gsmOrWeight: '',
+  composition: '',
+  weaveOrFinish: '',
+  colorOrShade: '',
   contactName: '',
   companyName: '',
   phone: '',
@@ -286,7 +286,7 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
   // Active Category Pillar
   const [activeMainCategory, setActiveMainCategory] = useState<MainDiscoveryCategory>('fabric');
 
-  // Selected Material Swatches (User selects item)
+  // Selected Material Swatches (User selects item) — Initial state is null / empty (no fabric auto-selected)
   const [selectedKit, setSelectedKit] = useState<KitItem[]>(() => {
     if (similarProduct) {
       return [
@@ -294,7 +294,7 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
           id: similarProduct.id,
           name: similarProduct.name,
           categoryLabel: similarProduct.category.toUpperCase(),
-          image: similarProduct.images[0] || '/assets/materials/fabrics/cotton.jpg',
+          image: similarProduct.images[0] || '/assets/materials/material-brief/organic-cotton.jpg',
           category:
             similarProduct.category === 'laces'
               ? 'lace'
@@ -310,23 +310,16 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
         },
       ];
     }
-    return [
-      {
-        id: 'cotton',
-        name: 'Cotton',
-        categoryLabel: 'Fabric',
-        image: '/assets/materials/fabrics/cotton.jpg',
-        category: 'fabric',
-        defaultSpecs: { composition: '100% Combed Cotton', typeVariant: 'Combed Cotton / Poplin' },
-      },
-    ];
+    return [];
   });
 
   // Form State
   const [formData, setFormData] = useState<MaterialRequestData>(() => ({
     ...INITIAL_REQUEST,
     ...initialData,
-    materialName: similarProduct ? similarProduct.name : 'Cotton Fabric',
+    materialName: similarProduct ? similarProduct.name : '',
+    composition: similarProduct?.fabric || '',
+    weaveOrFinish: similarProduct?.subcategory || '',
     similarToProductCode: similarProduct?.productCode,
     similarToProductName: similarProduct?.name,
   }));
@@ -359,33 +352,39 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
     setMousePos({ x: 0, y: 0 });
   };
 
-  // Swatch Toggle Handler
+  // Swatch Toggle Handler (Single Selection with Unselect Toggle)
   const handleToggleSwatch = (item: KitItem) => {
     setStep1Error('');
-    setSelectedKit((prev) => {
-      const exists = prev.some((k) => k.id === item.id);
-      if (exists) {
-        if (prev.length === 1) return prev; // Keep at least one
-        return prev.filter((k) => k.id !== item.id);
-      } else {
-        return [...prev, item];
-      }
-    });
+    const isCurrentlySelected = selectedKit.some((k) => k.id === item.id);
 
-    // Update material name and specs dynamically
-    setFormData((prev) => ({
-      ...prev,
-      category: item.category,
-      materialName: item.name,
-      composition: item.defaultSpecs?.composition || prev.composition,
-      weaveOrFinish: item.defaultSpecs?.typeVariant || prev.weaveOrFinish,
-    }));
+    if (isCurrentlySelected) {
+      // Unselect the current fabric: reset selection to empty (null)
+      setSelectedKit([]);
+      setFormData((prev) => ({
+        ...prev,
+        materialName: '',
+        composition: '',
+        weaveOrFinish: '',
+        gsmOrWeight: '',
+      }));
+    } else {
+      // Single selection: switch selection strictly to this fabric
+      setSelectedKit([item]);
+      setFormData((prev) => ({
+        ...prev,
+        category: item.category,
+        materialName: item.name,
+        composition: item.defaultSpecs?.composition || '',
+        weaveOrFinish: item.defaultSpecs?.typeVariant || '',
+        gsmOrWeight: item.defaultSpecs?.gsmOrWeight || '',
+      }));
+    }
   };
 
   // Step 1 Validation & Proceed
   const handleProceedToStep2 = () => {
     if (selectedKit.length === 0) {
-      setStep1Error('Please select at least one material type to proceed *');
+      setStep1Error('Please select a material type to proceed *');
       return;
     }
     setStep1Error('');
@@ -646,10 +645,14 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
               <button
                 type="button"
                 onClick={() => {
-                  if (selectedKit.length > 0) setCurrentStep(2);
+                  if (selectedKit.length > 0) {
+                    setCurrentStep(2);
+                  } else {
+                    setStep1Error('Please select a material type to proceed *');
+                  }
                 }}
                 className={`flex items-center gap-3 text-left transition-all ${
-                  selectedKit.length > 0 ? 'cursor-pointer' : 'cursor-not-allowed'
+                  selectedKit.length > 0 ? 'cursor-pointer' : 'cursor-pointer'
                 } ${
                   currentStep === 2
                     ? 'opacity-100'
@@ -844,18 +847,7 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                             key={cat.id}
                             onClick={() => {
                               setActiveMainCategory(cat.id);
-                              // Auto-select first swatch of the category
-                              const firstSwatch = SUB_SWATCHES[cat.id].items[0];
-                              if (firstSwatch) {
-                                setSelectedKit([firstSwatch]);
-                                setFormData((prev) => ({
-                                  ...prev,
-                                  category: firstSwatch.category,
-                                  materialName: firstSwatch.name,
-                                  composition: firstSwatch.defaultSpecs?.composition || prev.composition,
-                                  weaveOrFinish: firstSwatch.defaultSpecs?.typeVariant || prev.weaveOrFinish,
-                                }));
-                              }
+                              setStep1Error('');
                             }}
                             className={`group rounded-2xl border transition-all duration-300 cursor-pointer overflow-hidden flex flex-col ${
                               isSelected
@@ -867,7 +859,7 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                               <img
                                 src={cat.image}
                                 alt={cat.title}
-                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 pointer-events-none"
                               />
                               <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
                             </div>
@@ -882,7 +874,7 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
 
                               <div className="mt-3 pt-2 border-t border-[#ECE7DE] flex items-center justify-between">
                                 <span className="text-[10px] font-mono text-[#8C877E] uppercase">
-                                  {isSelected ? 'Selected' : 'Select'}
+                                  {isSelected ? 'Active Category' : 'Select'}
                                 </span>
                                 {isSelected ? (
                                   <div className="w-4 h-4 rounded-full bg-[#8C6534] text-white flex items-center justify-center">
@@ -906,7 +898,7 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                         {SUB_SWATCHES[activeMainCategory].heading}{' '}
                         <span className="text-[#C4432B] font-bold">*</span>
                       </label>
-                      <span className="text-[11px] text-[#8C6534]">Click to pick</span>
+                      <span className="text-[11px] text-[#8C6534]">Click to select / unselect</span>
                     </div>
 
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
@@ -916,17 +908,27 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                           <div
                             key={item.id}
                             onClick={() => handleToggleSwatch(item)}
-                            className={`rounded-2xl p-2.5 border transition-all cursor-pointer flex flex-col items-center ${
+                            role="button"
+                            tabIndex={0}
+                            aria-pressed={isChosen}
+                            aria-label={`${item.name}${isChosen ? ', selected' : ''}`}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                handleToggleSwatch(item);
+                              }
+                            }}
+                            className={`group rounded-2xl p-2.5 border transition-all cursor-pointer flex flex-col items-center select-none active:scale-[0.98] ${
                               isChosen
                                 ? 'border-[#8C6534] bg-[#FAF8F5] ring-2 ring-[#8C6534]/20 shadow-md'
                                 : 'border-[#E5E0D8] bg-white hover:border-[#C4BAA9] hover:shadow-xs'
                             }`}
                           >
-                            <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-[#ECE7DC]">
+                            <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-[#ECE7DC] pointer-events-none">
                               <img
                                 src={item.image}
                                 alt={item.name}
-                                className="w-full h-full object-cover transform transition-transform duration-300 hover:scale-105"
+                                className="w-full h-full object-cover transform transition-transform duration-300 group-hover:scale-105"
                               />
                               {isChosen && (
                                 <div className="absolute bottom-1 right-1 w-4 h-4 rounded-full bg-[#8C6534] text-white flex items-center justify-center shadow-xs">
@@ -934,7 +936,11 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                                 </div>
                               )}
                             </div>
-                            <span className="text-[11px] font-semibold text-center mt-2 truncate w-full text-[#181715]">
+                            <span
+                              className={`text-[11px] font-semibold text-center mt-2 truncate w-full transition-colors ${
+                                isChosen ? 'text-[#8C6534] font-bold' : 'text-[#181715]'
+                              }`}
+                            >
                               {item.name}
                             </span>
                           </div>
@@ -1015,7 +1021,7 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                   {/* Step 1 Action Bar */}
                   <div className="pt-4 border-t border-[#ECE7DE] flex items-center justify-between">
                     <span className="text-xs text-[#78736B]">
-                      {selectedKit.length} material(s) chosen
+                      {selectedKit.length === 0 ? 'No material selected' : `${selectedKit.length} material selected`}
                     </span>
                     <button
                       type="button"
@@ -1493,10 +1499,10 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                         <div className="flex items-center gap-2">
                           <button
                             type="button"
-                            onClick={() => setCurrentStep(1)}
-                            className="text-[11px] text-[#8C6534] hover:underline font-semibold cursor-pointer"
+                            onClick={() => handleToggleSwatch(item)}
+                            className="text-[11px] text-[#8C877E] hover:text-[#C4432B] hover:underline font-semibold cursor-pointer"
                           >
-                            Change
+                            Remove
                           </button>
                         </div>
                       </div>

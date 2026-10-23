@@ -23,11 +23,11 @@ export const CategoryShowcase: React.FC<CategoryShowcaseProps> = ({
           </h3>
         </div>
         <span className="text-xs text-[#7B756C] font-mono hidden sm:inline">
-          4 Primary Classifications
+          {CATEGORY_PANELS.length} Core Classifications
         </span>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {CATEGORY_PANELS.map((panel) => {
           const isCurrent = activeCategory === panel.id;
 

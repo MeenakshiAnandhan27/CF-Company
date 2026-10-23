@@ -44,8 +44,7 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
     if (upper.includes('FABRIC')) return 'FABRICS';
     if (upper.includes('DENIM')) return 'DENIM & CHAMBRAY';
     if (upper.includes('LACE')) return 'LACES';
-    if (upper.includes('ACCESS')) return 'GARMENT ACCESSORIES';
-    return 'ALL';
+        return 'ALL';
   });
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -153,7 +152,7 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
           </h1>
 
           <p className="text-sm sm:text-base md:text-lg text-[#666057] max-w-2xl mx-auto leading-relaxed font-sans">
-            Explore fabrics, denim, chambray, laces and garment accessories sourced for apparel production.
+            Explore fabrics, denim, chambray and laces sourced for apparel production.
           </p>
 
           <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
@@ -316,7 +315,7 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
                   },
                   {
                     title: 'Specialty Fabrics',
-                    description: 'Textured seersucker, traditional putta, napped flannel, taffeta, chiffon, velvet, fur and pure linen.',
+                    description: 'Textured seersucker, traditional putta, napped flannel, chiffon, velvet, fur and pure linen.',
                     filterSection: 'SPECIALTY',
                   },
                   {
@@ -354,35 +353,8 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
                 />
               </div>
 
-              {/* GARMENT ACCESSORIES */}
-              <div className="pt-6 border-t border-[#EAE3D6]">
-                <MaterialGrid
-                  title="Garment Accessories"
-                  subtitle="Precision zippers, apparel buttons and heat-sealed cord tipping components."
-                  materials={ALL_DISCOVERY_MATERIALS.filter((m) => m.category === 'GARMENT ACCESSORIES')}
-                  onSelectMaterial={setSelectedMaterial}
-                  onOpen360={handleOpen360Viewer}
-                  subsections={[
-                    {
-                      title: 'Zippers',
-                      description: 'Heavy interlocking metal tooth chains and molded lightweight vislon zippers.',
-                      filterSection: 'ZIPPERS',
-                    },
-                    {
-                      title: 'Buttons',
-                      description: 'Stamped metal, press snaps, cut crystal glass, resin plastic, turned hardwood, mother-of-pearl and natural shell.',
-                      filterSection: 'BUTTONS',
-                    },
-                    {
-                      title: 'Tipping Components',
-                      description: 'Thermal acetate film tipping and solid crimped brass drawcord ends.',
-                      filterSection: 'TIPPING',
-                    },
-                  ]}
-                />
               </div>
-            </div>
-          ) : activeFilter === 'FABRICS' && !searchQuery ? (
+) : activeFilter === 'FABRICS' && !searchQuery ? (
             /* Specific FABRICS View */
             <MaterialGrid
               title="Explore Fabrics"
@@ -398,7 +370,7 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
                 },
                 {
                   title: 'Specialty Fabrics',
-                  description: 'Textured seersucker, traditional putta, napped flannel, taffeta, chiffon, velvet, fur and pure linen.',
+                  description: 'Textured seersucker, traditional putta, napped flannel, chiffon, velvet, fur and pure linen.',
                   filterSection: 'SPECIALTY',
                 },
                 {

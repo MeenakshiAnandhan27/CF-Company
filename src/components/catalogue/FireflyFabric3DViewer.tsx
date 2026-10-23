@@ -10,20 +10,26 @@ import {
   Sparkles,
   Search,
   ChevronLeft,
-  ChevronRight,
   Info,
   AlertCircle,
   X,
   Send,
   Wind,
   CheckCircle2,
-  Maximize2,
+  Layers,
+  Repeat,
+  Eye,
 } from 'lucide-react';
-import { FIREFLY_FABRICS, FireflyFabricItem, findMatchingFireflyIndex } from '../../data/fireflyFabricsData.ts';
+import {
+  CATALOGUE_3D_ITEMS,
+  Catalogue3DItem,
+  findMatchingCatalogueIndex,
+} from '../../data/catalogue3DData.ts';
+import { createClothGeometry } from './Catalogue3DGeometries.ts';
 
 interface FireflyFabric3DViewerProps {
   onBack?: () => void;
-  onEnquire?: (fabric: FireflyFabricItem) => void;
+  onEnquire?: (item: Catalogue3DItem) => void;
   isModal?: boolean;
   initialMaterial?: { id?: string; name?: string; subcategory?: string } | null;
   initialFabricId?: string;
@@ -36,23 +42,24 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
   initialMaterial,
   initialFabricId,
 }) => {
-  // Active Fabric Selection — intelligently pre-select matching fabric from initialMaterial or ID
-  const [selectedFabricIndex, setSelectedFabricIndex] = useState<number>(() => {
+  // Active Fabric Selection (from curated 24-fabric collection)
+  const [selectedIndex, setSelectedIndex] = useState<number>(() => {
     const query = initialFabricId || initialMaterial?.name || initialMaterial?.id;
-    return findMatchingFireflyIndex(query);
+    return findMatchingCatalogueIndex(query);
   });
 
-  // Keep selected fabric in sync if initialMaterial or initialFabricId changes
+  // Keep selected item in sync if initialMaterial or initialFabricId changes
   useEffect(() => {
     const query = initialFabricId || initialMaterial?.name || initialMaterial?.id;
     if (query) {
-      setSelectedFabricIndex(findMatchingFireflyIndex(query));
+      setSelectedIndex(findMatchingCatalogueIndex(query));
     }
   }, [initialMaterial, initialFabricId]);
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [activeCategory, setActiveCategory] = useState<string>('All');
 
-  // Surface Geometry Mode
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [activeCategoryFilter, setActiveCategoryFilter] = useState<string>('All');
+
+  // Surface Geometry Mode for Fabrics
   const [surfaceMode, setSurfaceMode] = useState<'drape' | 'curved-swatch' | 'inspection-bed'>('drape');
 
   // Camera & Turntable State
@@ -72,13 +79,12 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
   const sceneRef = useRef<THREE.Scene | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
-  const fabricMeshRef = useRef<THREE.Mesh | null>(null);
   const turntableRef = useRef<THREE.Group | null>(null);
-  const materialRef = useRef<THREE.MeshPhysicalMaterial | null>(null);
+  const clothMeshRef = useRef<THREE.Mesh | null>(null);
   const animFrameIdRef = useRef<number | null>(null);
   const currentTextureRef = useRef<THREE.Texture | null>(null);
 
-  // Base geometry attribute positions (for dynamic breeze wave)
+  // Cloth mesh reference for dynamic breeze wave
   const basePositionsRef = useRef<Float32Array | null>(null);
   const breezeTimeRef = useRef<number>(0);
 
@@ -95,7 +101,7 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
   const targetZoomRef = useRef<number>(zoomLevel);
   const currentZoomRef = useRef<number>(zoomLevel);
 
-  // Refs for animation loop state to avoid recreating loop on state changes
+  // Refs for animation loop state
   const isAutoSpinningRef = useRef<boolean>(isAutoSpinning);
   const isBreezeActiveRef = useRef<boolean>(isBreezeActive);
   const surfaceModeRef = useRef<'drape' | 'curved-swatch' | 'inspection-bed'>(surfaceMode);
@@ -112,17 +118,31 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
     surfaceModeRef.current = surfaceMode;
   }, [surfaceMode]);
 
-  const currentFabric: FireflyFabricItem = FIREFLY_FABRICS[selectedFabricIndex] || FIREFLY_FABRICS[0];
+  const currentItem: Catalogue3DItem = CATALOGUE_3D_ITEMS[selectedIndex] || CATALOGUE_3D_ITEMS[0];
 
   // Filtered fabric list for selector
-  const filteredFabrics = FIREFLY_FABRICS.filter((f) => {
+  const filteredItems = CATALOGUE_3D_ITEMS.filter((item) => {
+    const q = searchQuery.toLowerCase().trim();
     const matchesSearch =
-      f.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      f.composition.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      f.weave.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCat = activeCategory === 'All' || f.category === activeCategory;
-    return matchesSearch && matchesCat;
+      !q ||
+      item.name.toLowerCase().includes(q) ||
+      item.composition.toLowerCase().includes(q) ||
+      (item.weave && item.weave.toLowerCase().includes(q)) ||
+      item.subcategory.toLowerCase().includes(q);
+
+    const matchesCategory =
+      activeCategoryFilter === 'All' || item.subcategory === activeCategoryFilter;
+
+    return matchesSearch && matchesCategory;
   });
+
+  const categoryCounts: Record<string, number> = {
+    All: CATALOGUE_3D_ITEMS.length,
+    'Natural Fibers': CATALOGUE_3D_ITEMS.filter((i) => i.subcategory === 'Natural Fibers').length,
+    'Blends & Luxury': CATALOGUE_3D_ITEMS.filter((i) => i.subcategory === 'Blends & Luxury').length,
+    'Mesh & Knits': CATALOGUE_3D_ITEMS.filter((i) => i.subcategory === 'Mesh & Knits').length,
+    'Synthetics & Sheers': CATALOGUE_3D_ITEMS.filter((i) => i.subcategory === 'Synthetics & Sheers').length,
+  };
 
   // Check WebGL availability
   useEffect(() => {
@@ -137,68 +157,58 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
     }
   }, []);
 
-  // Geometry generator for 3D fabric surfaces with organic asymmetric folds
-  const createFabricGeometry = useCallback(
-    (mode: 'drape' | 'curved-swatch' | 'inspection-bed', stiffness: number) => {
-      const width = 3.2;
-      const height = 2.5;
-      const segW = 120;
-      const segH = 120;
+  // Update or mount the active 3D cloth model whenever texture, mode, or item changes
+  const update3DClothModel = useCallback(
+    (texture: THREE.Texture, item: Catalogue3DItem, mode: 'drape' | 'curved-swatch' | 'inspection-bed') => {
+      if (!turntableRef.current) return;
 
-      const geometry = new THREE.PlaneGeometry(width, height, segW, segH);
-      const pos = geometry.attributes.position;
-      const count = pos.count;
-
-      const basePos = new Float32Array(count * 3);
-
-      for (let i = 0; i < count; i++) {
-        const x = pos.getX(i);
-        const y = pos.getY(i);
-        const normY = Math.max(0, Math.min(1, (y + height / 2) / height)); // 0 (bottom) to 1 (top)
-        const invertNormY = 1 - normY; // 0 (top) to 1 (bottom)
-        const normX = x / (width / 2); // -1 to +1
-
-        let z = 0;
-        let finalY = y;
-
-        if (mode === 'drape') {
-          // Asymmetric realistic cloth drape
-          const foldFreq = 2.4 + (1 - stiffness) * 1.8;
-
-          const primaryFold =
-            Math.sin(x * foldFreq + 0.35) * (0.34 - stiffness * 0.12) * Math.sin(normY * Math.PI * 0.94);
-
-          const secondaryRipple = Math.cos(x * foldFreq * 1.85 + 0.6) * 0.08 * invertNormY;
-
-          const asymmetricSway = Math.sin(x * 1.1 + y * 0.75) * 0.05 * invertNormY;
-
-          const edgeCurl = Math.pow(Math.abs(normX), 2.8) * 0.09 * (normX > 0 ? 1 : -0.8) * invertNormY;
-
-          z = primaryFold + secondaryRipple + asymmetricSway + edgeCurl;
-
-          const sag = Math.pow(Math.abs(normX), 2) * 0.08 * (1 - stiffness);
-          finalY = y - sag;
-        } else if (mode === 'curved-swatch') {
-          const arc = Math.cos((x / width) * Math.PI) * 0.36;
-          z = arc;
+      // Remove existing model from turntable
+      if (clothMeshRef.current) {
+        turntableRef.current.remove(clothMeshRef.current);
+        clothMeshRef.current.geometry.dispose();
+        if (Array.isArray(clothMeshRef.current.material)) {
+          clothMeshRef.current.material.forEach((m) => m.dispose());
         } else {
-          z = 0;
+          clothMeshRef.current.material.dispose();
         }
-
-        pos.setX(i, x);
-        pos.setY(i, finalY);
-        pos.setZ(i, isNaN(z) ? 0 : z);
-
-        basePos[i * 3] = x;
-        basePos[i * 3 + 1] = finalY;
-        basePos[i * 3 + 2] = isNaN(z) ? 0 : z;
+        clothMeshRef.current = null;
+        basePositionsRef.current = null;
       }
 
+      const stiffness = item.drapeStiffness ?? 0.4;
+      const geometry = createClothGeometry(mode, stiffness);
+
+      // Store base positions for dynamic breeze wave
+      const pos = geometry.attributes.position;
+      const count = pos.count;
+      const basePos = new Float32Array(count * 3);
+      for (let i = 0; i < count; i++) {
+        basePos[i * 3] = pos.getX(i);
+        basePos[i * 3 + 1] = pos.getY(i);
+        basePos[i * 3 + 2] = pos.getZ(i);
+      }
       basePositionsRef.current = basePos;
-      geometry.computeVertexNormals();
-      geometry.computeBoundingBox();
-      geometry.computeBoundingSphere();
-      return geometry;
+
+      const fabricMaterial = new THREE.MeshPhysicalMaterial({
+        map: texture,
+        roughness: item.roughness ?? 0.8,
+        metalness: item.metalness ?? 0.0,
+        clearcoat: item.clearcoat ?? 0.0,
+        clearcoatRoughness: item.clearcoatRoughness ?? 0.1,
+        sheen: item.sheen ?? 0.2,
+        sheenColor: new THREE.Color(item.sheenColor || '#FFFFFF'),
+        sheenRoughness: item.sheenRoughness ?? 0.3,
+        side: THREE.DoubleSide,
+        shadowSide: THREE.DoubleSide,
+      });
+
+      const clothMesh = new THREE.Mesh(geometry, fabricMaterial);
+      clothMesh.position.set(0, 0.05, 0);
+      clothMesh.castShadow = true;
+      clothMesh.receiveShadow = true;
+
+      turntableRef.current.add(clothMesh);
+      clothMeshRef.current = clothMesh;
     },
     []
   );
@@ -217,10 +227,10 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
 
     // 2. Camera
     const camera = new THREE.PerspectiveCamera(38, width / height, 0.1, 50);
-    camera.position.set(0, 0.25, 4.6);
+    camera.position.set(0, 0.2, 4.6);
     cameraRef.current = camera;
 
-    // 3. Renderer with ACES Filmic tone mapping and preserveDrawingBuffer
+    // 3. Renderer with ACES Filmic tone mapping
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
       alpha: true,
@@ -230,7 +240,7 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.12;
+    renderer.toneMappingExposure = 1.15;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFShadowMap;
 
@@ -256,7 +266,7 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
     rimLight.position.set(0, 3.2, -4.5);
     scene.add(rimLight);
 
-    const ambientLight = new THREE.AmbientLight('#FFFFFF', 0.55);
+    const ambientLight = new THREE.AmbientLight('#FFFFFF', 0.65);
     scene.add(ambientLight);
 
     // 5. Atelier Turntable Group
@@ -264,40 +274,16 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
     scene.add(turntableGroup);
     turntableRef.current = turntableGroup;
 
-    // Soft Contact Shadow Plane underneath the cloth
+    // Soft Contact Shadow Plane underneath the active model
     const shadowGeo = new THREE.PlaneGeometry(5.5, 5.5);
-    const shadowMat = new THREE.ShadowMaterial({ opacity: 0.3 });
+    const shadowMat = new THREE.ShadowMaterial({ opacity: 0.32 });
     const shadowMesh = new THREE.Mesh(shadowGeo, shadowMat);
     shadowMesh.rotation.x = -Math.PI / 2;
     shadowMesh.position.y = -1.5;
     shadowMesh.receiveShadow = true;
     scene.add(shadowMesh);
 
-    // 6. Fabric Physical Material & Mesh
-    const initialFab = FIREFLY_FABRICS[0];
-    const fabricMaterial = new THREE.MeshPhysicalMaterial({
-      color: new THREE.Color(0xffffff),
-      roughness: initialFab.roughness,
-      metalness: initialFab.metalness,
-      clearcoat: initialFab.clearcoat || 0,
-      clearcoatRoughness: initialFab.clearcoatRoughness || 0.1,
-      sheen: initialFab.sheen || 0,
-      sheenColor: new THREE.Color(initialFab.sheenColor || '#FFFFFF'),
-      sheenRoughness: initialFab.sheenRoughness || 0.3,
-      side: THREE.DoubleSide,
-      shadowSide: THREE.DoubleSide,
-    });
-    materialRef.current = fabricMaterial;
-
-    const geometry = createFabricGeometry('drape', initialFab.drapeStiffness);
-    const fabricMesh = new THREE.Mesh(geometry, fabricMaterial);
-    fabricMesh.position.set(0, 0.05, 0);
-    fabricMesh.castShadow = true;
-    fabricMesh.receiveShadow = true;
-    turntableGroup.add(fabricMesh);
-    fabricMeshRef.current = fabricMesh;
-
-    // 7. Animation Loop
+    // 6. Animation Loop
     let lastTime = performance.now();
 
     const animate = (time: number) => {
@@ -316,6 +302,9 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
       currentRotXRef.current += (targetRotXRef.current - currentRotXRef.current) * 0.12;
       currentZoomRef.current += (targetZoomRef.current - currentZoomRef.current) * 0.15;
 
+      setRotationY(currentRotYRef.current);
+      setRotationX(currentRotXRef.current);
+
       if (turntableRef.current) {
         turntableRef.current.rotation.y = (currentRotYRef.current * Math.PI) / 180;
         turntableRef.current.rotation.x = (currentRotXRef.current * Math.PI) / 180;
@@ -328,14 +317,14 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
 
       // Dynamic Cloth Breathing / Airflow Wave in Drape Mode
       if (
-        fabricMeshRef.current &&
+        clothMeshRef.current &&
         basePositionsRef.current &&
         surfaceModeRef.current === 'drape' &&
         isBreezeActiveRef.current
       ) {
         breezeTimeRef.current += delta;
         const bTime = breezeTimeRef.current;
-        const meshGeo = fabricMeshRef.current.geometry;
+        const meshGeo = clothMeshRef.current.geometry;
         const posAttr = meshGeo.attributes.position;
         const base = basePositionsRef.current;
         const count = posAttr.count;
@@ -362,7 +351,7 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
 
     animFrameIdRef.current = requestAnimationFrame(animate);
 
-    // 8. Resize Handler
+    // 7. Resize Handler
     const handleResize = () => {
       if (!container || !rendererRef.current || !cameraRef.current) return;
       const w = container.clientWidth || 800;
@@ -377,9 +366,7 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
     const resizeObserver = new ResizeObserver(() => {
       handleResize();
     });
-    if (container) {
-      resizeObserver.observe(container);
-    }
+    resizeObserver.observe(container);
 
     return () => {
       window.removeEventListener('resize', handleResize);
@@ -391,28 +378,27 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
         container.removeChild(rendererRef.current.domElement);
         rendererRef.current.dispose();
       }
-      geometry.dispose();
-      fabricMaterial.dispose();
     };
-  }, [webGLSupported, createFabricGeometry]);
+  }, [webGLSupported]);
 
-  // Load Real Adobe Firefly Texture Map when selected fabric changes
+  // Load Real High-Definition Texture Map whenever selected fabric changes
   useEffect(() => {
-    if (!materialRef.current) return;
-
     setIsTextureLoading(true);
     setTextureError(null);
 
     const loader = new THREE.TextureLoader();
-    const encodedUrl = encodeURI(currentFabric.imageUrl);
+    const textureUrl = currentItem.imageUrl;
 
     loader.load(
-      encodedUrl,
+      textureUrl,
       (texture) => {
         texture.colorSpace = THREE.SRGBColorSpace;
         texture.wrapS = THREE.RepeatWrapping;
         texture.wrapT = THREE.RepeatWrapping;
-        texture.repeat.set(currentFabric.textureRepeat.x, currentFabric.textureRepeat.y);
+
+        const repeat = currentItem.textureRepeat || { x: 2, y: 2 };
+        texture.center.set(0, 0);
+        texture.repeat.set(repeat.x, repeat.y);
         texture.generateMipmaps = true;
         texture.minFilter = THREE.LinearMipmapLinearFilter;
         texture.magFilter = THREE.LinearFilter;
@@ -426,36 +412,25 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
         }
         currentTextureRef.current = texture;
 
-        const mat = materialRef.current!;
-        mat.map = texture;
-        mat.color = new THREE.Color(0xffffff);
-        mat.roughness = currentFabric.roughness;
-        mat.metalness = currentFabric.metalness;
-        mat.clearcoat = currentFabric.clearcoat || 0;
-        mat.clearcoatRoughness = currentFabric.clearcoatRoughness || 0.1;
-        mat.sheen = currentFabric.sheen || 0;
-        mat.sheenColor = new THREE.Color(currentFabric.sheenColor || '#FFFFFF');
-        mat.sheenRoughness = currentFabric.sheenRoughness || 0.3;
-        mat.needsUpdate = true;
-
+        // Mount updated 3D cloth model
+        update3DClothModel(texture, currentItem, surfaceMode);
         setIsTextureLoading(false);
       },
       undefined,
       (err) => {
-        console.error('Failed to load Firefly texture:', err);
-        setTextureError(`Could not load texture from ${currentFabric.imageUrl}`);
+        console.error('Failed to load fabric texture:', err);
+        setTextureError(`Could not load texture from ${currentItem.imageUrl}`);
         setIsTextureLoading(false);
       }
     );
-  }, [currentFabric]);
+  }, [currentItem, update3DClothModel]);
 
-  // Update Geometry when surfaceMode or fabric stiffness changes
+  // Update model when surfaceMode changes
   useEffect(() => {
-    if (!fabricMeshRef.current) return;
-    const newGeo = createFabricGeometry(surfaceMode, currentFabric.drapeStiffness);
-    fabricMeshRef.current.geometry.dispose();
-    fabricMeshRef.current.geometry = newGeo;
-  }, [surfaceMode, currentFabric.drapeStiffness, createFabricGeometry]);
+    if (currentTextureRef.current) {
+      update3DClothModel(currentTextureRef.current, currentItem, surfaceMode);
+    }
+  }, [surfaceMode, currentItem, update3DClothModel]);
 
   // Sync zoom changes to ref
   useEffect(() => {
@@ -476,12 +451,10 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
     const dy = e.clientY - dragStartRef.current.y;
 
     const newRotY = (targetRotYRef.current + dx * 0.65 + 360) % 360;
-    const newRotX = Math.max(-55, Math.min(55, targetRotXRef.current - dy * 0.45));
+    const newRotX = Math.max(-65, Math.min(65, targetRotXRef.current - dy * 0.45));
 
     targetRotYRef.current = newRotY;
     targetRotXRef.current = newRotX;
-    setRotationY(newRotY);
-    setRotationX(newRotX);
 
     dragStartRef.current = { x: e.clientX, y: e.clientY };
   };
@@ -491,11 +464,11 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
     try {
       (e.target as HTMLElement).releasePointerCapture(e.pointerId);
     } catch {
-      // Ignored if already released
+      // Ignore if pointer capture was already released
     }
   };
 
-  // Wheel Zoom Handler
+  // Mouse Wheel Zoom
   const handleWheel = (e: React.WheelEvent) => {
     e.preventDefault();
     const zoomDelta = -e.deltaY * 0.0015;
@@ -531,7 +504,7 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
     touchDistanceRef.current = null;
   };
 
-  // One-Click Camera Reset
+  // Camera Reset
   const handleResetCamera = () => {
     targetRotYRef.current = 0;
     targetRotXRef.current = 10;
@@ -541,18 +514,40 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
     setZoomLevel(1.0);
   };
 
+  // Flip 180 degrees (inspect reverse side of fabric)
+  const handleFlip180 = () => {
+    targetRotYRef.current = (targetRotYRef.current + 180) % 360;
+  };
+
+  // Macro zoom shortcut
+  const handleMacroZoom = () => {
+    targetZoomRef.current = 2.2;
+    setZoomLevel(2.2);
+  };
+
+  // Mode select with smooth angle adjustment
+  const handleSelectMode = (mode: 'drape' | 'curved-swatch' | 'inspection-bed') => {
+    setSurfaceMode(mode);
+    if (mode === 'inspection-bed') {
+      targetRotXRef.current = 5;
+      targetRotYRef.current = 0;
+    }
+  };
+
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'ArrowRight') {
-        setSelectedFabricIndex((prev) => (prev + 1) % FIREFLY_FABRICS.length);
+        setSelectedIndex((prev) => (prev + 1) % CATALOGUE_3D_ITEMS.length);
       } else if (e.key === 'ArrowLeft') {
-        setSelectedFabricIndex((prev) => (prev - 1 + FIREFLY_FABRICS.length) % FIREFLY_FABRICS.length);
+        setSelectedIndex((prev) => (prev - 1 + CATALOGUE_3D_ITEMS.length) % CATALOGUE_3D_ITEMS.length);
       } else if (e.key === ' ') {
         e.preventDefault();
         setIsAutoSpinning((prev) => !prev);
       } else if (e.key === 'r' || e.key === 'R') {
         handleResetCamera();
+      } else if (e.key === 'f' || e.key === 'F') {
+        handleFlip180();
       } else if (e.key === 'b' || e.key === 'B') {
         setIsBreezeActive((prev) => !prev);
       }
@@ -562,48 +557,46 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  const categories = ['All', 'Natural Fibers', 'Blends', 'Synthetics', 'Mesh & Knits'];
-
   return (
     <div
       role="region"
-      aria-label="Interactive 3D Fabric Atelier Studio"
+      aria-label="Interactive 3D Textile Atelier Studio"
       style={isModal ? { position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 9999 } : undefined}
       className={`${isModal ? 'fixed inset-0 z-[9999] w-screen h-screen bg-[#0B0A09]/98 backdrop-blur-2xl' : 'relative w-full h-[calc(100vh-80px)] min-h-[650px] bg-[#0D0C0B]'} text-white flex flex-col overflow-hidden select-none`}
     >
       {/* Top Header Bar */}
       <header className="relative z-20 flex items-center justify-between px-4 sm:px-6 py-2.5 border-b border-[#262420] bg-[#141311]/95 backdrop-blur-md shrink-0">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 min-w-0">
           {onBack && (
             <button
               onClick={onBack}
-              className="p-1.5 rounded-full hover:bg-white/10 text-[#C6A66B] transition-colors cursor-pointer"
+              className="p-1.5 rounded-full hover:bg-white/10 text-[#C6A66B] transition-colors cursor-pointer shrink-0"
               title="Return to catalogue"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
           )}
-          <div>
-            <div className="flex items-center gap-2">
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
               <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#D4AF37]/15 border border-[#D4AF37]/35 text-[#F5DE93] text-[10px] font-mono uppercase tracking-widest font-semibold">
                 <Sparkles className="w-3 h-3 text-[#D4AF37]" />
                 Atelier 3D Fabric Studio
               </span>
               <span className="text-[10px] font-mono text-neutral-400 hidden sm:inline">
-                Adobe Firefly Collection • 15 Real Fabric Textures
+                {CATALOGUE_3D_ITEMS.length} Photorealistic Fabric Textures • Adobe Firefly Sourced
               </span>
             </div>
-            <h1 className="font-serif text-base sm:text-lg font-bold text-[#F8F5EE] tracking-tight mt-0.5">
-              {currentFabric.name}
+            <h1 className="font-serif text-base sm:text-lg font-bold text-[#F8F5EE] tracking-tight mt-0.5 truncate">
+              {currentItem.name}
             </h1>
           </div>
         </div>
 
         {/* Surface Geometry Mode Switcher */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           <div className="flex items-center bg-[#1D1B17] p-1 rounded-xl border border-[#332F28]">
             <button
-              onClick={() => setSurfaceMode('drape')}
+              onClick={() => handleSelectMode('drape')}
               className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer ${
                 surfaceMode === 'drape'
                   ? 'bg-gradient-to-r from-[#D4AF37] to-[#B38728] text-[#121110] font-semibold shadow-sm'
@@ -613,7 +606,7 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
               Draped Cloth
             </button>
             <button
-              onClick={() => setSurfaceMode('curved-swatch')}
+              onClick={() => handleSelectMode('curved-swatch')}
               className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer ${
                 surfaceMode === 'curved-swatch'
                   ? 'bg-gradient-to-r from-[#D4AF37] to-[#B38728] text-[#121110] font-semibold shadow-sm'
@@ -623,7 +616,7 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
               Curved Swatch
             </button>
             <button
-              onClick={() => setSurfaceMode('inspection-bed')}
+              onClick={() => handleSelectMode('inspection-bed')}
               className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer ${
                 surfaceMode === 'inspection-bed'
                   ? 'bg-gradient-to-r from-[#D4AF37] to-[#B38728] text-[#121110] font-semibold shadow-sm'
@@ -660,7 +653,7 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
           onTouchEnd={handleTouchEnd}
           className="relative flex-1 w-full h-full bg-radial from-[#1A1815] via-[#100F0E] to-[#080707] cursor-grab active:cursor-grabbing touch-none select-none overflow-hidden"
         >
-          {/* Dedicated Three.js canvas container with ZERO React JSX children */}
+          {/* Three.js canvas container */}
           <div ref={mountRef} className="absolute inset-0 pointer-events-none" />
 
           {/* WebGL Not Supported Fallback */}
@@ -669,11 +662,11 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
               <AlertCircle className="w-12 h-12 text-[#D4AF37] mb-3" />
               <h3 className="font-serif text-xl font-bold">WebGL Acceleration Required</h3>
               <p className="text-neutral-400 text-sm max-w-md mt-2">
-                Your browser does not currently support WebGL hardware rendering. Below is the authentic 2D high-resolution swatch preview.
+                Your browser does not currently support WebGL hardware rendering. Below is the authentic 2D high-resolution specimen preview.
               </p>
               <img
-                src={encodeURI(currentFabric.imageUrl)}
-                alt={currentFabric.name}
+                src={currentItem.imageUrl}
+                alt={currentItem.name}
                 className="mt-4 max-h-64 rounded-xl border border-[#D4AF37]/30 shadow-2xl object-cover"
               />
             </div>
@@ -683,7 +676,7 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
           {isTextureLoading && (
             <div className="absolute top-4 left-4 z-20 flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-[#181715]/85 backdrop-blur-md border border-[#D4AF37]/40 text-xs font-mono text-[#F5DE93]">
               <div className="w-3.5 h-3.5 border-2 border-[#D4AF37] border-t-transparent rounded-full animate-spin" />
-              <span>Streaming 1024×1024 PBR Texture...</span>
+              <span>Streaming 1024×1024 High-Res Texture...</span>
             </div>
           )}
 
@@ -695,7 +688,7 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
             </div>
           )}
 
-          {/* Prominent Simulated Geometry Notice Badge */}
+          {/* Honest Procedural Geometry Disclosure Badge */}
           <div className="absolute top-3 right-3 z-20 max-w-xs sm:max-w-md hidden sm:block pointer-events-none">
             <div className="flex items-start gap-2.5 px-3 py-2 rounded-xl bg-[#141311]/85 backdrop-blur-md border border-[#332F26] text-[11px] text-neutral-300 leading-snug shadow-xl">
               <Info className="w-4 h-4 text-[#D4AF37] shrink-0 mt-0.5" />
@@ -724,7 +717,7 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
             </div>
           </div>
 
-          {/* Floating Viewport Controls (Reset, Auto-spin, Breeze, Zoom) */}
+          {/* Floating Viewport Controls (Reset, Auto-spin, Flip 180, Macro, Breeze, Zoom) */}
           <div className="absolute bottom-3 right-3 z-20 flex items-center gap-1.5 bg-[#141311]/90 backdrop-blur-md p-1.5 rounded-2xl border border-[#332F26] shadow-2xl">
             {/* Auto-spin Toggle */}
             <button
@@ -739,7 +732,25 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
               {isAutoSpinning ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
             </button>
 
-            {/* Breeze Airflow Toggle */}
+            {/* Quick 180 Flip (inspect reverse side) */}
+            <button
+              onClick={handleFlip180}
+              className="p-2 rounded-xl text-neutral-400 hover:text-[#F5DE93] hover:bg-white/10 transition-colors cursor-pointer"
+              title="Flip 180° to inspect reverse side (F)"
+            >
+              <Repeat className="w-4 h-4" />
+            </button>
+
+            {/* Macro View Zoom */}
+            <button
+              onClick={handleMacroZoom}
+              className="p-2 rounded-xl text-neutral-400 hover:text-[#F5DE93] hover:bg-white/10 transition-colors cursor-pointer"
+              title="Macro close-up inspection"
+            >
+              <Eye className="w-4 h-4" />
+            </button>
+
+            {/* Breeze Airflow Toggle (in drape mode) */}
             {surfaceMode === 'drape' && (
               <button
                 onClick={() => setIsBreezeActive(!isBreezeActive)}
@@ -785,28 +796,29 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
           </div>
         </div>
 
-        {/* Right Sidebar: Fabric Details & PBR Specs */}
+        {/* Right Sidebar: Details & Calibrated PBR Specs */}
         <div className="w-full md:w-80 lg:w-96 border-t md:border-t-0 md:border-l border-[#262420] bg-[#12110F] flex flex-col overflow-y-auto shrink-0">
           <div className="p-4 sm:p-5 space-y-5">
-            {/* Fabric Image & Title Card */}
+            {/* Title & Category Badge */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-mono uppercase tracking-wider text-[#C6A66B]">
-                  {currentFabric.category}
+                <span className="inline-flex items-center gap-1 text-xs font-mono uppercase tracking-wider text-[#C6A66B]">
+                  <Layers className="w-3 h-3 text-[#E6C687]" />
+                  {currentItem.subcategory}
                 </span>
                 <span className="text-xs font-mono text-neutral-400">
-                  {selectedFabricIndex + 1} of {FIREFLY_FABRICS.length}
+                  {selectedIndex + 1} of {CATALOGUE_3D_ITEMS.length}
                 </span>
               </div>
               <h2 className="font-serif text-xl sm:text-2xl font-bold text-[#F8F5EE]">
-                {currentFabric.name}
+                {currentItem.name}
               </h2>
               <p className="text-xs text-neutral-300 leading-relaxed">
-                {currentFabric.description}
+                {currentItem.description}
               </p>
             </div>
 
-            {/* Technical Mill Specifications */}
+            {/* Specifications Card */}
             <div className="space-y-2 pt-3 border-t border-[#262420]">
               <h4 className="text-[10px] font-mono uppercase tracking-wider text-neutral-400 font-semibold">
                 Textile Specifications
@@ -815,81 +827,86 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
                 <div className="p-2 rounded-lg bg-[#181715] border border-[#262420]">
                   <span className="text-[10px] text-neutral-400 block font-mono">Composition</span>
                   <span className="text-[#FAF7F0] font-medium leading-tight block mt-0.5">
-                    {currentFabric.composition}
+                    {currentItem.composition}
                   </span>
                 </div>
+
                 <div className="p-2 rounded-lg bg-[#181715] border border-[#262420]">
-                  <span className="text-[10px] text-neutral-400 block font-mono">Construction</span>
+                  <span className="text-[10px] text-neutral-400 block font-mono">Weave / Construction</span>
                   <span className="text-[#FAF7F0] font-medium leading-tight block mt-0.5">
-                    {currentFabric.weave}
+                    {currentItem.weave || 'Mill Standard'}
                   </span>
                 </div>
+
                 <div className="p-2 rounded-lg bg-[#181715] border border-[#262420]">
                   <span className="text-[10px] text-neutral-400 block font-mono">Weight / Density</span>
                   <span className="text-[#FAF7F0] font-medium leading-tight block mt-0.5">
-                    {currentFabric.weightGsm}
+                    {currentItem.weightGsm || 'Standard Production Weight'}
                   </span>
                 </div>
+
                 <div className="p-2 rounded-lg bg-[#181715] border border-[#262420]">
-                  <span className="text-[10px] text-neutral-400 block font-mono">Texture Mapping</span>
+                  <span className="text-[10px] text-neutral-400 block font-mono">Texture Resolution</span>
                   <span className="text-[#FAF7F0] font-medium leading-tight block mt-0.5 font-mono">
-                    1024×1024 PNG
+                    {currentItem.width}×{currentItem.height} {currentItem.format}
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* Fabric PBR Material Parameters */}
+            {/* Physical Shader Configuration */}
             <div className="space-y-2.5 pt-3 border-t border-[#262420]">
               <h4 className="text-[10px] font-mono uppercase tracking-wider text-neutral-400 font-semibold">
-                Physical Shader Configuration
+                PBR Surface Physics
               </h4>
               <div className="space-y-2 text-xs font-mono">
                 <div>
                   <div className="flex justify-between text-neutral-400 mb-1">
                     <span>Roughness (Matte vs Specular)</span>
-                    <span className="text-[#E6C687]">{currentFabric.roughness}</span>
+                    <span className="text-[#E6C687]">{currentItem.roughness}</span>
                   </div>
                   <div className="w-full h-1.5 bg-[#201E1A] rounded-full overflow-hidden">
                     <div
                       className="h-full bg-gradient-to-r from-[#D4AF37] to-[#B38728]"
-                      style={{ width: `${currentFabric.roughness * 100}%` }}
+                      style={{ width: `${currentItem.roughness * 100}%` }}
                     />
                   </div>
                 </div>
 
                 <div>
                   <div className="flex justify-between text-neutral-400 mb-1">
-                    <span>Textile Sheen & Grazing Fiber Luster</span>
-                    <span className="text-[#E6C687]">{currentFabric.sheen}</span>
+                    <span>Sheen & Grazing Fiber Luster</span>
+                    <span className="text-[#E6C687]">{currentItem.sheen ?? 0.2}</span>
                   </div>
                   <div className="w-full h-1.5 bg-[#201E1A] rounded-full overflow-hidden">
                     <div
                       className="h-full bg-gradient-to-r from-[#D4AF37] to-[#B38728]"
-                      style={{ width: `${currentFabric.sheen * 100}%` }}
+                      style={{ width: `${(currentItem.sheen ?? 0.2) * 100}%` }}
                     />
                   </div>
                 </div>
 
-                <div>
-                  <div className="flex justify-between text-neutral-400 mb-1">
-                    <span>Drape Structural Stiffness</span>
-                    <span className="text-[#E6C687]">{currentFabric.drapeStiffness}</span>
+                {currentItem.drapeStiffness !== undefined && (
+                  <div>
+                    <div className="flex justify-between text-neutral-400 mb-1">
+                      <span>Drape Structural Stiffness</span>
+                      <span className="text-[#E6C687]">{currentItem.drapeStiffness}</span>
+                    </div>
+                    <div className="w-full h-1.5 bg-[#201E1A] rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-[#D4AF37] to-[#B38728]"
+                        style={{ width: `${currentItem.drapeStiffness * 100}%` }}
+                      />
+                    </div>
                   </div>
-                  <div className="w-full h-1.5 bg-[#201E1A] rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-[#D4AF37] to-[#B38728]"
-                      style={{ width: `${currentFabric.drapeStiffness * 100}%` }}
-                    />
-                  </div>
-                </div>
+                )}
               </div>
             </div>
 
             {/* Actions */}
             <div className="pt-3 border-t border-[#262420]">
               <button
-                onClick={() => onEnquire && onEnquire(currentFabric)}
+                onClick={() => onEnquire && onEnquire(currentItem)}
                 className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#D4AF37] via-[#F2D785] to-[#B38728] text-[#121110] font-semibold text-xs tracking-wider uppercase flex items-center justify-center gap-2 hover:opacity-95 transition-opacity shadow-lg cursor-pointer"
               >
                 <Send className="w-3.5 h-3.5" />
@@ -900,25 +917,71 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
         </div>
       </div>
 
-      {/* Bottom Fabric Selector Drawer (All 15 Adobe Firefly Fabrics) */}
+      {/* Bottom Product Selector Drawer (All 24 Fabrics with Textile Filters) */}
       <div className="border-t border-[#262420] bg-[#141311] px-4 py-2.5 z-20 shrink-0">
         <div className="max-w-7xl mx-auto space-y-2">
-          {/* Filter Chips & Search Bar */}
+          {/* Category Filter Chips & Search Bar */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
-              {categories.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setActiveCategory(cat)}
-                  className={`px-2.5 py-1 rounded-full text-xs font-mono transition-all whitespace-nowrap cursor-pointer ${
-                    activeCategory === cat
-                      ? 'bg-[#D4AF37] text-[#121110] font-bold'
-                      : 'bg-[#1E1C18] text-neutral-400 hover:text-white hover:bg-[#26241F]'
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
+              <button
+                data-tab="all"
+                onClick={() => setActiveCategoryFilter('All')}
+                className={`px-3 py-1 rounded-full text-xs font-mono transition-all whitespace-nowrap cursor-pointer ${
+                  activeCategoryFilter === 'All'
+                    ? 'bg-[#D4AF37] text-[#121110] font-bold shadow-md'
+                    : 'bg-[#1E1C18] text-neutral-400 hover:text-white hover:bg-[#26241F]'
+                }`}
+              >
+                All ({categoryCounts['All']})
+              </button>
+              <button
+                data-tab="natural-fibers"
+                onClick={() => setActiveCategoryFilter('Natural Fibers')}
+                className={`px-3 py-1 rounded-full text-xs font-mono transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
+                  activeCategoryFilter === 'Natural Fibers'
+                    ? 'bg-[#D4AF37] text-[#121110] font-bold shadow-md'
+                    : 'bg-[#1E1C18] text-neutral-400 hover:text-white hover:bg-[#26241F]'
+                }`}
+              >
+                <Layers className="w-3 h-3" />
+                Natural Fibers ({categoryCounts['Natural Fibers']})
+              </button>
+              <button
+                data-tab="blends-luxury"
+                onClick={() => setActiveCategoryFilter('Blends & Luxury')}
+                className={`px-3 py-1 rounded-full text-xs font-mono transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
+                  activeCategoryFilter === 'Blends & Luxury'
+                    ? 'bg-[#D4AF37] text-[#121110] font-bold shadow-md'
+                    : 'bg-[#1E1C18] text-neutral-400 hover:text-white hover:bg-[#26241F]'
+                }`}
+              >
+                <Sparkles className="w-3 h-3" />
+                Blends & Luxury ({categoryCounts['Blends & Luxury']})
+              </button>
+              <button
+                data-tab="mesh-knits"
+                onClick={() => setActiveCategoryFilter('Mesh & Knits')}
+                className={`px-3 py-1 rounded-full text-xs font-mono transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
+                  activeCategoryFilter === 'Mesh & Knits'
+                    ? 'bg-[#D4AF37] text-[#121110] font-bold shadow-md'
+                    : 'bg-[#1E1C18] text-neutral-400 hover:text-white hover:bg-[#26241F]'
+                }`}
+              >
+                <Wind className="w-3 h-3" />
+                Mesh & Knits ({categoryCounts['Mesh & Knits']})
+              </button>
+              <button
+                data-tab="synthetics-sheers"
+                onClick={() => setActiveCategoryFilter('Synthetics & Sheers')}
+                className={`px-3 py-1 rounded-full text-xs font-mono transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
+                  activeCategoryFilter === 'Synthetics & Sheers'
+                    ? 'bg-[#D4AF37] text-[#121110] font-bold shadow-md'
+                    : 'bg-[#1E1C18] text-neutral-400 hover:text-white hover:bg-[#26241F]'
+                }`}
+              >
+                <Layers className="w-3 h-3" />
+                Synthetics & Sheers ({categoryCounts['Synthetics & Sheers']})
+              </button>
             </div>
 
             <div className="relative">
@@ -927,22 +990,23 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search 15 Firefly fabrics..."
-                className="pl-8 pr-3 py-1 rounded-lg bg-[#1E1C18] border border-[#332F28] text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-[#D4AF37] w-full sm:w-56"
+                placeholder="Search 24 curated fabrics..."
+                className="pl-8 pr-3 py-1 rounded-lg bg-[#1E1C18] border border-[#332F28] text-xs text-white placeholder-neutral-500 focus:outline-none focus:border-[#D4AF37] w-full sm:w-64"
               />
             </div>
           </div>
 
-          {/* Horizontal Swatch Thumbnails Carousel (15 Fabrics) */}
+          {/* Horizontal Swatch Thumbnails Carousel (24 Fabrics) */}
           <div className="flex items-center gap-2.5 overflow-x-auto pb-1 scrollbar-thin scrollbar-thumb-[#332F28] scrollbar-track-transparent">
-            {filteredFabrics.map((fabric) => {
-              const originalIndex = FIREFLY_FABRICS.findIndex((f) => f.id === fabric.id);
-              const isSelected = originalIndex === selectedFabricIndex;
+            {filteredItems.map((item) => {
+              const originalIndex = CATALOGUE_3D_ITEMS.findIndex((i) => i.id === item.id);
+              const isSelected = originalIndex === selectedIndex;
 
               return (
                 <button
-                  key={fabric.id}
-                  onClick={() => setSelectedFabricIndex(originalIndex)}
+                  key={item.id}
+                  data-item-id={item.id}
+                  onClick={() => setSelectedIndex(originalIndex)}
                   className={`group relative flex-shrink-0 w-24 sm:w-28 p-1.5 rounded-xl border text-left transition-all cursor-pointer ${
                     isSelected
                       ? 'bg-[#26221A] border-[#D4AF37] shadow-[0_0_16px_rgba(212,175,55,0.25)] ring-1 ring-[#D4AF37]'
@@ -952,11 +1016,15 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
                   {/* Thumbnail Image */}
                   <div className="relative w-full aspect-square rounded-lg overflow-hidden bg-neutral-900 mb-1.5">
                     <img
-                      src={encodeURI(fabric.imageUrl)}
-                      alt={fabric.name}
+                      src={item.imageUrl}
+                      alt={item.name}
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                       loading="lazy"
                     />
+                    <div className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded bg-black/75 backdrop-blur-sm text-[8px] font-mono uppercase tracking-wider text-neutral-300">
+                      FAB
+                    </div>
+
                     {isSelected && (
                       <div className="absolute top-1 right-1 w-3.5 h-3.5 rounded-full bg-[#D4AF37] text-[#121110] flex items-center justify-center">
                         <CheckCircle2 className="w-2.5 h-2.5 stroke-[3]" />
@@ -967,10 +1035,10 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
                   {/* Title & Info */}
                   <div className="truncate">
                     <p className={`text-[10px] font-medium truncate ${isSelected ? 'text-[#FAF7F0]' : 'text-neutral-300'}`}>
-                      {fabric.name}
+                      {item.name}
                     </p>
                     <p className="text-[9px] font-mono text-neutral-500 truncate">
-                      {fabric.weightGsm}
+                      {item.weightGsm || item.subcategory}
                     </p>
                   </div>
                 </button>

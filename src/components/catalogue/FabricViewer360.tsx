@@ -30,15 +30,15 @@ export const FabricViewer360: React.FC<FabricViewer360Props> = ({
           const discMat: DiscoveryMaterial = {
             id: f.id,
             name: f.name,
-            category: 'FABRICS',
-            subcategory: f.category,
+            category: (f.category === 'button' ? 'ACCESSORIES' : f.category === 'accessory' ? 'ACCESSORIES' : 'FABRICS') as any,
+            subcategory: f.subcategory || (f as any).category || 'Textiles',
             section: 'WOVEN',
             image: f.imageUrl,
             description: f.description,
             composition: f.composition,
-            weave: f.weave,
-            gsm: f.weightGsm,
-            width: '58" / 60"',
+            weave: f.weave || f.finish || 'Standard Construction',
+            gsm: f.weightGsm || f.dimensions || 'Standard Gauge',
+            width: f.dimensions || '58" / 60"',
           };
           onEnquire(discMat);
         }

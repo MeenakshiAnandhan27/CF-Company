@@ -17,6 +17,7 @@ import { FireflyFabric3DViewer } from './components/catalogue/FireflyFabric3DVie
 import { FireflyFabricItem, getProductForFireflyFabric } from './data/fireflyFabricsData.ts';
 import { Product, ProductCategory, CollectionItem, NavigationTab, MaterialRequestCategory } from './types.ts';
 import { products } from './data/products.ts';
+import { ALL_DISCOVERY_MATERIALS, getProductForDiscoveryMaterial } from './data/catalogueDiscoveryData.ts';
 import { ArrowRight, ShoppingBag, Sparkles, PhoneCall } from 'lucide-react';
 
 const COLLECTION_STORAGE_KEY = 'cf_dealer_collection_v1';
@@ -68,6 +69,18 @@ export default function App() {
   const [isEnquiryOpen, setIsEnquiryOpen] = useState(false);
   const [isCollectionEnquiry, setIsCollectionEnquiry] = useState(false);
   const [reachUsContext, setReachUsContext] = useState<string | undefined>(undefined);
+
+  // Complete list of catalogue products including all discovery materials for smooth full-view navigation
+  const allCatalogueProducts = React.useMemo(() => {
+    const discoveryProds = ALL_DISCOVERY_MATERIALS.map(getProductForDiscoveryMaterial);
+    const combined = [...discoveryProds];
+    products.forEach((p) => {
+      if (!combined.some((item) => item.id === p.id || item.name.toLowerCase() === p.name.toLowerCase())) {
+        combined.push(p);
+      }
+    });
+    return combined;
+  }, []);
 
   // Listen for hash navigation (#3d-fabric-viewer)
   useEffect(() => {
@@ -425,8 +438,12 @@ export default function App() {
           setDetailProduct(null);
           handleRequestMaterial(undefined, p);
         }}
-        allProducts={products}
+        allProducts={allCatalogueProducts}
         onSelectProduct={(p) => setDetailProduct(p)}
+        onOpen360={() => {
+          setDetailProduct(null);
+          handleNavigate('3d-fabric-viewer');
+        }}
       />
 
       {/* Product / Collection Enquiry Modal */}

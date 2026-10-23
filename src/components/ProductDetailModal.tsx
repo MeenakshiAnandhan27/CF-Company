@@ -1,28 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Product } from '../types.ts';
 import { RAW_MATERIAL_IMAGES } from '../data/materialImages.ts';
 import {
   X,
   ArrowRight,
-  Maximize2,
-  ChevronDown,
-  ChevronUp,
   Sparkles,
   ChevronLeft,
   ChevronRight,
-  Info,
+  RotateCw,
 } from 'lucide-react';
 
 interface ProductDetailModalProps {
   product: Product | null;
   onClose: () => void;
   onEnquire: (product: Product) => void;
+  onRequestSimilar?: (product: Product) => void;
+  onOpen360?: (product: Product) => void;
+  allProducts?: Product[];
+  onSelectProduct?: (product: Product) => void;
   onAddToCollection?: (product: Product, quantity: number, colour?: string, size?: string) => void;
   isInCollection?: boolean;
   currentQuantityInCollection?: number;
-  onRequestSimilar?: (product: Product) => void;
-  allProducts?: Product[];
-  onSelectProduct?: (product: Product) => void;
 }
 
 interface KeyDetail {
@@ -31,72 +29,61 @@ interface KeyDetail {
 }
 
 /**
- * Extracts a maximum of 3–4 category-relevant specifications
- * to keep the initial view clean, minimal, and scannable within 3–5 seconds.
+ * Extracts essential specifications: Width, Composition, Weave/Type (and Weight/GSM if present).
+ * Excludes Availability, In Stock, and reference codes as requested.
  */
 function getKeyDetails(product: Product): KeyDetail[] {
   const details: KeyDetail[] = [];
-  const cat = product.category;
 
-  if (cat === 'fabrics') {
-    if (product.width) details.push({ label: 'WIDTH', value: product.width });
-    if (product.gsm) details.push({ label: 'GSM / WEIGHT', value: product.gsm });
-    if (product.yarnConstruction) details.push({ label: 'CONSTRUCTION', value: product.yarnConstruction });
-    if (product.weave || product.subcategory) {
-      details.push({ label: 'WEAVE', value: product.weave || product.subcategory || 'Woven' });
-    }
-  } else if (cat === 'denim') {
-    if (product.width) details.push({ label: 'WIDTH', value: product.width });
-    if (product.fabric) {
-      details.push({ label: 'COMPOSITION', value: product.fabric.split(';')[0].slice(0, 24) });
-    }
-    details.push({ label: 'WEAVE', value: '3/1 Twill' });
-    details.push({ label: 'AVAILABILITY', value: product.availability || 'In Stock' });
-  } else if (cat === 'mesh' || cat === 'lycra-mesh') {
-    if (product.width || product.sizes?.[0]) {
-      details.push({ label: 'WIDTH', value: product.width || product.sizes?.[0] || '58"' });
-    }
-    if (product.fabric) {
-      details.push({ label: 'STRUCTURE', value: product.fabric.split(';')[0].slice(0, 24) });
-    }
-    if (product.gsm) details.push({ label: 'WEIGHT', value: product.gsm });
-    details.push({ label: 'AVAILABILITY', value: product.availability || 'In Stock' });
-  } else if (cat === 'laces') {
-    const size = product.sizes?.[0] || '25 mm – 100 mm';
-    details.push({ label: 'WIDTH', value: size });
-    if (product.fabric) {
-      details.push({ label: 'MATERIAL', value: product.fabric.split(';')[0].slice(0, 24) });
-    }
-    if (product.subcategory) details.push({ label: 'TYPE', value: product.subcategory });
-    details.push({ label: 'AVAILABILITY', value: product.availability || 'In Stock' });
-  } else if (cat === 'buttons') {
-    const sizes = product.sizes ? product.sizes.slice(0, 2).join(', ') : '14L – 24L';
-    details.push({ label: 'SIZES', value: sizes });
-    if (product.fabric) details.push({ label: 'MATERIAL', value: product.fabric.slice(0, 24) });
-    if (product.subcategory) details.push({ label: 'TYPE', value: product.subcategory });
-    details.push({ label: 'AVAILABILITY', value: product.availability || 'In Stock' });
-  } else if (cat === 'tapes') {
-    const sizes = product.sizes ? product.sizes.slice(0, 2).join(', ') : '10mm – 40mm';
-    details.push({ label: 'WIDTHS', value: sizes });
-    if (product.fabric) details.push({ label: 'MATERIAL', value: product.fabric.slice(0, 24) });
-    details.push({ label: 'WEAVE', value: 'Woven Twill' });
-    details.push({ label: 'AVAILABILITY', value: product.availability || 'In Stock' });
-  } else if (cat === 'tags') {
-    const sizes = product.sizes?.[0] || 'Standard & Custom';
-    details.push({ label: 'SIZES', value: sizes });
-    if (product.fabric) details.push({ label: 'MATERIAL', value: product.fabric.slice(0, 24) });
-    details.push({ label: 'EDGE', value: 'Ultrasonic Soft Cut' });
-    details.push({ label: 'AVAILABILITY', value: product.availability || 'In Stock' });
-  } else {
-    // Default accessories / processing
-    if (product.sizes?.[0]) details.push({ label: 'SPECIFICATION', value: product.sizes[0] });
-    if (product.fabric) details.push({ label: 'MATERIAL', value: product.fabric.slice(0, 24) });
-    if (product.subcategory) details.push({ label: 'TYPE', value: product.subcategory });
-    details.push({ label: 'AVAILABILITY', value: product.availability || 'In Stock' });
+  // 1. Width
+  const widthVal = product.width || (product.sizes && product.sizes.length > 0 && product.category !== 'buttons' && product.category !== 'tags' ? product.sizes[0] : undefined);
+  if (widthVal) {
+    details.push({
+      label: product.category === 'buttons' || product.category === 'tags' ? 'SIZE / GAUGE' : 'WIDTH',
+      value: widthVal,
+    });
+  } else if (product.category === 'buttons' && product.sizes && product.sizes.length > 0) {
+    details.push({
+      label: 'SIZES',
+      value: product.sizes.slice(0, 2).join(', '),
+    });
   }
 
-  // Strictly maximum 4 key specifications
-  return details.slice(0, 4);
+  // 2. Composition
+  const comp = product.fabric || product.quality;
+  if (comp) {
+    const cleanComp = comp.split(';')[0].trim();
+    details.push({
+      label: 'COMPOSITION',
+      value: cleanComp,
+    });
+  }
+
+  // 3. Weave / Type
+  let weave = product.weave || product.fabricWeaveType;
+  if (!weave) {
+    if (product.name.toLowerCase() === 'chambray') {
+      weave = '1/1 Plain Chambray Weave';
+    } else if (product.subcategory) {
+      weave = product.subcategory;
+    }
+  }
+  if (weave) {
+    details.push({
+      label: 'WEAVE / TYPE',
+      value: weave,
+    });
+  }
+
+  // 4. Weight / GSM (if present)
+  if (product.gsm) {
+    details.push({
+      label: 'WEIGHT / GSM',
+      value: product.gsm,
+    });
+  }
+
+  return details;
 }
 
 export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
@@ -104,52 +91,57 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
   onClose,
   onEnquire,
   onRequestSimilar,
+  onOpen360,
   allProducts,
   onSelectProduct,
 }) => {
-  const [showFullDetails, setShowFullDetails] = useState(false);
-  const [isFullscreenViewerOpen, setIsFullscreenViewerOpen] = useState(false);
+  // Interactive 3D Perspective Tilt on Mouse and Touch Drag
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [isHoveringImage, setIsHoveringImage] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStartRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const imageContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        if (isFullscreenViewerOpen) {
-          setIsFullscreenViewerOpen(false);
-        } else {
-          onClose();
-        }
+        onClose();
       }
     };
 
     if (product) {
       document.body.style.overflow = 'hidden';
       window.addEventListener('keydown', handleKeyDown);
-      setShowFullDetails(false);
-      setIsFullscreenViewerOpen(false);
+      setTilt({ x: 0, y: 0 });
     }
     return () => {
       document.body.style.overflow = 'auto';
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [product, onClose, isFullscreenViewerOpen]);
+  }, [product, onClose]);
 
   if (!product) return null;
 
-  // Strict Raw Material Image mapping: Always authentic raw material close-up
+  // Strict Raw Material Image mapping: High-res material image direct -> Category asset
   const rawConfig = RAW_MATERIAL_IMAGES[product.category];
-  const imageSrc = rawConfig?.imagePath || product.images?.[0] || `/assets/materials/${product.category}.jpg`;
-  const altText = rawConfig?.altText || `Raw material view of ${product.name}`;
+  const imageSrc = product.images?.[0] || rawConfig?.imagePath || `/assets/materials/${product.category}.jpg`;
+  const altText = rawConfig?.altText || `Raw material visual of ${product.name}`;
 
-  // Short 1-2 line description (What it is + Where it can be used)
-  const shortDescription = product.shortDescription || product.description;
+  // Description: Cleaned without "for casual shirting texture"
+  let description = product.shortDescription || product.description;
+  if (product.name.toLowerCase() === 'chambray') {
+    description = 'Lightweight plain-weave textile with coloured indigo warp and clean white weft yarns.';
+  } else if (description) {
+    description = description.replace(/ for casual shirting texture\.?/gi, '.').trim();
+  }
 
-  // Category-aware 3-4 key specifications
+  // Category-aware clean specifications (Max 3-4 items, NO availability)
   const keyDetails = getKeyDetails(product);
 
-  // Previous & Next navigation
-  const currentIndex = allProducts ? allProducts.findIndex((p) => p.id === product.id) : -1;
+  // Previous & Next navigation across catalogue items
+  const currentIndex = allProducts ? allProducts.findIndex((p) => p.id === product.id || p.name.toLowerCase() === product.name.toLowerCase()) : -1;
   const hasPrev = allProducts && currentIndex > 0;
-  const hasNext = allProducts && currentIndex < allProducts.length - 1;
+  const hasNext = allProducts && currentIndex >= 0 && currentIndex < allProducts.length - 1;
 
   const handlePrev = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -165,272 +157,262 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
     }
   };
 
-  return (
-    <>
-      {/* ======================================================== */}
-      {/* MAIN MATERIAL DETAIL MODAL BACKDROP */}
-      {/* ======================================================== */}
-      <div
-        className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200 select-none"
-        onClick={onClose}
-      >
-        <div
-          className="relative w-full max-w-4xl bg-white rounded-2xl shadow-2xl border border-stone-200/80 overflow-hidden flex flex-col md:flex-row max-h-[90vh] md:max-h-[640px]"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {/* Close button (top-right) */}
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 z-20 w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 hover:text-stone-900 flex items-center justify-center transition-colors"
-            aria-label="Close modal"
-          >
-            <X className="w-4 h-4" />
-          </button>
+  // Mouse & Touch Drag Gestures for tactile 3D perspective exploration
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!imageContainerRef.current) return;
+    const rect = imageContainerRef.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const rotateY = ((e.clientX - centerX) / (rect.width / 2)) * 14;
+    const rotateX = -((e.clientY - centerY) / (rect.height / 2)) * 14;
+    setTilt({ x: rotateX, y: rotateY });
+  };
 
-          {/* ======================================================== */}
-          {/* LEFT COLUMN (~58%): HERO RAW MATERIAL IMAGE */}
-          {/* ======================================================== */}
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (e.touches.length === 1) {
+      setIsDragging(true);
+      dragStartRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!isDragging || e.touches.length !== 1) return;
+    const deltaX = e.touches[0].clientX - dragStartRef.current.x;
+    const deltaY = e.touches[0].clientY - dragStartRef.current.y;
+    const rotateY = Math.max(-18, Math.min(18, (deltaX / 120) * 16));
+    const rotateX = Math.max(-18, Math.min(18, (-deltaY / 120) * 16));
+    setTilt({ x: rotateX, y: rotateY });
+  };
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+    setTilt({ x: 0, y: 0 });
+  };
+
+  const handleMouseLeave = () => {
+    setIsHoveringImage(false);
+    setIsDragging(false);
+    setTilt({ x: 0, y: 0 });
+  };
+
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="full-view-material-title"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-[#121110]/70 backdrop-blur-xs animate-in fade-in duration-200 select-none overflow-y-auto"
+      onClick={onClose}
+    >
+      <div
+        className="relative w-full max-w-4xl bg-gradient-to-b from-[#FFFDF9] via-[#FAF7F0] to-[#F7F2E8] rounded-2xl shadow-2xl border border-[#E2D8C3] overflow-hidden flex flex-col md:flex-row max-h-[92vh] md:max-h-[640px] my-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close button (top-right) */}
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute top-4 right-4 z-30 w-8 h-8 rounded-full bg-white/90 hover:bg-[#EAE2D2] text-[#55514B] hover:text-[#142E20] border border-[#DDD5C7] flex items-center justify-center transition-all cursor-pointer shadow-xs"
+          aria-label="Close modal"
+        >
+          <X className="w-4 h-4" />
+        </button>
+
+        {/* ═══════════════════════════════════════════════════════════ */}
+        {/* LEFT COLUMN (~58%): LARGE RAW FABRIC IMAGE & 360° CONTROL   */}
+        {/* ═══════════════════════════════════════════════════════════ */}
+        <div
+          ref={imageContainerRef}
+          onMouseEnter={() => setIsHoveringImage(true)}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          className="w-full md:w-[58%] relative bg-gradient-to-b from-[#FAF6EE] to-[#EFE8DC] min-h-[320px] sm:min-h-[380px] md:min-h-full overflow-hidden group cursor-grab active:cursor-grabbing border-b md:border-b-0 md:border-r border-[#E2D8C3]"
+        >
+          {/* Subtle Ambient Radial Spotlight behind fabric texture */}
           <div
-            className="w-full md:w-[58%] relative bg-stone-100 min-h-[300px] sm:min-h-[360px] md:min-h-full overflow-hidden group cursor-pointer"
-            onClick={() => setIsFullscreenViewerOpen(true)}
-            title="Click to view full-resolution raw material"
-          >
+            aria-hidden="true"
+            className="absolute inset-0 pointer-events-none opacity-60"
+            style={{
+              background:
+                'radial-gradient(circle at 50% 45%, rgba(184, 147, 74, 0.22) 0%, rgba(20, 46, 32, 0.04) 60%, transparent 80%)',
+            }}
+          />
+
+          {/* Large Raw Fabric Image with Interactive 3D Perspective Tilt */}
+          <div className="w-full h-full relative overflow-hidden flex items-center justify-center">
             <img
               src={imageSrc}
               alt={altText}
               referrerPolicy="no-referrer"
-              className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-              style={{ objectPosition: rawConfig?.objectPosition || 'center' }}
+              style={{
+                transform: `perspective(850px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale(${isHoveringImage ? 1.03 : 1})`,
+                transition: isHoveringImage ? 'transform 0.08s ease-out' : 'transform 0.4s ease-out',
+                objectPosition: rawConfig?.objectPosition || 'center',
+              }}
+              className="w-full h-full object-cover transition-transform duration-500 ease-out select-none"
             />
 
-            {/* Subtle corner zoom icon button */}
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsFullscreenViewerOpen(true);
+            {/* Dynamic Light Sheen Gradient Overlay shifting with angle */}
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-black/15 via-transparent to-white/20 transition-opacity"
+              style={{
+                transform: `translateX(${tilt.y * 1.5}px) translateY(${tilt.x * 1.5}px)`,
               }}
-              className="absolute bottom-4 right-4 p-2 rounded-lg bg-black/60 hover:bg-black/80 text-white backdrop-blur-xs transition-colors flex items-center gap-1.5 text-xs font-mono"
-              title="Expand raw material view"
-            >
-              <Maximize2 className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline text-[11px]">Inspect Fullscreen</span>
-            </button>
-
-            {/* Subtle Raw Textile Badge */}
-            <div className="absolute top-4 left-4 bg-stone-950/70 backdrop-blur-xs text-stone-200 px-2.5 py-1 rounded text-[10px] font-mono tracking-widest uppercase pointer-events-none">
-              Raw Material View
-            </div>
+            />
           </div>
 
-          {/* ======================================================== */}
-          {/* RIGHT COLUMN (~42%): CLEAN, VISUAL-FIRST INFORMATION */}
-          {/* ======================================================== */}
-          <div className="w-full md:w-[42%] p-6 sm:p-8 flex flex-col justify-between overflow-y-auto bg-white">
-            <div className="space-y-4">
-              {/* 1. Header: Small Category Label & Breadcrumb */}
-              <div>
-                <div className="text-[11px] font-mono text-[#82553E] uppercase tracking-[0.2em] font-semibold flex items-center gap-1.5">
-                  <span>{product.categoryLabel}</span>
-                  {product.subcategory && (
-                    <>
-                      <span className="text-stone-300">•</span>
-                      <span className="text-stone-600">{product.subcategory}</span>
-                    </>
-                  )}
+          {/* Subtle Corner Raw Textile Badge */}
+          <div className="absolute top-4 left-4 z-20 bg-[#142E20]/85 backdrop-blur-xs text-[#FAF7F2] px-2.5 py-1 rounded-md text-[9px] font-mono tracking-widest uppercase pointer-events-none border border-[#B8934A]/40 flex items-center gap-1.5 shadow-xs">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]" />
+            <span>Raw Material Visual</span>
+          </div>
+
+          {/* Prominent, Elegant Interactive 360° Turntable Control */}
+          <div className="absolute bottom-4 left-4 right-4 z-20">
+            <button
+              type="button"
+              onClick={() => {
+                if (onOpen360) {
+                  onOpen360(product);
+                }
+              }}
+              className="w-full relative group p-3 rounded-xl bg-gradient-to-r from-[#142E20]/95 via-[#1B3B2B]/95 to-[#142E20]/95 hover:from-[#1A3827] hover:to-[#173223] text-[#FAF7F2] border border-[#B8934A]/60 hover:border-[#D4AF37] shadow-[0_0_18px_rgba(184,147,74,0.32)] hover:shadow-[0_0_28px_rgba(184,147,74,0.52)] transition-all duration-300 cursor-pointer active:scale-[0.99] backdrop-blur-xs flex items-center justify-between gap-3 overflow-hidden"
+            >
+              {/* Animated highlight shimmer */}
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 pointer-events-none opacity-25 group-hover:opacity-40 transition-opacity bg-[radial-gradient(circle_at_50%_50%,rgba(212,175,55,0.45),transparent_70%)]"
+              />
+
+              <div className="relative flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-[#224430] border border-[#B8934A]/70 flex items-center justify-center shrink-0 text-[#D4AF37] shadow-[0_0_8px_rgba(184,147,74,0.3)] group-hover:scale-105 transition-transform">
+                  <RotateCw className="w-4 h-4 group-hover:rotate-180 transition-transform duration-700 stroke-[1.8]" />
                 </div>
-
-                {/* 2. Large Elegant Material Title */}
-                <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#181715] tracking-tight leading-tight mt-1">
-                  {product.name}
-                </h2>
-
-                {/* Subtle Material Reference Code */}
-                {product.productCode && (
-                  <span className="text-[11px] font-mono text-[#8C877E] block mt-0.5">
-                    Ref. {product.productCode}
+                <div className="text-left">
+                  <div className="font-serif text-xs sm:text-sm font-semibold tracking-wide text-[#FAF7F2] flex items-center gap-1.5">
+                    <span>Interactive 360° Turntable</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] animate-pulse" />
+                  </div>
+                  <span className="text-[10px] sm:text-[11px] font-mono text-[#D4AF37]/90 tracking-wide block mt-0.5">
+                    Drag to explore the texture
                   </span>
+                </div>
+              </div>
+
+              <ArrowRight className="w-4 h-4 text-[#D4AF37] group-hover:translate-x-1 transition-transform shrink-0" />
+            </button>
+          </div>
+        </div>
+
+        {/* ═══════════════════════════════════════════════════════════ */}
+        {/* RIGHT COLUMN (~42%): CLEAN, VISUAL-FIRST INFORMATION        */}
+        {/* ═══════════════════════════════════════════════════════════ */}
+        <div className="w-full md:w-[42%] p-6 sm:p-8 flex flex-col justify-between overflow-y-auto bg-gradient-to-b from-[#FFFDF9] to-[#FAF7F0]">
+          <div className="space-y-4">
+            
+            {/* 1. Header: Small Category Eyebrow with Single-Line Diamond Accent */}
+            <div>
+              <div className="text-[10px] sm:text-[11px] font-mono text-[#B8934A] uppercase tracking-[0.2em] font-semibold flex items-center gap-2">
+                <div className="w-1.5 h-1.5 border border-[#B8934A] rotate-45 shrink-0" />
+                <span>{product.categoryLabel}</span>
+                {product.subcategory && (
+                  <>
+                    <span className="text-[#C5BEB2]">·</span>
+                    <span className="text-[#737068]">{product.subcategory}</span>
+                  </>
                 )}
               </div>
 
-              {/* 3. Short 1–2 Line Description */}
-              <p className="text-xs sm:text-sm text-[#585550] leading-relaxed">
-                {shortDescription}
-              </p>
+              {/* 2. Large Elegant Material Title */}
+              <h2 id="full-view-material-title" className="font-serif text-2xl sm:text-3xl font-bold text-[#142E20] tracking-tight leading-tight mt-1.5">
+                {product.name}
+              </h2>
+            </div>
 
-              {/* 4. Category-Aware Key Specifications (Max 3–4 items) */}
-              <div className="pt-3 pb-3 border-t border-b border-[#F0ECE4] my-2">
+            {/* 3. Concise Description (Clean & Free of "casual shirting texture") */}
+            <p className="text-xs sm:text-sm text-[#55514B] leading-relaxed pt-0.5">
+              {description}
+            </p>
+
+            {/* 4. Category-Aware Key Specifications (Clean 2-Column Layout, NO Availability) */}
+            {keyDetails.length > 0 && (
+              <div className="bg-[#FAF7F0] border border-[#E2D8C3] rounded-xl p-4 my-2 shadow-2xs">
                 <div className="grid grid-cols-2 gap-x-4 gap-y-3">
                   {keyDetails.map((detail, idx) => (
-                    <div key={idx}>
+                    <div key={idx} className="space-y-0.5">
                       <span className="text-[10px] font-mono text-[#8C877E] uppercase tracking-wider block">
                         {detail.label}
                       </span>
-                      <span className="text-xs sm:text-sm font-semibold text-[#181715] leading-snug">
+                      <span className="text-xs sm:text-sm font-serif font-semibold text-[#142E20] leading-snug block">
                         {detail.value}
                       </span>
                     </div>
                   ))}
                 </div>
               </div>
+            )}
 
-              {/* 5. Primary Action: ENQUIRE ABOUT THIS MATERIAL → */}
-              <div className="space-y-2 pt-1">
+            {/* 5. Working Enquiry Actions Styled for Full-View */}
+            <div className="space-y-2.5 pt-2">
+              {/* Primary Action: ENQUIRE ABOUT THIS MATERIAL */}
+              <button
+                type="button"
+                onClick={() => onEnquire(product)}
+                className="w-full py-3.5 px-6 bg-[#142E20] hover:bg-[#1B3B2B] text-[#FAF7F2] font-mono text-xs font-semibold uppercase tracking-widest rounded-xl shadow-xs hover:shadow-[0_6px_22px_rgba(184,147,74,0.26)] border border-[#B8934A]/50 hover:border-[#D4AF37] transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99]"
+              >
+                <span>ENQUIRE ABOUT THIS MATERIAL</span>
+                <ArrowRight className="w-4 h-4 text-[#D4AF37]" />
+              </button>
+
+              {/* Secondary Action: REQUEST SIMILAR MATERIAL */}
+              {onRequestSimilar && (
                 <button
                   type="button"
-                  onClick={() => onEnquire(product)}
-                  className="w-full py-3.5 px-6 bg-[#181715] hover:bg-[#82553E] text-white font-mono text-xs font-semibold uppercase tracking-widest rounded-lg shadow-sm hover:shadow-md transition-all duration-300 flex items-center justify-center gap-2"
+                  onClick={() => onRequestSimilar(product)}
+                  className="w-full py-3 px-4 bg-[#FAF7F2] hover:bg-[#F3EDE2] text-[#142E20] border border-[#DDD5C7] hover:border-[#B8934A] font-mono text-xs font-semibold tracking-wider uppercase rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs"
                 >
-                  <span>ENQUIRE ABOUT THIS MATERIAL</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <Sparkles className="w-3.5 h-3.5 text-[#B8934A]" />
+                  <span>REQUEST SIMILAR MATERIAL</span>
                 </button>
-
-                {/* Secondary Action: REQUEST SIMILAR MATERIAL */}
-                {onRequestSimilar && (
-                  <button
-                    type="button"
-                    onClick={() => onRequestSimilar(product)}
-                    className="w-full py-2.5 px-4 bg-transparent hover:bg-stone-50 border border-stone-300 text-stone-700 hover:text-stone-900 font-mono text-xs tracking-wider uppercase rounded-lg transition-colors flex items-center justify-center gap-1.5"
-                  >
-                    <Sparkles className="w-3.5 h-3.5 text-[#82553E]" />
-                    <span>REQUEST SIMILAR MATERIAL</span>
-                  </button>
-                )}
-              </div>
-
-              {/* 6. Technical Details Accordion (Collapsed by Default) */}
-              <div className="pt-2">
-                <button
-                  type="button"
-                  onClick={() => setShowFullDetails(!showFullDetails)}
-                  className="inline-flex items-center gap-1.5 text-[11px] font-mono text-[#82553E] hover:text-[#181715] uppercase tracking-wider transition-colors"
-                >
-                  <span>{showFullDetails ? 'HIDE TECHNICAL DETAILS –' : 'VIEW TECHNICAL DETAILS +'}</span>
-                </button>
-
-                {showFullDetails && (
-                  <div className="mt-3 p-3.5 bg-stone-50 rounded-lg border border-stone-200 text-xs font-mono space-y-2 animate-in fade-in duration-200">
-                    {product.yarnConstruction && (
-                      <div className="flex justify-between border-b border-stone-200 pb-1">
-                        <span className="text-stone-500">Yarn Count:</span>
-                        <span className="text-stone-800 font-semibold">{product.yarnConstruction}</span>
-                      </div>
-                    )}
-                    {product.quality && (
-                      <div className="flex justify-between border-b border-stone-200 pb-1">
-                        <span className="text-stone-500">Quality:</span>
-                        <span className="text-stone-800 font-semibold">{product.quality}</span>
-                      </div>
-                    )}
-                    {product.loom && (
-                      <div className="flex justify-between border-b border-stone-200 pb-1">
-                        <span className="text-stone-500">Manufacturing Loom:</span>
-                        <span className="text-stone-800 font-semibold">{product.loom}</span>
-                      </div>
-                    )}
-                    {product.selvage && (
-                      <div className="flex justify-between border-b border-stone-200 pb-1">
-                        <span className="text-stone-500">Selvage Standard:</span>
-                        <span className="text-stone-800 font-semibold">{product.selvage}</span>
-                      </div>
-                    )}
-                    {product.standard && (
-                      <div className="flex justify-between border-b border-stone-200 pb-1">
-                        <span className="text-stone-500">Standard Grade:</span>
-                        <span className="text-stone-800 font-semibold">{product.standard}</span>
-                      </div>
-                    )}
-                    {product.applications && product.applications.length > 0 && (
-                      <div className="pt-1">
-                        <span className="text-stone-500 block text-[10px] uppercase">Common Uses:</span>
-                        <span className="text-stone-700 font-sans text-xs">
-                          {product.applications.join(' · ')}
-                        </span>
-                      </div>
-                    )}
-                    {product.colours && product.colours.length > 0 && (
-                      <div className="pt-1">
-                        <span className="text-stone-500 block text-[10px] uppercase">Available States / Shades:</span>
-                        <span className="text-stone-700 font-sans text-xs">
-                          {product.colours.join(' · ')}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
+              )}
             </div>
 
-            {/* 7. Subtle Previous / Next Material Navigation */}
-            {allProducts && allProducts.length > 1 && (
-              <div className="pt-4 mt-4 border-t border-stone-100 flex items-center justify-between text-[11px] font-mono text-[#8C877E]">
-                <button
-                  type="button"
-                  onClick={handlePrev}
-                  disabled={!hasPrev}
-                  className="hover:text-[#181715] disabled:opacity-30 disabled:pointer-events-none transition-colors flex items-center gap-1"
-                >
-                  <ChevronLeft className="w-3.5 h-3.5" />
-                  <span>PREV</span>
-                </button>
-
-                <span className="text-[10px] text-stone-400">
-                  {currentIndex + 1} / {allProducts.length}
-                </span>
-
-                <button
-                  type="button"
-                  onClick={handleNext}
-                  disabled={!hasNext}
-                  className="hover:text-[#181715] disabled:opacity-30 disabled:pointer-events-none transition-colors flex items-center gap-1"
-                >
-                  <span>NEXT</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            )}
           </div>
+
+          {/* 6. Subtle Previous / Next Material Navigation */}
+          {allProducts && allProducts.length > 1 && (
+            <div className="pt-4 mt-4 border-t border-[#EAE3D4] flex items-center justify-between text-[11px] font-mono text-[#737068]">
+              <button
+                type="button"
+                onClick={handlePrev}
+                disabled={!hasPrev}
+                className="hover:text-[#142E20] disabled:opacity-30 disabled:pointer-events-none transition-colors flex items-center gap-1 cursor-pointer"
+              >
+                <ChevronLeft className="w-3.5 h-3.5 text-[#B8934A]" />
+                <span>PREV</span>
+              </button>
+
+              <span className="text-[10px] text-[#8C877E] font-mono">
+                {currentIndex >= 0 ? currentIndex + 1 : 1} / {allProducts.length}
+              </span>
+
+              <button
+                type="button"
+                onClick={handleNext}
+                disabled={!hasNext}
+                className="hover:text-[#142E20] disabled:opacity-30 disabled:pointer-events-none transition-colors flex items-center gap-1 cursor-pointer"
+              >
+                <span>NEXT</span>
+                <ChevronRight className="w-3.5 h-3.5 text-[#B8934A]" />
+              </button>
+            </div>
+          )}
+
         </div>
       </div>
-
-      {/* ======================================================== */}
-      {/* FULLSCREEN RAW MATERIAL LIGHTBOX VIEWER */}
-      {/* ======================================================== */}
-      {isFullscreenViewerOpen && (
-        <div
-          className="fixed inset-0 z-[60] bg-black/95 backdrop-blur-md flex flex-col items-center justify-center p-4 sm:p-8 animate-in fade-in duration-200 select-none"
-          onClick={() => setIsFullscreenViewerOpen(false)}
-        >
-          {/* Close button in top-right */}
-          <button
-            onClick={() => setIsFullscreenViewerOpen(false)}
-            className="absolute top-6 right-6 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
-            aria-label="Close fullscreen view"
-          >
-            <X className="w-6 h-6" />
-          </button>
-
-          {/* Centered High-Resolution Image */}
-          <div
-            className="relative max-h-[82vh] max-w-[90vw] overflow-hidden rounded-lg shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <img
-              src={imageSrc}
-              alt={altText}
-              referrerPolicy="no-referrer"
-              className="max-h-[82vh] max-w-[90vw] object-contain rounded-lg"
-            />
-          </div>
-
-          {/* Bottom Caption */}
-          <div className="mt-4 text-center text-xs font-mono text-stone-300">
-            <span className="font-semibold text-white">{product.name}</span>
-            {product.productCode && <span> • Ref. {product.productCode}</span>}
-            <span className="text-stone-500"> • Raw Material Texture Close-Up</span>
-          </div>
-        </div>
-      )}
-    </>
+    </div>
   );
 };

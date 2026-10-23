@@ -7,7 +7,6 @@ import {
 } from '../../data/catalogueDiscoveryData.ts';
 import { CategoryShowcase } from './CategoryShowcase.tsx';
 import { MaterialGrid } from './MaterialGrid.tsx';
-import { MaterialDetail } from './MaterialDetail.tsx';
 import { MaterialWall } from './MaterialWall.tsx';
 import { MaterialWallStudio } from './MaterialWallStudio.tsx';
 import { CatalogueNavigation, NavFilter } from './CatalogueNavigation.tsx';
@@ -51,9 +50,6 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
   });
 
   const [searchQuery, setSearchQuery] = useState('');
-
-  // ── FEATURE 1: Explore Fabrics — selectedMaterial opens MaterialDetail drawer (UNCHANGED)
-  const [selectedMaterial, setSelectedMaterial] = useState<DiscoveryMaterial | null>(null);
 
   // ── FEATURE 2: Digital Lookbook — separate book interface
   const [isDigitalBookOpen, setIsDigitalBookOpen] = useState(false);
@@ -119,40 +115,6 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
     onEnquire(product);
   };
 
-  const handleRequestMaterialDirect = (material: DiscoveryMaterial, selectedVariant?: string) => {
-    const product = getProductForDiscoveryMaterial(material);
-    if (selectedVariant) {
-      product.name = `${material.name} (${selectedVariant})`;
-    }
-    if (onRequestMaterial) {
-      const mappedCategory =
-        material.category === 'LACES'
-          ? 'laces'
-          : material.category === 'DENIM & CHAMBRAY'
-          ? 'denim'
-          : 'fabrics';
-      onRequestMaterial(mappedCategory, product);
-    } else {
-      onEnquire(product);
-    }
-    setSelectedMaterial(null);
-  };
-
-  const handleReachUsDirect = (material: DiscoveryMaterial, selectedVariant?: string) => {
-    const context = `${material.name}${selectedVariant ? ` (${selectedVariant})` : ''} [${material.category}]`;
-    try {
-      sessionStorage.setItem('cf_reach_us_material_context', context);
-    } catch {
-      // ignore storage error
-    }
-    if (onReachUs) {
-      onReachUs(context);
-    } else {
-      window.location.hash = '#reach-us';
-    }
-    setSelectedMaterial(null);
-  };
-
   const handleDeepDetailsMaterial = (material: DiscoveryMaterial) => {
     const product = getProductForDiscoveryMaterial(material);
     onViewDetails(product);
@@ -165,12 +127,6 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
       product.name = `${material.name} (${selectedVariant})`;
     }
     onAddToCollection(product, 1);
-  };
-
-  const isMaterialInCollection = (material: DiscoveryMaterial | null): boolean => {
-    if (!material) return false;
-    const matchedProduct = getProductForDiscoveryMaterial(material);
-    return collection.some((item) => item.product.id === matchedProduct.id || item.product.name.toLowerCase() === material.name.toLowerCase());
   };
 
   return (
@@ -348,7 +304,7 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
                 title="Explore Fabrics"
                 subtitle="Browse materials by construction, texture and application."
                 materials={ALL_DISCOVERY_MATERIALS.filter((m) => m.category === 'FABRICS')}
-                onSelectMaterial={setSelectedMaterial}
+                onSelectMaterial={handleDeepDetailsMaterial}
                 onOpen360={handleOpen360Viewer}
                 subsections={[
                   {
@@ -380,7 +336,7 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
                   title="Denim & Chambray"
                   subtitle="Authentic raw indigo twill textiles and lightweight chambray weaves."
                   materials={ALL_DISCOVERY_MATERIALS.filter((m) => m.category === 'DENIM & CHAMBRAY')}
-                  onSelectMaterial={setSelectedMaterial}
+                  onSelectMaterial={handleDeepDetailsMaterial}
                   onOpen360={handleOpen360Viewer}
                 />
               </div>
@@ -391,7 +347,7 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
                   title="Laces & Trims"
                   subtitle="Fine embroidery needlework, pure cotton crochet, raschel lycra, ric rac and imported lace."
                   materials={ALL_DISCOVERY_MATERIALS.filter((m) => m.category === 'LACES')}
-                  onSelectMaterial={setSelectedMaterial}
+                  onSelectMaterial={handleDeepDetailsMaterial}
                   onOpen360={handleOpen360Viewer}
                 />
               </div>
@@ -403,7 +359,7 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
               title="Explore Fabrics"
               subtitle="Browse materials by construction, texture and application."
               materials={filteredMaterials}
-              onSelectMaterial={setSelectedMaterial}
+              onSelectMaterial={handleDeepDetailsMaterial}
               onOpen360={handleOpen360Viewer}
               subsections={[
                 {
@@ -438,7 +394,7 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
                   : 'Sourced and supplied for your production specifications.'
               }
               materials={filteredMaterials}
-              onSelectMaterial={setSelectedMaterial}
+              onSelectMaterial={handleDeepDetailsMaterial}
               onOpen360={handleOpen360Viewer}
               showCategoryLabel={true}
             />
@@ -473,22 +429,6 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
           }}
         />
       </div>
-
-      {/* ========================================================
-          7. FEATURE 1: SLIDE-OVER QUICK MATERIAL DETAIL DRAWER
-          Only opened by "Explore Fabrics" material cards (setSelectedMaterial)
-          ======================================================== */}
-      <MaterialDetail
-        material={selectedMaterial}
-        onClose={() => setSelectedMaterial(null)}
-        onEnquire={handleEnquireMaterial}
-        onRequestMaterial={handleRequestMaterialDirect}
-        onReachUs={handleReachUsDirect}
-        onOpen360={handleOpen360Viewer}
-        onViewDeepDetails={handleDeepDetailsMaterial}
-        onAddToCollection={handleAddToCollectionMaterial}
-        isInCollection={isMaterialInCollection(selectedMaterial)}
-      />
 
       {/* ========================================================
           8. FEATURE 2: DIGITAL LOOKBOOK (Book flip experience)

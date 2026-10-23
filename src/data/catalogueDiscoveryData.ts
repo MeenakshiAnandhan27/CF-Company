@@ -759,7 +759,7 @@ export const ALL_DISCOVERY_MATERIALS: DiscoveryMaterial[] = [
     section: 'DENIM_CHAMBRAY',
     image: getCatalogueAssetUrl('chambray.jpg'),
     fallbackTexture: CHAMBRAY_TEXTURE,
-    description: 'Lightweight plain-weave textile combining colored indigo warp with clean white weft yarns for casual shirting texture.',
+    description: 'Lightweight plain-weave textile with coloured indigo warp and clean white weft yarns.',
     composition: '100% Combed Cotton',
     weave: '1/1 Yarn-Dyed Plain Chambray Weave',
     width: '54" – 58"',

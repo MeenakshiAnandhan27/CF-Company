@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, X, BookOpen, Sparkles, Filter, RotateCw, Layers } from 'lucide-react';
+import { Search, X, RotateCw } from 'lucide-react';
 
 export type NavFilter = 'ALL' | 'FABRICS' | 'DENIM & CHAMBRAY' | 'LACES' | 'GARMENT ACCESSORIES';
 
@@ -8,8 +8,6 @@ interface CatalogueNavigationProps {
   onSelectFilter: (filter: NavFilter) => void;
   searchQuery: string;
   onSearchChange: (query: string) => void;
-  onOpenDigitalBook: () => void;
-  onOpenMaterialWall?: () => void;
   onOpen360?: () => void;
   totalMaterialsCount: number;
 }
@@ -19,8 +17,6 @@ export const CatalogueNavigation: React.FC<CatalogueNavigationProps> = ({
   onSelectFilter,
   searchQuery,
   onSearchChange,
-  onOpenDigitalBook,
-  onOpenMaterialWall,
   onOpen360,
   totalMaterialsCount,
 }) => {
@@ -60,7 +56,7 @@ export const CatalogueNavigation: React.FC<CatalogueNavigationProps> = ({
             })}
           </div>
 
-          {/* Right Tools: Search & Feature Launchers */}
+          {/* Right Tools: Search & 360° Studio */}
           <div className="flex items-center gap-2.5 w-full md:w-auto justify-between md:justify-end overflow-x-auto no-scrollbar py-0.5">
             {/* Quick Search Bar */}
             <div className="relative flex-1 md:w-48 lg:w-56 shrink-0">
@@ -83,32 +79,6 @@ export const CatalogueNavigation: React.FC<CatalogueNavigationProps> = ({
                 </button>
               )}
             </div>
-
-            {/* FEATURE 1: THE MATERIAL WALL (Visual Studio) */}
-            {onOpenMaterialWall && (
-              <button
-                type="button"
-                onClick={onOpenMaterialWall}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-bold uppercase tracking-wider bg-white text-[#181715] hover:bg-[#F2ECE1] border border-[#DDD5C7] rounded-full shadow-xs transition-all shrink-0 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
-                title="Launch The Material Wall Studio"
-              >
-                <Layers className="w-3.5 h-3.5 text-[#82553E]" />
-                <span className="hidden sm:inline">Material Wall</span>
-                <span className="sm:hidden font-mono">Wall</span>
-              </button>
-            )}
-
-            {/* FEATURE 2: OPEN DIGITAL LOOKBOOK (Printed Book Experience) */}
-            <button
-              type="button"
-              onClick={onOpenDigitalBook}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-mono font-bold uppercase tracking-wider bg-[#82553E] text-white hover:bg-[#6e4632] rounded-full shadow-xs transition-all shrink-0 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
-              title="Open Digital Printed Textile Lookbook"
-            >
-              <BookOpen className="w-3.5 h-3.5 text-[#F5DE93]" />
-              <span className="hidden sm:inline">Lookbook</span>
-              <span className="sm:hidden font-mono">Book</span>
-            </button>
 
             {/* 360° Studio */}
             {onOpen360 && (

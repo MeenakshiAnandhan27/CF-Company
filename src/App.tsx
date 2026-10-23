@@ -41,6 +41,16 @@ export default function App() {
   const [similarProductForRequest, setSimilarProductForRequest] = useState<Product | null>(null);
   const [initialRequestCategory, setInitialRequestCategory] = useState<MaterialRequestCategory | undefined>(undefined);
 
+  // Drawer state for refined interactive collection swatch organizer
+  const [isCollectionDrawerOpen, setIsCollectionDrawerOpen] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash.toLowerCase();
+      const params = new URLSearchParams(window.location.search);
+      return hash === '#collection' || params.get('tab') === 'collection';
+    }
+    return false;
+  });
+
   // Collection State (Stored in localStorage for dealer convenience)
   const [collection, setCollection] = useState<CollectionItem[]>(() => {
     try {
@@ -82,12 +92,14 @@ export default function App() {
     return combined;
   }, []);
 
-  // Listen for hash navigation (#3d-fabric-viewer)
+  // Listen for hash navigation (#3d-fabric-viewer, #collection)
   useEffect(() => {
     const handleHash = () => {
       const hash = window.location.hash.toLowerCase();
       if (hash === '#3d-fabric-viewer' || hash === '#firefly-viewer' || hash === '#3d-viewer') {
         setCurrentTab('3d-fabric-viewer');
+      } else if (hash === '#collection') {
+        setIsCollectionDrawerOpen(true);
       }
     };
     handleHash();
@@ -107,6 +119,10 @@ export default function App() {
     tab: NavigationTab,
     category?: ProductCategory
   ) => {
+    if (tab === 'collection') {
+      setIsCollectionDrawerOpen(true);
+      return;
+    }
     setCurrentTab(tab);
     if (category) {
       setCatalogueCategory(category);
@@ -239,6 +255,7 @@ export default function App() {
         currentTab={currentTab}
         onNavigate={handleNavigate}
         collectionCount={collection.length}
+        isCollectionOpen={isCollectionDrawerOpen || currentTab === 'collection'}
       />
 
       {/* Main Content Areas based on currentTab */}
@@ -363,14 +380,14 @@ export default function App() {
           />
         )}
 
-        {currentTab === 'catalogue' && (
+        {(currentTab === 'catalogue' || currentTab === 'collection') && (
           <CatalogueView
             initialCategory={catalogueCategory}
             onViewDetails={handleOpenDetails}
             onEnquire={handleOpenSingleEnquiry}
             onAddToCollection={handleAddToCollection}
             collection={collection}
-            onViewCollection={() => handleNavigate('collection')}
+            onViewCollection={() => setIsCollectionDrawerOpen(true)}
             onRequestMaterial={(cat, similarProd) => handleRequestMaterial(cat, similarProd)}
             onReachUs={(ctx) => {
               setReachUsContext(ctx);
@@ -388,19 +405,7 @@ export default function App() {
           />
         )}
 
-        {currentTab === 'collection' && (
-          <CollectionView
-            collection={collection}
-            onUpdateQuantity={handleUpdateCollectionQuantity}
-            onRemoveItem={handleRemoveFromCollection}
-            onClearCollection={handleClearCollection}
-            onGenerateEnquiry={handleGenerateCollectionEnquiry}
-            onExploreCatalogue={() => handleNavigate('catalogue')}
-            onViewDetails={handleOpenDetails}
-          />
-        )}
-
-                {currentTab === '3d-fabric-viewer' && (
+        {currentTab === '3d-fabric-viewer' && (
           <FireflyFabric3DViewer
             onBack={() => handleNavigate('catalogue')}
             onEnquire={handleFireflyEnquire}
@@ -419,6 +424,32 @@ export default function App() {
       <Footer
         onNavigate={handleNavigate}
         isDarkLuxuryTheme={false}
+      />
+
+      {/* Interactive Personal Swatch Collection Drawer */}
+      <CollectionView
+        isOpen={isCollectionDrawerOpen || currentTab === 'collection'}
+        onClose={() => {
+          setIsCollectionDrawerOpen(false);
+          if (currentTab === 'collection') {
+            setCurrentTab('catalogue');
+          }
+        }}
+        collection={collection}
+        onUpdateQuantity={handleUpdateCollectionQuantity}
+        onRemoveItem={handleRemoveFromCollection}
+        onClearCollection={handleClearCollection}
+        onGenerateEnquiry={() => {
+          setIsCollectionDrawerOpen(false);
+          handleGenerateCollectionEnquiry();
+        }}
+        onExploreCatalogue={() => {
+          setIsCollectionDrawerOpen(false);
+          handleNavigate('catalogue');
+        }}
+        onViewDetails={(product) => {
+          handleOpenDetails(product);
+        }}
       />
 
       {/* Product Detail Modal */}

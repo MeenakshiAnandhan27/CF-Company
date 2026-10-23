@@ -1580,20 +1580,19 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                 </div>
               </div>
 
-              {/* Assistance Card — Compact, Neat Luxury Card below Your Material Brief */}
+              {/* Assistance Card — Centered Luxury Card below Your Material Brief */}
               <div
-                onClick={onReachUs}
-                className="relative rounded-2xl overflow-hidden p-4 sm:p-5 border border-[#E5E0D8] bg-white text-[#181715] shadow-[0_8px_25px_rgba(24,23,21,0.04)] hover:border-[#8C6534] hover:shadow-[0_12px_32px_rgba(140,101,52,0.10)] transition-all duration-300 group cursor-pointer"
+                className="relative rounded-2xl overflow-hidden p-5 sm:p-6 border border-[#E5E0D8] bg-gradient-to-b from-[#FFFDF9] via-[#FAF7F2] to-[#F5EFE6] text-[#181715] shadow-[0_8px_25px_rgba(24,23,21,0.04)] hover:border-[#B8934A]/50 hover:shadow-[0_12px_32px_rgba(184,147,74,0.12)] transition-all duration-300 text-center"
               >
                 {/* Subtle Gold Backlight Ambient Glow */}
                 <div
                   aria-hidden="true"
-                  className="absolute -top-8 -right-8 w-28 h-28 bg-[#D4AF37]/10 rounded-full blur-2xl group-hover:bg-[#D4AF37]/20 transition-all pointer-events-none"
+                  className="absolute -top-10 left-1/2 -translate-x-1/2 w-40 h-40 bg-[#D4AF37]/12 rounded-full blur-3xl pointer-events-none"
                 />
 
-                <div className="relative flex items-center gap-3.5">
+                <div className="relative flex flex-col items-center">
                   {/* 3D Headphones Symbol Container */}
-                  <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-xl overflow-hidden bg-[#FAF8F5] border border-[#DDD7CD] shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform duration-300 shadow-xs">
+                  <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-2xl overflow-hidden bg-[#FAF8F5] border border-[#DDD7CD] flex items-center justify-center shadow-xs mb-3">
                     <img
                       src="/assets/materials/assistance-headphones.jpg"
                       alt="Classic Fashions Material Specialists"
@@ -1601,37 +1600,29 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                     />
                   </div>
 
-                  {/* Content */}
-                  <div className="flex-1 min-w-0">
-                    <h4 className="font-serif text-sm sm:text-base font-bold text-[#181715] group-hover:text-[#8C6534] transition-colors leading-tight">
-                      Need help choosing materials?
-                    </h4>
-                    <p className="text-[11px] sm:text-xs text-[#6B665E] mt-0.5 leading-snug">
-                      Our textile specialists are here to guide your custom specifications, sourcing, and sampling.
-                    </p>
+                  {/* Heading & Supporting Text */}
+                  <h4 className="font-serif text-base sm:text-lg font-bold text-[#142E20] leading-snug">
+                    Need help choosing materials?
+                  </h4>
+                  <p className="text-xs sm:text-[13px] text-[#6B665E] mt-1.5 leading-relaxed max-w-sm mx-auto">
+                    Our textile specialists are here to guide your custom specifications, sourcing, and sampling.
+                  </p>
 
-                    <div className="mt-3 flex items-center justify-between gap-2 flex-wrap">
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onReachUs();
-                        }}
-                        className="inline-flex items-center gap-1.5 bg-[#8C6534] hover:bg-[#735128] text-white font-semibold text-[11px] px-3.5 py-1.5 rounded-full transition-colors shadow-xs"
-                      >
-                        <span>Reach Our Team</span>
-                        <ArrowRight className="w-3 h-3 text-[#E5C58D] transform group-hover:translate-x-0.5 transition-transform" />
-                      </button>
-
-                      <a
-                        href={`tel:${VERIFIED_PHONE_RAW}`}
-                        onClick={(e) => e.stopPropagation()}
-                        className="inline-flex items-center gap-1 text-[11px] font-mono font-semibold text-[#6B665E] hover:text-[#8C6534] px-2.5 py-1 rounded-full border border-[#DDD6C8] bg-[#FAF8F5] transition-colors"
-                      >
-                        <Phone className="w-3 h-3 text-[#8C6534]" />
-                        <span>{VERIFIED_PHONE_DISPLAY}</span>
-                      </a>
-                    </div>
+                  {/* Centered & Highlighted Reach Us Button */}
+                  <div className="mt-4 pt-0.5 flex justify-center w-full">
+                    <button
+                      type="button"
+                      onClick={() => onReachUs()}
+                      className="group/btn relative inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider text-[#FAF7F2] bg-[#142E20] hover:bg-[#1B3B2B] border border-[#B8934A]/70 hover:border-[#D4AF37] shadow-[0_0_16px_rgba(184,147,74,0.22)] hover:shadow-[0_0_24px_rgba(184,147,74,0.42)] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+                    >
+                      {/* Subtle warm gold shimmer */}
+                      <div
+                        aria-hidden="true"
+                        className="absolute inset-0 rounded-full opacity-20 group-hover/btn:opacity-35 transition-opacity bg-[radial-gradient(circle_at_50%_50%,rgba(212,175,55,0.45),transparent_70%)] pointer-events-none"
+                      />
+                      <span className="font-mono text-xs tracking-widest font-semibold text-[#FAF7F2]">Reach Us</span>
+                      <ArrowRight className="w-3.5 h-3.5 text-[#D4AF37] group-hover/btn:translate-x-1 transition-transform" />
+                    </button>
                   </div>
                 </div>
               </div>

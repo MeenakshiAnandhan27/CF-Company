@@ -14,16 +14,13 @@ interface CatalogueViewProps {
 }
 
 /**
- * RE-DESIGNED CATALOGUE SECTION — CLASSIC FASHIONS
+ * CATALOGUE SECTION — CLASSIC FASHIONS
  *
  * Built as a premium textile material discovery experience:
  * - Editorial headline: "Materials Behind Every Garment"
  * - 4 major category panels: Fabrics, Denim & Chambray, Laces, Garment Accessories
- * - Large circular / softly masked raw material items
- * - Interactive tactile hover with subtle magnification
- * - Slide-over quick material inspection drawer
- * - Flowing tactile "Material Wall"
- * - Slim sticky navigation with "Open Digital Catalogue" book mode
+ * - Direct Full View material inspection with interactive 360° turntable
+ * - Slim sticky navigation with real-time search & category tabs
  * - Custom sourcing request callout at the bottom
  * - 100% focused on authentic RAW MATERIALS (zero finished garments or models)
  */

@@ -1026,33 +1026,6 @@ export const ALL_DISCOVERY_MATERIALS: DiscoveryMaterial[] = [
 ];
 
 /**
- * Curated list for the "MATERIAL WALL" section:
- * Flowing tactile circular arrangement of raw textile materials
- */
-export const MATERIAL_WALL_ITEMS: DiscoveryMaterial[] = [
-  ALL_DISCOVERY_MATERIALS.find((m) => m.name === 'Seersucker')!,
-  ALL_DISCOVERY_MATERIALS.find((m) => m.name === 'Putta fabric')!,
-  ALL_DISCOVERY_MATERIALS.find((m) => m.name === 'Plain')!,
-  ALL_DISCOVERY_MATERIALS.find((m) => m.name === 'Denim')!,
-  ALL_DISCOVERY_MATERIALS.find((m) => m.name === 'Chambray')!,
-  ALL_DISCOVERY_MATERIALS.find((m) => m.name === 'Stripes')!,
-  ALL_DISCOVERY_MATERIALS.find((m) => m.name === 'Checked')!,
-  ALL_DISCOVERY_MATERIALS.find((m) => m.name === 'Flannel fabrics')!,
-  ALL_DISCOVERY_MATERIALS.find((m) => m.name === 'Taffeta')!,
-  ALL_DISCOVERY_MATERIALS.find((m) => m.name === 'Satin fabrics (pc)polyster')!,
-  ALL_DISCOVERY_MATERIALS.find((m) => m.name === 'Mesh fabrics (cotton & polys & lycra)')!,
-  ALL_DISCOVERY_MATERIALS.find((m) => m.name === 'Canvas gada')!,
-  ALL_DISCOVERY_MATERIALS.find((m) => m.name === 'Fur')!,
-  ALL_DISCOVERY_MATERIALS.find((m) => m.name === 'Chiffon fabrics')!,
-  ALL_DISCOVERY_MATERIALS.find((m) => m.name === 'Velvet')!,
-  ALL_DISCOVERY_MATERIALS.find((m) => m.name === 'Linen')!,
-  ALL_DISCOVERY_MATERIALS.find((m) => m.name === 'Cotton')!,
-  ALL_DISCOVERY_MATERIALS.find((m) => m.name === 'Polyster')!,
-  ALL_DISCOVERY_MATERIALS.find((m) => m.name === 'Poly-cotton')!,
-  ALL_DISCOVERY_MATERIALS.find((m) => m.name === 'Additional Sample (to fill grid)')!,
-].filter(Boolean);
-
-/**
  * Utility to find a matched Product object for integration with the rest of the application
  */
 export function getProductForDiscoveryMaterial(mat: DiscoveryMaterial): Product {

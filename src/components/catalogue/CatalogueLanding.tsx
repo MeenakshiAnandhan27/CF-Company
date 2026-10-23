@@ -7,16 +7,13 @@ import {
 } from '../../data/catalogueDiscoveryData.ts';
 import { CategoryShowcase } from './CategoryShowcase.tsx';
 import { MaterialGrid } from './MaterialGrid.tsx';
-import { MaterialWall } from './MaterialWall.tsx';
-import { MaterialWallStudio } from './MaterialWallStudio.tsx';
 import { CatalogueNavigation, NavFilter } from './CatalogueNavigation.tsx';
-import { DigitalCatalogue } from './DigitalCatalogue.tsx';
 import { FabricViewer360 } from './FabricViewer360.tsx';
 import { FireflyFabric3DViewer } from './FireflyFabric3DViewer.tsx';
 import { getProductForFireflyFabric } from '../../data/fireflyFabricsData.ts';
 import { RequestMaterialCallout } from './RequestMaterialCallout.tsx';
 import { Product, CollectionItem } from '../../types.ts';
-import { Sparkles, ArrowRight, Layers, BookOpen, RotateCw } from 'lucide-react';
+import { Sparkles, ArrowRight, RotateCw } from 'lucide-react';
 
 interface CatalogueLandingProps {
   initialCategory?: string | null;
@@ -50,13 +47,6 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
   });
 
   const [searchQuery, setSearchQuery] = useState('');
-
-  // ── FEATURE 2: Digital Lookbook — separate book interface
-  const [isDigitalBookOpen, setIsDigitalBookOpen] = useState(false);
-
-  // ── FEATURE 3: Material Wall Studio — separate full-screen gallery
-  const [isMaterialWallStudioOpen, setIsMaterialWallStudioOpen] = useState(false);
-  const [initialStudioMaterial, setInitialStudioMaterial] = useState<DiscoveryMaterial | null>(null);
 
   // ── 360° Viewer
   const [isViewer360Open, setIsViewer360Open] = useState(false);
@@ -106,27 +96,9 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
     }
   };
 
-  // Convert DiscoveryMaterial to Product for parent handlers
-  const handleEnquireMaterial = (material: DiscoveryMaterial, selectedVariant?: string) => {
-    const product = getProductForDiscoveryMaterial(material);
-    if (selectedVariant) {
-      product.name = `${material.name} (${selectedVariant})`;
-    }
-    onEnquire(product);
-  };
-
   const handleDeepDetailsMaterial = (material: DiscoveryMaterial) => {
     const product = getProductForDiscoveryMaterial(material);
     onViewDetails(product);
-  };
-
-  const handleAddToCollectionMaterial = (material: DiscoveryMaterial, selectedVariant?: string) => {
-    if (!onAddToCollection) return;
-    const product = getProductForDiscoveryMaterial(material);
-    if (selectedVariant) {
-      product.name = `${material.name} (${selectedVariant})`;
-    }
-    onAddToCollection(product, 1);
   };
 
   return (
@@ -142,10 +114,6 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
         />
 
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
-          <div className="inline-flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.22em] text-[#82553E] font-semibold bg-[#F2EDE4] px-3.5 py-1 rounded-full border border-[#DDD5C7]">
-            <span>DIGITAL MATERIAL CATALOGUE</span>
-          </div>
-
           <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl font-medium tracking-tight text-[#181715] leading-[1.12]">
             Materials Behind Every Garment
           </h1>
@@ -169,30 +137,7 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
 
-            {/* 2. Open Digital Lookbook (Interactive Printed Book) */}
-            <button
-              type="button"
-              onClick={() => setIsDigitalBookOpen(true)}
-              className="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-mono font-bold uppercase tracking-wider bg-[#82553E] hover:bg-[#6e4632] text-white rounded-full shadow-xs transition-all hover:scale-[1.02] cursor-pointer"
-            >
-              <BookOpen className="w-3.5 h-3.5 text-[#F5DE93]" />
-              <span>Digital Lookbook</span>
-            </button>
-
-            {/* 3. The Material Wall (Visual Exploration Studio) */}
-            <button
-              type="button"
-              onClick={() => {
-                setInitialStudioMaterial(null);
-                setIsMaterialWallStudioOpen(true);
-              }}
-              className="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-mono font-bold uppercase tracking-wider bg-white hover:bg-[#F2ECE1] text-[#181715] border border-[#DDD5C7] rounded-full shadow-xs transition-all hover:scale-[1.02] cursor-pointer"
-            >
-              <Layers className="w-3.5 h-3.5 text-[#82553E]" />
-              <span>The Material Wall</span>
-            </button>
-
-            {/* 4. 3D & 360° Fabric Studio */}
+            {/* 2. 3D & 360° Fabric Studio */}
             <button
               type="button"
               onClick={() => handleOpen360Viewer()}
@@ -216,11 +161,6 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
         }}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
-        onOpenDigitalBook={() => setIsDigitalBookOpen(true)}
-        onOpenMaterialWall={() => {
-          setInitialStudioMaterial(null);
-          setIsMaterialWallStudioOpen(true);
-        }}
         onOpen360={() => handleOpen360Viewer()}
         totalMaterialsCount={filteredMaterials.length}
       />
@@ -402,24 +342,7 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
         </div>
 
         {/* ========================================================
-            5. THE MATERIAL WALL — Visual Material Exploration Studio
-            Separate visual interface with search, close-up zoom, side-by-side compare
-            Clicking swatches opens MaterialWallStudio directly focused on that material
-            ======================================================== */}
-        <MaterialWall
-          onSelectMaterial={(item) => {
-            setInitialStudioMaterial(item);
-            setIsMaterialWallStudioOpen(true);
-          }}
-          onOpenFullStudio={() => {
-            setInitialStudioMaterial(null);
-            setIsMaterialWallStudioOpen(true);
-          }}
-          onOpen360={handleOpen360Viewer}
-        />
-
-        {/* ========================================================
-            6. REQUEST A MATERIAL CALLOUT
+            5. REQUEST A MATERIAL CALLOUT
             ======================================================== */}
         <RequestMaterialCallout
           onRequestMaterial={() => {
@@ -429,43 +352,6 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
           }}
         />
       </div>
-
-      {/* ========================================================
-          8. FEATURE 2: DIGITAL LOOKBOOK (Book flip experience)
-          Enquire goes directly to enquiry modal — no drawer involved
-          ======================================================== */}
-      <DigitalCatalogue
-        isOpen={isDigitalBookOpen}
-        onClose={() => setIsDigitalBookOpen(false)}
-        onEnquire={(mat) => {
-          setIsDigitalBookOpen(false);
-          handleEnquireMaterial(mat);
-        }}
-      />
-
-      {/* ========================================================
-          9. FEATURE 3: MATERIAL WALL STUDIO (Full Visual Gallery)
-          Compare, filter, swatch inquiry, texture close-up — strictly NO drawer
-          ======================================================== */}
-      <MaterialWallStudio
-        isOpen={isMaterialWallStudioOpen}
-        initialMaterial={initialStudioMaterial}
-        onClose={() => {
-          setIsMaterialWallStudioOpen(false);
-          setInitialStudioMaterial(null);
-        }}
-        onEnquire={(mat) => {
-          setIsMaterialWallStudioOpen(false);
-          handleEnquireMaterial(mat);
-        }}
-        onAddToSwatchInquiry={(mat) => {
-          handleAddToCollectionMaterial(mat);
-        }}
-        onOpen360={(mat) => {
-          setIsMaterialWallStudioOpen(false);
-          handleOpen360Viewer(mat);
-        }}
-      />
 
       {/* ========================================================
           10. 360° FABRIC ATELIER STUDIO (15 REAL FABRIC TEXTURES)

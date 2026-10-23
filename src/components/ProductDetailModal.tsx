@@ -8,6 +8,7 @@ import {
   ChevronLeft,
   ChevronRight,
   RotateCw,
+  Bookmark,
 } from 'lucide-react';
 
 interface ProductDetailModalProps {
@@ -94,6 +95,8 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
   onOpen360,
   allProducts,
   onSelectProduct,
+  onAddToCollection,
+  isInCollection,
 }) => {
   // Interactive 3D Perspective Tilt on Mouse and Touch Drag
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
@@ -200,7 +203,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
       role="dialog"
       aria-modal="true"
       aria-labelledby="full-view-material-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-[#121110]/70 backdrop-blur-xs animate-in fade-in duration-200 select-none overflow-y-auto"
+      className="fixed inset-0 z-[60] flex items-center justify-center p-3 sm:p-6 bg-[#121110]/70 backdrop-blur-xs animate-in fade-in duration-200 select-none overflow-y-auto"
       onClick={onClose}
     >
       <div
@@ -376,6 +379,22 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 >
                   <Sparkles className="w-3.5 h-3.5 text-[#B8934A]" />
                   <span>REQUEST SIMILAR MATERIAL</span>
+                </button>
+              )}
+
+              {/* Swatch Collection Action: ADD TO SWATCH INQUIRY */}
+              {onAddToCollection && (
+                <button
+                  type="button"
+                  onClick={() => onAddToCollection(product, 1)}
+                  className={`w-full py-2.5 px-4 font-mono text-xs font-semibold tracking-wider uppercase rounded-xl transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer border ${
+                    isInCollection
+                      ? 'bg-[#EAE2D2] text-[#142E20] border-[#B8934A] shadow-xs'
+                      : 'bg-white hover:bg-[#FAF7F2] text-[#55514B] hover:text-[#142E20] border-[#DDD5C7] hover:border-[#B8934A]'
+                  }`}
+                >
+                  <Bookmark className={`w-3.5 h-3.5 ${isInCollection ? 'text-[#142E20] fill-[#142E20]' : 'text-[#B8934A]'}`} />
+                  <span>{isInCollection ? 'SAVED IN SWATCH INQUIRY' : 'ADD TO SWATCH INQUIRY'}</span>
                 </button>
               )}
             </div>

@@ -12,12 +12,14 @@ interface NavbarProps {
     category?: ProductCategory
   ) => void;
   collectionCount?: number;
+  isCollectionOpen?: boolean;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   currentTab,
   onNavigate,
   collectionCount = 0,
+  isCollectionOpen = false,
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -144,21 +146,21 @@ export const Navbar: React.FC<NavbarProps> = ({
             className={`group relative inline-flex items-center gap-2 pl-4 pr-2.5 py-2 text-xs font-semibold uppercase tracking-wider rounded-full border transition-all duration-300 cursor-pointer shadow-xs active:scale-[0.98] ${
               isDarkNav
                 ? 'bg-[#102C22] text-[#F3EBDD] border-[#2A5243] hover:border-[#C49A55]'
-                : currentTab === 'collection'
+                : (currentTab === 'collection' || isCollectionOpen)
                 ? 'bg-[#181715] text-white border-[#181715] shadow-md'
                 : 'bg-gradient-to-b from-[#FFFFFF] to-[#FAF8F5] hover:bg-white text-[#181715] border-[#D5D0C6] hover:border-[#D4AF37] hover:shadow-[0_4px_16px_rgba(212,175,55,0.18)]'
             }`}
-            title="View selected wholesale materials"
+            title="View selected material swatches"
           >
             <ShoppingBag className={`w-3.5 h-3.5 transition-transform duration-300 group-hover:scale-110 ${
-              isDarkNav ? 'text-[#C49A55]' : currentTab === 'collection' ? 'text-[#D4AF37]' : 'text-[#8C6534]'
+              isDarkNav ? 'text-[#C49A55]' : (currentTab === 'collection' || isCollectionOpen) ? 'text-[#D4AF37]' : 'text-[#8C6534]'
             }`} />
             <span className="font-mono text-[11px] tracking-[0.14em] font-bold">Collection</span>
             <span
               className={`font-mono text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-extrabold transition-colors ${
                 isDarkNav
                   ? 'bg-[#C49A55] text-[#071B15]'
-                  : currentTab === 'collection'
+                  : (currentTab === 'collection' || isCollectionOpen)
                   ? 'bg-[#D4AF37] text-[#181715]'
                   : collectionCount > 0
                   ? 'bg-[#181715] text-[#D4AF37] border border-[#D4AF37]/50 shadow-xs'

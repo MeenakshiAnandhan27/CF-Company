@@ -7,7 +7,7 @@ import { Product } from '../types.ts';
  * Universal asset URL resolver for local Vite dev and GitHub Pages production base paths
  */
 export function getCatalogueAssetUrl(filename: string): string {
-  const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
+  const base = (typeof import.meta !== 'undefined' && (import.meta as any).env?.BASE_URL ? (import.meta as any).env.BASE_URL : '/').replace(/\/$/, '');
   const prefix = base ? `${base}/` : '/';
   // Use encodeURIComponent to handle spaces safely
   return `${prefix}assets/catalogue-3d/${encodeURIComponent(filename)}`;

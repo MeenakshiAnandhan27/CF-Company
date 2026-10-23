@@ -389,41 +389,59 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
     const loader = new THREE.TextureLoader();
     const textureUrl = currentItem.imageUrl;
 
+    const applyTexture = (texture: THREE.Texture) => {
+      texture.colorSpace = THREE.SRGBColorSpace;
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.wrapT = THREE.RepeatWrapping;
+
+      const repeat = currentItem.textureRepeat || { x: 2, y: 2 };
+      texture.center.set(0, 0);
+      texture.repeat.set(repeat.x, repeat.y);
+      texture.generateMipmaps = true;
+      texture.minFilter = THREE.LinearMipmapLinearFilter;
+      texture.magFilter = THREE.LinearFilter;
+
+      if (rendererRef.current) {
+        texture.anisotropy = rendererRef.current.capabilities.getMaxAnisotropy();
+      }
+
+      if (currentTextureRef.current) {
+        currentTextureRef.current.dispose();
+      }
+      currentTextureRef.current = texture;
+
+      // Mount updated 3D cloth model
+      update3DClothModel(texture, currentItem, surfaceMode);
+      setIsTextureLoading(false);
+    };
+
     loader.load(
       textureUrl,
       (texture) => {
-        texture.colorSpace = THREE.SRGBColorSpace;
-        texture.wrapS = THREE.RepeatWrapping;
-        texture.wrapT = THREE.RepeatWrapping;
-
-        const repeat = currentItem.textureRepeat || { x: 2, y: 2 };
-        texture.center.set(0, 0);
-        texture.repeat.set(repeat.x, repeat.y);
-        texture.generateMipmaps = true;
-        texture.minFilter = THREE.LinearMipmapLinearFilter;
-        texture.magFilter = THREE.LinearFilter;
-
-        if (rendererRef.current) {
-          texture.anisotropy = rendererRef.current.capabilities.getMaxAnisotropy();
-        }
-
-        if (currentTextureRef.current) {
-          currentTextureRef.current.dispose();
-        }
-        currentTextureRef.current = texture;
-
-        // Mount updated 3D cloth model
-        update3DClothModel(texture, currentItem, surfaceMode);
-        setIsTextureLoading(false);
+        applyTexture(texture);
       },
       undefined,
       (err) => {
-        console.error('Failed to load fabric texture:', err);
-        setTextureError(`Could not load texture from ${currentItem.imageUrl}`);
-        setIsTextureLoading(false);
+        console.warn('Initial texture load failed, trying alternate path...', err);
+        const altUrl = textureUrl.includes('/assets/catalogue-3d/')
+          ? textureUrl.replace('/assets/catalogue-3d/', '/assets/firefly-fabrics/')
+          : textureUrl.replace('/assets/firefly-fabrics/', '/assets/catalogue-3d/');
+
+        loader.load(
+          altUrl,
+          (altTexture) => {
+            applyTexture(altTexture);
+          },
+          undefined,
+          (secondErr) => {
+            console.error('All texture paths failed:', secondErr);
+            setTextureError(`Could not load texture from ${currentItem.imageUrl}`);
+            setIsTextureLoading(false);
+          }
+        );
       }
     );
-  }, [currentItem, update3DClothModel]);
+  }, [currentItem, update3DClothModel, surfaceMode]);
 
   // Update model when surfaceMode changes
   useEffect(() => {
@@ -1020,6 +1038,16 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
                       alt={item.name}
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                       loading="lazy"
+                      onError={(e) => {
+                        const target = e.currentTarget;
+                        if (target.dataset.triedFallback) return;
+                        target.dataset.triedFallback = 'true';
+                        if (target.src.includes('/catalogue-3d/')) {
+                          target.src = target.src.replace('/catalogue-3d/', '/firefly-fabrics/');
+                        } else {
+                          target.src = '/assets/catalogue-3d/plain.png';
+                        }
+                      }}
                     />
                     <div className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded bg-black/75 backdrop-blur-sm text-[8px] font-mono uppercase tracking-wider text-neutral-300">
                       FAB

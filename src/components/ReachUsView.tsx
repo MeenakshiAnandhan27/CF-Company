@@ -1,17 +1,25 @@
 import React, { useState } from 'react';
 import { businessConfig } from '../data/businessConfig.ts';
 import {
+  MapPin,
   Phone,
   Mail,
-  MapPin,
   Clock,
   ArrowRight,
   ArrowUpRight,
   CheckCircle2,
-  ExternalLink,
   Copy,
-  Check,
   RotateCcw,
+  Send,
+  Edit3,
+  Layers,
+  Sparkles,
+  Package,
+  Sliders,
+  HelpCircle,
+  ShieldCheck,
+  Award,
+  Check,
 } from 'lucide-react';
 
 interface ReachUsViewProps {
@@ -24,27 +32,98 @@ const VERIFIED_PHONE_RAW = '918826415868';
 const VERIFIED_EMAIL = 'material@classicfashions.com';
 const STORAGE_ENQUIRIES_KEY = 'cf_reach_us_enquiries_v1';
 
+// Five Enquiry Categories matching reference image
+type EnquiryCategoryKey =
+  | 'fabric'
+  | 'accessories'
+  | 'bulk'
+  | 'custom'
+  | 'other';
+
+interface EnquiryCategory {
+  key: EnquiryCategoryKey;
+  label: string;
+  tagline: string;
+  icon: React.ComponentType<{ className?: string }>;
+  promptHeadline: string;
+  placeholder: string;
+}
+
+const ENQUIRY_CATEGORIES: EnquiryCategory[] = [
+  {
+    key: 'fabric',
+    label: 'Fabric Request',
+    tagline: 'Woven, knits, denims & custom weaves',
+    icon: Layers,
+    promptHeadline: 'What fabric specifications, target GSM, or meterage do you require?',
+    placeholder: 'e.g. Sourcing 2,500 metres of 240 GSM combed cotton twill with bio-wash for an export order...',
+  },
+  {
+    key: 'accessories',
+    label: 'Accessories Inquiry',
+    tagline: 'Laces, buttons, tags, tapes & trims',
+    icon: Sparkles,
+    promptHeadline: 'Which garment trims or accessories do you wish to source?',
+    placeholder: 'e.g. Custom dyed cotton laces, natural corozo buttons, and woven neck labels with gold lurex...',
+  },
+  {
+    key: 'bulk',
+    label: 'Bulk Order',
+    tagline: 'Export volume sourcing & mill production',
+    icon: Package,
+    promptHeadline: 'Tell us about your production volume, delivery deadlines, and destination',
+    placeholder: 'e.g. Bulk mill booking for 15,000 meters single jersey knit with reactive dyeing scheduled for next quarter...',
+  },
+  {
+    key: 'custom',
+    label: 'Custom Development',
+    tagline: 'Specialized dyes, washes & GSM specs',
+    icon: Sliders,
+    promptHeadline: 'Describe the unique material composition, finish, or lab-dip requirement',
+    placeholder: 'e.g. Need lab-dip Pantone matching, antimicrobial coating, and custom peach finish on french terry...',
+  },
+  {
+    key: 'other',
+    label: 'Other Enquiry',
+    tagline: 'General queries & showroom consultation',
+    icon: HelpCircle,
+    promptHeadline: 'How can our Tiruppur sourcing atelier assist you today?',
+    placeholder: 'e.g. We would like to schedule a visit to your Boyampalayam office to inspect swatch catalogues...',
+  },
+];
+
 export const ReachUsView: React.FC<ReachUsViewProps> = () => {
-  // Enquiry form fields: Name, Phone/WhatsApp, optional Email, Message
+  // Enquiry Category Selection
+  const [selectedCategoryKey, setSelectedCategoryKey] = useState<EnquiryCategoryKey>('fabric');
+  const [isEnquiryExpanded, setIsEnquiryExpanded] = useState<boolean>(false);
+
+  // Progressive Enquiry Stepper: 1 = Requirement/Message, 2 = Contact Details, 3 = Review & Send
+  const [stepperStep, setStepperStep] = useState<1 | 2 | 3>(1);
+
+  // Form Fields
   const [formData, setFormData] = useState({
+    message: '',
     name: '',
     phone: '',
     email: '',
-    message: '',
   });
 
+  // UI Feedback States
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [copiedPhone, setCopiedPhone] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [referenceCode, setReferenceCode] = useState('');
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const mapsSearchUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
     '5/1475, 5th Street, Palanisamy Nagar, Boyampalayam, Tiruppur, Tamil Nadu 641602'
   )}`;
 
-  // Quick copy utility
+  const currentCategory =
+    ENQUIRY_CATEGORIES.find((cat) => cat.key === selectedCategoryKey) || ENQUIRY_CATEGORIES[0];
+
+  // Quick Copy
   const handleCopy = (text: string, type: 'email' | 'phone') => {
     navigator.clipboard?.writeText(text);
     if (type === 'email') {
@@ -56,32 +135,41 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
     }
   };
 
-  // Form validation: Name, Phone/WhatsApp, and Message are required
-  const validateForm = () => {
-    const errs: Record<string, string> = {};
+  // Step 1 Validation
+  const validateStep1 = () => {
+    const errors: Record<string, string> = {};
+    if (!formData.message.trim() || formData.message.trim().length < 4) {
+      errors.message = 'Please provide a brief description of your requirement.';
+    }
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  // Step 2 Validation
+  const validateStep2 = () => {
+    const errors: Record<string, string> = {};
     if (!formData.name.trim() || formData.name.trim().length < 2) {
-      errs.name = 'Please enter your name.';
+      errors.name = 'Please enter your name.';
     }
     if (!formData.phone.trim() || formData.phone.trim().length < 7) {
-      errs.phone = 'Please enter your phone or WhatsApp number.';
+      errors.phone = 'Please provide a valid phone or WhatsApp number.';
     }
     if (
       formData.email.trim() &&
       !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())
     ) {
-      errs.email = 'Please enter a valid email address, or leave it blank.';
+      errors.email = 'Please provide a valid email format, or leave it blank.';
     }
-    if (!formData.message.trim() || formData.message.trim().length < 4) {
-      errs.message = 'Please provide details about your requirements.';
-    }
-    setErrors(errs);
-    return Object.keys(errs).length === 0;
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
-  // Form submission
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validateForm()) return;
+  // Form Submit Handler
+  const handleSubmitEnquiry = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!validateStep1() || !validateStep2()) {
+      return;
+    }
 
     setIsSubmitting(true);
     try {
@@ -89,12 +177,13 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
       const code = `CF-ENQ-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
 
       const record = {
-        id: `enquiry-${timestamp}`,
+        id: `reach-us-${timestamp}`,
         referenceCode: code,
+        category: currentCategory.label,
+        message: formData.message.trim(),
         name: formData.name.trim(),
         phone: formData.phone.trim(),
         email: formData.email.trim() || undefined,
-        message: formData.message.trim(),
         submittedAt: timestamp,
       };
 
@@ -110,223 +199,288 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
       setReferenceCode(code);
       setIsSubmitted(true);
     } catch {
-      setErrors({ form: 'Unable to send enquiry. Please contact us directly via phone or WhatsApp.' });
+      setFieldErrors({ form: 'Unable to submit enquiry. Please call or WhatsApp us directly.' });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // WhatsApp link for success state
-  const getWhatsAppEnquiryUrl = () => {
+  // Reset Enquiry
+  const handleReset = () => {
+    setIsSubmitted(false);
+    setIsEnquiryExpanded(false);
+    setStepperStep(1);
+    setFormData({ message: '', name: '', phone: '', email: '' });
+    setFieldErrors({});
+    setReferenceCode('');
+  };
+
+  // Pre-formatted WhatsApp URL
+  const getWhatsAppUrl = (customMsg?: string) => {
+    if (customMsg) {
+      return `https://wa.me/${VERIFIED_PHONE_RAW}?text=${encodeURIComponent(customMsg)}`;
+    }
     const text =
-      `*New Requirement — Classic Fashions*\n` +
-      `• *Name:* ${formData.name.trim()}\n` +
-      `• *Phone/WhatsApp:* ${formData.phone.trim()}\n` +
+      `*CLASSIC FASHIONS — REACH US ENQUIRY*\n` +
+      `• *Reference:* ${referenceCode || 'Direct Sourcing Query'}\n` +
+      `• *Category:* ${currentCategory.label}\n` +
+      `• *Name:* ${formData.name.trim() || 'Buyer'}\n` +
+      `• *Phone:* ${formData.phone.trim() || 'Direct'}\n` +
       (formData.email.trim() ? `• *Email:* ${formData.email.trim()}\n` : '') +
-      `• *Requirement:* ${formData.message.trim()}\n` +
-      (referenceCode ? `• *Reference:* ${referenceCode}\n` : '');
+      `• *Message:* ${formData.message.trim() || 'Please get in touch with me.'}\n`;
 
     return `https://wa.me/${VERIFIED_PHONE_RAW}?text=${encodeURIComponent(text)}`;
   };
 
   return (
-    <div className="bg-[#FAF7F2] text-[#242422] min-h-screen pb-28 font-sans selection:bg-[#C5A059]/25 selection:text-[#142E20]">
+    <div className="bg-[#FAF7F2] text-[#242422] min-h-screen relative overflow-hidden font-sans selection:bg-[#B8934A]/20 selection:text-[#142E20]">
       {/* ========================================================================= */}
-      {/* 2. HERO SECTION: Spacious, Centered with Italic Accent                     */}
+      {/* BACKGROUND DECORATIVE ELEMENTS — Fine Gold Arcs & Subtle Textile Peek     */}
       {/* ========================================================================= */}
-      <section className="pt-20 sm:pt-24 lg:pt-32 pb-14 sm:pb-20 text-center px-4 sm:px-6">
+      {/* Top Left Fine Gold Curved Line */}
+      <svg
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-12 -left-12 w-96 h-96 opacity-25"
+        viewBox="0 0 400 400"
+        fill="none"
+      >
+        <circle cx="100" cy="100" r="240" stroke="#B8934A" strokeWidth="1" strokeDasharray="3 4" />
+        <circle cx="100" cy="100" r="180" stroke="#B8934A" strokeWidth="0.8" />
+      </svg>
+
+      {/* Bottom Right Fine Gold Arc */}
+      <svg
+        aria-hidden="true"
+        className="pointer-events-none absolute -bottom-16 -right-16 w-[420px] h-[420px] opacity-25"
+        viewBox="0 0 400 400"
+        fill="none"
+      >
+        <circle cx="300" cy="300" r="260" stroke="#B8934A" strokeWidth="1" strokeDasharray="4 4" />
+        <circle cx="300" cy="300" r="190" stroke="#B8934A" strokeWidth="0.8" />
+      </svg>
+
+      {/* Right Edge Cropped Subtle Textile Image Peek */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute top-48 -right-20 w-80 h-[520px] hidden xl:block opacity-25 rounded-l-3xl overflow-hidden border-l border-y border-[#B8934A]/30 shadow-2xl"
+      >
+        <img
+          src="/assets/materials/fabrics.jpg"
+          alt=""
+          className="w-full h-full object-cover grayscale contrast-125 mix-blend-multiply"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#FAF7F2] via-transparent to-transparent" />
+      </div>
+
+      {/* ========================================================================= */}
+      {/* HERO SECTION — Centered, Generous Proportions, Editorial Accent           */}
+      {/* ========================================================================= */}
+      <section className="pt-20 sm:pt-28 lg:pt-32 pb-12 sm:pb-16 text-center px-4 sm:px-6 relative z-10">
         <div className="max-w-2xl mx-auto space-y-3.5">
-          <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.28em] text-[#B8934A] font-semibold block">
-            CLASSIC FASHIONS · REACH US
+          <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.3em] text-[#B8934A] font-semibold block">
+            REACH US
           </span>
 
-          <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-normal tracking-tight text-[#142E20] leading-[1.15]">
-            Let’s Get <span className="italic font-serif text-[#C5A059]">in</span> Touch
+          <h1 className="font-editorial text-4xl sm:text-5xl lg:text-6xl font-normal tracking-tight text-[#142E20] leading-[1.12]">
+            Let’s Get <span className="italic font-editorial text-[#B8934A]">in</span> Touch
           </h1>
 
-          <div className="w-10 h-px bg-[#C5A059]/60 mx-auto" />
+          <div className="w-12 h-px bg-[#B8934A]/50 mx-auto my-2" />
 
-          <p className="text-sm sm:text-base text-[#52524E] font-normal leading-relaxed max-w-lg mx-auto pt-1">
+          <p className="text-sm sm:text-base text-[#5C5A55] font-normal leading-relaxed max-w-lg mx-auto">
             Have a question or a business requirement? We’re here to help.
           </p>
         </div>
       </section>
 
       {/* ========================================================================= */}
-      {/* 3. MAIN LAYOUT: Balanced Two-Column (Contact Details & Enquiry Form)       */}
+      {/* MAIN TWO-COLUMN COMPOSITION: Left Suspended Panel vs Right Interactive    */}
       {/* ========================================================================= */}
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           
-          {/* ─────────────────────────────────────────────────────────────────────── */}
-          {/* LEFT — CONTACT DETAILS (4 Clean Rows with Outline Icons & Dividers)      */}
-          {/* ─────────────────────────────────────────────────────────────────────── */}
-          <div className="lg:col-span-5">
-            <div className="bg-white border border-[#E8E2D8] rounded-2xl p-7 sm:p-9 lg:p-10 shadow-[0_2px_16px_rgba(20,46,32,0.02)] space-y-7">
+          {/* ═══════════════════════════════════════════════════════════════════════ */}
+          {/* LEFT SIDE (5 cols): Large Suspended Contact Panel Layered on Textile  */}
+          {/* ═══════════════════════════════════════════════════════════════════════ */}
+          <div className="lg:col-span-5 relative pt-10">
+            {/* Suspended Hanging Thread & Gold Ring */}
+            <div className="absolute top-0 left-12 sm:left-16 flex flex-col items-center z-20" aria-hidden="true">
+              {/* Subtle gold attachment ring */}
+              <div className="w-4 h-4 rounded-full border-2 border-[#B8934A] bg-[#FAF7F2] ring-4 ring-[#FAF7F2] shadow-xs" />
+              {/* Fine vertical hanging thread */}
+              <div className="w-px h-10 bg-gradient-to-b from-[#B8934A] to-[#DCD5C8]" />
+            </div>
+
+            {/* Behind Layer: Real Vertical Textile Photograph providing layered fabric depth */}
+            <div
+              aria-hidden="true"
+              className="absolute top-14 left-3 sm:left-4 right-3 sm:right-4 bottom-2 rounded-2xl rounded-b-[2.8rem] overflow-hidden border border-[#D5CBB9] shadow-md -rotate-1 hidden sm:block opacity-60"
+            >
+              <img
+                src="/assets/materials/fabrics-collection-board.jpg"
+                alt="Woven textiles preview"
+                className="w-full h-full object-cover filter contrast-105"
+              />
+              <div className="absolute inset-0 bg-[#FAF7F2]/80 backdrop-blur-[2px]" />
+            </div>
+
+            {/* Front Panel: Tall elegant ivory panel with softly rounded lower silhouette */}
+            <div className="relative z-10 bg-[#FFFDF9]/95 border border-[#E8E1D5] rounded-2xl rounded-b-[2.6rem] p-6 sm:p-8 shadow-[0_20px_50px_rgba(20,46,32,0.06)] backdrop-blur-xs space-y-6">
               
-              <div className="pb-4 border-b border-[#EFEBE3]">
-                <span className="text-[10px] font-mono uppercase tracking-[0.22em] text-[#B8934A] font-semibold block mb-1">
-                  OFFICIAL CONTACTS
-                </span>
-                <h2 className="font-serif text-2xl font-normal text-[#142E20] tracking-tight">
-                  Tiruppur Mill &amp; Atelier Desk
+              {/* Panel Header */}
+              <div className="border-b border-[#F0EBE2] pb-5">
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-[9px] font-mono uppercase tracking-[0.22em] text-[#B8934A] font-semibold">
+                    ATELIER CONTACT DESK
+                  </span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#B8934A]" />
+                </div>
+                <h2 className="font-editorial text-2xl sm:text-[26px] font-normal text-[#142E20] tracking-tight">
+                  We’d Love to Hear from You
                 </h2>
+                <p className="text-xs text-[#6B6862] font-light leading-relaxed mt-1.5">
+                  Direct contact with our Tiruppur material coordinators for fabric swatches, mill schedules, and volume sourcing.
+                </p>
               </div>
 
-              <div className="space-y-6">
+              {/* Four Contact Sections with Minimal Circular Outline Icons */}
+              <div className="space-y-5">
                 
-                {/* 1. Business Address with Google Maps link */}
-                <div className="flex items-start gap-4 pb-6 border-b border-[#EFEBE3]">
-                  <div className="w-9 h-9 rounded-lg border border-[#E5DFD4] bg-[#FAF8F5] flex items-center justify-center shrink-0 text-[#142E20] mt-0.5">
-                    <MapPin className="w-4 h-4 text-[#B8934A] stroke-[1.5]" />
+                {/* 1. Location */}
+                <div className="group flex items-start gap-4">
+                  <div className="w-9 h-9 rounded-full border border-[#DCD5C8] bg-[#FAF7F2] flex items-center justify-center shrink-0 text-[#B8934A] group-hover:border-[#B8934A] group-hover:scale-105 transition-all">
+                    <MapPin className="w-4 h-4 stroke-[1.5]" />
                   </div>
-                  <div className="space-y-1.5 flex-1 min-w-0">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#73736E] font-semibold block">
-                      BUSINESS ADDRESS
-                    </span>
-                    <p className="text-sm text-[#242422] leading-relaxed">
-                      {businessConfig.addressLine1},<br />
-                      {businessConfig.addressLine2},<br />
-                      {businessConfig.city}, {businessConfig.state} – {businessConfig.pincode}, India
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-editorial text-base font-medium text-[#142E20]">Our Location</h3>
+                      <span className="text-[9px] font-mono text-[#8C8478] uppercase">TIRUPPUR</span>
+                    </div>
+                    <p className="text-xs text-[#5C5A55] leading-relaxed mt-1 font-light">
+                      {businessConfig.addressLine1}, {businessConfig.addressLine2}, {businessConfig.city}, {businessConfig.state} – {businessConfig.pincode}
                     </p>
                     <a
                       href={mapsSearchUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-xs font-mono text-[#B8934A] hover:text-[#142E20] transition-colors pt-1 group"
+                      className="inline-flex items-center gap-1 text-[11px] font-mono text-[#B8934A] hover:text-[#142E20] transition-colors mt-1.5 group/link"
                     >
-                      <span>View on Google Maps</span>
-                      <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                      <span>Open in Google Maps</span>
+                      <ArrowUpRight className="w-3 h-3 transition-transform group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
                     </a>
                   </div>
                 </div>
 
-                {/* 2. Phone / WhatsApp with working contact links */}
-                <div className="flex items-start gap-4 pb-6 border-b border-[#EFEBE3]">
-                  <div className="w-9 h-9 rounded-lg border border-[#E5DFD4] bg-[#FAF8F5] flex items-center justify-center shrink-0 text-[#142E20] mt-0.5">
-                    <Phone className="w-4 h-4 text-[#B8934A] stroke-[1.5]" />
+                <div className="h-px bg-[#F0EBE2]" />
+
+                {/* 2. Phone / WhatsApp */}
+                <div className="group flex items-start gap-4">
+                  <div className="w-9 h-9 rounded-full border border-[#DCD5C8] bg-[#FAF7F2] flex items-center justify-center shrink-0 text-[#B8934A] group-hover:border-[#B8934A] group-hover:scale-105 transition-all">
+                    <Phone className="w-4 h-4 stroke-[1.5]" />
                   </div>
-                  <div className="space-y-1.5 flex-1 min-w-0">
+                  <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-mono uppercase tracking-wider text-[#73736E] font-semibold">
-                        PHONE / WHATSAPP
-                      </span>
+                      <h3 className="font-editorial text-base font-medium text-[#142E20]">Call / WhatsApp</h3>
                       <button
                         type="button"
                         onClick={() => handleCopy(VERIFIED_PHONE, 'phone')}
-                        className="inline-flex items-center gap-1 text-[10px] font-mono text-[#B8934A] hover:text-[#142E20] transition-colors cursor-pointer"
+                        className="text-[10px] font-mono text-[#8C8478] hover:text-[#142E20] transition-colors cursor-pointer inline-flex items-center gap-1"
                         title="Copy phone number"
                       >
                         {copiedPhone ? (
-                          <>
-                            <Check className="w-3 h-3 text-[#142E20]" />
-                            <span className="text-[#142E20]">Copied</span>
-                          </>
+                          <span className="text-[#142E20] font-semibold inline-flex items-center gap-0.5">
+                            <Check className="w-2.5 h-2.5 text-[#B8934A]" /> Copied
+                          </span>
                         ) : (
-                          <>
-                            <Copy className="w-3 h-3" />
-                            <span>Copy</span>
-                          </>
+                          <span className="inline-flex items-center gap-0.5">
+                            <Copy className="w-2.5 h-2.5" /> Copy
+                          </span>
                         )}
                       </button>
                     </div>
-
                     <a
                       href={`tel:${VERIFIED_PHONE}`}
-                      className="font-mono text-base font-semibold text-[#142E20] hover:text-[#B8934A] transition-colors block"
+                      className="font-mono text-sm font-semibold text-[#142E20] hover:text-[#B8934A] transition-colors block mt-1"
                     >
                       {VERIFIED_PHONE}
                     </a>
-
-                    <div className="flex items-center gap-3 pt-1">
-                      <a
-                        href={`tel:${VERIFIED_PHONE}`}
-                        className="inline-flex items-center gap-1 px-3 py-1 rounded-md bg-[#FAF8F5] hover:bg-[#F2ECE2] border border-[#E2DBD0] text-xs font-mono text-[#142E20] transition-colors"
-                      >
-                        <Phone className="w-3 h-3 text-[#B8934A]" />
-                        <span>Call</span>
+                    <div className="flex items-center gap-3 text-[11px] font-mono mt-1.5">
+                      <a href={`tel:${VERIFIED_PHONE}`} className="text-[#142E20] hover:text-[#B8934A] transition-colors font-medium">
+                        Call Directly
                       </a>
+                      <span className="text-[#DCD5C8]">•</span>
                       <a
-                        href={`https://wa.me/${VERIFIED_PHONE_RAW}?text=${encodeURIComponent(
-                          'Hello Classic Fashions, I would like to inquire about fabrics and accessories.'
-                        )}`}
+                        href={getWhatsAppUrl('Hello Classic Fashions, I would like to enquire regarding fabric sourcing.')}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 px-3 py-1 rounded-md bg-[#FAF8F5] hover:bg-[#F2ECE2] border border-[#E2DBD0] text-xs font-mono text-[#142E20] transition-colors"
+                        className="text-[#B8934A] hover:text-[#142E20] transition-colors font-medium inline-flex items-center gap-0.5"
                       >
-                        <span>WhatsApp</span>
-                        <ExternalLink className="w-3 h-3 text-[#B8934A]" />
+                        <span>WhatsApp Chat</span>
+                        <ArrowUpRight className="w-3 h-3" />
                       </a>
                     </div>
                   </div>
                 </div>
 
-                {/* 3. Business Email with working email link */}
-                <div className="flex items-start gap-4 pb-6 border-b border-[#EFEBE3]">
-                  <div className="w-9 h-9 rounded-lg border border-[#E5DFD4] bg-[#FAF8F5] flex items-center justify-center shrink-0 text-[#142E20] mt-0.5">
-                    <Mail className="w-4 h-4 text-[#B8934A] stroke-[1.5]" />
+                <div className="h-px bg-[#F0EBE2]" />
+
+                {/* 3. Business Email */}
+                <div className="group flex items-start gap-4">
+                  <div className="w-9 h-9 rounded-full border border-[#DCD5C8] bg-[#FAF7F2] flex items-center justify-center shrink-0 text-[#B8934A] group-hover:border-[#B8934A] group-hover:scale-105 transition-all">
+                    <Mail className="w-4 h-4 stroke-[1.5]" />
                   </div>
-                  <div className="space-y-1.5 flex-1 min-w-0">
+                  <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-mono uppercase tracking-wider text-[#73736E] font-semibold">
-                        BUSINESS EMAIL
-                      </span>
+                      <h3 className="font-editorial text-base font-medium text-[#142E20]">Business Email</h3>
                       <button
                         type="button"
                         onClick={() => handleCopy(VERIFIED_EMAIL, 'email')}
-                        className="inline-flex items-center gap-1 text-[10px] font-mono text-[#B8934A] hover:text-[#142E20] transition-colors cursor-pointer"
+                        className="text-[10px] font-mono text-[#8C8478] hover:text-[#142E20] transition-colors cursor-pointer inline-flex items-center gap-1"
                         title="Copy email address"
                       >
                         {copiedEmail ? (
-                          <>
-                            <Check className="w-3 h-3 text-[#142E20]" />
-                            <span className="text-[#142E20]">Copied</span>
-                          </>
+                          <span className="text-[#142E20] font-semibold inline-flex items-center gap-0.5">
+                            <Check className="w-2.5 h-2.5 text-[#B8934A]" /> Copied
+                          </span>
                         ) : (
-                          <>
-                            <Copy className="w-3 h-3" />
-                            <span>Copy</span>
-                          </>
+                          <span className="inline-flex items-center gap-0.5">
+                            <Copy className="w-2.5 h-2.5" /> Copy
+                          </span>
                         )}
                       </button>
                     </div>
-
                     <a
                       href={`mailto:${VERIFIED_EMAIL}`}
-                      className="font-mono text-sm sm:text-[15px] font-medium text-[#142E20] hover:text-[#B8934A] transition-colors block truncate"
+                      className="font-mono text-xs font-semibold text-[#142E20] hover:text-[#B8934A] transition-colors block mt-1 truncate"
+                      title={VERIFIED_EMAIL}
                     >
                       {VERIFIED_EMAIL}
                     </a>
-
-                    <div className="pt-0.5">
-                      <a
-                        href={`mailto:${VERIFIED_EMAIL}?subject=${encodeURIComponent(
-                          'Sourcing Inquiry — Classic Fashions'
-                        )}`}
-                        className="inline-flex items-center gap-1 text-xs font-mono text-[#B8934A] hover:text-[#142E20] transition-colors group"
-                      >
-                        <span>Send Direct Email</span>
-                        <ArrowUpRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                      </a>
-                    </div>
+                    <a
+                      href={`mailto:${VERIFIED_EMAIL}?subject=${encodeURIComponent('Sourcing Inquiry — Classic Fashions')}`}
+                      className="inline-flex items-center gap-1 text-[11px] font-mono text-[#B8934A] hover:text-[#142E20] transition-colors mt-1.5"
+                    >
+                      <span>Send Direct Email</span>
+                      <ArrowUpRight className="w-3 h-3" />
+                    </a>
                   </div>
                 </div>
 
+                <div className="h-px bg-[#F0EBE2]" />
+
                 {/* 4. Working Hours */}
-                <div className="flex items-start gap-4">
-                  <div className="w-9 h-9 rounded-lg border border-[#E5DFD4] bg-[#FAF8F5] flex items-center justify-center shrink-0 text-[#142E20] mt-0.5">
-                    <Clock className="w-4 h-4 text-[#B8934A] stroke-[1.5]" />
+                <div className="group flex items-start gap-4">
+                  <div className="w-9 h-9 rounded-full border border-[#DCD5C8] bg-[#FAF7F2] flex items-center justify-center shrink-0 text-[#B8934A] group-hover:border-[#B8934A] group-hover:scale-105 transition-all">
+                    <Clock className="w-4 h-4 stroke-[1.5]" />
                   </div>
-                  <div className="space-y-1.5 flex-1 min-w-0">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#73736E] font-semibold block">
-                      WORKING HOURS
-                    </span>
-                    <div className="text-sm text-[#242422] space-y-1">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-editorial text-base font-medium text-[#142E20]">Working Hours</h3>
+                    <div className="text-xs text-[#5C5A55] space-y-1 mt-1.5">
                       <div className="flex items-center justify-between">
                         <span>Monday – Saturday</span>
-                        <span className="font-mono text-xs font-medium text-[#142E20]">9:30 AM – 7:30 PM IST</span>
+                        <span className="font-mono text-[11px] font-semibold text-[#142E20]">9:30 AM – 7:30 PM IST</span>
                       </div>
-                      <div className="flex items-center justify-between text-xs text-[#73736E]">
+                      <div className="flex items-center justify-between text-[#8C8478]">
                         <span>Sunday</span>
                         <span className="font-mono text-[11px]">Closed</span>
                       </div>
@@ -336,193 +490,628 @@ export const ReachUsView: React.FC<ReachUsViewProps> = () => {
 
               </div>
 
-            </div>
-          </div>
-
-          {/* ─────────────────────────────────────────────────────────────────────── */}
-          {/* RIGHT — ENQUIRY FORM: Clean, Lightly Bordered Panel                     */}
-          {/* ─────────────────────────────────────────────────────────────────────── */}
-          <div className="lg:col-span-7">
-            <div className="bg-white border border-[#E8E2D8] rounded-2xl p-7 sm:p-9 lg:p-10 shadow-[0_2px_16px_rgba(20,46,32,0.02)] space-y-6">
-              
-              {/* Header */}
-              <div className="space-y-1 pb-4 border-b border-[#EFEBE3]">
-                <h3 className="font-serif text-2xl sm:text-3xl font-normal text-[#142E20] tracking-tight">
-                  Share Your Requirements
-                </h3>
-                <p className="text-xs sm:text-sm text-[#5C5C57] leading-relaxed">
-                  Tell us what you need, and our team will get back to you.
+              {/* Handwritten-Style Brand Phrase in Lower-Left Area */}
+              <div className="pt-4 border-t border-[#F0EBE2]">
+                <p className="font-editorial italic text-xs text-[#827D73] leading-relaxed">
+                  “Fine textiles woven with integrity & craft — Boyampalayam, Tiruppur”
                 </p>
               </div>
 
+            </div>
+          </div>
+
+          {/* ═══════════════════════════════════════════════════════════════════════ */}
+          {/* RIGHT SIDE (7 cols): Interactive Enquiry Experience "Let's Work Together" */}
+          {/* ═══════════════════════════════════════════════════════════════════════ */}
+          <div className="lg:col-span-7 space-y-6 pt-2">
+            
+            {/* Section Header */}
+            <div className="space-y-2">
+              <span className="text-[10px] font-mono uppercase tracking-[0.24em] text-[#B8934A] font-semibold block">
+                ATELIER ENQUIRY
+              </span>
+              <h2 className="font-editorial text-3xl sm:text-4xl font-normal text-[#142E20] tracking-tight">
+                Let’s Work Together
+              </h2>
+              <p className="text-xs sm:text-sm text-[#5C5A55] leading-relaxed max-w-xl font-light">
+                Tell us what you need — fabric, accessories, bulk orders or custom development. We’ll get back to you soon.
+              </p>
+            </div>
+
+            {/* Five Elegant Interactive Enquiry Tiles */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+              {ENQUIRY_CATEGORIES.map((cat, idx) => {
+                const Icon = cat.icon;
+                const isSelected = selectedCategoryKey === cat.key;
+                const isFullWidth = idx === 4; // 5th item spans full row cleanly
+
+                return (
+                  <button
+                    key={cat.key}
+                    type="button"
+                    onClick={() => {
+                      setSelectedCategoryKey(cat.key);
+                      setIsEnquiryExpanded(true);
+                      if (isSubmitted) {
+                        setIsSubmitted(false);
+                        setStepperStep(1);
+                      }
+                    }}
+                    className={`text-left p-4 rounded-xl border transition-all duration-200 cursor-pointer group flex items-start gap-3.5 relative overflow-hidden ${
+                      isFullWidth ? 'sm:col-span-2' : ''
+                    } ${
+                      isSelected
+                        ? 'bg-[#FAF6EE] border-[#B8934A] ring-1 ring-[#B8934A]/50 shadow-xs'
+                        : 'bg-white/90 border-[#E8E1D5] hover:border-[#B8934A]/70 hover:bg-[#FAF8F5]'
+                    }`}
+                  >
+                    {/* Outline Icon */}
+                    <div
+                      className={`w-9 h-9 rounded-lg border flex items-center justify-center shrink-0 transition-colors ${
+                        isSelected
+                          ? 'border-[#B8934A] bg-[#B8934A]/10 text-[#142E20]'
+                          : 'border-[#E2DBD0] bg-[#FAF7F2] text-[#B8934A] group-hover:border-[#B8934A]/60'
+                      }`}
+                    >
+                      <Icon className="w-4 h-4 stroke-[1.5]" />
+                    </div>
+
+                    {/* Content */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <span
+                          className={`font-editorial text-sm sm:text-base font-normal tracking-tight transition-colors ${
+                            isSelected ? 'text-[#142E20] font-medium' : 'text-[#142E20] group-hover:text-[#B8934A]'
+                          }`}
+                        >
+                          {cat.label}
+                        </span>
+                        <ArrowRight
+                          className={`w-3.5 h-3.5 transition-all ${
+                            isSelected
+                              ? 'text-[#B8934A] translate-x-0.5'
+                              : 'text-[#C5BEB2] opacity-70 group-hover:text-[#B8934A] group-hover:translate-x-1 group-hover:opacity-100'
+                          }`}
+                        />
+                      </div>
+                      <p className="text-[11px] text-[#737068] mt-0.5 font-light leading-snug">
+                        {cat.tagline}
+                      </p>
+                    </div>
+
+                    {/* Selected Indicator Edge Stripe */}
+                    {isSelected && (
+                      <div aria-hidden="true" className="absolute top-0 left-0 bottom-0 w-1 bg-[#B8934A]" />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* ═══════════════════════════════════════════════════════════════════ */}
+            {/* PROGRESSIVE ENQUIRY AREA — Spacious Panel with "Drop us a message"   */}
+            {/* ═══════════════════════════════════════════════════════════════════ */}
+            <div className="bg-[#FFFDF9]/95 border border-[#E8E1D5] rounded-2xl p-6 sm:p-8 shadow-[0_12px_40px_rgba(20,46,32,0.04)] relative overflow-hidden transition-all duration-300">
+              
+              {/* Corner Fine Gold Accents */}
+              <div aria-hidden="true" className="absolute top-3 left-3 w-2 h-2 border-t border-l border-[#B8934A]/30" />
+              <div aria-hidden="true" className="absolute top-3 right-3 w-2 h-2 border-t border-r border-[#B8934A]/30" />
+              <div aria-hidden="true" className="absolute bottom-3 left-3 w-2 h-2 border-b border-l border-[#B8934A]/30" />
+              <div aria-hidden="true" className="absolute bottom-3 right-3 w-2 h-2 border-b border-r border-[#B8934A]/30" />
+
+              {/* --------------------------------------------------------------- */}
+              {/* STATE A: SUBMITTED SUCCESS CONFIRMATION                          */}
+              {/* --------------------------------------------------------------- */}
               {isSubmitted ? (
-                /* Success Confirmation State */
-                <div className="py-8 text-center space-y-5 animate-in fade-in duration-300">
-                  <div className="w-12 h-12 rounded-full bg-[#FAF8F5] text-[#142E20] border border-[#C5A059]/40 flex items-center justify-center mx-auto">
+                <div className="text-center py-6 space-y-5 animate-in fade-in duration-300">
+                  <div className="w-12 h-12 rounded-full bg-[#FAF7F2] border border-[#B8934A] flex items-center justify-center mx-auto text-[#142E20]">
                     <CheckCircle2 className="w-6 h-6 text-[#142E20]" />
                   </div>
 
                   <div className="space-y-1.5">
-                    <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#B8934A] font-semibold block">
-                      REQUIREMENT RECEIVED
+                    <span className="text-[10px] font-mono uppercase tracking-[0.22em] text-[#B8934A] font-semibold block">
+                      ENQUIRY CONFIRMED
                     </span>
-                    <h4 className="font-serif text-2xl font-normal text-[#142E20]">
+                    <h3 className="font-editorial text-2xl font-normal text-[#142E20]">
                       Thank you, {formData.name}
-                    </h4>
-                    <p className="text-xs sm:text-sm text-[#5C5C57] max-w-md mx-auto leading-relaxed">
-                      We have received your requirement. Our Tiruppur sourcing desk will contact you via {formData.phone}.
+                    </h3>
+                    <p className="text-xs text-[#5C5A55] max-w-md mx-auto leading-relaxed">
+                      We have received your <strong className="text-[#142E20] font-medium">{currentCategory.label}</strong> enquiry. Our Tiruppur team will review your specifications and reach out via <strong className="text-[#142E20] font-medium">{formData.phone}</strong>.
                     </p>
                   </div>
 
-                  <div className="inline-block bg-[#FAF8F5] border border-[#E8E2D8] rounded-xl px-5 py-2.5">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#73736E] block">
-                      Enquiry Reference ID
+                  {/* Reference code */}
+                  <div className="inline-block bg-[#FAF7F2] border border-[#E6DFD3] rounded-xl px-5 py-2.5">
+                    <span className="text-[9px] font-mono uppercase tracking-wider text-[#737068] block">
+                      Reference Code
                     </span>
-                    <span className="font-mono text-base font-semibold text-[#142E20]">
+                    <span className="font-mono text-sm font-semibold text-[#142E20]">
                       {referenceCode}
                     </span>
                   </div>
 
-                  <div className="pt-3 flex flex-col sm:flex-row items-center justify-center gap-3">
+                  <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
                     <a
-                      href={getWhatsAppEnquiryUrl()}
+                      href={getWhatsAppUrl()}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#142E20] hover:bg-[#1A3828] text-[#FAF8F5] px-6 py-2.5 rounded-xl text-xs font-mono font-medium tracking-wider transition-colors cursor-pointer"
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#142E20] hover:bg-[#1B3B2B] text-[#FAF7F2] px-6 py-3 rounded-xl text-xs font-mono font-medium tracking-wider transition-colors cursor-pointer shadow-xs"
                     >
                       <span>Share on WhatsApp</span>
-                      <ExternalLink className="w-3.5 h-3.5 text-[#C5A059]" />
+                      <ArrowUpRight className="w-3.5 h-3.5 text-[#B8934A]" />
                     </a>
 
                     <button
                       type="button"
-                      onClick={() => {
-                        setIsSubmitted(false);
-                        setFormData({
-                          name: '',
-                          phone: '',
-                          email: '',
-                          message: '',
-                        });
-                        setReferenceCode('');
-                      }}
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl border border-[#DDD6C8] bg-white text-xs font-mono text-[#5C5C57] hover:text-[#142E20] hover:border-[#142E20] transition-colors cursor-pointer"
+                      onClick={handleReset}
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl border border-[#DDD6C8] bg-white text-xs font-mono text-[#5C5A55] hover:text-[#142E20] hover:border-[#142E20] transition-colors cursor-pointer"
                     >
-                      <RotateCcw className="w-3.5 h-3.5" />
-                      <span>Send Another Requirement</span>
+                      <RotateCcw className="w-3 h-3" />
+                      <span>Submit Another Enquiry</span>
                     </button>
                   </div>
                 </div>
+              ) : !isEnquiryExpanded ? (
+                /* ------------------------------------------------------------- */
+                /* STATE B: COLLAPSED PANEL WITH "DROP US A MESSAGE" & BUTTON     */
+                /* ------------------------------------------------------------- */
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-2">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-[#B8934A] font-semibold">
+                        SELECTED:
+                      </span>
+                      <span className="text-xs font-mono font-semibold text-[#142E20] bg-[#FAF6EE] px-2 py-0.5 rounded border border-[#B8934A]/30">
+                        {currentCategory.label}
+                      </span>
+                    </div>
+                    {/* Handwritten-style detail */}
+                    <p className="font-editorial italic text-base sm:text-lg text-[#524F4A] pt-0.5">
+                      Drop us a message with your requirements...
+                    </p>
+                  </div>
+
+                  {/* Prominent Forest-Green Open Enquiry Button */}
+                  <button
+                    type="button"
+                    onClick={() => setIsEnquiryExpanded(true)}
+                    className="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-[#142E20] hover:bg-[#1B3B2B] text-[#FAF7F2] text-xs font-mono font-medium uppercase tracking-[0.16em] shadow-sm hover:shadow transition-all active:scale-[0.99] cursor-pointer shrink-0"
+                  >
+                    <span>Open Enquiry</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-[#B8934A]" />
+                  </button>
+                </div>
               ) : (
-                /* Clean Functional Enquiry Form */
-                <form onSubmit={handleSubmit} className="space-y-5">
-                  
-                  {/* Name — Required */}
-                  <div>
-                    <label className="block text-[11px] font-mono uppercase tracking-wider text-[#3D3D3A] font-semibold mb-1.5">
-                      Name <span className="text-[#C5A059]">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      placeholder="Your full name"
-                      className="w-full px-4 py-3 text-sm bg-[#FAF8F5] border border-[#E2DBD0] rounded-xl text-[#142E20] placeholder-[#8F8F8A] focus:bg-white focus:outline-none focus:border-[#142E20] focus:ring-1 focus:ring-[#142E20] transition-all"
-                    />
-                    {errors.name && (
-                      <p className="text-[11px] text-[#A63624] mt-1 font-mono">{errors.name}</p>
-                    )}
+                /* ------------------------------------------------------------- */
+                /* STATE C: PROGRESSIVE MULTI-STEP ENQUIRY INTERACTION           */
+                /* ------------------------------------------------------------- */
+                <div className="space-y-6 animate-in fade-in duration-300">
+                  {/* Top Bar with Discreet Step Indicator & Selected Topic */}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-[#F0EBE2]">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-mono uppercase tracking-wider text-[#B8934A] font-semibold">
+                          ENQUIRY FOR:
+                        </span>
+                        <span className="text-xs font-mono font-semibold text-[#142E20] bg-[#FAF6EE] px-2 py-0.5 rounded border border-[#B8934A]/30">
+                          {currentCategory.label}
+                        </span>
+                      </div>
+                      <p className="font-editorial italic text-sm text-[#737068] mt-0.5">
+                        Drop us a message — our coordinators reply within hours
+                      </p>
+                    </div>
+
+                    {/* Step indicator */}
+                    <div className="flex items-center gap-2 self-start sm:self-auto">
+                      <span className="text-[11px] font-mono text-[#737068]">
+                        Step {stepperStep} of 3
+                      </span>
+                      <div className="flex items-center gap-1.5" aria-hidden="true">
+                        {[1, 2, 3].map((step) => (
+                          <div
+                            key={step}
+                            className={`h-1.5 rounded-full transition-all duration-300 ${
+                              step === stepperStep
+                                ? 'w-5 bg-[#B8934A]'
+                                : step < stepperStep
+                                ? 'w-1.5 bg-[#142E20]'
+                                : 'w-1.5 bg-[#E2DBD0]'
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    </div>
                   </div>
 
-                  {/* Phone / WhatsApp — Required */}
-                  <div>
-                    <label className="block text-[11px] font-mono uppercase tracking-wider text-[#3D3D3A] font-semibold mb-1.5">
-                      Phone / WhatsApp <span className="text-[#C5A059]">*</span>
-                    </label>
-                    <input
-                      type="tel"
-                      required
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      placeholder="+91 98420 12345"
-                      className="w-full px-4 py-3 text-sm bg-[#FAF8F5] border border-[#E2DBD0] rounded-xl text-[#142E20] placeholder-[#8F8F8A] focus:bg-white focus:outline-none focus:border-[#142E20] focus:ring-1 focus:ring-[#142E20] transition-all"
-                    />
-                    {errors.phone && (
-                      <p className="text-[11px] text-[#A63624] mt-1 font-mono">{errors.phone}</p>
-                    )}
-                  </div>
+                  {/* ─────────────────────────────────────────────────────────── */}
+                  {/* STEP 1: Message / Requirement Specification                 */}
+                  {/* ─────────────────────────────────────────────────────────── */}
+                  {stepperStep === 1 && (
+                    <div className="space-y-4 animate-in fade-in duration-200">
+                      <div>
+                        <h4 className="font-editorial text-base font-medium text-[#142E20]">
+                          {currentCategory.promptHeadline}
+                        </h4>
+                        <p className="text-xs text-[#737068] mt-0.5">
+                          Include target quantity, construction, lead time, or any reference codes.
+                        </p>
+                      </div>
 
-                  {/* Email — Optional */}
-                  <div>
-                    <label className="block text-[11px] font-mono uppercase tracking-wider text-[#3D3D3A] font-semibold mb-1.5">
-                      Email <span className="font-normal text-[10px] text-[#73736E]">(Optional)</span>
-                    </label>
-                    <input
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      placeholder="name@company.com"
-                      className="w-full px-4 py-3 text-sm bg-[#FAF8F5] border border-[#E2DBD0] rounded-xl text-[#142E20] placeholder-[#8F8F8A] focus:bg-white focus:outline-none focus:border-[#142E20] focus:ring-1 focus:ring-[#142E20] transition-all"
-                    />
-                    {errors.email && (
-                      <p className="text-[11px] text-[#A63624] mt-1 font-mono">{errors.email}</p>
-                    )}
-                  </div>
+                      <div className="space-y-1.5">
+                        <textarea
+                          rows={4}
+                          autoFocus
+                          value={formData.message}
+                          onChange={(e) => {
+                            setFormData({ ...formData, message: e.target.value });
+                            if (fieldErrors.message) setFieldErrors({});
+                          }}
+                          placeholder={currentCategory.placeholder}
+                          className="w-full px-4 py-3 text-xs sm:text-sm bg-[#FAF8F5] border border-[#E2DBD0] rounded-xl text-[#142E20] placeholder-[#99948A] focus:bg-white focus:outline-none focus:border-[#142E20] focus:ring-1 focus:ring-[#142E20] transition-all resize-none leading-relaxed"
+                        />
+                        {fieldErrors.message && (
+                          <p className="text-[11px] text-[#A63624] font-mono">{fieldErrors.message}</p>
+                        )}
+                        <div className="flex items-center justify-between text-[11px] font-mono text-[#8C8478]">
+                          <span>Feel free to be as detailed or brief as required</span>
+                          <span>{formData.message.trim().length} chars</span>
+                        </div>
+                      </div>
 
-                  {/* Message — Required */}
-                  <div>
-                    <label className="block text-[11px] font-mono uppercase tracking-wider text-[#3D3D3A] font-semibold mb-1.5">
-                      Message <span className="text-[#C5A059]">*</span>
-                    </label>
-                    <textarea
-                      rows={4}
-                      required
-                      value={formData.message}
-                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      placeholder="Tell us about your fabric type, accessory specifications, volume, or sample requirements..."
-                      className="w-full px-4 py-3 text-sm bg-[#FAF8F5] border border-[#E2DBD0] rounded-xl text-[#142E20] placeholder-[#8F8F8A] focus:bg-white focus:outline-none focus:border-[#142E20] focus:ring-1 focus:ring-[#142E20] transition-all resize-none"
-                    />
-                    {errors.message && (
-                      <p className="text-[11px] text-[#A63624] mt-1 font-mono">{errors.message}</p>
-                    )}
-                  </div>
+                      <div className="flex items-center justify-between pt-3 border-t border-[#F0EBE2]">
+                        <button
+                          type="button"
+                          onClick={() => setIsEnquiryExpanded(false)}
+                          className="text-xs font-mono text-[#737068] hover:text-[#142E20] transition-colors cursor-pointer"
+                        >
+                          Cancel
+                        </button>
 
-                  {errors.form && (
-                    <p className="text-xs text-[#A63624] font-mono">{errors.form}</p>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (validateStep1()) {
+                              setStepperStep(2);
+                            }
+                          }}
+                          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#142E20] hover:bg-[#1B3B2B] text-[#FAF7F2] text-xs font-mono font-medium uppercase tracking-wider transition-colors cursor-pointer"
+                        >
+                          <span>Continue to Contact</span>
+                          <ArrowRight className="w-3.5 h-3.5 text-[#B8934A]" />
+                        </button>
+                      </div>
+                    </div>
                   )}
 
-                  {/* One Clear "Send Enquiry" Button (Dark forest-green button with a subtle gold arrow) */}
-                  <div className="pt-2">
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="group w-full inline-flex items-center justify-center gap-2.5 py-3.5 px-8 rounded-xl bg-[#142E20] hover:bg-[#1A3828] text-[#FAF8F5] border border-[#C5A059]/40 text-xs font-mono font-semibold uppercase tracking-[0.2em] shadow-xs hover:shadow-md transition-all active:scale-[0.99] cursor-pointer disabled:opacity-50"
-                    >
-                      {isSubmitting ? (
-                        <span>Sending Enquiry...</span>
-                      ) : (
-                        <>
-                          <span>Send Enquiry</span>
-                          <ArrowRight className="w-3.5 h-3.5 text-[#C5A059] transition-transform group-hover:translate-x-1" />
-                        </>
-                      )}
-                    </button>
-                  </div>
+                  {/* ─────────────────────────────────────────────────────────── */}
+                  {/* STEP 2: Contact Details                                     */}
+                  {/* ─────────────────────────────────────────────────────────── */}
+                  {stepperStep === 2 && (
+                    <div className="space-y-4 animate-in fade-in duration-200">
+                      <div>
+                        <h4 className="font-editorial text-base font-medium text-[#142E20]">
+                          Where should we send your quotation or swatch response?
+                        </h4>
+                        <p className="text-xs text-[#737068] mt-0.5">
+                          We do not send marketing spam. We only use your information to reply to this enquiry.
+                        </p>
+                      </div>
 
-                  <div className="text-center pt-1">
-                    <span className="text-[11px] text-[#73736E] font-light">
-                      We respect your privacy. Details are used solely to respond to your requirement.
-                    </span>
-                  </div>
-                </form>
+                      <div className="space-y-3.5">
+                        {/* Name */}
+                        <div>
+                          <label className="block text-[11px] font-mono uppercase tracking-wider text-[#3D3D3A] font-semibold mb-1">
+                            YOUR NAME <span className="text-[#B8934A]">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            required
+                            value={formData.name}
+                            onChange={(e) => {
+                              setFormData({ ...formData, name: e.target.value });
+                              if (fieldErrors.name) setFieldErrors((prev) => ({ ...prev, name: '' }));
+                            }}
+                            placeholder="e.g. Anandhan / Murugan"
+                            className="w-full px-4 py-2.5 text-xs sm:text-sm bg-[#FAF8F5] border border-[#E2DBD0] rounded-xl text-[#142E20] placeholder-[#99948A] focus:bg-white focus:outline-none focus:border-[#142E20] focus:ring-1 focus:ring-[#142E20] transition-all"
+                          />
+                          {fieldErrors.name && (
+                            <p className="text-[11px] text-[#A63624] mt-1 font-mono">{fieldErrors.name}</p>
+                          )}
+                        </div>
+
+                        {/* Phone / WhatsApp */}
+                        <div>
+                          <label className="block text-[11px] font-mono uppercase tracking-wider text-[#3D3D3A] font-semibold mb-1">
+                            PHONE / WHATSAPP NUMBER <span className="text-[#B8934A]">*</span>
+                          </label>
+                          <input
+                            type="tel"
+                            required
+                            value={formData.phone}
+                            onChange={(e) => {
+                              setFormData({ ...formData, phone: e.target.value });
+                              if (fieldErrors.phone) setFieldErrors((prev) => ({ ...prev, phone: '' }));
+                            }}
+                            placeholder="e.g. +91 98420 12345"
+                            className="w-full px-4 py-2.5 text-xs sm:text-sm bg-[#FAF8F5] border border-[#E2DBD0] rounded-xl text-[#142E20] placeholder-[#99948A] focus:bg-white focus:outline-none focus:border-[#142E20] focus:ring-1 focus:ring-[#142E20] transition-all"
+                          />
+                          {fieldErrors.phone && (
+                            <p className="text-[11px] text-[#A63624] mt-1 font-mono">{fieldErrors.phone}</p>
+                          )}
+                        </div>
+
+                        {/* Email (Optional) */}
+                        <div>
+                          <label className="block text-[11px] font-mono uppercase tracking-wider text-[#3D3D3A] font-semibold mb-1">
+                            EMAIL ADDRESS <span className="font-normal text-[10px] text-[#737068]">(Optional)</span>
+                          </label>
+                          <input
+                            type="email"
+                            value={formData.email}
+                            onChange={(e) => {
+                              setFormData({ ...formData, email: e.target.value });
+                              if (fieldErrors.email) setFieldErrors((prev) => ({ ...prev, email: '' }));
+                            }}
+                            placeholder="e.g. sourcing@garments.com"
+                            className="w-full px-4 py-2.5 text-xs sm:text-sm bg-[#FAF8F5] border border-[#E2DBD0] rounded-xl text-[#142E20] placeholder-[#99948A] focus:bg-white focus:outline-none focus:border-[#142E20] focus:ring-1 focus:ring-[#142E20] transition-all"
+                          />
+                          {fieldErrors.email && (
+                            <p className="text-[11px] text-[#A63624] mt-1 font-mono">{fieldErrors.email}</p>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between pt-3 border-t border-[#F0EBE2]">
+                        <button
+                          type="button"
+                          onClick={() => setStepperStep(1)}
+                          className="text-xs font-mono text-[#737068] hover:text-[#142E20] transition-colors cursor-pointer"
+                        >
+                          ← Back to Requirement
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (validateStep2()) {
+                              setStepperStep(3);
+                            }
+                          }}
+                          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#142E20] hover:bg-[#1B3B2B] text-[#FAF7F2] text-xs font-mono font-medium uppercase tracking-wider transition-colors cursor-pointer"
+                        >
+                          <span>Review Enquiry</span>
+                          <ArrowRight className="w-3.5 h-3.5 text-[#B8934A]" />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* ─────────────────────────────────────────────────────────── */}
+                  {/* STEP 3: Review & Send                                       */}
+                  {/* ─────────────────────────────────────────────────────────── */}
+                  {stepperStep === 3 && (
+                    <div className="space-y-5 animate-in fade-in duration-200">
+                      <div>
+                        <h4 className="font-editorial text-base font-medium text-[#142E20]">
+                          Confirm Your Enquiry Details
+                        </h4>
+                        <p className="text-xs text-[#737068] mt-0.5">
+                          Review your summary before dispatching to our Tiruppur team.
+                        </p>
+                      </div>
+
+                      {/* Concise Summary Slip */}
+                      <div className="bg-[#FAF7F2] border border-[#E6DFD3] rounded-xl p-4 sm:p-5 space-y-3.5 text-xs">
+                        {/* Category */}
+                        <div className="flex items-center justify-between pb-2.5 border-b border-[#ECE5D8]">
+                          <div>
+                            <span className="text-[10px] font-mono uppercase tracking-wider text-[#737068] block">
+                              Enquiry Topic
+                            </span>
+                            <span className="font-editorial text-sm font-medium text-[#142E20] mt-0.5 block">
+                              {currentCategory.label}
+                            </span>
+                          </div>
+                          <span className="text-[10px] font-mono text-[#B8934A]">Preselected</span>
+                        </div>
+
+                        {/* Message */}
+                        <div className="flex items-start justify-between pb-2.5 border-b border-[#ECE5D8]">
+                          <div className="max-w-md">
+                            <span className="text-[10px] font-mono uppercase tracking-wider text-[#737068] block">
+                              Requirement Details
+                            </span>
+                            <p className="font-light italic text-[#33312E] mt-1 leading-relaxed">
+                              "{formData.message}"
+                            </p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setStepperStep(1)}
+                            className="inline-flex items-center gap-1 font-mono text-[11px] text-[#B8934A] hover:text-[#142E20] transition-colors cursor-pointer shrink-0 ml-3"
+                          >
+                            <Edit3 className="w-3 h-3" />
+                            <span>Edit</span>
+                          </button>
+                        </div>
+
+                        {/* Contact details */}
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <span className="text-[10px] font-mono uppercase tracking-wider text-[#737068] block">
+                              Contact Person
+                            </span>
+                            <div className="font-mono text-[#142E20] space-y-0.5 mt-1">
+                              <p><strong className="font-semibold text-neutral-800">Name:</strong> {formData.name}</p>
+                              <p><strong className="font-semibold text-neutral-800">Phone:</strong> {formData.phone}</p>
+                              {formData.email && (
+                                <p><strong className="font-semibold text-neutral-800">Email:</strong> {formData.email}</p>
+                              )}
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setStepperStep(2)}
+                            className="inline-flex items-center gap-1 font-mono text-[11px] text-[#B8934A] hover:text-[#142E20] transition-colors cursor-pointer shrink-0 ml-3"
+                          >
+                            <Edit3 className="w-3 h-3" />
+                            <span>Edit</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      {fieldErrors.form && (
+                        <p className="text-xs text-[#A63624] font-mono">{fieldErrors.form}</p>
+                      )}
+
+                      {/* Single Prominent Action: Send Enquiry */}
+                      <div className="pt-2">
+                        <button
+                          type="button"
+                          disabled={isSubmitting}
+                          onClick={() => handleSubmitEnquiry()}
+                          className="group w-full inline-flex items-center justify-center gap-2.5 py-3.5 px-6 rounded-xl bg-[#142E20] hover:bg-[#1B3B2B] text-[#FAF7F2] border border-[#B8934A]/40 text-xs font-mono font-medium uppercase tracking-[0.2em] shadow-sm hover:shadow transition-all active:scale-[0.99] cursor-pointer disabled:opacity-50"
+                        >
+                          {isSubmitting ? (
+                            <span>Sending Your Enquiry...</span>
+                          ) : (
+                            <>
+                              <Send className="w-3.5 h-3.5 text-[#B8934A]" />
+                              <span>Send Enquiry</span>
+                              <ArrowRight className="w-3.5 h-3.5 text-[#B8934A] transition-transform group-hover:translate-x-1" />
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               )}
 
             </div>
+
+            {/* ═══════════════════════════════════════════════════════════════════ */}
+            {/* SUBTLE DIVIDER "OR" & THREE MINIMAL DIRECT CONTACT OPTIONS          */}
+            {/* ═══════════════════════════════════════════════════════════════════ */}
+            <div className="pt-2">
+              <div className="relative my-6 text-center">
+                <div className="border-t border-[#E8E1D5] absolute inset-x-0 top-1/2" />
+                <span className="relative bg-[#FAF7F2] px-3 font-mono text-[11px] text-[#B8934A] tracking-widest font-semibold uppercase">
+                  OR
+                </span>
+              </div>
+
+              {/* Three Minimal Direct Contact Options */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                
+                {/* 1. Call / WhatsApp */}
+                <a
+                  href={`tel:${VERIFIED_PHONE}`}
+                  className="p-3.5 rounded-xl border border-[#E8E1D5] bg-white/80 hover:bg-[#FAF8F5] hover:border-[#B8934A]/60 transition-all text-center group block"
+                >
+                  <Phone className="w-4 h-4 text-[#B8934A] mx-auto mb-1.5 group-hover:scale-110 transition-transform" />
+                  <span className="font-editorial text-xs font-medium text-[#142E20] block">
+                    Call / WhatsApp
+                  </span>
+                  <span className="font-mono text-[11px] text-[#737068] block mt-0.5">
+                    {VERIFIED_PHONE}
+                  </span>
+                </a>
+
+                {/* 2. Email Us */}
+                <a
+                  href={`mailto:${VERIFIED_EMAIL}?subject=${encodeURIComponent('Material Enquiry — Classic Fashions')}`}
+                  className="p-3.5 rounded-xl border border-[#E8E1D5] bg-white/80 hover:bg-[#FAF8F5] hover:border-[#B8934A]/60 transition-all text-center group block"
+                >
+                  <Mail className="w-4 h-4 text-[#B8934A] mx-auto mb-1.5 group-hover:scale-110 transition-transform" />
+                  <span className="font-editorial text-xs font-medium text-[#142E20] block">
+                    Email Us
+                  </span>
+                  <span className="font-mono text-[11px] text-[#737068] block mt-0.5 truncate px-1">
+                    {VERIFIED_EMAIL}
+                  </span>
+                </a>
+
+                {/* 3. Find Us */}
+                <a
+                  href={mapsSearchUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-3.5 rounded-xl border border-[#E8E1D5] bg-white/80 hover:bg-[#FAF8F5] hover:border-[#B8934A]/60 transition-all text-center group block"
+                >
+                  <MapPin className="w-4 h-4 text-[#B8934A] mx-auto mb-1.5 group-hover:scale-110 transition-transform" />
+                  <span className="font-editorial text-xs font-medium text-[#142E20] block">
+                    Find Us
+                  </span>
+                  <span className="font-mono text-[11px] text-[#737068] block mt-0.5">
+                    Boyampalayam, Tiruppur ↗
+                  </span>
+                </a>
+
+              </div>
+            </div>
+
           </div>
 
         </div>
       </main>
+
+      {/* ========================================================================= */}
+      {/* 7. BOTTOM BRAND STRIP — Slim Footer Strip with Minimal Outline Icons      */}
+      {/* ========================================================================= */}
+      <footer className="border-t border-[#E8E1D5] bg-[#FAF8F5]/90 py-8 px-4 sm:px-6 relative z-10">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-center text-center md:text-left">
+            
+            {/* Item 1 */}
+            <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-3.5">
+              <div className="w-10 h-10 rounded-full border border-[#DCD5C8] bg-white flex items-center justify-center text-[#B8934A] shrink-0">
+                <ShieldCheck className="w-5 h-5 stroke-[1.5]" />
+              </div>
+              <div>
+                <h4 className="font-editorial text-sm font-medium text-[#142E20]">
+                  Premium Textiles
+                </h4>
+                <p className="text-xs text-[#737068] font-light mt-0.5">
+                  World-class quality
+                </p>
+              </div>
+            </div>
+
+            {/* Item 2 */}
+            <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-3.5 border-y md:border-y-0 md:border-x border-[#EAE4D8] py-4 md:py-0 md:px-6">
+              <div className="w-10 h-10 rounded-full border border-[#DCD5C8] bg-white flex items-center justify-center text-[#B8934A] shrink-0">
+                <Award className="w-5 h-5 stroke-[1.5]" />
+              </div>
+              <div>
+                <h4 className="font-editorial text-sm font-medium text-[#142E20]">
+                  Trusted Partner
+                </h4>
+                <p className="text-xs text-[#737068] font-light mt-0.5">
+                  For your business
+                </p>
+              </div>
+            </div>
+
+            {/* Item 3 */}
+            <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-3.5">
+              <div className="w-10 h-10 rounded-full border border-[#DCD5C8] bg-white flex items-center justify-center text-[#B8934A] shrink-0">
+                <Clock className="w-5 h-5 stroke-[1.5]" />
+              </div>
+              <div>
+                <h4 className="font-editorial text-sm font-medium text-[#142E20]">
+                  Reliable Supply
+                </h4>
+                <p className="text-xs text-[#737068] font-light mt-0.5">
+                  Always on time
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };

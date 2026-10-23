@@ -42,7 +42,23 @@ export interface MaterialRequestData {
   materialName: string;
   similarToProductCode?: string;
   similarToProductName?: string;
-  specifications: {
+  quantity: string;
+  unit: string;
+  urgency?: 'immediate' | 'standard' | 'flexible' | string;
+  targetDate?: string;
+  width?: string;
+  gsmOrWeight?: string;
+  composition?: string;
+  weaveOrFinish?: string;
+  colorOrShade?: string;
+  contactName: string;
+  companyName: string;
+  phone: string;
+  email: string;
+  cityState: string;
+  preferredContactMethod?: 'whatsapp' | 'call' | 'email' | string;
+  additionalNotes?: string;
+  specifications?: {
     typeVariant?: string;
     composition?: string;
     gsmOrWeight?: string;
@@ -62,25 +78,18 @@ export interface MaterialRequestData {
     dataUrl?: string;
     sizeKb?: number;
   }[];
-  hasPhysicalSample: boolean;
+  hasPhysicalSample?: boolean;
   sampleCourierNotes?: string;
-  quantity: string;
-  unit: string;
-  purpose: string;
+  purpose?: string;
   targetTimeline?: string;
   testingRequirements?: string;
-  contactName: string;
-  companyName: string;
-  phone: string;
-  email: string;
-  cityState: string;
-  additionalNotes?: string;
 }
 
 export interface MaterialRequestSubmission extends MaterialRequestData {
   id: string;
   referenceCode: string;
-  submittedAt: number;
+  submittedAt: string | number;
+  status?: string;
 }
 
 export interface FabricQuality {

@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import {
   ALL_DISCOVERY_MATERIALS,
   CATEGORY_PANELS,
@@ -27,6 +27,56 @@ interface CatalogueLandingProps {
   onReachUs?: (materialContext?: string) => void;
 }
 
+function parseCategoryParam(cat?: string | null): { nav: NavFilter; sub: string } {
+  if (!cat || cat.toLowerCase() === 'all') {
+    return { nav: 'ALL', sub: 'ALL' };
+  }
+  const lower = cat.toLowerCase().trim();
+  if (lower === 'denim') {
+    return { nav: 'DENIM & CHAMBRAY', sub: 'DENIM' };
+  }
+  if (lower === 'chambray') {
+    return { nav: 'DENIM & CHAMBRAY', sub: 'CHAMBRAY' };
+  }
+  if (lower.includes('denim') || lower.includes('chambray')) {
+    return { nav: 'DENIM & CHAMBRAY', sub: 'ALL' };
+  }
+  if (lower === 'zippers' || lower === 'zipper') {
+    return { nav: 'GARMENT ACCESSORIES', sub: 'ZIPPERS' };
+  }
+  if (lower === 'buttons' || lower === 'button') {
+    return { nav: 'GARMENT ACCESSORIES', sub: 'BUTTONS' };
+  }
+  if (lower === 'tipping') {
+    return { nav: 'GARMENT ACCESSORIES', sub: 'TIPPING' };
+  }
+  if (lower === 'accessories' || lower.includes('access')) {
+    return { nav: 'GARMENT ACCESSORIES', sub: 'ALL' };
+  }
+  if (lower === 'laces' || lower === 'lace') {
+    return { nav: 'LACES', sub: 'ALL' };
+  }
+  if (lower === 'mesh' || lower === 'lycra-mesh' || lower === 'lycra') {
+    return { nav: 'FABRICS', sub: 'MESH_STRETCH' };
+  }
+  if (lower === 'woven') {
+    return { nav: 'FABRICS', sub: 'WOVEN' };
+  }
+  if (lower === 'specialty') {
+    return { nav: 'FABRICS', sub: 'SPECIALTY' };
+  }
+  if (lower === 'patterns') {
+    return { nav: 'FABRICS', sub: 'PATTERNS' };
+  }
+  if (lower === 'tapes' || lower === 'tags') {
+    return { nav: 'GARMENT ACCESSORIES', sub: 'ALL' };
+  }
+  if (lower.includes('fabric')) {
+    return { nav: 'FABRICS', sub: 'ALL' };
+  }
+  return { nav: 'ALL', sub: 'ALL' };
+}
+
 export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
   initialCategory,
   onViewDetails,
@@ -36,17 +86,10 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
   onRequestMaterial,
   onReachUs,
 }) => {
+  const initialParsed = useMemo(() => parseCategoryParam(initialCategory), [initialCategory]);
   // Navigation filter state
-  const [activeFilter, setActiveFilter] = useState<NavFilter>(() => {
-    if (!initialCategory || initialCategory === 'ALL') return 'ALL';
-    const upper = initialCategory.toUpperCase();
-    if (upper.includes('FABRIC')) return 'FABRICS';
-    if (upper.includes('DENIM')) return 'DENIM & CHAMBRAY';
-    if (upper.includes('LACE')) return 'LACES';
-    if (upper.includes('ACCESS')) return 'GARMENT ACCESSORIES';
-    return 'ALL';
-  });
-
+  const [activeFilter, setActiveFilter] = useState<NavFilter>(initialParsed.nav);
+  const [activeSubFilter, setActiveSubFilter] = useState<string>(initialParsed.sub);
   const [searchQuery, setSearchQuery] = useState('');
 
   // ── 360° Viewer
@@ -62,11 +105,27 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
   // Section reference to smoothly scroll when category is selected
   const materialsSectionRef = useRef<HTMLDivElement>(null);
 
-  // Filtered materials based on category and search query
+  // Sync with initialCategory prop changes (from URL or home page clicks)
+  useEffect(() => {
+    const parsed = parseCategoryParam(initialCategory);
+    setActiveFilter(parsed.nav);
+    setActiveSubFilter(parsed.sub);
+    setSearchQuery('');
+    if (initialCategory && initialCategory.toLowerCase() !== 'all') {
+      const timer = setTimeout(() => {
+        if (materialsSectionRef.current) {
+          materialsSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 150);
+      return () => clearTimeout(timer);
+    }
+  }, [initialCategory]);
+
+  // Filtered materials based on category, sub-filter and search query
   const filteredMaterials = useMemo(() => {
     let result = ALL_DISCOVERY_MATERIALS;
 
-    // Filter by category
+    // Filter by main category
     if (activeFilter !== 'ALL') {
       result = result.filter((m) => m.category === activeFilter);
     }
@@ -87,13 +146,57 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
     return result;
   }, [activeFilter, searchQuery]);
 
-  // Handle category panel click
+  // Handle category panel click from Core Material Divisions
   const handleSelectCategoryPanel = (catId: NavFilter) => {
     setActiveFilter(catId);
+    setActiveSubFilter('ALL');
     setSearchQuery('');
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      params.set('tab', 'catalogue');
+      const slug = catId === 'GARMENT ACCESSORIES' ? 'accessories' : catId === 'DENIM & CHAMBRAY' ? 'denim' : catId.toLowerCase();
+      params.set('category', slug);
+      window.history.pushState(null, '', `${window.location.pathname}?${params.toString()}`);
+    }
     // Smooth scroll down to materials section
     if (materialsSectionRef.current) {
       materialsSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  // Handle filter selection from sticky nav
+  const handleSelectNavFilter = (filter: NavFilter) => {
+    setActiveFilter(filter);
+    setActiveSubFilter('ALL');
+    setSearchQuery('');
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      params.set('tab', 'catalogue');
+      if (filter === 'ALL') {
+        params.delete('category');
+      } else {
+        const slug = filter === 'GARMENT ACCESSORIES' ? 'accessories' : filter === 'DENIM & CHAMBRAY' ? 'denim' : filter.toLowerCase();
+        params.set('category', slug);
+      }
+      window.history.pushState(null, '', `${window.location.pathname}?${params.toString()}`);
+    }
+  };
+
+  // Handle sub-filter pill selection
+  const handleSelectSubFilter = (sub: string) => {
+    setActiveSubFilter(sub);
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      params.set('tab', 'catalogue');
+      if (sub === 'ALL') {
+        if (activeFilter === 'GARMENT ACCESSORIES') params.set('category', 'accessories');
+        else if (activeFilter === 'DENIM & CHAMBRAY') params.set('category', 'denim');
+        else if (activeFilter === 'FABRICS') params.set('category', 'fabrics');
+        else if (activeFilter === 'LACES') params.set('category', 'laces');
+      } else {
+        params.set('category', sub.toLowerCase());
+      }
+      window.history.pushState(null, '', `${window.location.pathname}?${params.toString()}`);
     }
   };
 
@@ -158,10 +261,7 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
           ======================================================== */}
       <CatalogueNavigation
         activeFilter={activeFilter}
-        onSelectFilter={(f) => {
-          setActiveFilter(f);
-          setSearchQuery('');
-        }}
+        onSelectFilter={handleSelectNavFilter}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         onOpen360={() => handleOpen360Viewer()}
@@ -295,47 +395,243 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
                 />
               </div>
 
-              {/* GARMENT ACCESSORIES */}
+              {/* GARMENT ACCESSORIES — SEPARATE PRODUCTS AS REQUESTED */}
               <div className="pt-6 border-t border-[#EAE3D6]">
                 <MaterialGrid
                   title="Garment Accessories"
-                  subtitle="Continuous zipper coils, natural and horn buttons, tipping, tags and apparel hardware."
+                  subtitle="Continuous zipper coils, natural and horn buttons, tipping, and apparel sundries."
                   materials={ALL_DISCOVERY_MATERIALS.filter((m) => m.category === 'GARMENT ACCESSORIES')}
                   onSelectMaterial={handleDeepDetailsMaterial}
                   onOpen360={handleOpen360Viewer}
+                  subsections={[
+                    {
+                      title: 'Zippers',
+                      description: 'Heavy-duty precision interlocking metallic teeth and lightweight molded vislon closures.',
+                      filterSection: 'ZIPPERS',
+                    },
+                    {
+                      title: 'Buttons',
+                      description: 'Stamped brass, snap fasteners, lead-free crystal glass, durable polyester resin, organic wood, pearl, and natural mollusc shell buttons.',
+                      filterSection: 'BUTTONS',
+                    },
+                    {
+                      title: 'Tipping',
+                      description: 'Clear heat-sealed cellulose acetate film and electroplated solid brass / zinc aglets for drawstrings and hoodie cords.',
+                      filterSection: 'TIPPING',
+                    },
+                  ]}
                 />
               </div>
             </div>
-) : activeFilter === 'FABRICS' && !searchQuery ? (
+          ) : activeFilter === 'GARMENT ACCESSORIES' && !searchQuery ? (
+            /* Specific GARMENT ACCESSORIES View */
+            <div className="space-y-8">
+              {/* Sub-category Quick Filters */}
+              <div className="flex flex-wrap items-center gap-2 border-b border-[#E8E2D7] pb-4">
+                <span className="text-xs font-mono font-medium text-[#7A746B] uppercase mr-2">Filter By:</span>
+                {[
+                  { id: 'ALL', label: 'All Accessories (11)' },
+                  { id: 'ZIPPERS', label: 'Zippers (2)' },
+                  { id: 'BUTTONS', label: 'Buttons (7)' },
+                  { id: 'TIPPING', label: 'Tipping (2)' },
+                ].map((pill) => {
+                  const isActive = activeSubFilter === pill.id;
+                  return (
+                    <button
+                      key={pill.id}
+                      type="button"
+                      onClick={() => handleSelectSubFilter(pill.id)}
+                      className={`px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide transition-all cursor-pointer ${
+                        isActive
+                          ? 'bg-[#181715] text-white shadow-xs font-semibold'
+                          : 'bg-white border border-[#DDD5C7] text-[#6A645A] hover:text-[#181715] hover:bg-[#EFECE5]'
+                      }`}
+                    >
+                      {pill.label}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {activeSubFilter === 'ALL' ? (
+                <MaterialGrid
+                  title="Garment Accessories"
+                  subtitle="Continuous zipper coils, natural and horn buttons, tipping, and apparel sundries."
+                  materials={filteredMaterials}
+                  onSelectMaterial={handleDeepDetailsMaterial}
+                  onOpen360={handleOpen360Viewer}
+                  subsections={[
+                    {
+                      title: 'Zippers',
+                      description: 'Heavy-duty precision interlocking metallic teeth and lightweight molded vislon closures for outerwear and activewear.',
+                      filterSection: 'ZIPPERS',
+                    },
+                    {
+                      title: 'Buttons',
+                      description: 'Stamped brass, snap fasteners, lead-free crystal glass, durable polyester resin, organic wood, pearl, and natural mollusc shell buttons.',
+                      filterSection: 'BUTTONS',
+                    },
+                    {
+                      title: 'Tipping',
+                      description: 'Clear heat-sealed cellulose acetate film and electroplated solid brass / zinc aglets for drawstrings and hoodie cords.',
+                      filterSection: 'TIPPING',
+                    },
+                  ]}
+                />
+              ) : (
+                <MaterialGrid
+                  title={activeSubFilter === 'ZIPPERS' ? 'Zippers' : activeSubFilter === 'BUTTONS' ? 'Buttons' : 'Tipping'}
+                  subtitle={
+                    activeSubFilter === 'ZIPPERS'
+                      ? 'Heavy-duty interlocking metallic teeth and lightweight molded vislon closures.'
+                      : activeSubFilter === 'BUTTONS'
+                      ? 'Stamped brass, snap fasteners, crystal glass, resilient resin, natural wood, pearl, and marine shell buttons.'
+                      : 'Clear heat-sealed acetate film and electroplated solid metal aglets for cords and drawstrings.'
+                  }
+                  materials={filteredMaterials.filter((m) => m.section === activeSubFilter)}
+                  onSelectMaterial={handleDeepDetailsMaterial}
+                  onOpen360={handleOpen360Viewer}
+                  showCategoryLabel={true}
+                />
+              )}
+            </div>
+          ) : activeFilter === 'DENIM & CHAMBRAY' && !searchQuery ? (
+            /* Specific DENIM & CHAMBRAY View */
+            <div className="space-y-8">
+              {/* Sub-category Quick Filters */}
+              <div className="flex flex-wrap items-center gap-2 border-b border-[#E8E2D7] pb-4">
+                <span className="text-xs font-mono font-medium text-[#7A746B] uppercase mr-2">Filter By:</span>
+                {[
+                  { id: 'ALL', label: 'All (2)' },
+                  { id: 'DENIM', label: 'Denim (1)' },
+                  { id: 'CHAMBRAY', label: 'Chambray (1)' },
+                ].map((pill) => {
+                  const isActive = activeSubFilter === pill.id;
+                  return (
+                    <button
+                      key={pill.id}
+                      type="button"
+                      onClick={() => handleSelectSubFilter(pill.id)}
+                      className={`px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide transition-all cursor-pointer ${
+                        isActive
+                          ? 'bg-[#181715] text-white shadow-xs font-semibold'
+                          : 'bg-white border border-[#DDD5C7] text-[#6A645A] hover:text-[#181715] hover:bg-[#EFECE5]'
+                      }`}
+                    >
+                      {pill.label}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <MaterialGrid
+                title={activeSubFilter === 'DENIM' ? 'Denim Fabric' : activeSubFilter === 'CHAMBRAY' ? 'Chambray Fabric' : 'Denim & Chambray'}
+                subtitle={
+                  activeSubFilter === 'DENIM'
+                    ? 'Authentic 3/1 right-hand twill textile with indigo dyed warp and unbleached ecru weft.'
+                    : activeSubFilter === 'CHAMBRAY'
+                    ? 'Lightweight plain-weave textile with coloured indigo warp and clean white weft yarns.'
+                    : 'Authentic raw indigo twill textiles and lightweight chambray weaves.'
+                }
+                materials={
+                  activeSubFilter === 'ALL'
+                    ? filteredMaterials
+                    : filteredMaterials.filter((m) => m.subcategory === activeSubFilter)
+                }
+                onSelectMaterial={handleDeepDetailsMaterial}
+                onOpen360={handleOpen360Viewer}
+                showCategoryLabel={true}
+              />
+            </div>
+          ) : activeFilter === 'FABRICS' && !searchQuery ? (
             /* Specific FABRICS View */
+            <div className="space-y-8">
+              {/* Sub-category Quick Filters */}
+              <div className="flex flex-wrap items-center gap-2 border-b border-[#E8E2D7] pb-4">
+                <span className="text-xs font-mono font-medium text-[#7A746B] uppercase mr-2">Filter By:</span>
+                {[
+                  { id: 'ALL', label: 'All Fabrics (23)' },
+                  { id: 'WOVEN', label: 'Woven (6)' },
+                  { id: 'SPECIALTY', label: 'Specialty (8)' },
+                  { id: 'MESH_STRETCH', label: 'Mesh & Stretch (3)' },
+                  { id: 'PATTERNS', label: 'Patterns (2)' },
+                ].map((pill) => {
+                  const isActive = activeSubFilter === pill.id;
+                  return (
+                    <button
+                      key={pill.id}
+                      type="button"
+                      onClick={() => handleSelectSubFilter(pill.id)}
+                      className={`px-3.5 py-1.5 rounded-full text-xs font-medium tracking-wide transition-all cursor-pointer ${
+                        isActive
+                          ? 'bg-[#181715] text-white shadow-xs font-semibold'
+                          : 'bg-white border border-[#DDD5C7] text-[#6A645A] hover:text-[#181715] hover:bg-[#EFECE5]'
+                      }`}
+                    >
+                      {pill.label}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {activeSubFilter === 'ALL' ? (
+                <MaterialGrid
+                  title="Explore Fabrics"
+                  subtitle="Browse materials by construction, texture and application."
+                  materials={filteredMaterials}
+                  onSelectMaterial={handleDeepDetailsMaterial}
+                  onOpen360={handleOpen360Viewer}
+                  subsections={[
+                    {
+                      title: 'Woven Fabrics',
+                      description: 'Plain, Twill, Satin, Drill, Canvas / Gada and Duck constructions.',
+                      filterSection: 'WOVEN',
+                    },
+                    {
+                      title: 'Specialty Fabrics',
+                      description: 'Textured seersucker, traditional putta, napped flannel, taffeta, chiffon, velvet, fur and pure linen.',
+                      filterSection: 'SPECIALTY',
+                    },
+                    {
+                      title: 'Mesh & Stretch',
+                      description: 'Porous cotton mesh, filament polyester athletic eyelet and 4-way lycra stretch net.',
+                      filterSection: 'MESH_STRETCH',
+                    },
+                    {
+                      title: 'Patterns',
+                      description: 'Yarn-dyed longitudinal stripes and balanced intersection checks.',
+                      filterSection: 'PATTERNS',
+                    },
+                  ]}
+                />
+              ) : (
+                <MaterialGrid
+                  title={
+                    activeSubFilter === 'WOVEN'
+                      ? 'Woven Fabrics'
+                      : activeSubFilter === 'SPECIALTY'
+                      ? 'Specialty Fabrics'
+                      : activeSubFilter === 'MESH_STRETCH'
+                      ? 'Mesh & Stretch'
+                      : 'Patterned Fabrics'
+                  }
+                  subtitle="Sourced and manufactured for high-performance apparel construction."
+                  materials={filteredMaterials.filter((m) => m.section === activeSubFilter)}
+                  onSelectMaterial={handleDeepDetailsMaterial}
+                  onOpen360={handleOpen360Viewer}
+                  showCategoryLabel={true}
+                />
+              )}
+            </div>
+          ) : activeFilter === 'LACES' && !searchQuery ? (
+            /* Specific LACES View */
             <MaterialGrid
-              title="Explore Fabrics"
-              subtitle="Browse materials by construction, texture and application."
+              title="Laces & Trims"
+              subtitle="Fine embroidery needlework, pure cotton crochet, raschel lycra, ric rac and imported lace."
               materials={filteredMaterials}
               onSelectMaterial={handleDeepDetailsMaterial}
               onOpen360={handleOpen360Viewer}
-              subsections={[
-                {
-                  title: 'Woven Fabrics',
-                  description: 'Plain, Twill, Satin, Drill, Canvas / Gada and Duck constructions.',
-                  filterSection: 'WOVEN',
-                },
-                {
-                  title: 'Specialty Fabrics',
-                  description: 'Textured seersucker, traditional putta, napped flannel, taffeta, chiffon, velvet, fur and pure linen.',
-                  filterSection: 'SPECIALTY',
-                },
-                {
-                  title: 'Mesh & Stretch',
-                  description: 'Porous cotton mesh, filament polyester athletic eyelet and 4-way lycra stretch net.',
-                  filterSection: 'MESH_STRETCH',
-                },
-                {
-                  title: 'Patterns',
-                  description: 'Yarn-dyed longitudinal stripes and balanced intersection checks.',
-                  filterSection: 'PATTERNS',
-                },
-              ]}
+              showCategoryLabel={true}
             />
           ) : (
             /* Search results or filtered single-category */

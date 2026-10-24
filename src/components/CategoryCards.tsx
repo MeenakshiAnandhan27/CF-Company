@@ -43,6 +43,15 @@ const MATERIAL_SHOWCASE_ITEMS: ShowcaseCategoryItem[] = [
     objectPosition: 'center',
   },
   {
+    id: 'chambray',
+    name: 'CHAMBRAY',
+    shortDescriptor: 'Lightweight indigo plain weave',
+    categoryKey: 'chambray',
+    image: RAW_MATERIAL_IMAGES.chambray?.imagePath || '/assets/catalogue-3d/chambray.jpg',
+    altText: 'Close-up texture of yarn-dyed plain weave chambray shirting fabric',
+    objectPosition: 'center',
+  },
+  {
     id: 'mesh',
     name: 'MESH',
     shortDescriptor: 'Breathable athletic mesh',
@@ -73,7 +82,7 @@ const MATERIAL_SHOWCASE_ITEMS: ShowcaseCategoryItem[] = [
     id: 'zippers',
     name: 'ZIPPERS',
     shortDescriptor: 'Continuous coils & metal teeth',
-    categoryKey: 'accessories',
+    categoryKey: 'zippers',
     image: RAW_MATERIAL_IMAGES.zippers?.imagePath || '/assets/materials/homepage/zippers.jpg',
     altText: 'Close-up of raw zipper components, brass teeth, and continuous zipper tape',
     objectPosition: 'center 40%',
@@ -108,7 +117,7 @@ const MATERIAL_SHOWCASE_ITEMS: ShowcaseCategoryItem[] = [
 ];
 
 interface CategoryCardsProps {
-  onSelectCategory: (category: ProductCategory) => void;
+  onSelectCategory: (category: ProductCategory | string) => void;
   onExploreCatalogue?: () => void;
 }
 

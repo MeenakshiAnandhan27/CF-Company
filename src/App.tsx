@@ -38,7 +38,14 @@ export default function App() {
     }
     return 'home';
   });
-  const [catalogueCategory, setCatalogueCategory] = useState<ProductCategory | 'all'>('all');
+  const [catalogueCategory, setCatalogueCategory] = useState<ProductCategory | 'all' | string>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const cat = params.get('category');
+      if (cat) return cat;
+    }
+    return 'all';
+  });
   const [similarProductForRequest, setSimilarProductForRequest] = useState<Product | null>(null);
   const [initialRequestCategory, setInitialRequestCategory] = useState<MaterialRequestCategory | undefined>(undefined);
 
@@ -105,7 +112,29 @@ export default function App() {
     };
     handleHash();
     window.addEventListener('hashchange', handleHash);
-    return () => window.removeEventListener('hashchange', handleHash);
+
+    const handlePopState = () => {
+      if (typeof window === 'undefined') return;
+      const params = new URLSearchParams(window.location.search);
+      const tabParam = params.get('tab') as NavigationTab;
+      const catParam = params.get('category');
+      if (tabParam && ['home', 'about', 'catalogue', 'material-request', 'collection', 'reach-us', '3d-fabric-viewer'].includes(tabParam)) {
+        setCurrentTab(tabParam);
+      } else {
+        setCurrentTab('home');
+      }
+      if (catParam) {
+        setCatalogueCategory(catParam);
+      } else {
+        setCatalogueCategory('all');
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('hashchange', handleHash);
+      window.removeEventListener('popstate', handlePopState);
+    };
   }, []);
 
   const handleFireflyEnquire = (fabric: FireflyFabricItem) => {
@@ -118,7 +147,7 @@ export default function App() {
   // Navigation handler
   const handleNavigate = (
     tab: NavigationTab,
-    category?: ProductCategory
+    category?: ProductCategory | string
   ) => {
     if (tab === 'collection') {
       setIsCollectionDrawerOpen(true);
@@ -133,18 +162,30 @@ export default function App() {
       }
     }
     setCurrentTab(tab);
-    if (category) {
-      setCatalogueCategory(category);
+    const catToSet = category || (tab === 'catalogue' ? 'all' : undefined);
+    if (catToSet) {
+      setCatalogueCategory(catToSet);
     } else if (tab === 'catalogue' && !category) {
       setCatalogueCategory('all');
     }
+
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      params.set('tab', tab);
+      if (tab === 'catalogue' && catToSet && catToSet !== 'all') {
+        params.set('category', catToSet);
+      } else {
+        params.delete('category');
+      }
+      const newUrl = `${window.location.pathname}?${params.toString()}`;
+      window.history.pushState({ tab, category: catToSet }, '', newUrl);
+    }
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleCategorySelect = (category: ProductCategory) => {
-    setCatalogueCategory(category);
-    setCurrentTab('catalogue');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  const handleCategorySelect = (category: ProductCategory | string) => {
+    handleNavigate('catalogue', category);
   };
 
   const handleRequestMaterial = (category?: ProductCategory, similarProduct?: Product) => {

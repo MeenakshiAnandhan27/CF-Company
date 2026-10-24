@@ -520,11 +520,13 @@ export default function App() {
         }}
       />
 
-      {/* Assistant & Quick Navigation Chatbot */}
-      <Chatbot
-        onNavigate={handleNavigate}
-        isDarkTheme={currentTab === 'reach-us'}
-      />
+      {/* Assistant & Quick Navigation Chatbot (Removed on 3D Home Page) */}
+      {currentTab !== 'home' && (
+        <Chatbot
+          onNavigate={handleNavigate}
+          isDarkTheme={currentTab === 'reach-us'}
+        />
+      )}
     </div>
   );
 }

@@ -32,7 +32,7 @@ export const BrandIntroSection: React.FC<BrandIntroSectionProps> = ({
   return (
     <section
       aria-label="Classic Fashions Brand Introduction"
-      className="relative w-full min-h-screen flex flex-col justify-between items-center text-[#181715] bg-[#FAF8F5] border-b border-[#E8E6E0] overflow-hidden select-none"
+      className="relative w-full min-h-[calc(100vh-5rem)] flex flex-col justify-between items-center text-[#181715] bg-[#FAF8F5] border-b border-[#E8E6E0] overflow-hidden select-none"
     >
       {/* Subtle luxury warm studio ambient gradient backdrop */}
       <div
@@ -55,7 +55,7 @@ export const BrandIntroSection: React.FC<BrandIntroSectionProps> = ({
       <HeroFabric3D />
 
       {/* Top spacing */}
-      <div className="pt-24 sm:pt-28 md:pt-32 relative z-20" />
+      <div className="pt-8 sm:pt-12 relative z-20" />
 
       {/* Center Hero Block: Typography, Slogan, and Subtitle */}
       <div className="relative z-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center my-auto py-6">

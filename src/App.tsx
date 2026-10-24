@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar.tsx';
-import { BrandIntroSection } from './components/BrandIntroSection.tsx';
+import { BrandIntroSection, MaterialsMarqueeStrip } from './components/BrandIntroSection.tsx';
 import { Hero } from './components/Hero.tsx';
 import { HomeIntro } from './components/HomeIntro.tsx';
 import { CategoryCards } from './components/CategoryCards.tsx';
@@ -291,10 +291,18 @@ export default function App() {
               onScrollToDiscover={() => {
                 const el = document.getElementById('materials-strip') || document.getElementById('materials-hero');
                 if (el) {
-                  el.scrollIntoView({ behavior: 'smooth' });
+                  const navHeight = 80;
+                  const elTop = el.getBoundingClientRect().top + window.pageYOffset;
+                  window.scrollTo({
+                    top: elTop - navHeight,
+                    behavior: 'smooth',
+                  });
                 }
               }}
             />
+
+            {/* Slow-Moving Materials Categories Marquee Strip (Reference Image 2) */}
+            <MaterialsMarqueeStrip />
 
             {/* 1. Hero Section: Materials for Every Requirement */}
             <Hero

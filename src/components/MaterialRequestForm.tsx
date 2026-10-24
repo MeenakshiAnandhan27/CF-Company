@@ -86,7 +86,7 @@ const MAIN_CATEGORIES: MainCategoryCard[] = [
     id: 'custom',
     title: 'Custom Development',
     subtitle: 'Develop unique materials made for you',
-    image: '/assets/reach-us/hero-atelier-3d.jpg',
+    image: '/assets/materials/custom-development.jpg',
     mappedCategory: 'other',
   },
 ];
@@ -103,27 +103,19 @@ const SUB_SWATCHES: Record<
     items: [
       {
         id: 'cotton',
-        name: 'Organic Cotton',
+        name: 'Cotton',
         categoryLabel: 'Fabric',
         image: '/assets/materials/material-brief/organic-cotton.jpg',
         category: 'fabric',
-        defaultSpecs: { composition: '100% Combed Organic Cotton', typeVariant: 'GOTS Certified Combed Cotton' },
-      },
-      {
-        id: 'silk-satin',
-        name: 'Silk Satin',
-        categoryLabel: 'Fabric',
-        image: '/assets/materials/material-brief/silk-satin.jpg',
-        category: 'fabric',
-        defaultSpecs: { composition: '100% Pure Mulberry Silk (Grade 6A)', typeVariant: 'Liquid Drape Satin' },
+        defaultSpecs: { composition: '100% Combed Cotton', typeVariant: 'Combed Cotton' },
       },
       {
         id: 'linen',
-        name: 'Belgian Linen',
+        name: 'Linen',
         categoryLabel: 'Fabric',
         image: '/assets/materials/material-brief/belgian-linen.jpg',
         category: 'fabric',
-        defaultSpecs: { composition: '100% Pure Flax Linen', typeVariant: 'Natural Slub Plain Weave' },
+        defaultSpecs: { composition: '100% Pure Flax Linen', typeVariant: 'Natural Plain Weave' },
       },
       {
         id: 'denim',
@@ -134,36 +126,44 @@ const SUB_SWATCHES: Record<
         defaultSpecs: { composition: 'Cotton Indigo Twill', gsmOrWeight: '12.5 Oz', typeVariant: '3/1 Diagonal Twill' },
       },
       {
-        id: 'velvet',
-        name: 'Plush Velvet',
-        categoryLabel: 'Fabric',
-        image: '/assets/materials/material-brief/plush-velvet.jpg',
-        category: 'fabric',
-        defaultSpecs: { composition: 'Royal Burgundy Cut-Pile', typeVariant: 'Plush Velvet' },
-      },
-      {
-        id: 'wool',
-        name: 'Merino Wool',
-        categoryLabel: 'Fabric',
-        image: '/assets/materials/material-brief/merino-wool.jpg',
-        category: 'fabric',
-        defaultSpecs: { composition: 'Super 130s Australian Merino Wool', typeVariant: 'Charcoal Herringbone' },
-      },
-      {
-        id: 'jacquard',
-        name: 'Jacquard Brocade',
-        categoryLabel: 'Fabric',
-        image: '/assets/materials/material-brief/jacquard-brocade.jpg',
-        category: 'fabric',
-        defaultSpecs: { composition: 'Gold Ivory Figured Brocade', typeVariant: 'Multi-Weft Jacquard' },
-      },
-      {
-        id: 'pique-knit',
-        name: 'Pique Knit',
+        id: 'knits',
+        name: 'Knits',
         categoryLabel: 'Fabric',
         image: '/assets/materials/material-brief/pique-knit.jpg',
         category: 'fabric',
-        defaultSpecs: { composition: '100% Combed Cotton Pique', typeVariant: 'Honey-Comb Pique Knit' },
+        defaultSpecs: { composition: '100% Cotton Pique / Jersey Knit', typeVariant: 'Knit Texture' },
+      },
+      {
+        id: 'woven',
+        name: 'Woven',
+        categoryLabel: 'Fabric',
+        image: '/assets/materials/fabrics/woven.jpg',
+        category: 'fabric',
+        defaultSpecs: { composition: 'Fine Woven Yarn', typeVariant: 'Plain & Twill Woven' },
+      },
+      {
+        id: 'satin',
+        name: 'Satin',
+        categoryLabel: 'Fabric',
+        image: '/assets/materials/material-brief/silk-satin.jpg',
+        category: 'fabric',
+        defaultSpecs: { composition: '100% Pure Silk / Satin Weave', typeVariant: 'Drape Satin' },
+      },
+      {
+        id: 'velvet',
+        name: 'Velvet',
+        categoryLabel: 'Fabric',
+        image: '/assets/materials/material-brief/plush-velvet.jpg',
+        category: 'fabric',
+        defaultSpecs: { composition: 'Cut-Pile Velvet', typeVariant: 'Plush Velvet' },
+      },
+      {
+        id: 'wool',
+        name: 'Wool',
+        categoryLabel: 'Fabric',
+        image: '/assets/materials/material-brief/merino-wool.jpg',
+        category: 'fabric',
+        defaultSpecs: { composition: 'Pure Wool', typeVariant: 'Herringbone Weave' },
       },
     ],
   },
@@ -1602,7 +1602,7 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                   </div>
 
                   {/* Heading & Supporting Text */}
-                  <h4 className="font-serif text-base sm:text-lg font-bold text-[#142E20] leading-snug">
+                  <h4 className="font-serif text-base sm:text-lg font-bold text-[#181715] leading-snug">
                     Need help choosing materials?
                   </h4>
                   <p className="text-xs sm:text-[13px] text-[#6B665E] mt-1.5 leading-relaxed max-w-sm mx-auto">
@@ -1614,7 +1614,7 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                     <button
                       type="button"
                       onClick={() => onReachUs()}
-                      className="group/btn relative inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider text-[#FAF7F2] bg-[#142E20] hover:bg-[#1B3B2B] border border-[#B8934A]/70 hover:border-[#D4AF37] shadow-[0_0_16px_rgba(184,147,74,0.22)] hover:shadow-[0_0_24px_rgba(184,147,74,0.42)] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+                      className="group/btn relative inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider text-[#FAF7F2] bg-[#181715] hover:bg-[#2A2621] border border-[#B8934A]/70 hover:border-[#D4AF37] shadow-[0_0_16px_rgba(184,147,74,0.22)] hover:shadow-[0_0_24px_rgba(184,147,74,0.42)] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
                     >
                       {/* Subtle warm gold shimmer */}
                       <div

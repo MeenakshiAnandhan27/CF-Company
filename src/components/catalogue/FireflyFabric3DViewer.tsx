@@ -20,12 +20,50 @@ import {
   Repeat,
   Eye,
 } from 'lucide-react';
+import { BrandLogo } from '../BrandLogo.tsx';
 import {
   CATALOGUE_3D_ITEMS,
   Catalogue3DItem,
   findMatchingCatalogueIndex,
 } from '../../data/catalogue3DData.ts';
 import { createClothGeometry } from './Catalogue3DGeometries.ts';
+
+/**
+ * Concise, short fabric names for the selection bar (e.g. "Denim", "Chambray", "Linen")
+ */
+export function getSimpleFabricName(item: Catalogue3DItem): string {
+  const id = item.id.toLowerCase();
+  const name = item.name.toLowerCase();
+
+  if (id.includes('chambray') || name.includes('chambray')) return 'Chambray';
+  if (id.includes('denim') || name.includes('denim')) return 'Denim';
+  if (id.includes('seersucker') || name.includes('seersucker')) return 'Seersucker';
+  if (id.includes('stripes') || name.includes('poplin')) return 'Poplin';
+  if (id.includes('twill') || name.includes('twill')) return 'Twill';
+  if (id.includes('canvas') || id.includes('canvas-gada')) return 'Canvas';
+  if (id.includes('duck')) return 'Duck Canvas';
+  if (id.includes('gada') || name.includes('gada') || name.includes('calico')) return 'Gada';
+  if (id.includes('checked') || name.includes('checked')) return 'Checked';
+  if (id.includes('flannel') || name.includes('flannel')) return 'Flannel';
+  if (id.includes('fur') || name.includes('fur')) return 'Faux Fur';
+  if (id.includes('linen') || name.includes('flax') || name.includes('linen')) return 'Linen';
+  if (id.includes('satin') || name.includes('satin')) return 'Satin';
+  if (id.includes('chiffon') || name.includes('chiffon')) return 'Chiffon';
+  if (id.includes('velvet') || name.includes('velvet')) return 'Velvet';
+  if (id.includes('taffeta') || name.includes('taffeta')) return 'Taffeta';
+  if (id.includes('lycra') || name.includes('lycra')) return 'Lycra Mesh';
+  if (id.includes('cotton-mesh') || name.includes('cotton mesh')) return 'Cotton Mesh';
+  if (id.includes('polyster-mesh') || name.includes('sport mesh')) return 'Poly Mesh';
+  if (id.includes('poly-cotton') || name.includes('poly-cotton')) return 'Poly-Cotton';
+  if (id.includes('polyster') || name.includes('polyester') || name.includes('gabardine')) return 'Polyester';
+  if (id.includes('putta') || name.includes('jacquard') || name.includes('brocade')) return 'Jacquard';
+  if (id.includes('plain') || name.includes('plain weave')) return 'Plain Weave';
+  if (id.includes('flash') || name.includes('dobby') || name.includes('specimen')) return 'Dobby';
+  if (id.includes('cotton') || name.includes('cotton')) return 'Cotton';
+
+  // Fallback: primary word
+  return item.name.split(' ')[0] || item.name;
+}
 
 /**
  * Creates an authentic, procedural woven canvas textile texture
@@ -673,7 +711,7 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
     >
       {/* Top Header Bar */}
       <header className="relative z-20 flex items-center justify-between px-4 sm:px-6 py-2.5 border-b border-[#262420] bg-[#141311]/95 backdrop-blur-md shrink-0">
-        <div className="flex items-center gap-3 min-w-0">
+        <div className="flex items-center gap-3 shrink-0">
           {onBack && (
             <button
               onClick={onBack}
@@ -683,19 +721,8 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
               <ChevronLeft className="w-5 h-5" />
             </button>
           )}
-          <div className="min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#D4AF37]/15 border border-[#D4AF37]/35 text-[#F5DE93] text-[10px] font-mono uppercase tracking-widest font-semibold">
-                <Sparkles className="w-3 h-3 text-[#D4AF37]" />
-                Atelier 3D Fabric Studio
-              </span>
-              <span className="text-[10px] font-mono text-neutral-400 hidden sm:inline">
-                {CATALOGUE_3D_ITEMS.length} Photorealistic Fabric Textures • Adobe Firefly Sourced
-              </span>
-            </div>
-            <h1 className="font-serif text-base sm:text-lg font-bold text-[#F8F5EE] tracking-tight mt-0.5 truncate">
-              {currentItem.name}
-            </h1>
+          <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center p-1.5 shrink-0 bg-[#181715] border border-[#D4AF37]/60 shadow-[0_2px_10px_rgba(212,175,55,0.25)]">
+            <BrandLogo variant="white" size="sm" className="w-full h-auto" />
           </div>
         </div>
 
@@ -748,166 +775,11 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
 
       {/* Main 3D Canvas & Spec Area */}
       <div className="relative flex-1 flex flex-col md:flex-row overflow-hidden min-h-0">
-        {/* Interactive Viewport Area */}
-        <div
-          onPointerDown={handlePointerDown}
-          onPointerMove={handlePointerMove}
-          onPointerUp={handlePointerUp}
-          onPointerCancel={handlePointerUp}
-          onWheel={handleWheel}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-          className="relative flex-1 w-full h-full bg-radial from-[#1A1815] via-[#100F0E] to-[#080707] cursor-grab active:cursor-grabbing touch-none select-none overflow-hidden"
-        >
-          {/* Three.js canvas container */}
-          <div ref={mountRef} className="absolute inset-0 pointer-events-none" />
-
-          {/* WebGL Not Supported Fallback */}
-          {!webGLSupported && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-[#141210]">
-              <AlertCircle className="w-12 h-12 text-[#D4AF37] mb-3" />
-              <h3 className="font-serif text-xl font-bold">WebGL Acceleration Required</h3>
-              <p className="text-neutral-400 text-sm max-w-md mt-2">
-                Your browser does not currently support WebGL hardware rendering. Below is the authentic 2D high-resolution specimen preview.
-              </p>
-              <img
-                src={currentItem.imageUrl}
-                alt={currentItem.name}
-                className="mt-4 max-h-64 rounded-xl border border-[#D4AF37]/30 shadow-2xl object-cover"
-              />
-            </div>
-          )}
-
-          {/* Texture Streaming Indicator */}
-          {isTextureLoading && (
-            <div className="absolute top-4 left-4 z-20 flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-[#181715]/85 backdrop-blur-md border border-[#D4AF37]/40 text-xs font-mono text-[#F5DE93]">
-              <div className="w-3.5 h-3.5 border-2 border-[#D4AF37] border-t-transparent rounded-full animate-spin" />
-              <span>Streaming 1024×1024 High-Res Texture...</span>
-            </div>
-          )}
-
-          {/* Texture Error Display */}
-          {textureError && (
-            <div className="absolute top-4 left-4 z-20 flex items-center gap-2 px-3 py-1.5 rounded-lg bg-red-950/85 border border-red-500/50 text-xs text-red-200">
-              <AlertCircle className="w-4 h-4 text-red-400" />
-              <span>{textureError}</span>
-            </div>
-          )}
-
-          {/* Honest Procedural Geometry Disclosure Badge */}
-          <div className="absolute top-3 right-3 z-20 max-w-xs sm:max-w-md hidden sm:block pointer-events-none">
-            <div className="flex items-start gap-2.5 px-3 py-2 rounded-xl bg-[#141311]/85 backdrop-blur-md border border-[#332F26] text-[11px] text-neutral-300 leading-snug shadow-xl">
-              <Info className="w-4 h-4 text-[#D4AF37] shrink-0 mt-0.5" />
-              <div>
-                <span className="font-mono uppercase tracking-wider text-[10px] text-[#F3DE9C] font-semibold block">
-                  Simulated Geometry Notice
-                </span>
-                <span>
-                  {surfaceMode === 'drape'
-                    ? 'Procedural simulated geometry (parametric catenary drape folds & atelier airflow). Not physically accurate real-time cloth simulation.'
-                    : surfaceMode === 'curved-swatch'
-                    ? 'Curved architectural swatch plaque for grazing specular reflection.'
-                    : 'Flat tensioned inspection bed for weave density and thread inspection.'}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* 3D Turntable Angle & Zoom Indicator */}
-          <div className="absolute bottom-3 left-3 z-20 flex items-center gap-2">
-            <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-[#141311]/85 backdrop-blur-md border border-[#332F26] text-xs font-mono text-neutral-300 shadow-lg">
-              <RotateCw className="w-3 h-3 text-[#D4AF37]" />
-              <span>{Math.round(((rotationY % 360) + 360) % 360)}° Azimuth</span>
-              <span className="text-neutral-500">•</span>
-              <span>{zoomLevel.toFixed(1)}x Zoom</span>
-            </div>
-          </div>
-
-          {/* Floating Viewport Controls (Reset, Auto-spin, Flip 180, Macro, Breeze, Zoom) */}
-          <div className="absolute bottom-3 right-3 z-20 flex items-center gap-1.5 bg-[#141311]/90 backdrop-blur-md p-1.5 rounded-2xl border border-[#332F26] shadow-2xl">
-            {/* Auto-spin Toggle */}
-            <button
-              onClick={() => setIsAutoSpinning(!isAutoSpinning)}
-              className={`p-2 rounded-xl transition-all cursor-pointer ${
-                isAutoSpinning
-                  ? 'bg-[#D4AF37]/20 text-[#F5DE93] border border-[#D4AF37]/40'
-                  : 'text-neutral-400 hover:text-white hover:bg-white/10'
-              }`}
-              title={isAutoSpinning ? 'Pause auto-rotation (Space)' : 'Start auto-rotation (Space)'}
-            >
-              {isAutoSpinning ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-            </button>
-
-            {/* Quick 180 Flip (inspect reverse side) */}
-            <button
-              onClick={handleFlip180}
-              className="p-2 rounded-xl text-neutral-400 hover:text-[#F5DE93] hover:bg-white/10 transition-colors cursor-pointer"
-              title="Flip 180° to inspect reverse side (F)"
-            >
-              <Repeat className="w-4 h-4" />
-            </button>
-
-            {/* Macro View Zoom */}
-            <button
-              onClick={handleMacroZoom}
-              className="p-2 rounded-xl text-neutral-400 hover:text-[#F5DE93] hover:bg-white/10 transition-colors cursor-pointer"
-              title="Macro close-up inspection"
-            >
-              <Eye className="w-4 h-4" />
-            </button>
-
-            {/* Breeze Airflow Toggle (in drape mode) */}
-            {surfaceMode === 'drape' && (
-              <button
-                onClick={() => setIsBreezeActive(!isBreezeActive)}
-                className={`p-2 rounded-xl transition-all cursor-pointer ${
-                  isBreezeActive
-                    ? 'bg-[#38BDF8]/20 text-[#7DD3FC] border border-[#38BDF8]/40'
-                    : 'text-neutral-400 hover:text-white hover:bg-white/10'
-                }`}
-                title={isBreezeActive ? 'Pause cloth airflow (B)' : 'Activate cloth airflow (B)'}
-              >
-                <Wind className="w-4 h-4" />
-              </button>
-            )}
-
-            {/* Camera Reset */}
-            <button
-              onClick={handleResetCamera}
-              className="p-2 rounded-xl text-neutral-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
-              title="Reset camera view (R)"
-            >
-              <RotateCcw className="w-4 h-4" />
-            </button>
-
-            <div className="w-[1px] h-4 bg-[#332F26] mx-0.5" />
-
-            {/* Zoom In */}
-            <button
-              onClick={() => setZoomLevel((prev) => Math.min(3.5, prev + 0.25))}
-              className="p-2 rounded-xl text-neutral-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
-              title="Zoom in"
-            >
-              <ZoomIn className="w-4 h-4" />
-            </button>
-
-            {/* Zoom Out */}
-            <button
-              onClick={() => setZoomLevel((prev) => Math.max(0.6, prev - 0.25))}
-              className="p-2 rounded-xl text-neutral-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
-              title="Zoom out"
-            >
-              <ZoomOut className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-
-        {/* Right Sidebar: Details & Calibrated PBR Specs */}
-        <div className="w-full md:w-80 lg:w-96 border-t md:border-t-0 md:border-l border-[#262420] bg-[#12110F] flex flex-col overflow-y-auto shrink-0">
-          <div className="p-4 sm:p-5 space-y-5">
+        {/* Left Control Column: Details & Calibrated PBR Specs (Moved to the left) */}
+        <div className="w-full md:w-80 lg:w-96 border-b md:border-b-0 md:border-r border-[#262420] bg-[#12110F] flex flex-col overflow-y-auto shrink-0 order-2 md:order-1 max-h-[35vh] md:max-h-none">
+          <div className="p-4 sm:p-5 space-y-4 sm:space-y-5">
             {/* Title & Category Badge */}
-            <div className="space-y-2">
+            <div className="space-y-1.5 sm:space-y-2">
               <div className="flex items-center justify-between">
                 <span className="inline-flex items-center gap-1 text-xs font-mono uppercase tracking-wider text-[#C6A66B]">
                   <Layers className="w-3 h-3 text-[#E6C687]" />
@@ -917,7 +789,7 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
                   {selectedIndex + 1} of {CATALOGUE_3D_ITEMS.length}
                 </span>
               </div>
-              <h2 className="font-serif text-xl sm:text-2xl font-bold text-[#F8F5EE]">
+              <h2 className="font-serif text-lg sm:text-2xl font-bold text-[#F8F5EE] leading-tight">
                 {currentItem.name}
               </h2>
               <p className="text-xs text-neutral-300 leading-relaxed">
@@ -1018,6 +890,148 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
               >
                 <Send className="w-3.5 h-3.5" />
                 <span>Enquire About This Fabric</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Section: Fabric Viewing Area with Full Edge-to-Edge Control Bar */}
+        <div className="relative flex-1 flex flex-col overflow-hidden h-full order-1 md:order-2 min-h-0">
+          {/* Interactive Viewport Area */}
+          <div
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+            onPointerCancel={handlePointerUp}
+            onWheel={handleWheel}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            className="relative flex-1 w-full h-full bg-radial from-[#1A1815] via-[#100F0E] to-[#080707] cursor-grab active:cursor-grabbing touch-none select-none overflow-hidden"
+          >
+            {/* Three.js canvas container */}
+            <div ref={mountRef} className="absolute inset-0 pointer-events-none" />
+
+            {/* WebGL Not Supported Fallback */}
+            {!webGLSupported && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-[#141210]">
+                <AlertCircle className="w-12 h-12 text-[#D4AF37] mb-3" />
+                <h3 className="font-serif text-xl font-bold">WebGL Acceleration Required</h3>
+                <p className="text-neutral-400 text-sm max-w-md mt-2">
+                  Your browser does not currently support WebGL hardware rendering. Below is the authentic 2D high-resolution specimen preview.
+                </p>
+                <img
+                  src={currentItem.imageUrl}
+                  alt={currentItem.name}
+                  className="mt-4 max-h-64 rounded-xl border border-[#D4AF37]/30 shadow-2xl object-cover"
+                />
+              </div>
+            )}
+
+            {/* Texture Streaming Indicator */}
+            {isTextureLoading && (
+              <div className="absolute top-4 left-4 z-20 flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-[#181715]/85 backdrop-blur-md border border-[#D4AF37]/40 text-xs font-mono text-[#F5DE93]">
+                <div className="w-3.5 h-3.5 border-2 border-[#D4AF37] border-t-transparent rounded-full animate-spin" />
+                <span>Streaming 1024×1024 High-Res Texture...</span>
+              </div>
+            )}
+
+            {/* Texture Error Display */}
+            {textureError && (
+              <div className="absolute top-4 left-4 z-20 flex items-center gap-2 px-3 py-1.5 rounded-lg bg-red-950/85 border border-red-500/50 text-xs text-red-200">
+                <AlertCircle className="w-4 h-4 text-red-400" />
+                <span>{textureError}</span>
+              </div>
+            )}
+          </div>
+
+          {/* Fabric Viewer Bar - Full Edge-to-Edge Width Directly Beneath the Fabric Viewer */}
+          <div className="w-full border-t border-[#262420] bg-[#141311]/95 backdrop-blur-md px-3 sm:px-4 py-2 flex flex-wrap items-center justify-between gap-2 shrink-0 z-10">
+            {/* 3D Turntable Angle & Zoom Indicator */}
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-[#1A1916] border border-[#332F26] text-xs font-mono text-neutral-300">
+                <RotateCw className="w-3 h-3 text-[#D4AF37]" />
+                <span>{Math.round(((rotationY % 360) + 360) % 360)}° Azimuth</span>
+                <span className="text-neutral-500">•</span>
+                <span>{zoomLevel.toFixed(1)}x Zoom</span>
+              </div>
+            </div>
+
+            {/* Viewport Action Controls */}
+            <div className="flex items-center gap-1 sm:gap-1.5 bg-[#1A1916] p-1 rounded-xl border border-[#332F26]">
+              {/* Auto-spin Toggle */}
+              <button
+                onClick={() => setIsAutoSpinning(!isAutoSpinning)}
+                className={`p-1.5 sm:p-2 rounded-lg transition-all cursor-pointer ${
+                  isAutoSpinning
+                    ? 'bg-[#D4AF37]/20 text-[#F5DE93] border border-[#D4AF37]/40'
+                    : 'text-neutral-400 hover:text-white hover:bg-white/10'
+                }`}
+                title={isAutoSpinning ? 'Pause auto-rotation (Space)' : 'Start auto-rotation (Space)'}
+              >
+                {isAutoSpinning ? <Pause className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <Play className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
+              </button>
+
+              {/* Quick 180 Flip */}
+              <button
+                onClick={handleFlip180}
+                className="p-1.5 sm:p-2 rounded-lg text-neutral-400 hover:text-[#F5DE93] hover:bg-white/10 transition-colors cursor-pointer"
+                title="Flip 180° to inspect reverse side (F)"
+              >
+                <Repeat className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              </button>
+
+              {/* Macro View Zoom */}
+              <button
+                onClick={handleMacroZoom}
+                className="p-1.5 sm:p-2 rounded-lg text-neutral-400 hover:text-[#F5DE93] hover:bg-white/10 transition-colors cursor-pointer"
+                title="Macro close-up inspection"
+              >
+                <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              </button>
+
+              {/* Breeze Airflow Toggle (in drape mode) */}
+              {surfaceMode === 'drape' && (
+                <button
+                  onClick={() => setIsBreezeActive(!isBreezeActive)}
+                  className={`p-1.5 sm:p-2 rounded-lg transition-all cursor-pointer ${
+                    isBreezeActive
+                      ? 'bg-[#38BDF8]/20 text-[#7DD3FC] border border-[#38BDF8]/40'
+                      : 'text-neutral-400 hover:text-white hover:bg-white/10'
+                  }`}
+                  title={isBreezeActive ? 'Pause cloth airflow (B)' : 'Activate cloth airflow (B)'}
+                >
+                  <Wind className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                </button>
+              )}
+
+              {/* Camera Reset */}
+              <button
+                onClick={handleResetCamera}
+                className="p-1.5 sm:p-2 rounded-lg text-neutral-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                title="Reset camera view (R)"
+              >
+                <RotateCcw className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              </button>
+
+              <div className="w-[1px] h-4 bg-[#332F26] mx-0.5" />
+
+              {/* Zoom In */}
+              <button
+                onClick={() => setZoomLevel((prev) => Math.min(3.5, prev + 0.25))}
+                className="p-1.5 sm:p-2 rounded-lg text-neutral-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                title="Zoom in"
+              >
+                <ZoomIn className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              </button>
+
+              {/* Zoom Out */}
+              <button
+                onClick={() => setZoomLevel((prev) => Math.max(0.6, prev - 0.25))}
+                className="p-1.5 sm:p-2 rounded-lg text-neutral-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                title="Zoom out"
+              >
+                <ZoomOut className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </button>
             </div>
           </div>
@@ -1151,8 +1165,8 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
 
                   {/* Title & Info */}
                   <div className="truncate">
-                    <p className={`text-[10px] font-medium truncate ${isSelected ? 'text-[#FAF7F0]' : 'text-neutral-300'}`}>
-                      {item.name}
+                    <p className={`text-[10px] sm:text-[11px] font-medium truncate ${isSelected ? 'text-[#FAF7F0] font-semibold' : 'text-neutral-300'}`}>
+                      {getSimpleFabricName(item)}
                     </p>
                     <p className="text-[9px] font-mono text-neutral-500 truncate">
                       {item.weightGsm || item.subcategory}

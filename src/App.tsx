@@ -288,6 +288,26 @@ export default function App() {
     });
   };
 
+  const handleToggleCollection = (product: Product) => {
+    setCollection((prev) => {
+      const exists = prev.some((item) => item.product.id === product.id);
+      if (exists) {
+        return prev.filter((item) => item.product.id !== product.id);
+      } else {
+        return [
+          ...prev,
+          {
+            product,
+            quantity: 1,
+            selectedColour: (product.colours && product.colours.length > 0) ? product.colours[0] : 'Default',
+            selectedSize: (product.sizes && product.sizes.length > 0) ? product.sizes[0] : 'Standard',
+            addedAt: Date.now(),
+          },
+        ];
+      }
+    });
+  };
+
   const handleUpdateCollectionQuantity = (productId: string, quantity: number) => {
     if (quantity <= 0) {
       handleRemoveFromCollection(productId);
@@ -325,7 +345,7 @@ export default function App() {
       />
 
       {/* Main Content Areas based on currentTab */}
-      <main className={`flex-1 pb-12 ${currentTab !== 'home' ? 'pt-20' : ''}`}>
+      <main className="flex-1 pb-12 pt-20">
         {currentTab === 'home' && (
           <div>
             {/* Brand Intro Section */}
@@ -533,6 +553,7 @@ export default function App() {
           handleOpenSingleEnquiry(p);
         }}
         onAddToCollection={handleAddToCollection}
+        onToggleCollection={handleToggleCollection}
         isInCollection={detailProduct ? Boolean(getCollectionItem(detailProduct.id)) : false}
         currentQuantityInCollection={
           detailProduct ? getCollectionItem(detailProduct.id)?.quantity || 0 : 0
@@ -561,11 +582,11 @@ export default function App() {
         }}
       />
 
-      {/* Assistant & Quick Navigation Chatbot (Removed on 3D Home Page) */}
+      {/* Assistant & Quick Navigation Chatbot */}
       {currentTab !== 'home' && (
         <Chatbot
           onNavigate={handleNavigate}
-          isDarkTheme={currentTab === 'reach-us'}
+          isDarkTheme={false}
         />
       )}
     </div>

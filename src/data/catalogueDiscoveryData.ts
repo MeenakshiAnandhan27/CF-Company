@@ -1030,12 +1030,24 @@ export const ALL_DISCOVERY_MATERIALS: DiscoveryMaterial[] = [
  * Utility to find a matched Product object for integration with the rest of the application
  */
 export function getProductForDiscoveryMaterial(mat: DiscoveryMaterial): Product {
-  // Check products list by matched id or code
+  const primaryImage = mat.image || mat.fallbackTexture;
+
+  // Check products list by exact matched id, product code, or id only (no loose substring matching)
   const found = products.find(
-    (p) => p.id === mat.matchedProductId || p.productCode === mat.productCode || p.name.toLowerCase().includes(mat.name.toLowerCase())
+    (p) =>
+      (mat.matchedProductId && p.id === mat.matchedProductId) ||
+      (mat.productCode && p.productCode === mat.productCode) ||
+      p.id === mat.id
   );
+
   if (found) {
-    return found;
+    return {
+      ...found,
+      images: primaryImage
+        ? [primaryImage, ...(found.images || []).filter((img) => img !== primaryImage)]
+        : found.images,
+      imageAlt: found.imageAlt || `Raw ${mat.name} material swatch`,
+    };
   }
 
   // Create a compliant Product object representing this raw material
@@ -1052,17 +1064,17 @@ export function getProductForDiscoveryMaterial(mat: DiscoveryMaterial): Product 
     weave: mat.weave,
     description: mat.description,
     shortDescription: mat.description,
-    fullDescription: `${mat.description} Sourced and supplied by Classic Fashions for garment makers and export units.`,
-    images: [mat.image, mat.fallbackTexture || mat.image],
+    fullDescription: `${mat.description} Sourced and inspected to production standards for apparel manufacturing.`,
+    images: primaryImage ? [primaryImage] : [],
     imageAlt: `Raw ${mat.name} textile material sample`,
-    colours: ['Natural Ecru', 'Optical White', 'Custom Mill Dyeing'],
-    sizes: mat.variants || ['Sample Bolt', 'Production Roll'],
-    fabric: mat.composition || '100% Textile Material',
+    colours: mat.variants && mat.variants.length > 0 ? mat.variants : ['Natural / Standard Finish', 'Custom Finish'],
+    sizes: mat.variants || ['Standard Production Spec'],
+    fabric: mat.composition || mat.weave || 'Garment Material',
     price: 'Wholesale Quotation on Enquiry',
     availability: 'In Stock',
     active: true,
     patternType: mat.category === 'LACES' ? 'embroidery-lace' : mat.category === 'DENIM & CHAMBRAY' ? 'denim' : 'woven-fabric',
-    specifications: mat.composition || mat.weave || 'Standard Mill Specification',
+    specifications: `${mat.composition ? `Composition: ${mat.composition}. ` : ''}${mat.weave ? `Weave: ${mat.weave}. ` : ''}${mat.width ? `Width: ${mat.width}. ` : ''}${mat.gsm ? `Weight: ${mat.gsm}.` : ''}`,
     applications: ['Garment Manufacturing', 'Sampling', 'Apparel Export'],
     enquiryEnabled: true,
     isService: false,

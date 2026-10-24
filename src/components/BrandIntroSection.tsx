@@ -86,7 +86,7 @@ export const BrandIntroSection: React.FC<BrandIntroSectionProps> = ({
       <HeroFabric3D />
 
       {/* Top spacing */}
-      <div className="pt-20 sm:pt-24 relative z-20" />
+      <div className="pt-4 sm:pt-6 relative z-20" />
 
       {/* Center Hero Block: Typography, Slogan, and Subtitle */}
       <div className="relative z-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center my-auto py-6">

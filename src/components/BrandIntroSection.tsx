@@ -51,9 +51,9 @@ export const BrandIntroSection: React.FC<BrandIntroSectionProps> = ({
       const targetEl = document.getElementById('materials-strip') || document.getElementById('materials-hero');
       if (targetEl) {
         const navHeight = 80;
-        const elTop = targetEl.getBoundingClientRect().top + window.pageYOffset;
+        const targetPos = targetEl.getBoundingClientRect().top + window.scrollY - navHeight;
         window.scrollTo({
-          top: elTop - navHeight,
+          top: Math.max(0, targetPos),
           behavior: 'smooth',
         });
       }

@@ -97,7 +97,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           ========================================================================= */}
       {!isHeroNavbar && (
         <header
-          className={`sticky top-0 z-40 transition-all duration-300 ${
+          className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
             scrollY > 20
               ? 'bg-white/95 backdrop-blur-md shadow-[0_1px_4px_rgba(0,0,0,0.06)] border-b border-[#E8E6E0]'
               : 'bg-white border-b border-[#E8E6E0]'

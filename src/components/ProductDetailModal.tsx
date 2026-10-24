@@ -10,6 +10,7 @@ import {
   RotateCw,
   Bookmark,
 } from 'lucide-react';
+import { DiamondMotif } from './DiamondMotif.tsx';
 
 interface ProductDetailModalProps {
   product: Product | null;
@@ -333,6 +334,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               <h2 id="full-view-material-title" className="font-serif text-2xl sm:text-3xl font-bold text-[#142E20] tracking-tight leading-tight mt-1.5">
                 {product.name}
               </h2>
+              <DiamondMotif align="left" maxWidth="max-w-[200px]" className="my-1.5" />
             </div>
 
             {/* 3. Concise Description (Clean & Free of "casual shirting texture") */}

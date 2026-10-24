@@ -14,6 +14,7 @@ import { getProductForFireflyFabric } from '../../data/fireflyFabricsData.ts';
 import { RequestMaterialCallout } from './RequestMaterialCallout.tsx';
 import { Product, CollectionItem } from '../../types.ts';
 import { Sparkles, ArrowRight, RotateCw } from 'lucide-react';
+import { DiamondMotif } from '../DiamondMotif.tsx';
 
 interface CatalogueLandingProps {
   initialCategory?: string | null;
@@ -102,7 +103,7 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] text-[#181715] selection:bg-[#E0D7C8] selection:text-[#181715]">
+    <div className="min-h-screen w-full overflow-x-hidden bg-[#FAF8F5] text-[#181715] selection:bg-[#E0D7C8] selection:text-[#181715]">
       {/* ========================================================
           1. HERO SECTION: Clean editorial typography & whitespace
           ======================================================== */}
@@ -117,6 +118,8 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
           <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl font-medium tracking-tight text-[#181715] leading-[1.12]">
             Materials Behind Every Garment
           </h1>
+
+          <DiamondMotif align="center" maxWidth="max-w-xs" />
 
           <p className="text-sm sm:text-base md:text-lg text-[#666057] max-w-2xl mx-auto leading-relaxed font-sans">
             Explore fabrics, denim, chambray, laces and garment accessories sourced for apparel production.
@@ -166,7 +169,7 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
       />
 
       {/* Main Container */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16 sm:pt-10 sm:pb-20 space-y-12 sm:space-y-16">
         {/* ========================================================
             3. CATEGORY SHOWCASE (4 Large Panels)
             Only show when in "ALL" mode or not currently searching
@@ -292,7 +295,17 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
                 />
               </div>
 
+              {/* GARMENT ACCESSORIES */}
+              <div className="pt-6 border-t border-[#EAE3D6]">
+                <MaterialGrid
+                  title="Garment Accessories"
+                  subtitle="Continuous zipper coils, natural and horn buttons, tipping, tags and apparel hardware."
+                  materials={ALL_DISCOVERY_MATERIALS.filter((m) => m.category === 'GARMENT ACCESSORIES')}
+                  onSelectMaterial={handleDeepDetailsMaterial}
+                  onOpen360={handleOpen360Viewer}
+                />
               </div>
+            </div>
 ) : activeFilter === 'FABRICS' && !searchQuery ? (
             /* Specific FABRICS View */
             <MaterialGrid

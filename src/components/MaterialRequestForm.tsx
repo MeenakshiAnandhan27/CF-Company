@@ -32,6 +32,7 @@ import {
   FileCheck,
   CheckCircle,
 } from 'lucide-react';
+import { DiamondMotif } from './DiamondMotif.tsx';
 
 interface MaterialRequestFormProps {
   initialData?: Partial<MaterialRequestData>;
@@ -536,8 +537,8 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                   Build Your <br />
                   Material <span className="text-[#8C6534]">Brief</span>
                 </h1>
-                {/* Thin gold accent line */}
-                <div className="w-14 h-[2px] bg-gradient-to-r from-[#8C6534] to-[#D4AF37] rounded-full" />
+                {/* Elegant Gold Diamond Motif Divider */}
+                <DiamondMotif align="left" maxWidth="max-w-sm" />
               </div>
 
               <p className="text-sm sm:text-base text-[#6B665E] leading-relaxed max-w-xl">

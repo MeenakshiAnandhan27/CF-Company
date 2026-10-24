@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { businessConfig } from '../data/businessConfig.ts';
 import { CollectionItem, Product } from '../types.ts';
 import { RAW_MATERIAL_IMAGES } from '../data/materialImages.ts';
+import { DiamondMotif } from './DiamondMotif.tsx';
 import {
   MapPin,
   Phone,
@@ -514,13 +515,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
           </h1>
 
           {/* Subtle Single-Line Diamond Motif Divider */}
-          <div className="relative flex items-center justify-center w-full max-w-xs mx-auto my-3.5">
-            <div className="h-[1px] w-20 bg-gradient-to-r from-transparent via-[#B8934A]/50 to-[#B8934A]" />
-            <div className="relative mx-3 flex items-center justify-center">
-              <div className="w-2.5 h-2.5 border border-[#B8934A] rotate-45 shrink-0 shadow-[0_0_8px_rgba(184,147,74,0.3)]" />
-            </div>
-            <div className="h-[1px] w-20 bg-gradient-to-r from-[#B8934A] via-[#B8934A]/50 to-transparent" />
-          </div>
+          <DiamondMotif align="center" maxWidth="max-w-xs" />
 
           <p className="text-base sm:text-lg text-[#55514B] font-normal leading-relaxed max-w-lg mx-auto">
             Have a question or a business requirement? We’re here to help.

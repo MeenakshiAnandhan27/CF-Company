@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { ProductCategory } from '../types.ts';
 import { RAW_MATERIAL_IMAGES } from '../data/materialImages.ts';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import { DiamondMotif } from './DiamondMotif.tsx';
 
 interface ShowcaseCategoryItem {
   id: string;
@@ -219,13 +220,7 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({
               MATERIALS FOR EVERY CREATION
             </h2>
             {/* Elegant Golden Motif Line Centered */}
-            <div className="relative flex items-center justify-center my-3 w-full max-w-sm mx-auto">
-              <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-[#D4AF37]/50 to-[#D4AF37]" />
-              <div className="relative mx-3 flex items-center justify-center">
-                <div className="w-2 h-2 bg-gradient-to-tr from-[#D4AF37] via-[#F2D785] to-[#B38728] rotate-45 shadow-[0_0_10px_rgba(212,175,55,0.75)]" />
-              </div>
-              <div className="h-[1px] w-full bg-gradient-to-r from-[#D4AF37] via-[#D4AF37]/50 to-transparent" />
-            </div>
+            <DiamondMotif align="center" maxWidth="max-w-sm" />
             <p className="text-xs sm:text-sm md:text-base text-[#585550] max-w-2xl mx-auto font-normal leading-relaxed pt-1 text-pretty">
               Explore fabrics, laces, and garment accessories — sourced and manufactured to match your exact requirements.
             </p>

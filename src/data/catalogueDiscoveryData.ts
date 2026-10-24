@@ -2,6 +2,7 @@ import { Product } from '../types.ts';
 import { products } from './products.ts';
 import { fabricQualities } from './fabricQualities.ts';
 import { getCatalogueAssetUrl } from './catalogue3DData.ts';
+import { RAW_MATERIAL_IMAGES } from './materialImages.ts';
 
 export interface DiscoveryMaterial {
   id: string;
@@ -60,7 +61,7 @@ export const CATEGORY_PANELS: CategoryPanel[] = [
     title: 'LACES',
     tagline: 'Trims & Decorative Garment Materials',
     description: 'Trims, needlework and decorative garment laces for apparel finishing.',
-    image: '/assets/materials/laces.jpg',
+    image: RAW_MATERIAL_IMAGES.laces?.imagePath || '/assets/materials/homepage/laces.jpg',
     materialCount: 5,
   },
   {

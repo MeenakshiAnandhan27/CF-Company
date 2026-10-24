@@ -9,6 +9,7 @@ import { CollectionView } from './components/CollectionView.tsx';
 import { AboutSection } from './components/AboutSection.tsx';
 import { ReachUsView } from './components/ReachUsView.tsx';
 import { MaterialRequestForm } from './components/MaterialRequestForm.tsx';
+import { DiamondMotif } from './components/DiamondMotif.tsx';
 import { Chatbot } from './components/Chatbot.tsx';
 import { Footer } from './components/Footer.tsx';
 import { ProductDetailModal } from './components/ProductDetailModal.tsx';
@@ -327,13 +328,7 @@ export default function App() {
                   backgroundSize: '28px 28px',
                 }}
               />
-              <div className="relative w-full max-w-2xl px-6 flex items-center justify-center">
-                <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-[#D4AF37]/50 to-[#D4AF37]" />
-                <div className="relative mx-4 flex items-center justify-center">
-                  <div className="w-3 h-3 bg-gradient-to-tr from-[#D4AF37] via-[#F2D785] to-[#B38728] rotate-45 shadow-[0_0_14px_rgba(212,175,55,0.85)] ring-2 ring-[#FAF7F2]" />
-                </div>
-                <div className="h-[1px] w-full bg-gradient-to-r from-[#D4AF37] via-[#D4AF37]/50 to-transparent" />
-              </div>
+              <DiamondMotif align="center" maxWidth="max-w-2xl" />
             </div>
 
             {/* 4. Business Introduction, Why Classic Fashions & Sourcing Workflow */}

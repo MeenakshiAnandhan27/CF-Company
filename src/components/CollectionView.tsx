@@ -10,6 +10,7 @@ import {
   Trash2,
   Plus,
 } from 'lucide-react';
+import { DiamondMotif } from './DiamondMotif.tsx';
 
 export interface CollectionViewProps {
   isOpen?: boolean;
@@ -163,6 +164,7 @@ export const CollectionView: React.FC<CollectionViewProps> = ({
                   <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#142E20]">
                     Your Material Collection
                   </h3>
+                  <DiamondMotif align="center" maxWidth="max-w-[180px]" />
                   <p className="text-xs sm:text-sm text-[#6B665E] leading-relaxed">
                     Save materials you love and keep them together for your next enquiry.
                   </p>

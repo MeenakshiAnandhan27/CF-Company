@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowDown } from 'lucide-react';
 import { HeroFabric3D } from './HeroFabric3D.tsx';
+import { DiamondMotif } from './DiamondMotif.tsx';
 
 interface BrandIntroSectionProps {
   onScrollToDiscover?: () => void;
@@ -97,11 +98,7 @@ export const BrandIntroSection: React.FC<BrandIntroSectionProps> = ({
         </div>
 
         {/* Decorative Jeweled Gold Hairline Divider */}
-        <div className="flex items-center justify-center gap-3 my-6 sm:my-8 w-full max-w-md">
-          <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#D4AF37]/40 to-[#D4AF37]" />
-          <div className="w-1.5 h-1.5 rotate-45 bg-[#D4AF37] shadow-[0_0_6px_rgba(212,175,55,0.6)]" />
-          <div className="flex-1 h-px bg-gradient-to-l from-transparent via-[#D4AF37]/40 to-[#D4AF37]" />
-        </div>
+        <DiamondMotif align="center" maxWidth="max-w-md" className="my-6 sm:my-8" />
 
         {/* Slogan in Exact Image Font Family & Size, but Straight Upright (Not-Italic / No Slant) */}
         <p className="font-serif not-italic text-2xl sm:text-3xl md:text-4xl text-[#181715] font-normal tracking-wide text-center max-w-3xl leading-snug text-balance">

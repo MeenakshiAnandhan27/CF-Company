@@ -10,6 +10,7 @@ import {
   Trash2,
   Plus,
 } from 'lucide-react';
+import { DiamondMotif } from './DiamondMotif.tsx';
 
 export interface CollectionViewProps {
   isOpen?: boolean;
@@ -76,7 +77,7 @@ export const CollectionView: React.FC<CollectionViewProps> = ({
 
                 <h2
                   id="collection-drawer-title"
-                  className="font-serif text-2xl sm:text-3xl font-bold text-[#142E20] tracking-tight leading-tight"
+                  className="font-serif text-2xl sm:text-3xl font-bold text-[#181715] tracking-tight leading-tight"
                 >
                   Your Material Collection
                 </h2>
@@ -109,7 +110,7 @@ export const CollectionView: React.FC<CollectionViewProps> = ({
                   type="button"
                   onClick={onClose}
                   aria-label="Close collection drawer"
-                  className="w-8 h-8 rounded-full bg-white hover:bg-[#F2ECE1] text-[#55514B] hover:text-[#142E20] border border-[#DDD5C7] flex items-center justify-center transition-all cursor-pointer shadow-2xs hover:scale-105 shrink-0"
+                  className="w-8 h-8 rounded-full bg-white hover:bg-[#F2ECE1] text-[#55514B] hover:text-[#181715] border border-[#DDD5C7] flex items-center justify-center transition-all cursor-pointer shadow-2xs hover:scale-105 shrink-0"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -160,9 +161,10 @@ export const CollectionView: React.FC<CollectionViewProps> = ({
                 </div>
 
                 <div className="space-y-1.5 max-w-xs">
-                  <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#142E20]">
+                  <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#181715]">
                     Your Material Collection
                   </h3>
+                  <DiamondMotif align="center" maxWidth="max-w-[180px]" />
                   <p className="text-xs sm:text-sm text-[#6B665E] leading-relaxed">
                     Save materials you love and keep them together for your next enquiry.
                   </p>
@@ -175,7 +177,7 @@ export const CollectionView: React.FC<CollectionViewProps> = ({
                       onClose?.();
                       onExploreCatalogue();
                     }}
-                    className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-xs font-mono font-semibold uppercase tracking-wider text-[#FAF7F2] bg-[#142E20] hover:bg-[#1B3B2B] border border-[#B8934A]/70 hover:border-[#D4AF37] shadow-[0_0_16px_rgba(184,147,74,0.22)] hover:shadow-[0_0_24px_rgba(184,147,74,0.42)] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+                    className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-xs font-mono font-semibold uppercase tracking-wider text-[#FAF7F2] bg-[#181715] hover:bg-[#2A2621] border border-[#B8934A]/70 hover:border-[#D4AF37] shadow-[0_0_16px_rgba(184,147,74,0.22)] hover:shadow-[0_0_24px_rgba(184,147,74,0.42)] transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
                   >
                     <span>Explore Fabrics</span>
                     <ArrowRight className="w-3.5 h-3.5 text-[#D4AF37]" />
@@ -233,7 +235,7 @@ export const CollectionView: React.FC<CollectionViewProps> = ({
                           {product.categoryLabel || product.subcategory || 'Textile'}
                         </span>
 
-                        <h4 className="font-serif text-xs sm:text-sm font-bold text-[#142E20] group-hover:text-[#8C6534] transition-colors leading-tight truncate">
+                        <h4 className="font-serif text-xs sm:text-sm font-bold text-[#181715] group-hover:text-[#8C6534] transition-colors leading-tight truncate">
                           {product.name}
                         </h4>
 
@@ -266,7 +268,7 @@ export const CollectionView: React.FC<CollectionViewProps> = ({
                   onClose?.();
                   onGenerateEnquiry();
                 }}
-                className="group relative w-full py-3.5 px-6 rounded-xl font-mono text-xs font-semibold uppercase tracking-wider text-[#FAF7F2] bg-[#142E20] hover:bg-[#1B3B2B] border border-[#B8934A]/70 hover:border-[#D4AF37] shadow-[0_0_18px_rgba(184,147,74,0.28)] hover:shadow-[0_0_26px_rgba(184,147,74,0.45)] transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99] overflow-hidden"
+                className="group relative w-full py-3.5 px-6 rounded-xl font-mono text-xs font-semibold uppercase tracking-wider text-[#FAF7F2] bg-[#181715] hover:bg-[#2A2621] border border-[#B8934A]/70 hover:border-[#D4AF37] shadow-[0_0_18px_rgba(184,147,74,0.28)] hover:shadow-[0_0_26px_rgba(184,147,74,0.45)] transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99] overflow-hidden"
               >
                 {/* Subtle warm shimmer */}
                 <div
@@ -289,7 +291,7 @@ export const CollectionView: React.FC<CollectionViewProps> = ({
                     onClose?.();
                     onExploreCatalogue();
                   }}
-                  className="inline-flex items-center gap-1 font-mono text-[11px] font-semibold text-[#8C6534] hover:text-[#142E20] hover:underline cursor-pointer"
+                  className="inline-flex items-center gap-1 font-mono text-[11px] font-semibold text-[#8C6534] hover:text-[#181715] hover:underline cursor-pointer"
                 >
                   <Plus className="w-3 h-3 text-[#B8934A]" />
                   <span>Add More Fabrics</span>

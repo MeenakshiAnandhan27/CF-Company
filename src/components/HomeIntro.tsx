@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Scissors, Store, Tag, Sparkles, ArrowRight, ArrowDown, CheckCircle2, Search, Send, PackageCheck, Check, Layers, BookOpen } from 'lucide-react';
+import { DiamondMotif } from './DiamondMotif.tsx';
 
 interface HomeIntroProps {
   onExploreCatalogue: () => void;
@@ -46,13 +47,7 @@ export const HomeIntro: React.FC<HomeIntroProps> = ({
             </h2>
 
             {/* Luxury Gold Diamond Motif Divider */}
-            <div className="relative flex items-center justify-center my-6 w-full max-w-md mx-auto">
-              <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-[#D4AF37]/50 to-[#D4AF37]" />
-              <div className="relative mx-3.5 flex items-center justify-center">
-                <div className="w-2.5 h-2.5 bg-gradient-to-tr from-[#D4AF37] via-[#F2D785] to-[#B38728] rotate-45 shadow-[0_0_12px_rgba(212,175,55,0.75)] ring-2 ring-[#FAF7F2]" />
-              </div>
-              <div className="h-[1px] w-full bg-gradient-to-r from-[#D4AF37] via-[#D4AF37]/50 to-transparent" />
-            </div>
+            <DiamondMotif align="center" maxWidth="max-w-md" />
 
             <p className="text-base sm:text-lg text-[#55514B] leading-relaxed font-normal text-pretty">
               From regular catalogue materials to specific manufacturing requirements, we source, manufacture, and supply garment fabrics and accessories suited to your needs.
@@ -212,13 +207,7 @@ export const HomeIntro: React.FC<HomeIntroProps> = ({
               </h3>
 
               {/* Gold Diamond Motif Line */}
-              <div className="relative flex items-center justify-start w-full max-w-sm pt-0.5">
-                <div className="h-[1px] w-28 bg-gradient-to-r from-[#D4AF37] to-[#D4AF37]/50" />
-                <div className="relative mx-2.5 flex items-center justify-center">
-                  <div className="w-2 h-2 bg-gradient-to-tr from-[#D4AF37] via-[#F2D785] to-[#B38728] rotate-45 shadow-[0_0_8px_rgba(212,175,55,0.75)]" />
-                </div>
-                <div className="h-[1px] flex-1 bg-gradient-to-r from-[#D4AF37]/50 to-transparent" />
-              </div>
+              <DiamondMotif align="left" maxWidth="max-w-sm" />
 
               <p className="text-base sm:text-lg text-[#55514B] leading-relaxed">
                 Dedicated sourcing and manufacturing solutions tailored to your technical specifications, custom weaves, and physical reference samples.
@@ -364,13 +353,7 @@ export const HomeIntro: React.FC<HomeIntroProps> = ({
             </h3>
 
             {/* Luxury Gold Diamond Motif Divider */}
-            <div className="relative flex items-center justify-center mt-5 w-full max-w-md mx-auto">
-              <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-[#D4AF37]/50 to-[#D4AF37]" />
-              <div className="relative mx-3.5 flex items-center justify-center">
-                <div className="w-2.5 h-2.5 bg-gradient-to-tr from-[#D4AF37] via-[#F2D785] to-[#B38728] rotate-45 shadow-[0_0_12px_rgba(212,175,55,0.75)] ring-2 ring-[#FAF7F2]" />
-              </div>
-              <div className="h-[1px] w-full bg-gradient-to-r from-[#D4AF37] via-[#D4AF37]/50 to-transparent" />
-            </div>
+            <DiamondMotif align="center" maxWidth="max-w-md" />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

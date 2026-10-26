@@ -57,6 +57,15 @@ export const RAW_MATERIAL_IMAGES: Record<string, RawMaterialImageEntry> = {
     objectPosition: 'center',
     description: 'Pure raw denim fabric showing authentic twill weave structure',
   },
+  chambray: {
+    category: 'chambray',
+    label: 'Chambray Weaves',
+    rawMaterialType: 'Lightweight plain weave indigo chambray',
+    imagePath: '/assets/catalogue-3d/chambray.jpg',
+    altText: 'Close-up texture of yarn-dyed plain weave chambray shirting fabric',
+    objectPosition: 'center',
+    description: 'Lightweight plain-weave chambray with indigo warp and white weft',
+  },
   mesh: {
     category: 'mesh',
     label: 'Mesh & Knit Structure',

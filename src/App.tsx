@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar.tsx';
-import { BrandIntroSection, MaterialsMarqueeStrip } from './components/BrandIntroSection.tsx';
+import { BrandIntroSection } from './components/BrandIntroSection.tsx';
 import { Hero } from './components/Hero.tsx';
 import { HomeIntro } from './components/HomeIntro.tsx';
 import { CategoryCards } from './components/CategoryCards.tsx';
@@ -9,7 +9,6 @@ import { CollectionView } from './components/CollectionView.tsx';
 import { AboutSection } from './components/AboutSection.tsx';
 import { ReachUsView } from './components/ReachUsView.tsx';
 import { MaterialRequestForm } from './components/MaterialRequestForm.tsx';
-import { DiamondMotif } from './components/DiamondMotif.tsx';
 import { Chatbot } from './components/Chatbot.tsx';
 import { Footer } from './components/Footer.tsx';
 import { ProductDetailModal } from './components/ProductDetailModal.tsx';
@@ -38,14 +37,7 @@ export default function App() {
     }
     return 'home';
   });
-  const [catalogueCategory, setCatalogueCategory] = useState<ProductCategory | 'all' | string>(() => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      const cat = params.get('category');
-      if (cat) return cat;
-    }
-    return 'all';
-  });
+  const [catalogueCategory, setCatalogueCategory] = useState<ProductCategory | 'all'>('all');
   const [similarProductForRequest, setSimilarProductForRequest] = useState<Product | null>(null);
   const [initialRequestCategory, setInitialRequestCategory] = useState<MaterialRequestCategory | undefined>(undefined);
 
@@ -112,29 +104,7 @@ export default function App() {
     };
     handleHash();
     window.addEventListener('hashchange', handleHash);
-
-    const handlePopState = () => {
-      if (typeof window === 'undefined') return;
-      const params = new URLSearchParams(window.location.search);
-      const tabParam = params.get('tab') as NavigationTab;
-      const catParam = params.get('category');
-      if (tabParam && ['home', 'about', 'catalogue', 'material-request', 'collection', 'reach-us', '3d-fabric-viewer'].includes(tabParam)) {
-        setCurrentTab(tabParam);
-      } else {
-        setCurrentTab('home');
-      }
-      if (catParam) {
-        setCatalogueCategory(catParam);
-      } else {
-        setCatalogueCategory('all');
-      }
-    };
-    window.addEventListener('popstate', handlePopState);
-
-    return () => {
-      window.removeEventListener('hashchange', handleHash);
-      window.removeEventListener('popstate', handlePopState);
-    };
+    return () => window.removeEventListener('hashchange', handleHash);
   }, []);
 
   const handleFireflyEnquire = (fabric: FireflyFabricItem) => {
@@ -147,7 +117,7 @@ export default function App() {
   // Navigation handler
   const handleNavigate = (
     tab: NavigationTab,
-    category?: ProductCategory | string
+    category?: ProductCategory
   ) => {
     if (tab === 'collection') {
       setIsCollectionDrawerOpen(true);
@@ -162,30 +132,18 @@ export default function App() {
       }
     }
     setCurrentTab(tab);
-    const catToSet = category || (tab === 'catalogue' ? 'all' : undefined);
-    if (catToSet) {
-      setCatalogueCategory(catToSet);
+    if (category) {
+      setCatalogueCategory(category);
     } else if (tab === 'catalogue' && !category) {
       setCatalogueCategory('all');
     }
-
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      params.set('tab', tab);
-      if (tab === 'catalogue' && catToSet && catToSet !== 'all') {
-        params.set('category', catToSet);
-      } else {
-        params.delete('category');
-      }
-      const newUrl = `${window.location.pathname}?${params.toString()}`;
-      window.history.pushState({ tab, category: catToSet }, '', newUrl);
-    }
-
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleCategorySelect = (category: ProductCategory | string) => {
-    handleNavigate('catalogue', category);
+  const handleCategorySelect = (category: ProductCategory) => {
+    setCatalogueCategory(category);
+    setCurrentTab('catalogue');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleRequestMaterial = (category?: ProductCategory, similarProduct?: Product) => {
@@ -288,26 +246,6 @@ export default function App() {
     });
   };
 
-  const handleToggleCollection = (product: Product) => {
-    setCollection((prev) => {
-      const exists = prev.some((item) => item.product.id === product.id);
-      if (exists) {
-        return prev.filter((item) => item.product.id !== product.id);
-      } else {
-        return [
-          ...prev,
-          {
-            product,
-            quantity: 1,
-            selectedColour: (product.colours && product.colours.length > 0) ? product.colours[0] : 'Default',
-            selectedSize: (product.sizes && product.sizes.length > 0) ? product.sizes[0] : 'Standard',
-            addedAt: Date.now(),
-          },
-        ];
-      }
-    });
-  };
-
   const handleUpdateCollectionQuantity = (productId: string, quantity: number) => {
     if (quantity <= 0) {
       handleRemoveFromCollection(productId);
@@ -345,7 +283,7 @@ export default function App() {
       />
 
       {/* Main Content Areas based on currentTab */}
-      <main className="flex-1 pb-12 pt-20">
+      <main className="flex-1 pb-12">
         {currentTab === 'home' && (
           <div>
             {/* Brand Intro Section */}
@@ -353,18 +291,10 @@ export default function App() {
               onScrollToDiscover={() => {
                 const el = document.getElementById('materials-strip') || document.getElementById('materials-hero');
                 if (el) {
-                  const navHeight = 80;
-                  const targetPos = el.getBoundingClientRect().top + window.scrollY - navHeight;
-                  window.scrollTo({
-                    top: Math.max(0, targetPos),
-                    behavior: 'smooth',
-                  });
+                  el.scrollIntoView({ behavior: 'smooth' });
                 }
               }}
             />
-
-            {/* Slow-Moving Materials Categories Marquee Strip (Reference Image 2) */}
-            <MaterialsMarqueeStrip />
 
             {/* 1. Hero Section: Materials for Every Requirement */}
             <Hero
@@ -389,7 +319,13 @@ export default function App() {
                   backgroundSize: '28px 28px',
                 }}
               />
-              <DiamondMotif align="center" maxWidth="max-w-2xl" />
+              <div className="relative w-full max-w-2xl px-6 flex items-center justify-center">
+                <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-[#D4AF37]/50 to-[#D4AF37]" />
+                <div className="relative mx-4 flex items-center justify-center">
+                  <div className="w-3 h-3 bg-gradient-to-tr from-[#D4AF37] via-[#F2D785] to-[#B38728] rotate-45 shadow-[0_0_14px_rgba(212,175,55,0.85)] ring-2 ring-[#FAF7F2]" />
+                </div>
+                <div className="h-[1px] w-full bg-gradient-to-r from-[#D4AF37] via-[#D4AF37]/50 to-transparent" />
+              </div>
             </div>
 
             {/* 4. Business Introduction, Why Classic Fashions & Sourcing Workflow */}
@@ -553,7 +489,6 @@ export default function App() {
           handleOpenSingleEnquiry(p);
         }}
         onAddToCollection={handleAddToCollection}
-        onToggleCollection={handleToggleCollection}
         isInCollection={detailProduct ? Boolean(getCollectionItem(detailProduct.id)) : false}
         currentQuantityInCollection={
           detailProduct ? getCollectionItem(detailProduct.id)?.quantity || 0 : 0
@@ -583,12 +518,10 @@ export default function App() {
       />
 
       {/* Assistant & Quick Navigation Chatbot */}
-      {currentTab !== 'home' && (
-        <Chatbot
-          onNavigate={handleNavigate}
-          isDarkTheme={false}
-        />
-      )}
+      <Chatbot
+        onNavigate={handleNavigate}
+        isDarkTheme={currentTab === 'reach-us'}
+      />
     </div>
   );
 }

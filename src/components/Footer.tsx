@@ -22,17 +22,25 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, isDarkLuxuryTheme })
   };
 
   return (
-    <footer className="bg-[#100F0E] text-[#E5E0D8] border-t border-[#24211D]">
+    <footer className={`${
+      isDarkLuxuryTheme
+        ? 'bg-[#05130E] text-[#A3B8B0] border-t border-[#102C22]'
+        : 'bg-[#100F0E] text-[#E5E0D8] border-t border-[#24211D]'
+    }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10">
           
           {/* Business Bio (Col 1-4) */}
           <div className="lg:col-span-4 space-y-4">
             <div className="flex items-center gap-3 h-10">
-              <div className="w-10 h-10 rounded-md flex items-center justify-center p-1.5 shrink-0 bg-[#25221F] border border-[#3A3632]">
+              <div className={`w-10 h-10 rounded-md flex items-center justify-center p-1.5 shrink-0 ${
+                isDarkLuxuryTheme ? 'bg-[#0E261E] border border-[#214738]' : 'bg-[#25221F] border border-[#3A3632]'
+              }`}>
                 <BrandLogo variant="white" size="sm" className="w-full h-auto" />
               </div>
-              <span className="font-serif text-2xl font-bold tracking-tight text-white">
+              <span className={`font-serif text-2xl font-bold tracking-tight ${
+                isDarkLuxuryTheme ? 'text-[#F3EBDD]' : 'text-white'
+              }`}>
                 {businessConfig.businessName}
               </span>
             </div>

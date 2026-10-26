@@ -365,7 +365,11 @@ export const Chatbot: React.FC<ChatbotProps> = ({ onNavigate, isDarkTheme }) => 
         <button
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Open Classic Fashions Assistant"
-          className="w-14 h-14 rounded-full transition-all duration-200 flex items-center justify-center cursor-pointer shadow-xl hover:scale-105 active:scale-95 bg-[#181715] text-white hover:bg-[#302D29] border-2 border-[#E8E6E0]"
+          className={`w-14 h-14 rounded-full transition-all duration-200 flex items-center justify-center cursor-pointer shadow-xl hover:scale-105 active:scale-95 ${
+            isDarkTheme
+              ? 'bg-[#102C22] text-[#F3EBDD] hover:bg-[#071B15] border-2 border-[#C49A55]/70 shadow-[0_4px_25px_rgba(0,0,0,0.6)]'
+              : 'bg-[#181715] text-white hover:bg-[#302D29] border-2 border-[#E8E6E0]'
+          }`}
         >
           {isOpen ? (
             <X className="w-6 h-6 text-white" />

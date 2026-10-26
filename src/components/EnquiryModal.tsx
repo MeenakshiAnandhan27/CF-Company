@@ -231,7 +231,7 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
           {isSubmitted ? (
             /* PHASE 5: Professional Success Screen */
             <div className="py-8 text-center space-y-6 animate-in fade-in zoom-in-95 duration-200">
-              <div className="w-16 h-16 bg-[#FAF7F2] text-[#B8934A] rounded-full flex items-center justify-center mx-auto border border-[#B8934A]/50 shadow-sm">
+              <div className="w-16 h-16 bg-[#E8F5E9] text-emerald-800 rounded-full flex items-center justify-center mx-auto border border-emerald-200 shadow-sm">
                 <CheckCircle2 className="w-9 h-9" />
               </div>
 
@@ -260,7 +260,7 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
                     onClick={handleCopyEnquiry}
                     className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 text-xs font-semibold text-[#181715] bg-white border border-[#D5D0C6] hover:bg-[#F5F3ED] rounded transition-colors"
                   >
-                    {copied ? <Check className="w-4 h-4 text-[#B8934A]" /> : <Copy className="w-4 h-4" />}
+                    {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
                     <span>{copied ? 'Copied to Clipboard' : 'Copy Requisition'}</span>
                   </button>
 

@@ -1,45 +1,10 @@
 import React from 'react';
 import { ArrowDown } from 'lucide-react';
 import { HeroFabric3D } from './HeroFabric3D.tsx';
-import { DiamondMotif } from './DiamondMotif.tsx';
 
 interface BrandIntroSectionProps {
   onScrollToDiscover?: () => void;
 }
-
-export const MaterialsMarqueeStrip: React.FC = () => {
-  const marqueeItems = [
-    'FABRICS',
-    'LACES',
-    'DENIM',
-    'ZIPPERS',
-    'BUTTONS',
-    'CUSTOM SOURCING',
-  ];
-
-  return (
-    <div
-      id="materials-strip"
-      aria-label="Garment Materials Categories Strip"
-      className="w-full border-y border-[#E8E6E0] bg-[#FAF9F5] py-3.5 overflow-hidden shadow-xs scroll-mt-20 select-none"
-    >
-      <div className="animate-marquee-slow flex items-center text-xs sm:text-sm font-mono tracking-[0.24em] uppercase font-medium text-[#736F68]">
-        {[0, 1, 2, 3].map((seqIdx) => (
-          <div key={`seq-${seqIdx}`} className="flex items-center shrink-0">
-            {marqueeItems.map((item, idx) => (
-              <span key={`seq-${seqIdx}-${idx}`} className="inline-flex items-center">
-                <span className="hover:text-[#8C6534] transition-colors px-4 sm:px-6">
-                  {item}
-                </span>
-                <span className="text-[#C5C0B7] font-light select-none">•</span>
-              </span>
-            ))}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
 
 export const BrandIntroSection: React.FC<BrandIntroSectionProps> = ({
   onScrollToDiscover,
@@ -50,20 +15,24 @@ export const BrandIntroSection: React.FC<BrandIntroSectionProps> = ({
     } else {
       const targetEl = document.getElementById('materials-strip') || document.getElementById('materials-hero');
       if (targetEl) {
-        const navHeight = 80;
-        const targetPos = targetEl.getBoundingClientRect().top + window.scrollY - navHeight;
-        window.scrollTo({
-          top: Math.max(0, targetPos),
-          behavior: 'smooth',
-        });
+        targetEl.scrollIntoView({ behavior: 'smooth' });
       }
     }
   };
 
+  const marqueeItems = [
+    'FABRICS',
+    'LACES',
+    'DENIM',
+    'ZIPPERS',
+    'BUTTONS',
+    'CUSTOM SOURCING',
+  ];
+
   return (
     <section
       aria-label="Classic Fashions Brand Introduction"
-      className="relative w-full h-screen min-h-[640px] flex flex-col justify-between items-center text-[#181715] bg-[#FAF8F5] overflow-hidden select-none"
+      className="relative w-full min-h-screen flex flex-col justify-between items-center text-[#181715] bg-[#FAF8F5] border-b border-[#E8E6E0] overflow-hidden select-none"
     >
       {/* Subtle luxury warm studio ambient gradient backdrop */}
       <div
@@ -86,7 +55,7 @@ export const BrandIntroSection: React.FC<BrandIntroSectionProps> = ({
       <HeroFabric3D />
 
       {/* Top spacing */}
-      <div className="pt-4 sm:pt-6 relative z-20" />
+      <div className="pt-24 sm:pt-28 md:pt-32 relative z-20" />
 
       {/* Center Hero Block: Typography, Slogan, and Subtitle */}
       <div className="relative z-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center my-auto py-6">
@@ -98,7 +67,11 @@ export const BrandIntroSection: React.FC<BrandIntroSectionProps> = ({
         </div>
 
         {/* Decorative Jeweled Gold Hairline Divider */}
-        <DiamondMotif align="center" maxWidth="max-w-md" className="my-6 sm:my-8" />
+        <div className="flex items-center justify-center gap-3 my-6 sm:my-8 w-full max-w-md">
+          <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#D4AF37]/40 to-[#D4AF37]" />
+          <div className="w-1.5 h-1.5 rotate-45 bg-[#D4AF37] shadow-[0_0_6px_rgba(212,175,55,0.6)]" />
+          <div className="flex-1 h-px bg-gradient-to-l from-transparent via-[#D4AF37]/40 to-[#D4AF37]" />
+        </div>
 
         {/* Slogan in Exact Image Font Family & Size, but Straight Upright (Not-Italic / No Slant) */}
         <p className="font-serif not-italic text-2xl sm:text-3xl md:text-4xl text-[#181715] font-normal tracking-wide text-center max-w-3xl leading-snug text-balance">
@@ -113,18 +86,76 @@ export const BrandIntroSection: React.FC<BrandIntroSectionProps> = ({
         </div>
       </div>
 
-      {/* Bottom Block: Down Arrow Button Only (Click smoothly navigates to 2nd page / materials strip) */}
-      <div className="w-full relative z-20 flex flex-col items-center pb-6 sm:pb-8 mt-auto">
+      {/* Bottom Block: Scroll Symbol Only (No Letters/Text) + Marquee Text Strip */}
+      <div className="w-full relative z-20 flex flex-col items-center mt-auto">
+        {/* Scroll Symbol Button Only - No Letters */}
         <button
           type="button"
           onClick={handleScroll}
-          className="group flex items-center justify-center p-2 text-[#736F68] hover:text-[#181715] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] rounded-full cursor-pointer"
+          className="group flex items-center justify-center p-2 mb-6 sm:mb-8 text-[#736F68] hover:text-[#181715] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] rounded-full cursor-pointer"
           aria-label="Scroll down to explore materials"
         >
-          <div className="w-10 h-10 rounded-full border border-[#D5D0C6] bg-white text-[#8C6534] group-hover:bg-[#181715] group-hover:text-[#D4AF37] group-hover:border-[#181715] flex items-center justify-center transition-all duration-300 shadow-[0_2px_10px_rgba(0,0,0,0.06)] group-hover:shadow-[0_4px_16px_rgba(212,175,55,0.3)]">
+          <div className="w-9 h-9 rounded-full border border-[#D5D0C6] bg-white text-[#8C6534] group-hover:bg-[#181715] group-hover:text-white group-hover:border-[#181715] flex items-center justify-center transition-all duration-300 shadow-xs">
             <ArrowDown className="w-4 h-4 transition-transform duration-300 group-hover:translate-y-0.5 animate-bounce" />
           </div>
         </button>
+
+        {/* Slow-moving text strip: FABRICS • LACES • DENIM • ZIPPERS • BUTTONS • CUSTOM SOURCING */}
+        <div
+          id="materials-strip"
+          aria-hidden="true"
+          className="w-full border-t border-[#E8E6E0] bg-[#FAF9F5] py-3.5 overflow-hidden shadow-xs scroll-mt-20"
+        >
+          <div className="animate-marquee-slow flex items-center text-xs sm:text-sm font-mono tracking-[0.24em] uppercase font-medium text-[#736F68]">
+            {/* Sequence 1 */}
+            <div className="flex items-center shrink-0">
+              {marqueeItems.map((item, idx) => (
+                <span key={`seq1-${idx}`} className="inline-flex items-center">
+                  <span className="hover:text-[#8C6534] transition-colors px-4 sm:px-6">
+                    {item}
+                  </span>
+                  <span className="text-[#C5C0B7] font-light select-none">•</span>
+                </span>
+              ))}
+            </div>
+
+            {/* Sequence 2 for seamless loop */}
+            <div className="flex items-center shrink-0">
+              {marqueeItems.map((item, idx) => (
+                <span key={`seq2-${idx}`} className="inline-flex items-center">
+                  <span className="hover:text-[#8C6534] transition-colors px-4 sm:px-6">
+                    {item}
+                  </span>
+                  <span className="text-[#C5C0B7] font-light select-none">•</span>
+                </span>
+              ))}
+            </div>
+
+            {/* Sequence 3 for ultra-wide screen safety */}
+            <div className="flex items-center shrink-0">
+              {marqueeItems.map((item, idx) => (
+                <span key={`seq3-${idx}`} className="inline-flex items-center">
+                  <span className="hover:text-[#8C6534] transition-colors px-4 sm:px-6">
+                    {item}
+                  </span>
+                  <span className="text-[#C5C0B7] font-light select-none">•</span>
+                </span>
+              ))}
+            </div>
+
+            {/* Sequence 4 for ultra-wide screen safety */}
+            <div className="flex items-center shrink-0">
+              {marqueeItems.map((item, idx) => (
+                <span key={`seq4-${idx}`} className="inline-flex items-center">
+                  <span className="hover:text-[#8C6534] transition-colors px-4 sm:px-6">
+                    {item}
+                  </span>
+                  <span className="text-[#C5C0B7] font-light select-none">•</span>
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

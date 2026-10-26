@@ -31,12 +31,12 @@ export const CatalogueNavigation: React.FC<CatalogueNavigationProps> = ({
   return (
     <nav
       aria-label="Catalogue Filtering"
-      className="sticky top-20 z-30 bg-[#FAF8F5]/95 backdrop-blur-md border-y border-[#E6E0D4] py-3 shadow-xs transition-all"
+      className="sticky top-16 z-30 bg-[#FAF8F5]/95 backdrop-blur-md border-y border-[#E6E0D4] py-3 shadow-xs transition-all"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-3">
           {/* Filter Navigation Tabs */}
-          <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar w-full md:w-auto py-1">
+          <div className="flex items-center gap-1 sm:gap-2 overflow-x-auto no-scrollbar w-full md:w-auto py-1">
             {filterTabs.map((tab) => {
               const isActive = activeFilter === tab.id;
               return (

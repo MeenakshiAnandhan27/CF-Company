@@ -2,14 +2,11 @@ export type ProductCategory =
   | 'laces'
   | 'fabrics'
   | 'denim'
-  | 'chambray'
   | 'mesh'
   | 'lycra-mesh'
   | 'tapes'
   | 'tags'
-  | 'zippers'
   | 'buttons'
-  | 'tipping'
   | 'accessories'
   | 'processing';
 
@@ -165,13 +162,9 @@ export interface Product {
     | 'other-mesh'
     | 'brand-tags'
     | 'custom-buttons'
-    | 'button'
-    | 'zipper'
-    | 'tipping'
     | 'tapes'
     | 'other-accessories'
-    | 'edge-cutting'
-    | (string & {});
+    | 'edge-cutting';
   specifications: string;
   applications: string[];
   customizationNote?: string;

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { ArrowRight, ArrowUpRight, Tag, Layers, Compass, CheckCircle2, ShieldCheck, Package, Check } from 'lucide-react';
-import { DiamondMotif } from './DiamondMotif.tsx';
 
 interface AboutSectionProps {
   onExploreCatalogue: (category?: string) => void;
@@ -114,7 +113,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
       description: 'Specialized blends, unlisted weaves, and requirement-specific textile substrates supplied upon request.',
       accent: 'border-[#D9CFC3] hover:border-[#524E48]',
       tagBg: 'bg-[#EAE8E4] text-[#524E48]',
-      image: '/assets/materials/accessories.jpg',
+      image: '/assets/materials/fabrics-collection-board.jpg',
     },
   ];
 
@@ -146,7 +145,13 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
           </h1>
 
           {/* Elegant Gold Diamond Motif Divider matching Home page */}
-          <DiamondMotif align="center" maxWidth="max-w-xs" />
+          <div className="relative flex items-center justify-center w-full max-w-xs mx-auto pt-0.5">
+            <div className="h-[1px] w-20 bg-gradient-to-r from-transparent via-[#D4AF37]/50 to-[#D4AF37]" />
+            <div className="relative mx-2.5 flex items-center justify-center">
+              <div className="w-2 h-2 bg-gradient-to-tr from-[#D4AF37] via-[#F2D785] to-[#B38728] rotate-45 shadow-[0_0_8px_rgba(212,175,55,0.75)]" />
+            </div>
+            <div className="h-[1px] w-20 bg-gradient-to-r from-[#D4AF37] via-[#D4AF37]/50 to-transparent" />
+          </div>
 
           {/* Simple, Professional, Concise Narrative */}
           <p className="text-base sm:text-lg text-[#55514B] max-w-2xl mx-auto leading-relaxed">
@@ -216,7 +221,6 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-[#181715] tracking-tight uppercase">
               WHAT WE DO
             </h2>
-            <DiamondMotif align="center" maxWidth="max-w-xs" />
             <p className="text-sm sm:text-base text-[#5C564D] leading-relaxed">
               We supply garment accessories and fabrics across a wide spectrum of requirements, delivering dependable materials tailored to your apparel production.
             </p>

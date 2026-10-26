@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { businessConfig } from '../data/businessConfig.ts';
 import { CollectionItem, Product } from '../types.ts';
 import { RAW_MATERIAL_IMAGES } from '../data/materialImages.ts';
-import { DiamondMotif } from './DiamondMotif.tsx';
 import {
   MapPin,
   Phone,
@@ -510,12 +509,18 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
             REACH US
           </span>
 
-          <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#181715] leading-[1.12]">
+          <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#142E20] leading-[1.12]">
             Let’s Get <span className="italic font-serif text-[#B8934A]">in</span> Touch
           </h1>
 
           {/* Subtle Single-Line Diamond Motif Divider */}
-          <DiamondMotif align="center" maxWidth="max-w-xs" />
+          <div className="relative flex items-center justify-center w-full max-w-xs mx-auto my-3.5">
+            <div className="h-[1px] w-20 bg-gradient-to-r from-transparent via-[#B8934A]/50 to-[#B8934A]" />
+            <div className="relative mx-3 flex items-center justify-center">
+              <div className="w-2.5 h-2.5 border border-[#B8934A] rotate-45 shrink-0 shadow-[0_0_8px_rgba(184,147,74,0.3)]" />
+            </div>
+            <div className="h-[1px] w-20 bg-gradient-to-r from-[#B8934A] via-[#B8934A]/50 to-transparent" />
+          </div>
 
           <p className="text-base sm:text-lg text-[#55514B] font-normal leading-relaxed max-w-lg mx-auto">
             Have a question or a business requirement? We’re here to help.
@@ -568,7 +573,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                   </div>
                   <div className="w-2 h-2 border border-[#B8934A] rotate-45 shrink-0 opacity-40" />
                 </div>
-                <h2 className="font-serif text-2xl sm:text-[26px] font-bold text-[#181715] tracking-tight">
+                <h2 className="font-serif text-2xl sm:text-[26px] font-bold text-[#142E20] tracking-tight">
                   We’d Love to Hear from You
                 </h2>
               </div>
@@ -583,7 +588,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <h3 className="font-serif text-base font-semibold text-[#181715]">Our Location</h3>
+                      <h3 className="font-serif text-base font-semibold text-[#142E20]">Our Location</h3>
                       <span className="text-[9px] font-mono text-[#8C8478] uppercase">TIRUPPUR</span>
                     </div>
                     <p className="text-xs text-[#55514B] leading-relaxed mt-1 font-normal">
@@ -593,7 +598,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                       href={mapsSearchUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 text-[11px] font-mono text-[#B8934A] hover:text-[#181715] transition-colors mt-1.5 group/link"
+                      className="inline-flex items-center gap-1 text-[11px] font-mono text-[#B8934A] hover:text-[#142E20] transition-colors mt-1.5 group/link"
                     >
                       <span>Open in Google Maps</span>
                       <ArrowUpRight className="w-3 h-3 transition-transform group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
@@ -610,15 +615,15 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <h3 className="font-serif text-base font-semibold text-[#181715]">Call / WhatsApp</h3>
+                      <h3 className="font-serif text-base font-semibold text-[#142E20]">Call / WhatsApp</h3>
                       <button
                         type="button"
                         onClick={() => handleCopy(VERIFIED_PHONE, 'phone')}
-                        className="text-[10px] font-mono text-[#8C8478] hover:text-[#181715] transition-colors cursor-pointer inline-flex items-center gap-1"
+                        className="text-[10px] font-mono text-[#8C8478] hover:text-[#142E20] transition-colors cursor-pointer inline-flex items-center gap-1"
                         title="Copy phone number"
                       >
                         {copiedPhone ? (
-                          <span className="text-[#181715] font-semibold inline-flex items-center gap-0.5">
+                          <span className="text-[#142E20] font-semibold inline-flex items-center gap-0.5">
                             <Check className="w-2.5 h-2.5 text-[#B8934A]" /> Copied
                           </span>
                         ) : (
@@ -630,12 +635,12 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                     </div>
                     <a
                       href={`tel:${VERIFIED_PHONE}`}
-                      className="font-mono text-sm font-semibold text-[#181715] hover:text-[#B8934A] transition-colors block mt-1"
+                      className="font-mono text-sm font-semibold text-[#142E20] hover:text-[#B8934A] transition-colors block mt-1"
                     >
                       {VERIFIED_PHONE}
                     </a>
                     <div className="flex items-center gap-3 text-[11px] font-mono mt-1.5">
-                      <a href={`tel:${VERIFIED_PHONE}`} className="text-[#181715] hover:text-[#B8934A] transition-colors font-medium">
+                      <a href={`tel:${VERIFIED_PHONE}`} className="text-[#142E20] hover:text-[#B8934A] transition-colors font-medium">
                         Call Directly
                       </a>
                       <span className="text-[#DCD5C8]">•</span>
@@ -643,7 +648,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                         href={getWhatsAppUrl('Hello Classic Fashions, I would like to enquire regarding fabric sourcing.')}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[#B8934A] hover:text-[#181715] transition-colors font-medium inline-flex items-center gap-0.5"
+                        className="text-[#B8934A] hover:text-[#142E20] transition-colors font-medium inline-flex items-center gap-0.5"
                       >
                         <span>WhatsApp Chat</span>
                         <ArrowUpRight className="w-3 h-3" />
@@ -661,15 +666,15 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <h3 className="font-serif text-base font-semibold text-[#181715]">Business Email</h3>
+                      <h3 className="font-serif text-base font-semibold text-[#142E20]">Business Email</h3>
                       <button
                         type="button"
                         onClick={() => handleCopy(VERIFIED_EMAIL, 'email')}
-                        className="text-[10px] font-mono text-[#8C8478] hover:text-[#181715] transition-colors cursor-pointer inline-flex items-center gap-1"
+                        className="text-[10px] font-mono text-[#8C8478] hover:text-[#142E20] transition-colors cursor-pointer inline-flex items-center gap-1"
                         title="Copy email address"
                       >
                         {copiedEmail ? (
-                          <span className="text-[#181715] font-semibold inline-flex items-center gap-0.5">
+                          <span className="text-[#142E20] font-semibold inline-flex items-center gap-0.5">
                             <Check className="w-2.5 h-2.5 text-[#B8934A]" /> Copied
                           </span>
                         ) : (
@@ -681,14 +686,14 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                     </div>
                     <a
                       href={`mailto:${VERIFIED_EMAIL}`}
-                      className="font-mono text-xs font-semibold text-[#181715] hover:text-[#B8934A] transition-colors block mt-1 truncate"
+                      className="font-mono text-xs font-semibold text-[#142E20] hover:text-[#B8934A] transition-colors block mt-1 truncate"
                       title={VERIFIED_EMAIL}
                     >
                       {VERIFIED_EMAIL}
                     </a>
                     <a
                       href={`mailto:${VERIFIED_EMAIL}?subject=${encodeURIComponent('Sourcing Inquiry — Classic Fashions')}`}
-                      className="inline-flex items-center gap-1 text-[11px] font-mono text-[#B8934A] hover:text-[#181715] transition-colors mt-1.5"
+                      className="inline-flex items-center gap-1 text-[11px] font-mono text-[#B8934A] hover:text-[#142E20] transition-colors mt-1.5"
                     >
                       <span>Send Direct Email</span>
                       <ArrowUpRight className="w-3 h-3" />
@@ -704,11 +709,11 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                     <Clock className="w-4 h-4 stroke-[1.5]" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-serif text-base font-semibold text-[#181715]">Working Hours</h3>
+                    <h3 className="font-serif text-base font-semibold text-[#142E20]">Working Hours</h3>
                     <div className="text-xs text-[#55514B] space-y-1 mt-1.5">
                       <div className="flex items-center justify-between">
                         <span>Monday – Saturday</span>
-                        <span className="font-mono text-[11px] font-semibold text-[#181715]">9:30 AM – 7:30 PM IST</span>
+                        <span className="font-mono text-[11px] font-semibold text-[#142E20]">9:30 AM – 7:30 PM IST</span>
                       </div>
                       <div className="flex items-center justify-between text-[#8C8478]">
                         <span>Sunday</span>
@@ -754,13 +759,13 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                     <button
                       type="button"
                       onClick={handleSwitchToGeneral}
-                      className="text-[11px] font-mono text-[#8C8478] hover:text-[#181715] transition-colors cursor-pointer"
+                      className="text-[11px] font-mono text-[#8C8478] hover:text-[#142E20] transition-colors cursor-pointer"
                     >
                       Switch to general enquiry
                     </button>
                   </div>
 
-                  <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#181715] tracking-tight">
+                  <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#142E20] tracking-tight">
                     Your Material Requirements
                   </h2>
                   <p className="text-sm text-[#55514B] leading-relaxed max-w-xl font-normal">
@@ -776,15 +781,15 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                     <div aria-hidden="true" className="absolute bottom-3 left-3 w-2 h-2 border-b border-l border-[#B8934A]/40" />
                     <div aria-hidden="true" className="absolute bottom-3 right-3 w-2 h-2 border-b border-r border-[#B8934A]/40" />
 
-                    <div className="w-12 h-12 rounded-full bg-[#FAF7F2] border border-[#B8934A] shadow-[0_0_14px_rgba(184,147,74,0.25)] flex items-center justify-center mx-auto text-[#181715]">
-                      <CheckCircle2 className="w-6 h-6 text-[#181715]" />
+                    <div className="w-12 h-12 rounded-full bg-[#FAF7F2] border border-[#B8934A] shadow-[0_0_14px_rgba(184,147,74,0.25)] flex items-center justify-center mx-auto text-[#142E20]">
+                      <CheckCircle2 className="w-6 h-6 text-[#142E20]" />
                     </div>
 
                     <div className="space-y-2">
                       <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#B8934A] font-semibold block">
                         ENQUIRY RECEIVED
                       </span>
-                      <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#181715] tracking-tight">
+                      <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#142E20] tracking-tight">
                         Thank You, {formData.name || 'Valued Buyer'}!
                       </h3>
                       <p className="text-sm text-[#55514B] max-w-md mx-auto leading-relaxed">
@@ -797,7 +802,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                       <span className="text-[9px] font-mono uppercase tracking-wider text-[#737068] block">
                         Reference Code
                       </span>
-                      <span className="font-mono text-sm font-semibold text-[#181715]">
+                      <span className="font-mono text-sm font-semibold text-[#142E20]">
                         {referenceCode}
                       </span>
                     </div>
@@ -808,7 +813,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                         <span className="text-[10px] font-mono uppercase tracking-wider text-[#B8934A] font-semibold block">
                           Submitted Material Requirements ({activeMaterials.length}):
                         </span>
-                        <ul className="text-xs text-[#181715] font-sans divide-y divide-[#F0EBE2]">
+                        <ul className="text-xs text-[#142E20] font-sans divide-y divide-[#F0EBE2]">
                           {activeMaterials.map((item, idx) => (
                             <li key={idx} className="py-1.5 flex items-center justify-between gap-2">
                               <span className="font-serif font-medium truncate">{item.product.name}</span>
@@ -826,7 +831,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                         href={getWhatsAppUrl()}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#181715] hover:bg-[#2A2621] text-[#FAF7F2] px-6 py-3 rounded-xl text-xs font-mono font-medium tracking-wider transition-all cursor-pointer shadow-xs border border-[#B8934A]/50 hover:shadow-[0_6px_22px_rgba(184,147,74,0.26)] active:scale-[0.99]"
+                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#142E20] hover:bg-[#1B3B2B] text-[#FAF7F2] px-6 py-3 rounded-xl text-xs font-mono font-medium tracking-wider transition-all cursor-pointer shadow-xs border border-[#B8934A]/50 hover:shadow-[0_6px_22px_rgba(184,147,74,0.26)] active:scale-[0.99]"
                       >
                         <span>Share on WhatsApp</span>
                         <ArrowUpRight className="w-3.5 h-3.5 text-[#B8934A]" />
@@ -834,7 +839,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
 
                       <a
                         href={getEmailMailtoUrl()}
-                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl border border-[#DDD6C8] bg-white text-xs font-mono text-[#55514B] hover:text-[#181715] hover:border-[#B8934A] hover:shadow-[0_4px_16px_rgba(184,147,74,0.12)] transition-all cursor-pointer"
+                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl border border-[#DDD6C8] bg-white text-xs font-mono text-[#55514B] hover:text-[#142E20] hover:border-[#B8934A] hover:shadow-[0_4px_16px_rgba(184,147,74,0.12)] transition-all cursor-pointer"
                       >
                         <Mail className="w-3 h-3 text-[#B8934A]" />
                         <span>Send Direct Email</span>
@@ -843,7 +848,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                       <button
                         type="button"
                         onClick={handleReset}
-                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl border border-[#DDD6C8] bg-white text-xs font-mono text-[#55514B] hover:text-[#181715] hover:border-[#B8934A] hover:shadow-[0_4px_16px_rgba(184,147,74,0.12)] transition-all cursor-pointer"
+                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl border border-[#DDD6C8] bg-white text-xs font-mono text-[#55514B] hover:text-[#142E20] hover:border-[#B8934A] hover:shadow-[0_4px_16px_rgba(184,147,74,0.12)] transition-all cursor-pointer"
                       >
                         <RotateCcw className="w-3 h-3" />
                         <span>Submit Another Enquiry</span>
@@ -869,13 +874,13 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                               SELECTED SWATCHES
                             </span>
                           </div>
-                          <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#181715] tracking-tight">
+                          <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#142E20] tracking-tight">
                             Your Material Requirements
                           </h3>
                         </div>
 
                         <div className="flex items-center gap-2">
-                          <span className="font-mono text-xs font-semibold text-[#181715] bg-white px-3 py-1 rounded-full border border-[#B8934A]/50 shadow-2xs">
+                          <span className="font-mono text-xs font-semibold text-[#142E20] bg-white px-3 py-1 rounded-full border border-[#B8934A]/50 shadow-2xs">
                             {activeMaterials.length} {activeMaterials.length === 1 ? 'Material' : 'Materials'} Selected
                           </span>
                           {activeMaterials.length > 0 && (
@@ -905,7 +910,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                                 <button
                                   type="button"
                                   onClick={onExploreCatalogue}
-                                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#181715] text-[#FAF7F2] text-xs font-mono font-medium hover:bg-[#2A2621] transition-colors cursor-pointer"
+                                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#142E20] text-[#FAF7F2] text-xs font-mono font-medium hover:bg-[#1B3B2B] transition-colors cursor-pointer"
                                 >
                                   <span>Explore Fabrics</span>
                                   <ArrowRight className="w-3 h-3 text-[#B8934A]" />
@@ -914,7 +919,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                               <button
                                 type="button"
                                 onClick={handleSwitchToGeneral}
-                                className="text-xs font-mono text-[#8C8478] hover:text-[#181715] underline cursor-pointer"
+                                className="text-xs font-mono text-[#8C8478] hover:text-[#142E20] underline cursor-pointer"
                               >
                                 Switch to standard enquiry
                               </button>
@@ -957,7 +962,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                                         <span className="inline-block text-[9px] font-mono uppercase tracking-widest text-[#B8934A] font-semibold">
                                           {p.categoryLabel || p.subcategory || p.category}
                                         </span>
-                                        <h4 className="font-serif text-sm sm:text-base font-bold text-[#181715] leading-snug">
+                                        <h4 className="font-serif text-sm sm:text-base font-bold text-[#142E20] leading-snug">
                                           {p.name}
                                         </h4>
                                       </div>
@@ -995,7 +1000,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                                           </span>
                                         )}
                                         {item.quantity > 1 && (
-                                          <span className="px-2 py-0.5 rounded bg-[#FAF7F2] border border-[#E6E0D2] font-semibold text-[#181715]">
+                                          <span className="px-2 py-0.5 rounded bg-[#FAF7F2] border border-[#E6E0D2] font-semibold text-[#142E20]">
                                             Qty: {item.quantity}
                                           </span>
                                         )}
@@ -1025,7 +1030,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                             CONTACT INFORMATION
                           </span>
                         </div>
-                        <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#181715] tracking-tight">
+                        <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#142E20] tracking-tight">
                           Where Should We Reach You?
                         </h3>
                         <p className="text-xs text-[#737068]">
@@ -1122,7 +1127,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                           <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="group w-full inline-flex items-center justify-center gap-2.5 py-4 px-6 rounded-xl bg-[#181715] hover:bg-[#2A2621] text-[#FAF7F2] border border-[#B8934A]/50 hover:border-[#D4AF37] hover:shadow-[0_6px_22px_rgba(184,147,74,0.26)] text-xs font-mono font-semibold uppercase tracking-[0.2em] shadow-sm transition-all active:scale-[0.99] cursor-pointer disabled:opacity-50"
+                            className="group w-full inline-flex items-center justify-center gap-2.5 py-4 px-6 rounded-xl bg-[#142E20] hover:bg-[#1B3B2B] text-[#FAF7F2] border border-[#B8934A]/50 hover:border-[#D4AF37] hover:shadow-[0_6px_22px_rgba(184,147,74,0.26)] text-xs font-mono font-semibold uppercase tracking-[0.2em] shadow-sm transition-all active:scale-[0.99] cursor-pointer disabled:opacity-50"
                           >
                             {isSubmitting ? (
                               <span>Submitting Your Enquiry...</span>
@@ -1148,16 +1153,16 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                 {/* Optional notification if user has materials in collection */}
                 {activeMaterials.length > 0 && (
                   <div className="p-3.5 rounded-xl bg-gradient-to-r from-[#FAF4E8] via-[#FFFDF9] to-[#FAF4E8] border border-[#B8934A]/60 flex items-center justify-between gap-3 text-xs animate-in fade-in">
-                    <div className="flex items-center gap-2 text-[#181715]">
+                    <div className="flex items-center gap-2 text-[#142E20]">
                       <Sparkles className="w-4 h-4 text-[#B8934A] shrink-0" />
                       <span className="font-sans">
-                        You have <strong className="font-semibold text-[#181715]">{activeMaterials.length}</strong> materials saved in your Collection.
+                        You have <strong className="font-semibold text-[#142E20]">{activeMaterials.length}</strong> materials saved in your Collection.
                       </span>
                     </div>
                     <button
                       type="button"
                       onClick={handleSwitchToCollection}
-                      className="font-mono text-[11px] font-semibold text-[#181715] hover:text-[#B8934A] underline cursor-pointer shrink-0"
+                      className="font-mono text-[11px] font-semibold text-[#142E20] hover:text-[#B8934A] underline cursor-pointer shrink-0"
                     >
                       Enquire about collection materials →
                     </button>
@@ -1172,7 +1177,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                       ENQUIRY DESK
                     </span>
                   </div>
-                  <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#181715] tracking-tight">
+                  <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#142E20] tracking-tight">
                     Let’s Work Together
                   </h2>
                   <p className="text-sm text-[#55514B] leading-relaxed max-w-xl font-normal">
@@ -1210,7 +1215,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                         <div
                           className={`w-9 h-9 rounded-lg border flex items-center justify-center shrink-0 transition-all ${
                             isSelected
-                              ? 'border-[#B8934A] bg-[#B8934A]/15 text-[#181715] shadow-[0_0_10px_rgba(184,147,74,0.25)]'
+                              ? 'border-[#B8934A] bg-[#B8934A]/15 text-[#142E20] shadow-[0_0_10px_rgba(184,147,74,0.25)]'
                               : 'border-[#E2DBD0] bg-white text-[#B8934A] group-hover:border-[#B8934A]/70 group-hover:shadow-[0_0_8px_rgba(184,147,74,0.18)]'
                           }`}
                         >
@@ -1221,7 +1226,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                           <div className="flex items-center justify-between">
                             <span
                               className={`font-serif text-sm sm:text-base font-semibold tracking-tight transition-colors ${
-                                isSelected ? 'text-[#181715]' : 'text-[#181715] group-hover:text-[#B8934A]'
+                                isSelected ? 'text-[#142E20]' : 'text-[#142E20] group-hover:text-[#B8934A]'
                               }`}
                             >
                               {cat.label}
@@ -1256,15 +1261,15 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
 
                   {isSubmitted ? (
                     <div className="text-center py-6 space-y-5 animate-in fade-in duration-300">
-                      <div className="w-12 h-12 rounded-full bg-[#FAF7F2] border border-[#B8934A] shadow-[0_0_14px_rgba(184,147,74,0.25)] flex items-center justify-center mx-auto text-[#181715]">
-                        <CheckCircle2 className="w-6 h-6 text-[#181715]" />
+                      <div className="w-12 h-12 rounded-full bg-[#FAF7F2] border border-[#B8934A] shadow-[0_0_14px_rgba(184,147,74,0.25)] flex items-center justify-center mx-auto text-[#142E20]">
+                        <CheckCircle2 className="w-6 h-6 text-[#142E20]" />
                       </div>
 
                       <div className="space-y-2">
                         <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#B8934A] font-semibold block">
                           ENQUIRY RECEIVED
                         </span>
-                        <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#181715] tracking-tight">
+                        <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#142E20] tracking-tight">
                           Thank You!
                         </h3>
                         <p className="text-sm text-[#55514B] max-w-md mx-auto leading-relaxed">
@@ -1276,7 +1281,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                         <span className="text-[9px] font-mono uppercase tracking-wider text-[#737068] block">
                           Reference Code
                         </span>
-                        <span className="font-mono text-sm font-semibold text-[#181715]">
+                        <span className="font-mono text-sm font-semibold text-[#142E20]">
                           {referenceCode}
                         </span>
                       </div>
@@ -1286,7 +1291,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                           href={getWhatsAppUrl()}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#181715] hover:bg-[#2A2621] text-[#FAF7F2] px-6 py-3 rounded-xl text-xs font-mono font-medium tracking-wider transition-all cursor-pointer shadow-xs border border-[#B8934A]/50 hover:shadow-[0_6px_22px_rgba(184,147,74,0.26)] active:scale-[0.99]"
+                          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#142E20] hover:bg-[#1B3B2B] text-[#FAF7F2] px-6 py-3 rounded-xl text-xs font-mono font-medium tracking-wider transition-all cursor-pointer shadow-xs border border-[#B8934A]/50 hover:shadow-[0_6px_22px_rgba(184,147,74,0.26)] active:scale-[0.99]"
                         >
                           <span>Share on WhatsApp</span>
                           <ArrowUpRight className="w-3.5 h-3.5 text-[#B8934A]" />
@@ -1295,7 +1300,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                         <button
                           type="button"
                           onClick={handleReset}
-                          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl border border-[#DDD6C8] bg-white text-xs font-mono text-[#55514B] hover:text-[#181715] hover:border-[#B8934A] hover:shadow-[0_4px_16px_rgba(184,147,74,0.12)] transition-all cursor-pointer"
+                          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl border border-[#DDD6C8] bg-white text-xs font-mono text-[#55514B] hover:text-[#142E20] hover:border-[#B8934A] hover:shadow-[0_4px_16px_rgba(184,147,74,0.12)] transition-all cursor-pointer"
                         >
                           <RotateCcw className="w-3 h-3" />
                           <span>Submit Another Enquiry</span>
@@ -1309,7 +1314,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                           <span className="text-[10px] font-mono uppercase tracking-wider text-[#B8934A] font-semibold">
                             SELECTED:
                           </span>
-                          <span className="text-xs font-mono font-semibold text-[#181715] bg-white px-2.5 py-0.5 rounded border border-[#B8934A]/40 shadow-[0_0_8px_rgba(184,147,74,0.12)]">
+                          <span className="text-xs font-mono font-semibold text-[#142E20] bg-white px-2.5 py-0.5 rounded border border-[#B8934A]/40 shadow-[0_0_8px_rgba(184,147,74,0.12)]">
                             {currentCategory.label}
                           </span>
                         </div>
@@ -1321,7 +1326,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                       <button
                         type="button"
                         onClick={() => setIsEnquiryExpanded(true)}
-                        className="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-[#181715] hover:bg-[#2A2621] text-[#FAF7F2] text-xs font-mono font-semibold uppercase tracking-[0.16em] border border-[#B8934A]/40 hover:border-[#D4AF37] hover:shadow-[0_6px_22px_rgba(184,147,74,0.26)] transition-all active:scale-[0.99] cursor-pointer shrink-0"
+                        className="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-[#142E20] hover:bg-[#1B3B2B] text-[#FAF7F2] text-xs font-mono font-semibold uppercase tracking-[0.16em] border border-[#B8934A]/40 hover:border-[#D4AF37] hover:shadow-[0_6px_22px_rgba(184,147,74,0.26)] transition-all active:scale-[0.99] cursor-pointer shrink-0"
                       >
                         <span>Open Enquiry</span>
                         <ArrowRight className="w-3.5 h-3.5 text-[#B8934A]" />
@@ -1336,7 +1341,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                             <span className="text-[10px] font-mono uppercase tracking-wider text-[#B8934A] font-semibold">
                               ENQUIRY FOR:
                             </span>
-                            <span className="text-xs font-mono font-semibold text-[#181715] bg-white px-2.5 py-0.5 rounded border border-[#B8934A]/40 shadow-[0_0_8px_rgba(184,147,74,0.12)]">
+                            <span className="text-xs font-mono font-semibold text-[#142E20] bg-white px-2.5 py-0.5 rounded border border-[#B8934A]/40 shadow-[0_0_8px_rgba(184,147,74,0.12)]">
                               {currentCategory.label}
                             </span>
                           </div>
@@ -1357,7 +1362,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                                   step === stepperStep
                                     ? 'w-5 bg-[#B8934A] shadow-[0_0_6px_rgba(184,147,74,0.4)]'
                                     : step < stepperStep
-                                    ? 'w-1.5 bg-[#181715]'
+                                    ? 'w-1.5 bg-[#142E20]'
                                     : 'w-1.5 bg-[#E2DBD0]'
                                 }`}
                               />
@@ -1370,7 +1375,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                       {stepperStep === 1 && (
                         <div className="space-y-4 animate-in fade-in duration-200">
                           <div>
-                            <h4 className="font-serif text-base font-semibold text-[#181715]">
+                            <h4 className="font-serif text-base font-semibold text-[#142E20]">
                               {currentCategory.promptHeadline}
                             </h4>
                             <p className="text-xs text-[#737068] mt-0.5">
@@ -1403,7 +1408,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                             <button
                               type="button"
                               onClick={() => setIsEnquiryExpanded(false)}
-                              className="text-xs font-mono text-[#737068] hover:text-[#181715] transition-colors cursor-pointer"
+                              className="text-xs font-mono text-[#737068] hover:text-[#142E20] transition-colors cursor-pointer"
                             >
                               Cancel
                             </button>
@@ -1415,7 +1420,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                                   setStepperStep(2);
                                 }
                               }}
-                              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#181715] hover:bg-[#2A2621] text-[#FAF7F2] text-xs font-mono font-semibold uppercase tracking-wider border border-[#B8934A]/40 hover:border-[#D4AF37] hover:shadow-[0_6px_22px_rgba(184,147,74,0.26)] transition-all active:scale-[0.99] cursor-pointer"
+                              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#142E20] hover:bg-[#1B3B2B] text-[#FAF7F2] text-xs font-mono font-semibold uppercase tracking-wider border border-[#B8934A]/40 hover:border-[#D4AF37] hover:shadow-[0_6px_22px_rgba(184,147,74,0.26)] transition-all active:scale-[0.99] cursor-pointer"
                             >
                               <span>Continue to Contact</span>
                               <ArrowRight className="w-3.5 h-3.5 text-[#B8934A]" />
@@ -1428,7 +1433,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                       {stepperStep === 2 && (
                         <div className="space-y-4 animate-in fade-in duration-200">
                           <div>
-                            <h4 className="font-serif text-base font-semibold text-[#181715]">
+                            <h4 className="font-serif text-base font-semibold text-[#142E20]">
                               Where should we send your response?
                             </h4>
                             <p className="text-xs text-[#737068] mt-0.5">
@@ -1501,7 +1506,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                             <button
                               type="button"
                               onClick={() => setStepperStep(1)}
-                              className="text-xs font-mono text-[#737068] hover:text-[#181715] transition-colors cursor-pointer"
+                              className="text-xs font-mono text-[#737068] hover:text-[#142E20] transition-colors cursor-pointer"
                             >
                               ← Back to Requirement
                             </button>
@@ -1513,7 +1518,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                                   setStepperStep(3);
                                 }
                               }}
-                              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#181715] hover:bg-[#2A2621] text-[#FAF7F2] text-xs font-mono font-semibold uppercase tracking-wider border border-[#B8934A]/40 hover:border-[#D4AF37] hover:shadow-[0_6px_22px_rgba(184,147,74,0.26)] transition-all active:scale-[0.99] cursor-pointer"
+                              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#142E20] hover:bg-[#1B3B2B] text-[#FAF7F2] text-xs font-mono font-semibold uppercase tracking-wider border border-[#B8934A]/40 hover:border-[#D4AF37] hover:shadow-[0_6px_22px_rgba(184,147,74,0.26)] transition-all active:scale-[0.99] cursor-pointer"
                             >
                               <span>Review Enquiry</span>
                               <ArrowRight className="w-3.5 h-3.5 text-[#B8934A]" />
@@ -1526,7 +1531,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                       {stepperStep === 3 && (
                         <div className="space-y-5 animate-in fade-in duration-200">
                           <div>
-                            <h4 className="font-serif text-base font-semibold text-[#181715]">
+                            <h4 className="font-serif text-base font-semibold text-[#142E20]">
                               Confirm Your Enquiry Details
                             </h4>
                             <p className="text-xs text-[#737068] mt-0.5">
@@ -1540,7 +1545,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                                 <span className="text-[10px] font-mono uppercase tracking-wider text-[#737068] block">
                                   Enquiry Topic
                                 </span>
-                                <span className="font-serif text-sm font-semibold text-[#181715] mt-0.5 block">
+                                <span className="font-serif text-sm font-semibold text-[#142E20] mt-0.5 block">
                                   {currentCategory.label}
                                 </span>
                               </div>
@@ -1559,7 +1564,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                               <button
                                 type="button"
                                 onClick={() => setStepperStep(1)}
-                                className="inline-flex items-center gap-1 font-mono text-[11px] text-[#B8934A] hover:text-[#181715] transition-colors cursor-pointer shrink-0 ml-3"
+                                className="inline-flex items-center gap-1 font-mono text-[11px] text-[#B8934A] hover:text-[#142E20] transition-colors cursor-pointer shrink-0 ml-3"
                               >
                                 <Edit3 className="w-3 h-3" />
                                 <span>Edit</span>
@@ -1571,7 +1576,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                                 <span className="text-[10px] font-mono uppercase tracking-wider text-[#737068] block">
                                   Contact Person
                                 </span>
-                                <div className="font-mono text-[#181715] space-y-0.5 mt-1">
+                                <div className="font-mono text-[#142E20] space-y-0.5 mt-1">
                                   <p><strong className="font-semibold text-neutral-800">Name:</strong> {formData.name}</p>
                                   <p><strong className="font-semibold text-neutral-800">Phone:</strong> {formData.phone}</p>
                                   {formData.email && (
@@ -1582,7 +1587,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                               <button
                                 type="button"
                                 onClick={() => setStepperStep(2)}
-                                className="inline-flex items-center gap-1 font-mono text-[11px] text-[#B8934A] hover:text-[#181715] transition-colors cursor-pointer shrink-0 ml-3"
+                                className="inline-flex items-center gap-1 font-mono text-[11px] text-[#B8934A] hover:text-[#142E20] transition-colors cursor-pointer shrink-0 ml-3"
                               >
                                 <Edit3 className="w-3 h-3" />
                                 <span>Edit</span>
@@ -1599,7 +1604,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                               type="button"
                               disabled={isSubmitting}
                               onClick={() => handleSubmitEnquiry()}
-                              className="group w-full inline-flex items-center justify-center gap-2.5 py-3.5 px-6 rounded-xl bg-[#181715] hover:bg-[#2A2621] text-[#FAF7F2] border border-[#B8934A]/40 hover:border-[#D4AF37] hover:shadow-[0_6px_22px_rgba(184,147,74,0.26)] text-xs font-mono font-semibold uppercase tracking-[0.2em] shadow-sm transition-all active:scale-[0.99] cursor-pointer disabled:opacity-50"
+                              className="group w-full inline-flex items-center justify-center gap-2.5 py-3.5 px-6 rounded-xl bg-[#142E20] hover:bg-[#1B3B2B] text-[#FAF7F2] border border-[#B8934A]/40 hover:border-[#D4AF37] hover:shadow-[0_6px_22px_rgba(184,147,74,0.26)] text-xs font-mono font-semibold uppercase tracking-[0.2em] shadow-sm transition-all active:scale-[0.99] cursor-pointer disabled:opacity-50"
                             >
                               {isSubmitting ? (
                                 <span>Sending Your Enquiry...</span>
@@ -1642,7 +1647,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                   className="p-3.5 rounded-xl border border-[#E2D8C3] bg-gradient-to-b from-white via-[#FDFBF7] to-[#FAF6EE] hover:from-[#FFFDF9] hover:to-[#FAF3E6] hover:border-[#B8934A]/70 hover:shadow-[0_6px_20px_rgba(184,147,74,0.12)] hover:-translate-y-0.5 transition-all text-center group block"
                 >
                   <Phone className="w-4 h-4 text-[#B8934A] mx-auto mb-1.5 group-hover:scale-110 group-hover:drop-shadow-[0_0_6px_rgba(184,147,74,0.35)] transition-all" />
-                  <span className="font-serif text-xs font-semibold text-[#181715] block">
+                  <span className="font-serif text-xs font-semibold text-[#142E20] block">
                     Call / WhatsApp
                   </span>
                   <span className="font-mono text-[11px] text-[#737068] block mt-0.5">
@@ -1656,7 +1661,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                   className="p-3.5 rounded-xl border border-[#E2D8C3] bg-gradient-to-b from-white via-[#FDFBF7] to-[#FAF6EE] hover:from-[#FFFDF9] hover:to-[#FAF3E6] hover:border-[#B8934A]/70 hover:shadow-[0_6px_20px_rgba(184,147,74,0.12)] hover:-translate-y-0.5 transition-all text-center group block"
                 >
                   <Mail className="w-4 h-4 text-[#B8934A] mx-auto mb-1.5 group-hover:scale-110 group-hover:drop-shadow-[0_0_6px_rgba(184,147,74,0.35)] transition-all" />
-                  <span className="font-serif text-xs font-semibold text-[#181715] block">
+                  <span className="font-serif text-xs font-semibold text-[#142E20] block">
                     Email Us
                   </span>
                   <span className="font-mono text-[11px] text-[#737068] block mt-0.5 truncate px-1">
@@ -1672,7 +1677,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                   className="p-3.5 rounded-xl border border-[#E2D8C3] bg-gradient-to-b from-white via-[#FDFBF7] to-[#FAF6EE] hover:from-[#FFFDF9] hover:to-[#FAF3E6] hover:border-[#B8934A]/70 hover:shadow-[0_6px_20px_rgba(184,147,74,0.12)] hover:-translate-y-0.5 transition-all text-center group block"
                 >
                   <MapPin className="w-4 h-4 text-[#B8934A] mx-auto mb-1.5 group-hover:scale-110 group-hover:drop-shadow-[0_0_6px_rgba(184,147,74,0.35)] transition-all" />
-                  <span className="font-serif text-xs font-semibold text-[#181715] block">
+                  <span className="font-serif text-xs font-semibold text-[#142E20] block">
                     Find Us
                   </span>
                   <span className="font-mono text-[11px] text-[#737068] block mt-0.5">
@@ -1701,7 +1706,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                 <ShieldCheck className="w-5 h-5 stroke-[1.5]" />
               </div>
               <div>
-                <h4 className="font-serif text-sm font-semibold text-[#181715]">
+                <h4 className="font-serif text-sm font-semibold text-[#142E20]">
                   Premium Textiles
                 </h4>
                 <p className="text-xs text-[#737068] font-normal mt-0.5">
@@ -1716,7 +1721,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                 <Award className="w-5 h-5 stroke-[1.5]" />
               </div>
               <div>
-                <h4 className="font-serif text-sm font-semibold text-[#181715]">
+                <h4 className="font-serif text-sm font-semibold text-[#142E20]">
                   Trusted Partner
                 </h4>
                 <p className="text-xs text-[#737068] font-normal mt-0.5">
@@ -1731,7 +1736,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                 <Clock className="w-5 h-5 stroke-[1.5]" />
               </div>
               <div>
-                <h4 className="font-serif text-sm font-semibold text-[#181715]">
+                <h4 className="font-serif text-sm font-semibold text-[#142E20]">
                   Reliable Supply
                 </h4>
                 <p className="text-xs text-[#737068] font-normal mt-0.5">

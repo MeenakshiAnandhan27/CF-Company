@@ -2,7 +2,6 @@ import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { ProductCategory } from '../types.ts';
 import { RAW_MATERIAL_IMAGES } from '../data/materialImages.ts';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
-import { DiamondMotif } from './DiamondMotif.tsx';
 
 interface ShowcaseCategoryItem {
   id: string;
@@ -43,15 +42,6 @@ const MATERIAL_SHOWCASE_ITEMS: ShowcaseCategoryItem[] = [
     objectPosition: 'center',
   },
   {
-    id: 'chambray',
-    name: 'CHAMBRAY',
-    shortDescriptor: 'Lightweight indigo plain weave',
-    categoryKey: 'chambray',
-    image: RAW_MATERIAL_IMAGES.chambray?.imagePath || '/assets/catalogue-3d/chambray.jpg',
-    altText: 'Close-up texture of yarn-dyed plain weave chambray shirting fabric',
-    objectPosition: 'center',
-  },
-  {
     id: 'mesh',
     name: 'MESH',
     shortDescriptor: 'Breathable athletic mesh',
@@ -82,7 +72,7 @@ const MATERIAL_SHOWCASE_ITEMS: ShowcaseCategoryItem[] = [
     id: 'zippers',
     name: 'ZIPPERS',
     shortDescriptor: 'Continuous coils & metal teeth',
-    categoryKey: 'zippers',
+    categoryKey: 'accessories',
     image: RAW_MATERIAL_IMAGES.zippers?.imagePath || '/assets/materials/homepage/zippers.jpg',
     altText: 'Close-up of raw zipper components, brass teeth, and continuous zipper tape',
     objectPosition: 'center 40%',
@@ -117,7 +107,7 @@ const MATERIAL_SHOWCASE_ITEMS: ShowcaseCategoryItem[] = [
 ];
 
 interface CategoryCardsProps {
-  onSelectCategory: (category: ProductCategory | string) => void;
+  onSelectCategory: (category: ProductCategory) => void;
   onExploreCatalogue?: () => void;
 }
 
@@ -229,7 +219,13 @@ export const CategoryCards: React.FC<CategoryCardsProps> = ({
               MATERIALS FOR EVERY CREATION
             </h2>
             {/* Elegant Golden Motif Line Centered */}
-            <DiamondMotif align="center" maxWidth="max-w-sm" />
+            <div className="relative flex items-center justify-center my-3 w-full max-w-sm mx-auto">
+              <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-[#D4AF37]/50 to-[#D4AF37]" />
+              <div className="relative mx-3 flex items-center justify-center">
+                <div className="w-2 h-2 bg-gradient-to-tr from-[#D4AF37] via-[#F2D785] to-[#B38728] rotate-45 shadow-[0_0_10px_rgba(212,175,55,0.75)]" />
+              </div>
+              <div className="h-[1px] w-full bg-gradient-to-r from-[#D4AF37] via-[#D4AF37]/50 to-transparent" />
+            </div>
             <p className="text-xs sm:text-sm md:text-base text-[#585550] max-w-2xl mx-auto font-normal leading-relaxed pt-1 text-pretty">
               Explore fabrics, laces, and garment accessories — sourced and manufactured to match your exact requirements.
             </p>

@@ -12,15 +12,22 @@ export const CategoryShowcase: React.FC<CategoryShowcaseProps> = ({
   onSelectCategory,
 }) => {
   return (
-    <section aria-label="Core Material Divisions" className="space-y-6">
-      {/* Clean Section Header without "Category Families" and "4 Core Classifications" */}
-      <div className="border-b border-[#E8E2D7] pb-3.5 flex items-center justify-between">
-        <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#181715] tracking-tight">
-          Core Material Divisions
-        </h3>
+    <section aria-label="Material Categories" className="space-y-6">
+      <div className="flex items-baseline justify-between border-b border-[#E8E2D7] pb-3">
+        <div>
+          <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#8C877E] font-medium">
+            Category Families
+          </span>
+          <h3 className="font-serif text-xl sm:text-2xl font-medium text-[#181715] mt-0.5">
+            Core Material Divisions
+          </h3>
+        </div>
+        <span className="text-xs text-[#7B756C] font-mono hidden sm:inline">
+          {CATEGORY_PANELS.length} Core Classifications
+        </span>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 items-stretch">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {CATEGORY_PANELS.map((panel) => {
           const isCurrent = activeCategory === panel.id;
 
@@ -47,29 +54,28 @@ export const CategoryShowcase: React.FC<CategoryShowcaseProps> = ({
                 <img
                   src={panel.image}
                   alt={`Raw ${panel.title} materials`}
-                  className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
-                  loading="lazy"
+                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 />
                 <div
                   aria-hidden="true"
-                  className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent pointer-events-none"
+                  className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none"
                 />
 
                 {/* Subtle editorial index number */}
-                <div className="absolute top-3 left-3 text-[11px] font-mono font-medium text-white/90 bg-[#181715]/70 backdrop-blur-xs px-2 py-0.5 rounded tracking-widest">
+                <div className="absolute top-3 left-3 text-[11px] font-mono font-medium text-white/90 bg-[#181715]/60 backdrop-blur-xs px-2 py-0.5 rounded tracking-widest">
                   {panel.index}
                 </div>
 
                 {/* Subtle variety count */}
-                <div className="absolute top-3 right-3 text-[10px] font-mono text-white/90 bg-[#181715]/70 backdrop-blur-xs px-2 py-0.5 rounded">
+                <div className="absolute top-3 right-3 text-[10px] font-mono text-white/90 bg-[#181715]/60 backdrop-blur-xs px-2 py-0.5 rounded">
                   {panel.materialCount} Types
                 </div>
               </div>
 
               {/* Text Information */}
               <div className="p-5 flex-1 flex flex-col justify-between space-y-3">
-                <div className="space-y-1.5">
-                  <h4 className="font-serif text-lg sm:text-xl font-bold text-[#181715] tracking-tight group-hover:text-[#82553E] transition-colors">
+                <div className="space-y-1">
+                  <h4 className="font-serif text-lg sm:text-xl font-medium text-[#181715] tracking-tight group-hover:text-[#82553E] transition-colors">
                     {panel.title}
                   </h4>
                   <p className="text-xs text-[#6B655B] line-clamp-2 leading-relaxed">
@@ -77,8 +83,8 @@ export const CategoryShowcase: React.FC<CategoryShowcaseProps> = ({
                   </p>
                 </div>
 
-                <div className="pt-3 border-t border-[#F2EDE4] flex items-center justify-between text-xs font-semibold text-[#82553E] group-hover:translate-x-0.5 transition-transform">
-                  <span className="uppercase tracking-wider text-[11px] font-mono font-bold">Explore Collection</span>
+                <div className="pt-2 flex items-center justify-between text-xs font-semibold text-[#82553E] group-hover:translate-x-0.5 transition-transform">
+                  <span className="uppercase tracking-wider text-[11px]">Explore Collection</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </div>
               </div>

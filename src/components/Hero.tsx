@@ -1,8 +1,6 @@
 import React from 'react';
 import { ArrowRight, ArrowUpRight, Compass, PhoneCall } from 'lucide-react';
 import { ProductCategory } from '../types.ts';
-import { RAW_MATERIAL_IMAGES } from '../data/materialImages.ts';
-import { DiamondMotif } from './DiamondMotif.tsx';
 
 interface HeroProps {
   onExploreCatalogue: (category?: ProductCategory) => void;
@@ -28,32 +26,32 @@ export const Hero: React.FC<HeroProps> = ({
       num: '01',
       title: 'Garment Laces',
       subtitle: 'Guipure & Embroidered Trims',
-      image: RAW_MATERIAL_IMAGES.laces?.imagePath || '/assets/materials/homepage/laces.jpg',
-      alt: RAW_MATERIAL_IMAGES.laces?.altText || 'Close-up macro of raw cotton lace rolls and embroidery needlework',
+      image: '/assets/materials/laces.jpg',
+      alt: 'Raw lace material texture',
     },
     {
       category: 'fabrics',
       num: '02',
       title: 'Fabrics & Gadas',
       subtitle: 'Pure Cotton, Gadas & Knits',
-      image: RAW_MATERIAL_IMAGES.fabrics?.imagePath || '/assets/materials/homepage/fabrics.jpg',
-      alt: RAW_MATERIAL_IMAGES.fabrics?.altText || 'Raw folded cotton twill and woven fabric rolls showing textile weave structure',
+      image: '/assets/materials/fabrics/plain.jpg',
+      alt: 'Raw woven fabric rolls texture',
     },
     {
       category: 'denim',
       num: '03',
       title: 'Denim Materials',
       subtitle: 'Raw Indigo Selvedge & Twill',
-      image: RAW_MATERIAL_IMAGES.denim?.imagePath || '/assets/materials/homepage/denim.jpg',
-      alt: RAW_MATERIAL_IMAGES.denim?.altText || 'Close-up texture of raw denim textile weave with visible twill cotton threads',
+      image: '/assets/materials/fabrics/denim.jpg',
+      alt: 'Raw denim twill fabric texture',
     },
     {
       category: 'accessories',
       num: '04',
       title: 'Trims & Accessories',
       subtitle: 'Buttons, Tags, Tapes & Zips',
-      image: RAW_MATERIAL_IMAGES.accessories?.imagePath || '/assets/materials/homepage/garment-accessories.jpg',
-      alt: RAW_MATERIAL_IMAGES.accessories?.altText || 'Collection of physical garment accessories: loose buttons, twill tape, and brand tags',
+      image: '/assets/materials/accessories.jpg',
+      alt: 'Raw garment accessories and buttons',
     },
   ];
 
@@ -91,7 +89,13 @@ export const Hero: React.FC<HeroProps> = ({
               </h1>
 
               {/* Elegant Gold Diamond Motif Divider */}
-              <DiamondMotif align="left" maxWidth="max-w-sm" />
+              <div className="relative flex items-center justify-start w-full max-w-sm pt-0.5">
+                <div className="h-[1px] w-24 bg-gradient-to-r from-[#D4AF37] to-[#D4AF37]/50" />
+                <div className="relative mx-2.5 flex items-center justify-center">
+                  <div className="w-2 h-2 bg-gradient-to-tr from-[#D4AF37] via-[#F2D785] to-[#B38728] rotate-45 shadow-[0_0_8px_rgba(212,175,55,0.75)]" />
+                </div>
+                <div className="h-[1px] flex-1 bg-gradient-to-r from-[#D4AF37]/50 to-transparent" />
+              </div>
 
               {/* Concise Supporting Text with Professional Grammar & Title Capitalization */}
               <p className="text-base sm:text-lg text-[#55514B] leading-relaxed max-w-2xl text-pretty font-medium">

@@ -10,7 +10,6 @@ import {
   RotateCw,
   Bookmark,
 } from 'lucide-react';
-import { DiamondMotif } from './DiamondMotif.tsx';
 
 interface ProductDetailModalProps {
   product: Product | null;
@@ -20,8 +19,7 @@ interface ProductDetailModalProps {
   onOpen360?: (product: Product) => void;
   allProducts?: Product[];
   onSelectProduct?: (product: Product) => void;
-  onAddToCollection?: (product: Product, quantity?: number, colour?: string, size?: string) => void;
-  onToggleCollection?: (product: Product) => void;
+  onAddToCollection?: (product: Product, quantity: number, colour?: string, size?: string) => void;
   isInCollection?: boolean;
   currentQuantityInCollection?: number;
 }
@@ -98,7 +96,6 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
   allProducts,
   onSelectProduct,
   onAddToCollection,
-  onToggleCollection,
   isInCollection,
 }) => {
   // Interactive 3D Perspective Tilt on Mouse and Touch Drag
@@ -128,12 +125,10 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
 
   if (!product) return null;
 
-  // Strict Material Image mapping: Selected product's actual image -> Category asset fallback
+  // Strict Raw Material Image mapping: High-res material image direct -> Category asset
   const rawConfig = RAW_MATERIAL_IMAGES[product.category];
-  const imageSrc = (product.images && product.images.length > 0 && product.images[0])
-    ? product.images[0]
-    : (rawConfig?.imagePath || `/assets/materials/${product.category}.jpg`);
-  const altText = product.imageAlt || rawConfig?.altText || `Raw material visual of ${product.name}`;
+  const imageSrc = product.images?.[0] || rawConfig?.imagePath || `/assets/materials/${product.category}.jpg`;
+  const altText = rawConfig?.altText || `Raw material visual of ${product.name}`;
 
   // Description: Cleaned without "for casual shirting texture"
   let description = product.shortDescription || product.description;
@@ -219,7 +214,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-4 right-4 z-30 w-8 h-8 rounded-full bg-white/90 hover:bg-[#EAE2D2] text-[#55514B] hover:text-[#181715] border border-[#DDD5C7] flex items-center justify-center transition-all cursor-pointer shadow-xs"
+          className="absolute top-4 right-4 z-30 w-8 h-8 rounded-full bg-white/90 hover:bg-[#EAE2D2] text-[#55514B] hover:text-[#142E20] border border-[#DDD5C7] flex items-center justify-center transition-all cursor-pointer shadow-xs"
           aria-label="Close modal"
         >
           <X className="w-4 h-4" />
@@ -244,7 +239,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
             className="absolute inset-0 pointer-events-none opacity-60"
             style={{
               background:
-                'radial-gradient(circle at 50% 45%, rgba(184, 147, 74, 0.22) 0%, rgba(24, 23, 21, 0.04) 60%, transparent 80%)',
+                'radial-gradient(circle at 50% 45%, rgba(184, 147, 74, 0.22) 0%, rgba(20, 46, 32, 0.04) 60%, transparent 80%)',
             }}
           />
 
@@ -273,7 +268,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
           </div>
 
           {/* Subtle Corner Raw Textile Badge */}
-          <div className="absolute top-4 left-4 z-20 bg-[#181715]/85 backdrop-blur-xs text-[#FAF7F2] px-2.5 py-1 rounded-md text-[9px] font-mono tracking-widest uppercase pointer-events-none border border-[#B8934A]/40 flex items-center gap-1.5 shadow-xs">
+          <div className="absolute top-4 left-4 z-20 bg-[#142E20]/85 backdrop-blur-xs text-[#FAF7F2] px-2.5 py-1 rounded-md text-[9px] font-mono tracking-widest uppercase pointer-events-none border border-[#B8934A]/40 flex items-center gap-1.5 shadow-xs">
             <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]" />
             <span>Raw Material Visual</span>
           </div>
@@ -287,7 +282,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                   onOpen360(product);
                 }
               }}
-              className="w-full relative group p-3 rounded-xl bg-gradient-to-r from-[#181715]/95 via-[#2A2621]/95 to-[#181715]/95 hover:from-[#23201C] hover:to-[#1C1A17] text-[#FAF7F2] border border-[#B8934A]/60 hover:border-[#D4AF37] shadow-[0_0_18px_rgba(184,147,74,0.32)] hover:shadow-[0_0_28px_rgba(184,147,74,0.52)] transition-all duration-300 cursor-pointer active:scale-[0.99] backdrop-blur-xs flex items-center justify-between gap-3 overflow-hidden"
+              className="w-full relative group p-3 rounded-xl bg-gradient-to-r from-[#142E20]/95 via-[#1B3B2B]/95 to-[#142E20]/95 hover:from-[#1A3827] hover:to-[#173223] text-[#FAF7F2] border border-[#B8934A]/60 hover:border-[#D4AF37] shadow-[0_0_18px_rgba(184,147,74,0.32)] hover:shadow-[0_0_28px_rgba(184,147,74,0.52)] transition-all duration-300 cursor-pointer active:scale-[0.99] backdrop-blur-xs flex items-center justify-between gap-3 overflow-hidden"
             >
               {/* Animated highlight shimmer */}
               <div
@@ -296,7 +291,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               />
 
               <div className="relative flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-[#2A2621] border border-[#B8934A]/70 flex items-center justify-center shrink-0 text-[#D4AF37] shadow-[0_0_8px_rgba(184,147,74,0.3)] group-hover:scale-105 transition-transform">
+                <div className="w-8 h-8 rounded-lg bg-[#224430] border border-[#B8934A]/70 flex items-center justify-center shrink-0 text-[#D4AF37] shadow-[0_0_8px_rgba(184,147,74,0.3)] group-hover:scale-105 transition-transform">
                   <RotateCw className="w-4 h-4 group-hover:rotate-180 transition-transform duration-700 stroke-[1.8]" />
                 </div>
                 <div className="text-left">
@@ -335,10 +330,9 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               </div>
 
               {/* 2. Large Elegant Material Title */}
-              <h2 id="full-view-material-title" className="font-serif text-2xl sm:text-3xl font-bold text-[#181715] tracking-tight leading-tight mt-1.5">
+              <h2 id="full-view-material-title" className="font-serif text-2xl sm:text-3xl font-bold text-[#142E20] tracking-tight leading-tight mt-1.5">
                 {product.name}
               </h2>
-              <DiamondMotif align="left" maxWidth="max-w-[200px]" className="my-1.5" />
             </div>
 
             {/* 3. Concise Description (Clean & Free of "casual shirting texture") */}
@@ -355,7 +349,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                       <span className="text-[10px] font-mono text-[#8C877E] uppercase tracking-wider block">
                         {detail.label}
                       </span>
-                      <span className="text-xs sm:text-sm font-serif font-semibold text-[#181715] leading-snug block">
+                      <span className="text-xs sm:text-sm font-serif font-semibold text-[#142E20] leading-snug block">
                         {detail.value}
                       </span>
                     </div>
@@ -370,7 +364,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               <button
                 type="button"
                 onClick={() => onEnquire(product)}
-                className="w-full py-3.5 px-6 bg-[#181715] hover:bg-[#2A2621] text-[#FAF7F2] font-mono text-xs font-semibold uppercase tracking-widest rounded-xl shadow-xs hover:shadow-[0_6px_22px_rgba(184,147,74,0.26)] border border-[#B8934A]/50 hover:border-[#D4AF37] transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99]"
+                className="w-full py-3.5 px-6 bg-[#142E20] hover:bg-[#1B3B2B] text-[#FAF7F2] font-mono text-xs font-semibold uppercase tracking-widest rounded-xl shadow-xs hover:shadow-[0_6px_22px_rgba(184,147,74,0.26)] border border-[#B8934A]/50 hover:border-[#D4AF37] transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99]"
               >
                 <span>ENQUIRE ABOUT THIS MATERIAL</span>
                 <ArrowRight className="w-4 h-4 text-[#D4AF37]" />
@@ -381,33 +375,26 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 <button
                   type="button"
                   onClick={() => onRequestSimilar(product)}
-                  className="w-full py-3 px-4 bg-[#FAF7F2] hover:bg-[#F3EDE2] text-[#181715] border border-[#DDD5C7] hover:border-[#B8934A] font-mono text-xs font-semibold tracking-wider uppercase rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+                  className="w-full py-3 px-4 bg-[#FAF7F2] hover:bg-[#F3EDE2] text-[#142E20] border border-[#DDD5C7] hover:border-[#B8934A] font-mono text-xs font-semibold tracking-wider uppercase rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs"
                 >
                   <Sparkles className="w-3.5 h-3.5 text-[#B8934A]" />
                   <span>REQUEST SIMILAR MATERIAL</span>
                 </button>
               )}
 
-              {/* Swatch Collection Toggle Action: ADD TO SWATCH / INQUIRY or REMOVE */}
-              {(onToggleCollection || onAddToCollection) && (
+              {/* Swatch Collection Action: ADD TO SWATCH INQUIRY */}
+              {onAddToCollection && (
                 <button
                   type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (onToggleCollection) {
-                      onToggleCollection(product);
-                    } else if (onAddToCollection) {
-                      onAddToCollection(product, 1);
-                    }
-                  }}
+                  onClick={() => onAddToCollection(product, 1)}
                   className={`w-full py-2.5 px-4 font-mono text-xs font-semibold tracking-wider uppercase rounded-xl transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer border ${
                     isInCollection
-                      ? 'bg-[#EAE2D2] text-[#181715] border-[#B8934A] shadow-xs hover:bg-[#E2D8C3]'
-                      : 'bg-white hover:bg-[#FAF7F2] text-[#55514B] hover:text-[#181715] border-[#DDD5C7] hover:border-[#B8934A]'
+                      ? 'bg-[#EAE2D2] text-[#142E20] border-[#B8934A] shadow-xs'
+                      : 'bg-white hover:bg-[#FAF7F2] text-[#55514B] hover:text-[#142E20] border-[#DDD5C7] hover:border-[#B8934A]'
                   }`}
                 >
-                  <Bookmark className={`w-3.5 h-3.5 ${isInCollection ? 'text-[#B8934A] fill-[#B8934A]' : 'text-[#B8934A]'}`} />
-                  <span>{isInCollection ? 'IN SWATCH COLLECTION — CLICK TO REMOVE' : 'ADD TO SWATCH / INQUIRY'}</span>
+                  <Bookmark className={`w-3.5 h-3.5 ${isInCollection ? 'text-[#142E20] fill-[#142E20]' : 'text-[#B8934A]'}`} />
+                  <span>{isInCollection ? 'SAVED IN SWATCH INQUIRY' : 'ADD TO SWATCH INQUIRY'}</span>
                 </button>
               )}
             </div>
@@ -421,7 +408,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 type="button"
                 onClick={handlePrev}
                 disabled={!hasPrev}
-                className="hover:text-[#181715] disabled:opacity-30 disabled:pointer-events-none transition-colors flex items-center gap-1 cursor-pointer"
+                className="hover:text-[#142E20] disabled:opacity-30 disabled:pointer-events-none transition-colors flex items-center gap-1 cursor-pointer"
               >
                 <ChevronLeft className="w-3.5 h-3.5 text-[#B8934A]" />
                 <span>PREV</span>
@@ -435,7 +422,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 type="button"
                 onClick={handleNext}
                 disabled={!hasNext}
-                className="hover:text-[#181715] disabled:opacity-30 disabled:pointer-events-none transition-colors flex items-center gap-1 cursor-pointer"
+                className="hover:text-[#142E20] disabled:opacity-30 disabled:pointer-events-none transition-colors flex items-center gap-1 cursor-pointer"
               >
                 <span>NEXT</span>
                 <ChevronRight className="w-3.5 h-3.5 text-[#B8934A]" />

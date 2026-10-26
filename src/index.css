@@ -24,28 +24,20 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Clean scrollbar suppression across all browsers while maintaining full scrolling functionality */
-html,
-body,
-* {
-  scrollbar-width: none !important; /* Firefox */
-  -ms-overflow-style: none !important; /* IE and Edge */
-}
-
+/* Elegant custom scrollbar */
 ::-webkit-scrollbar {
-  display: none !important;
-  width: 0 !important;
-  height: 0 !important;
+  width: 6px;
+  height: 6px;
 }
-
 ::-webkit-scrollbar-track {
-  display: none !important;
-  background: transparent !important;
+  background: #F5F4F0;
 }
-
 ::-webkit-scrollbar-thumb {
-  display: none !important;
-  background: transparent !important;
+  background: #D5D2CA;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #B2AEA5;
 }
 
 /* 3D Textile Showcase Utilities */

@@ -345,7 +345,7 @@ export default function App() {
       />
 
       {/* Main Content Areas based on currentTab */}
-      <main className="flex-1 pb-12 pt-20">
+      <main className={`flex-1 pb-12 ${currentTab !== 'home' ? 'pt-20' : ''}`}>
         {currentTab === 'home' && (
           <div>
             {/* Brand Intro Section */}

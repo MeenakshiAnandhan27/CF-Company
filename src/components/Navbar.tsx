@@ -45,14 +45,61 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: 'reach-us', label: 'REACH US' },
   ];
 
+  // The custom hero navbar is active ONLY on the homepage 3D fabric hero before scrolling down
+  const isHeroNavbar = currentTab === 'home' && scrollY < 220;
+
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-        scrollY > 20
-          ? 'bg-white/95 backdrop-blur-md shadow-[0_1px_4px_rgba(0,0,0,0.06)] border-b border-[#E8E6E0]'
-          : 'bg-white border-b border-[#E8E6E0]'
-      }`}
-    >
+    <>
+      {/* =========================================================================
+          1. NEW CUSTOM NAVBAR (ONLY for Homepage 1st 3D Fabric Hero Section)
+          User specification:
+          - NO CF logo or "CLASSIC FASHIONS" on this 3D hero page
+          - NO Collection bag or Catalogue button on this 3D hero page
+          - ONLY the 5 options: HOME, ABOUT, CATALOGUE, REQUEST MATERIAL, REACH US
+          ========================================================================= */}
+      {isHeroNavbar && (
+        <header
+          aria-label="Homepage Hero Navigation Bar"
+          className="fixed top-0 left-0 right-0 z-40 bg-transparent border-b border-transparent transition-all duration-300 pointer-events-none"
+        >
+          <div className="w-full px-3 sm:px-6 lg:px-8 h-20 flex items-center justify-center select-none">
+            {/* Center: Translucent Ivory / Glass Pill-Shaped Navigation Bar with only the 5 options */}
+            <nav
+              aria-label="Primary Navigation Pill"
+              className="pointer-events-auto flex items-center gap-1 sm:gap-1.5 lg:gap-2 px-2.5 sm:px-4 lg:px-6 py-2 rounded-full bg-white/85 sm:bg-[#FAF8F5]/90 backdrop-blur-md border border-[#E8E2D5]/90 shadow-[0_4px_24px_rgba(24,23,21,0.08),0_1px_4px_rgba(212,175,55,0.06)] overflow-x-auto no-scrollbar max-w-[96vw]"
+            >
+              {navLinks.map((link) => {
+                const isActive = currentTab === link.id;
+                return (
+                  <button
+                    key={link.id}
+                    onClick={() => handleNavClick(link.id)}
+                    className={`px-2.5 sm:px-3 lg:px-4 py-1.5 rounded-full text-[10px] sm:text-[11px] lg:text-xs font-semibold tracking-[0.10em] sm:tracking-[0.12em] lg:tracking-[0.14em] uppercase transition-all duration-200 cursor-pointer whitespace-nowrap shrink-0 ${
+                      isActive
+                        ? 'text-[#8C6226] font-bold bg-white shadow-2xs'
+                        : 'text-[#635E55] hover:text-[#181715] hover:bg-white/60'
+                    }`}
+                  >
+                    {link.label}
+                  </button>
+                );
+              })}
+            </nav>
+          </div>
+        </header>
+      )}
+
+      {/* =========================================================================
+          2. ORIGINAL STANDARD NAVBAR (Active for all other options and scrolled mode)
+          ========================================================================= */}
+      {!isHeroNavbar && (
+        <header
+          className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+            scrollY > 20
+              ? 'bg-white/95 backdrop-blur-md shadow-[0_1px_4px_rgba(0,0,0,0.06)] border-b border-[#E8E6E0]'
+              : 'bg-white border-b border-[#E8E6E0]'
+          }`}
+        >
       {/* Main Top Bar - Full Width Edge-to-Edge with Balanced Alignment */}
       <div className="w-full px-4 sm:px-8 md:px-10 lg:px-12 xl:px-14 h-20 flex items-center justify-between">
         {/* Zone 1: Wordmark / Logo - Left Edge Aligned */}
@@ -224,5 +271,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
       )}
     </header>
+      )}
+    </>
   );
 };

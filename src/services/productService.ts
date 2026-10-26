@@ -1,17 +1,29 @@
 import { Product, ProductCategory, ProductFilters, AvailabilityStatus } from '../types.ts';
 import { products } from '../data/products.ts';
+import { ApiService } from './api.ts';
 
 /**
  * Product Service Architecture (Preparation for Admin and Database APIs)
  * Encapsulates all data access and filtering logic so that local static data
- * can be swapped seamlessly with an Express API, Supabase, Firestore, or Cloud SQL later.
+ * is synchronized with the Express + PostgreSQL / SQLite database API,
+ * with reliable static fallback.
  */
 export class ProductService {
   /**
    * Returns all active products available for catalogue browsing.
+   * Queries backend API first; seamlessly falls back to local data if offline.
    */
-  public static async getProducts(): Promise<Product[]> {
-    return products.filter((p) => p.active !== false);
+  public static async getProducts(filters?: ProductFilters): Promise<Product[]> {
+    try {
+      const remoteProducts = await ApiService.getProducts(filters);
+      if (remoteProducts && remoteProducts.length > 0) {
+        return remoteProducts;
+      }
+    } catch {
+      // Fall back to static dataset if backend is not responding
+    }
+    const all = products.filter((p) => p.active !== false);
+    return filters ? this.filterProducts(all, filters) : all;
   }
 
   /**
@@ -25,6 +37,12 @@ export class ProductService {
    * Retrieve a single product by its unique internal ID.
    */
   public static async getProductById(id: string): Promise<Product | undefined> {
+    try {
+      const remote = await ApiService.getProductById(id);
+      if (remote) return remote;
+    } catch {
+      // Fall back to static dataset
+    }
     return products.find((p) => p.id === id);
   }
 

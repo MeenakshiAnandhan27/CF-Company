@@ -8,6 +8,10 @@ coverage/
 !.env.example
 .vscode/
 
+# Database files
+server/data/*.db
+server/data/*.db-journal
+
 # External cloned reference repositories
 img2threejs/
 

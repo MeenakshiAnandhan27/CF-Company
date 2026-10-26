@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { ApiService } from '../services/api.ts';
 import { Product, CollectionItem, EnquiryFormState } from '../types.ts';
 import { businessConfig } from '../data/businessConfig.ts';
 import {
@@ -48,6 +49,9 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submittedRefCode, setSubmittedRefCode] = useState<string>('');
   const [copied, setCopied] = useState(false);
 
   // Initialize or re-populate form whenever product or collection changes
@@ -136,7 +140,7 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
     validate();
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const allTouched: Record<string, boolean> = {
       name: true,
@@ -148,9 +152,48 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
     setTouched(allTouched);
 
     if (validate()) {
-      setIsSubmitted(true);
-      if (isCollectionMode && onClearCollectionAfterSubmit) {
-        // Option to retain or clean up
+      setIsSubmitting(true);
+      setSubmitError(null);
+      try {
+        const itemsPayload = isCollectionMode && collection.length > 0
+          ? collection.map((i) => ({
+              productId: i.product.id,
+              productCode: i.product.productCode,
+              productName: i.product.name,
+              quantity: i.quantity,
+              selectedColour: i.selectedColour,
+              selectedSize: i.selectedSize,
+              customNote: i.customNote,
+            }))
+          : product
+          ? [{
+              productId: product.id,
+              productCode: product.productCode,
+              productName: product.name,
+              quantity: formState.quantity || 1,
+            }]
+          : undefined;
+
+        const res = await ApiService.submitEnquiry({
+          name: formState.name,
+          companyName: formState.companyName,
+          phone: formState.phone,
+          email: formState.email,
+          cityState: formState.address,
+          message: formState.message || `Enquiry for ${isCollectionMode ? collection.length + ' collection items' : product?.name}`,
+          enquiryType: isCollectionMode ? 'collection' : 'general',
+          items: itemsPayload,
+        });
+
+        setSubmittedRefCode(res.referenceCode);
+        setIsSubmitted(true);
+        if (isCollectionMode && onClearCollectionAfterSubmit) {
+          // Clean up collection if requested
+        }
+      } catch (err: any) {
+        setSubmitError(err.message || 'Unable to submit enquiry to server. Please try again.');
+      } finally {
+        setIsSubmitting(false);
       }
     }
   };
@@ -239,6 +282,11 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
                 <h4 className="font-serif text-2xl sm:text-3xl font-bold text-[#181715]">
                   Enquiry Submitted Successfully
                 </h4>
+                {submittedRefCode && (
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#FAF7F0] border border-[#B8934A]/40 rounded-full text-xs font-mono font-semibold text-[#8C6534]">
+                    Reference: {submittedRefCode}
+                  </div>
+                )}
                 <p className="text-sm text-[#585550] max-w-md mx-auto leading-relaxed">
                   Your enquiry has been submitted successfully. Classic Fashions will contact you shortly.
                 </p>
@@ -512,12 +560,25 @@ export const EnquiryModal: React.FC<EnquiryModalProps> = ({
               </div>
 
               {/* Submit CTA */}
+              {submitError && (
+                <div className="p-3 bg-red-50 border border-red-200 rounded text-xs text-red-700 flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 shrink-0" />
+                  <span>{submitError}</span>
+                </div>
+              )}
               <button
                 type="submit"
-                className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 text-xs font-semibold uppercase tracking-wider text-white bg-[#181715] hover:bg-[#302D29] rounded shadow-sm transition-all"
+                disabled={isSubmitting}
+                className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 text-xs font-semibold uppercase tracking-wider text-white bg-[#181715] hover:bg-[#302D29] rounded shadow-sm transition-all disabled:opacity-50 cursor-pointer"
               >
-                <Send className="w-4 h-4 text-[#E5D7CC]" />
-                <span>Submit Dealer Enquiry</span>
+                {isSubmitting ? (
+                  <span>Saving to Database...</span>
+                ) : (
+                  <>
+                    <Send className="w-4 h-4 text-[#E5D7CC]" />
+                    <span>Submit Dealer Enquiry</span>
+                  </>
+                )}
               </button>
             </form>
           )}

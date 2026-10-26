@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { ApiService } from '../services/api.ts';
 import {
   MaterialRequestCategory,
   MaterialRequestData,
@@ -438,7 +439,7 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
   };
 
   // Step 3 Submit Handler
-  const handleSubmitEnquiry = (e: React.FormEvent) => {
+  const handleSubmitEnquiry = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!formData.contactName || formData.contactName.trim().length < 2) {
@@ -464,20 +465,31 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
     setStep3Error('');
     setIsSubmitting(true);
 
-    setTimeout(() => {
-      const code = `CF-REQ-${Math.floor(100000 + Math.random() * 900000)}`;
-      const submission: MaterialRequestSubmission = {
+    try {
+      const payload: MaterialRequestData = {
         ...formData,
-        id: `submission_${Date.now()}`,
-        referenceCode: code,
-        submittedAt: new Date().toISOString(),
+        referenceImages: uploadedFiles.map((f) => ({
+          name: f.name,
+          sizeKb: f.sizeKb,
+          dataUrl: f.dataUrl && f.dataUrl.length < 300000 ? f.dataUrl : undefined,
+        })),
+      };
+      const res = await ApiService.submitMaterialRequest(payload);
+      const submission: MaterialRequestSubmission = {
+        ...payload,
+        id: res.enquiryId,
+        referenceCode: res.referenceCode,
+        submittedAt: res.submittedAt,
         status: 'received',
       };
 
       setSubmissionSuccess(submission);
-      setIsSubmitting(false);
       window.scrollTo({ top: 100, behavior: 'smooth' });
-    }, 700);
+    } catch (err: any) {
+      setStep3Error(err.message || 'Failed to submit material request to server. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // WhatsApp Enquiry Link Builder

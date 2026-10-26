@@ -1,3 +1,4 @@
+import { ApiService } from '../services/api.ts';
 import React, { useState, useEffect } from 'react';
 import { businessConfig } from '../data/businessConfig.ts';
 import { CollectionItem, Product } from '../types.ts';
@@ -305,7 +306,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
   };
 
   // Unified Form Submit Handler
-  const handleSubmitEnquiry = (e?: React.FormEvent) => {
+  const handleSubmitEnquiry = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
 
     if (isCollectionMode) {
@@ -316,41 +317,44 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
 
     setIsSubmitting(true);
     try {
-      const timestamp = Date.now();
-      const code = `CF-ENQ-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
+      const itemsPayload = isCollectionMode && activeMaterials.length > 0
+        ? activeMaterials.map((i) => ({
+            productId: i.product.id,
+            productCode: i.product.productCode,
+            productName: i.product.name,
+            quantity: i.quantity,
+            selectedColour: i.selectedColour,
+            selectedSize: i.selectedSize,
+            customNotes: [
+              i.product.width ? `Width: ${i.product.width}` : '',
+              i.product.fabric || i.product.quality,
+              i.product.weave || i.product.fabricWeaveType,
+              i.product.gsm ? `${i.product.gsm} GSM` : '',
+            ].filter(Boolean).join(' • '),
+          }))
+        : undefined;
 
-      const record = {
-        id: `reach-us-${timestamp}`,
-        referenceCode: code,
-        category: isCollectionMode
-          ? `Material Requirements (${activeMaterials.length} materials)`
-          : currentCategory.label,
-        materials: isCollectionMode
-          ? activeMaterials.map((i) => ({
-              id: i.product.id,
-              name: i.product.name,
-              category: i.product.categoryLabel || i.product.subcategory || i.product.category,
-              specs: [
-                i.product.width ? `Width: ${i.product.width}` : '',
-                i.product.fabric || i.product.quality,
-                i.product.weave || i.product.fabricWeaveType,
-                i.product.gsm ? `${i.product.gsm} GSM` : '',
-                i.selectedColour ? `Colour: ${i.selectedColour}` : '',
-                i.selectedSize ? `Size: ${i.selectedSize}` : '',
-              ]
-                .filter(Boolean)
-                .join(' • '),
-              quantity: i.quantity,
-            }))
-          : undefined,
-        message: formData.message.trim() || undefined,
+      const res = await ApiService.submitEnquiry({
         name: formData.name.trim(),
         phone: formData.phone.trim(),
         email: formData.email.trim() || undefined,
-        submittedAt: timestamp,
-      };
+        message: formData.message.trim() || (isCollectionMode ? `Collection enquiry for ${activeMaterials.length} materials` : currentCategory.label),
+        enquiryType: isCollectionMode ? 'collection' : 'general',
+        items: itemsPayload,
+      });
 
+      // Save to local cache for offline browsing
       try {
+        const record = {
+          id: res.enquiryId,
+          referenceCode: res.referenceCode,
+          category: isCollectionMode ? `Material Requirements (${activeMaterials.length} materials)` : currentCategory.label,
+          message: formData.message.trim() || undefined,
+          name: formData.name.trim(),
+          phone: formData.phone.trim(),
+          email: formData.email.trim() || undefined,
+          submittedAt: Date.now(),
+        };
         const existing = localStorage.getItem(STORAGE_ENQUIRIES_KEY);
         const list = existing ? JSON.parse(existing) : [];
         list.unshift(record);
@@ -360,10 +364,10 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
         console.warn('LocalStorage error:', err);
       }
 
-      setReferenceCode(code);
+      setReferenceCode(res.referenceCode);
       setIsSubmitted(true);
-    } catch {
-      setFieldErrors({ form: 'Unable to submit enquiry. Please call or WhatsApp us directly.' });
+    } catch (err: any) {
+      setFieldErrors({ form: err.message || 'Unable to submit enquiry to server. Please call or WhatsApp us directly.' });
     } finally {
       setIsSubmitting(false);
     }

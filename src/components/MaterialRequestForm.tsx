@@ -32,6 +32,7 @@ import {
   Layers,
   FileCheck,
   CheckCircle,
+  MessageSquare,
 } from 'lucide-react';
 import { DiamondMotif } from './DiamondMotif.tsx';
 
@@ -273,8 +274,9 @@ const INITIAL_REQUEST: MaterialRequestData = {
   additionalNotes: '',
 };
 
-const VERIFIED_PHONE_RAW = '919443223150';
-const VERIFIED_PHONE_DISPLAY = '+91 94432 23150';
+const VERIFIED_PHONE_RAW = '917667812172';
+const VERIFIED_PHONE_DISPLAY = '+91 76678 12172';
+const VERIFIED_EMAIL = 'classicfashionsmerchant@gmail.com';
 
 export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
   initialData,
@@ -516,6 +518,31 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
     return `https://wa.me/${VERIFIED_PHONE_RAW}?text=${text}`;
   };
 
+  // Email Enquiry Link Builder
+  const getEmailEnquiryUrl = (submission: MaterialRequestSubmission) => {
+    const subject = `Material Request [${submission.referenceCode}]: ${submission.materialName} - ${submission.contactName}`;
+    const lines = [
+      `CLASSIC FASHIONS — MATERIAL BRIEF [${submission.referenceCode}]`,
+      ``,
+      `Selected Material: ${submission.materialName} (${submission.category})`,
+      `Quantity: ${isQuantityUndecided ? 'Sampling First / Undecided' : `${submission.quantity} ${submission.unit}`}`,
+      `Target Timeline: ${submission.targetDate || 'Flexible'}`,
+      `Width & GSM: ${submission.width || 'Standard'} | ${submission.gsmOrWeight || 'Standard'}`,
+      `Composition: ${submission.composition || 'As per sample'}`,
+      `Finish: ${submission.weaveOrFinish || 'Standard'}`,
+      ``,
+      `Contact Name: ${submission.contactName}`,
+      `Company / Brand: ${submission.companyName || 'Not specified'}`,
+      `Phone / WhatsApp: ${submission.phone}`,
+      `Email: ${submission.email}`,
+      `Delivery Location: ${submission.cityState}`,
+      submission.additionalNotes ? `Additional Notes: ${submission.additionalNotes}` : '',
+    ].filter(Boolean);
+
+    const body = encodeURIComponent(lines.join('\n'));
+    return `mailto:${VERIFIED_EMAIL}?subject=${encodeURIComponent(subject)}&body=${body}`;
+  };
+
   return (
     <div className="bg-[#FAF8F5] text-[#181715] min-h-screen pb-24 relative overflow-hidden font-sans selection:bg-[#D4AF37] selection:text-[#181715]">
       {/* Refined Luxury Ambient Backdrop Atmosphere */}
@@ -755,16 +782,15 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
             </div>
 
             <div className="space-y-2">
-              <span className="text-xs font-mono uppercase tracking-widest text-[#8C6534] font-semibold">
-                MATERIAL BRIEF LOGGED
+              <span className="text-xs font-mono uppercase tracking-widest text-[#8C6534] font-semibold flex items-center justify-center gap-1.5">
+                <Check className="w-4 h-4 text-[#25D366]" />
+                MATERIAL BRIEF TRANSMITTED DIRECTLY
               </span>
               <h2 className="font-serif text-3xl font-bold text-[#181715]">
                 Thank You, {submissionSuccess.contactName}
               </h2>
               <p className="text-sm text-[#6B665E] max-w-lg mx-auto">
-                Your material request has been logged. Our textile sourcing specialists in Tiruppur
-                will review your specifications and contact you with suitable swatch options and
-                pricing.
+                Your material request for <strong className="text-[#181715]">{submissionSuccess.materialName}</strong> ({isQuantityUndecided ? 'Sampling' : `${submissionSuccess.quantity} ${submissionSuccess.unit}`}) has been sent directly to our Classic Fashions desk (+91 76678 12172). Our textile specialists will review your requirements and respond promptly.
               </p>
             </div>
 
@@ -775,23 +801,33 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
               </span>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+            <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 pt-4">
               <a
                 href={getWhatsAppEnquiryUrl(submissionSuccess)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1EBE5D] text-white px-6 py-3.5 rounded-xl font-medium text-sm transition-all shadow-md hover:shadow-lg cursor-pointer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-medium text-xs sm:text-sm bg-[#25D366] hover:bg-[#1EBE5D] text-white transition-all shadow-md cursor-pointer"
               >
-                <span>Direct WhatsApp Confirmation</span>
-                <ExternalLink className="w-4 h-4" />
+                <MessageSquare className="w-4 h-4" />
+                <span>Open in WhatsApp</span>
+                <ExternalLink className="w-3.5 h-3.5 opacity-70" />
+              </a>
+
+              <a
+                href={getEmailEnquiryUrl(submissionSuccess)}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-medium text-xs sm:text-sm bg-[#181715] hover:bg-[#2B2824] text-white transition-all shadow-md cursor-pointer"
+              >
+                <Mail className="w-4 h-4 text-[#D4AF37]" />
+                <span>Email Sales Desk</span>
+                <ExternalLink className="w-3.5 h-3.5 opacity-70" />
               </a>
 
               <button
                 type="button"
                 onClick={onExploreCatalogue}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#181715] hover:bg-[#2B2824] text-white font-bold px-6 py-3.5 rounded-xl text-sm transition-all shadow-md cursor-pointer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#8C6534] hover:bg-[#72522A] text-white font-medium px-5 py-3.5 rounded-xl text-xs sm:text-sm transition-all shadow-md cursor-pointer"
               >
-                <span>Explore Digital Catalogue</span>
+                <span>Explore Catalogue</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
 
@@ -1406,6 +1442,64 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                       />
                     </div>
 
+                    {/* Preferred Channel Option: WhatsApp vs Email */}
+                    <div className="space-y-2 pt-1">
+                      <label className="block font-mono text-[10px] sm:text-[11px] uppercase tracking-wider text-[#78736B] font-semibold">
+                        SEND BRIEF VIA <span className="text-[#C4432B] font-bold">*</span>
+                      </label>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <button
+                          type="button"
+                          onClick={() => setFormData({ ...formData, preferredContactMethod: 'whatsapp' })}
+                          className={`p-3.5 rounded-xl border flex items-center gap-3 transition-all text-left cursor-pointer ${
+                            formData.preferredContactMethod === 'whatsapp'
+                              ? 'border-[#25D366] bg-[#25D366]/8 ring-2 ring-[#25D366]/40'
+                              : 'border-[#DDD7CD] bg-white hover:border-[#181715]/40'
+                          }`}
+                        >
+                          <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${
+                            formData.preferredContactMethod === 'whatsapp' ? 'bg-[#25D366] text-white' : 'bg-[#F0EDE6] text-[#6B665E]'
+                          }`}>
+                            <MessageSquare className="w-4 h-4" />
+                          </div>
+                          <div className="min-w-0">
+                            <span className="font-semibold text-xs sm:text-sm text-[#181715] flex items-center gap-1.5">
+                              WhatsApp
+                              {formData.preferredContactMethod === 'whatsapp' && (
+                                <span className="text-[9px] font-mono bg-[#25D366] text-white px-1.5 py-0.5 rounded font-normal">Active</span>
+                              )}
+                            </span>
+                            <span className="text-[10px] text-[#78736B] block truncate">Send via WhatsApp Desk</span>
+                          </div>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => setFormData({ ...formData, preferredContactMethod: 'email' })}
+                          className={`p-3.5 rounded-xl border flex items-center gap-3 transition-all text-left cursor-pointer ${
+                            formData.preferredContactMethod === 'email'
+                              ? 'border-[#8C6534] bg-[#8C6534]/8 ring-2 ring-[#8C6534]/40'
+                              : 'border-[#DDD7CD] bg-white hover:border-[#181715]/40'
+                          }`}
+                        >
+                          <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${
+                            formData.preferredContactMethod === 'email' ? 'bg-[#8C6534] text-white' : 'bg-[#F0EDE6] text-[#6B665E]'
+                          }`}>
+                            <Mail className="w-4 h-4" />
+                          </div>
+                          <div className="min-w-0">
+                            <span className="font-semibold text-xs sm:text-sm text-[#181715] flex items-center gap-1.5">
+                              Email
+                              {formData.preferredContactMethod === 'email' && (
+                                <span className="text-[9px] font-mono bg-[#8C6534] text-white px-1.5 py-0.5 rounded font-normal">Active</span>
+                              )}
+                            </span>
+                            <span className="text-[10px] text-[#78736B] block truncate">Send via Official Email</span>
+                          </div>
+                        </button>
+                      </div>
+                    </div>
+
                     {/* Notice Box */}
                     <div className="p-3.5 bg-[#FAF8F5] border border-[#DDD7CD] rounded-xl flex items-start gap-3">
                       <div className="w-5 h-5 rounded-full bg-[#8C6534]/15 text-[#8C6534] flex items-center justify-center shrink-0 mt-0.5">
@@ -1436,7 +1530,7 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                           <span>Processing Brief...</span>
                         ) : (
                           <>
-                            <span>Review &amp; Submit Brief</span>
+                            <span>{formData.preferredContactMethod === 'whatsapp' ? 'Submit & Send via WhatsApp' : 'Submit & Send via Email'}</span>
                             <ArrowRight className="w-4 h-4 text-[#D4AF37]" />
                           </>
                         )}
@@ -1586,7 +1680,7 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                       onClick={handleSubmitEnquiry}
                       className="w-full flex items-center justify-center gap-2 bg-[#181715] hover:bg-[#2B2824] text-white font-bold py-3.5 px-6 rounded-xl text-xs uppercase tracking-wider transition-all shadow-md hover:shadow-lg cursor-pointer"
                     >
-                      <span>Submit Material Brief</span>
+                      <span>{formData.preferredContactMethod === 'whatsapp' ? 'Submit via WhatsApp' : 'Submit via Email'}</span>
                       <ArrowRight className="w-4 h-4 text-[#D4AF37]" />
                     </button>
                   )}

@@ -40,7 +40,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, isDarkLuxuryTheme })
             <p className="text-xs sm:text-sm text-[#A8A29A] leading-relaxed max-w-sm">
               Supplier of Garment Accessories &amp; Fabrics
               <br />
-              Tiruppur, Tamil Nadu, India
+              Boyampalayam Pirivu, Tirupur - 641 602, Tamil Nadu
             </p>
           </div>
 
@@ -173,7 +173,24 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, isDarkLuxuryTheme })
               <div className="flex items-start gap-2">
                 <MapPin className="w-3.5 h-3.5 text-[#C4B7AA] shrink-0 mt-0.5" />
                 <span>
-                  Tiruppur, Tamil Nadu (View address on{' '}
+                  <a
+                    href="https://share.google/zq9Y9JnTWAsjApavg"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-white transition-colors"
+                  >
+                    Boyampalayam Pirivu, Tirupur - 641 602
+                  </a>
+                  {' '}(
+                  <a
+                    href="https://share.google/zq9Y9JnTWAsjApavg"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#E0D5C7] underline hover:text-white"
+                  >
+                    Google Maps
+                  </a>
+                  {' · '}
                   <button
                     onClick={() => handleNav('reach-us')}
                     className="text-[#E0D5C7] underline hover:text-white"
@@ -185,14 +202,14 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, isDarkLuxuryTheme })
               </div>
               <div className="flex items-start gap-2 font-mono">
                 <Phone className={`w-3.5 h-3.5 shrink-0 mt-0.5 ${isDarkLuxuryTheme ? 'text-[#C49A55]' : 'text-[#C4B7AA]'}`} />
-                <a href="tel:+918826415868" className="hover:text-white transition-colors">
-                  +91 88264 15868
+                <a href="tel:+917667812172" className="hover:text-white transition-colors">
+                  +91 76678 12172
                 </a>
               </div>
               <div className="flex items-start gap-2 font-mono">
                 <Mail className={`w-3.5 h-3.5 shrink-0 mt-0.5 ${isDarkLuxuryTheme ? 'text-[#C49A55]' : 'text-[#C4B7AA]'}`} />
-                <a href="mailto:material@classicfashions.com" className="truncate hover:text-white transition-colors">
-                  material@classicfashions.com
+                <a href="mailto:classicfashionsmerchant@gmail.com" className="truncate hover:text-white transition-colors">
+                  classicfashionsmerchant@gmail.com
                 </a>
               </div>
               <div className="flex items-start gap-2 font-mono">

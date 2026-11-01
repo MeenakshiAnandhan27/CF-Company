@@ -38,9 +38,9 @@ export interface ReachUsViewProps {
 }
 
 // Verified Business Contact Information
-const VERIFIED_PHONE = '+91 88264 15868';
-const VERIFIED_PHONE_RAW = '918826415868';
-const VERIFIED_EMAIL = 'material@classicfashions.com';
+const VERIFIED_PHONE = '+91 76678 12172';
+const VERIFIED_PHONE_RAW = '917667812172';
+const VERIFIED_EMAIL = 'classicfashionsmerchant@gmail.com';
 const STORAGE_ENQUIRIES_KEY = 'cf_reach_us_enquiries_v1';
 
 // Five Enquiry Categories matching reference structure
@@ -99,7 +99,7 @@ const ENQUIRY_CATEGORIES: EnquiryCategory[] = [
     tagline: 'General queries & showroom consultation',
     icon: HelpCircle,
     promptHeadline: 'How can our sourcing team assist you today?',
-    placeholder: 'e.g. We would like to schedule a visit to your Boyampalayam office to inspect swatch catalogues...',
+    placeholder: 'e.g. We would like to schedule a visit to your Boyampalayam Pirivu office to inspect swatch catalogues...',
   },
 ];
 
@@ -208,9 +208,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
   const [referenceCode, setReferenceCode] = useState('');
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
-  const mapsSearchUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-    '5/1475, 5th Street, Palanisamy Nagar, Boyampalayam, Tiruppur, Tamil Nadu 641602'
-  )}`;
+  const mapsSearchUrl = 'https://share.google/zq9Y9JnTWAsjApavg';
 
   const currentCategory =
     ENQUIRY_CATEGORIES.find((cat) => cat.key === selectedCategoryKey) || ENQUIRY_CATEGORIES[0];
@@ -591,7 +589,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                       <span className="text-[9px] font-mono text-[#8C8478] uppercase">TIRUPPUR</span>
                     </div>
                     <p className="text-xs text-[#55514B] leading-relaxed mt-1 font-normal">
-                      {businessConfig.addressLine1}, {businessConfig.addressLine2}, {businessConfig.city}, {businessConfig.state} – {businessConfig.pincode}
+                      {businessConfig.addressLine1}, {businessConfig.addressLine2}, {businessConfig.city} - {businessConfig.pincode}
                     </p>
                     <a
                       href={mapsSearchUrl}
@@ -691,7 +689,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                       {VERIFIED_EMAIL}
                     </a>
                     <a
-                      href={`mailto:${VERIFIED_EMAIL}?subject=${encodeURIComponent('Sourcing Inquiry — Classic Fashions')}`}
+                      href={`mailto:${VERIFIED_EMAIL}?subject=${encodeURIComponent('Sourcing Inquiry – Classic Fashions')}`}
                       className="inline-flex items-center gap-1 text-[11px] font-mono text-[#B8934A] hover:text-[#181715] transition-colors mt-1.5"
                     >
                       <span>Send Direct Email</span>
@@ -1656,7 +1654,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
 
                 {/* 2. Email Us */}
                 <a
-                  href={`mailto:${VERIFIED_EMAIL}?subject=${encodeURIComponent('Material Enquiry — Classic Fashions')}`}
+                  href={`mailto:${VERIFIED_EMAIL}?subject=${encodeURIComponent('Material Enquiry – Classic Fashions')}`}
                   className="p-3.5 rounded-xl border border-[#E2D8C3] bg-gradient-to-b from-white via-[#FDFBF7] to-[#FAF6EE] hover:from-[#FFFDF9] hover:to-[#FAF3E6] hover:border-[#B8934A]/70 hover:shadow-[0_6px_20px_rgba(184,147,74,0.12)] hover:-translate-y-0.5 transition-all text-center group block"
                 >
                   <Mail className="w-4 h-4 text-[#B8934A] mx-auto mb-1.5 group-hover:scale-110 group-hover:drop-shadow-[0_0_6px_rgba(184,147,74,0.35)] transition-all" />
@@ -1680,7 +1678,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                     Find Us
                   </span>
                   <span className="font-mono text-[11px] text-[#737068] block mt-0.5">
-                    Boyampalayam, Tiruppur ↗
+                    Boyampalayam Pirivu, Tirupur →
                   </span>
                 </a>
 

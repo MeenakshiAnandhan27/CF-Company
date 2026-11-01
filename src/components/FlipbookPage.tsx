@@ -497,7 +497,7 @@ export const FlipbookPage: React.FC<FlipbookPageProps> = ({
                   Tiruppur Facility
                 </span>
                 <span className="text-stone-500 text-[11px]">
-                  Classic Fashions, Main Textile District, Tiruppur, Tamil Nadu – 641602, India
+                  5/1475, 5th Street of Palanisamy Nagar North, Boyampalayam Pirivu, Tirupur - 641 602, Tamil Nadu
                 </span>
               </div>
             </div>
@@ -508,7 +508,7 @@ export const FlipbookPage: React.FC<FlipbookPageProps> = ({
                   Direct Mill Line
                 </span>
                 <span className="text-stone-500 text-[11px]">
-                  +91 94432 00000 / +91 421 2200000
+                  +91 76678 12172
                 </span>
               </div>
             </div>
@@ -519,7 +519,7 @@ export const FlipbookPage: React.FC<FlipbookPageProps> = ({
                   Commercial Orders
                 </span>
                 <span className="text-stone-500 text-[11px]">
-                  sales@classicfashions.in / info@classicfashions.in
+                  classicfashionsmerchant@gmail.com
                 </span>
               </div>
             </div>

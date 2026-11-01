@@ -102,8 +102,34 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
     setIsViewer360Open(true);
   };
 
-  // Section reference to smoothly scroll when category is selected
+  // Section and navigation references to smoothly and precisely scroll when category is selected
   const materialsSectionRef = useRef<HTMLDivElement>(null);
+  const navContainerRef = useRef<HTMLDivElement>(null);
+
+  const scrollToCategoryView = (smooth = true) => {
+    // The main fixed navbar is 80px high (h-20)
+    const navbarHeight = 80;
+
+    if (navContainerRef.current) {
+      const rect = navContainerRef.current.getBoundingClientRect();
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const targetY = Math.max(0, rect.top + scrollTop - navbarHeight);
+
+      window.scrollTo({
+        top: targetY,
+        behavior: smooth ? 'smooth' : 'auto',
+      });
+    } else if (materialsSectionRef.current) {
+      const rect = materialsSectionRef.current.getBoundingClientRect();
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const targetY = Math.max(0, rect.top + scrollTop - (navbarHeight + 60));
+
+      window.scrollTo({
+        top: targetY,
+        behavior: smooth ? 'smooth' : 'auto',
+      });
+    }
+  };
 
   // Sync with initialCategory prop changes (from URL or home page clicks)
   useEffect(() => {
@@ -113,10 +139,8 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
     setSearchQuery('');
     if (initialCategory && initialCategory.toLowerCase() !== 'all') {
       const timer = setTimeout(() => {
-        if (materialsSectionRef.current) {
-          materialsSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }, 150);
+        scrollToCategoryView(false);
+      }, 100);
       return () => clearTimeout(timer);
     }
   }, [initialCategory]);
@@ -158,10 +182,10 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
       params.set('category', slug);
       window.history.pushState(null, '', `${window.location.pathname}?${params.toString()}`);
     }
-    // Smooth scroll down to materials section
-    if (materialsSectionRef.current) {
-      materialsSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    // Defer scrolling until React commits DOM layout changes for the selected category
+    setTimeout(() => {
+      scrollToCategoryView(true);
+    }, 60);
   };
 
   // Handle filter selection from sticky nav
@@ -180,6 +204,9 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
       }
       window.history.pushState(null, '', `${window.location.pathname}?${params.toString()}`);
     }
+    setTimeout(() => {
+      scrollToCategoryView(true);
+    }, 60);
   };
 
   // Handle sub-filter pill selection
@@ -206,7 +233,7 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
   };
 
   return (
-    <div className="min-h-screen w-full overflow-x-hidden bg-[#FAF8F5] text-[#181715] selection:bg-[#E0D7C8] selection:text-[#181715]">
+    <div className="min-h-screen w-full overflow-x-clip bg-[#FAF8F5] text-[#181715] selection:bg-[#E0D7C8] selection:text-[#181715]">
       {/* ========================================================
           1. HERO SECTION: Clean editorial typography & whitespace
           ======================================================== */}
@@ -232,11 +259,7 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
             {/* 1. Explore Fabrics (Scroll to category browsing) */}
             <button
               type="button"
-              onClick={() => {
-                if (materialsSectionRef.current) {
-                  materialsSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-              }}
+              onClick={() => handleSelectCategoryPanel('FABRICS')}
               className="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-mono font-bold uppercase tracking-wider bg-[#181715] hover:bg-[#2E2B26] text-white rounded-full shadow-xs transition-all hover:scale-[1.02] cursor-pointer"
             >
               <span>Explore Fabrics</span>
@@ -259,14 +282,16 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
       {/* ========================================================
           2. STICKY CATALOGUE NAVIGATION (Slim, zero-pill bar)
           ======================================================== */}
-      <CatalogueNavigation
-        activeFilter={activeFilter}
-        onSelectFilter={handleSelectNavFilter}
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        onOpen360={() => handleOpen360Viewer()}
-        totalMaterialsCount={filteredMaterials.length}
-      />
+      <div ref={navContainerRef} className="scroll-mt-20">
+        <CatalogueNavigation
+          activeFilter={activeFilter}
+          onSelectFilter={handleSelectNavFilter}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          onOpen360={() => handleOpen360Viewer()}
+          totalMaterialsCount={filteredMaterials.length}
+        />
+      </div>
 
       {/* Main Container */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16 sm:pt-10 sm:pb-20 space-y-12 sm:space-y-16">
@@ -284,32 +309,34 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
         {/* ========================================================
             3B. INTERACTIVE 3D & 360° FABRIC ATELIER BANNER
             ======================================================== */}
-        <section className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-[#181715] via-[#23201C] to-[#141311] border border-[#D4AF37]/40 shadow-xl p-6 sm:p-8 text-white">
-          <div className="absolute top-0 right-0 -mt-10 -mr-10 w-60 h-60 bg-[#D4AF37]/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="space-y-2 text-center md:text-left">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D4AF37]/15 border border-[#D4AF37]/30 text-[#F5DE93] text-[10px] font-mono uppercase tracking-[0.2em] font-semibold">
-                <RotateCw className="w-3 h-3 text-[#D4AF37] animate-spin-slow" />
-                <span>3D Cloth Physics & 360° Turntable</span>
+        {activeFilter === 'ALL' && !searchQuery && (
+          <section className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-[#181715] via-[#23201C] to-[#141311] border border-[#D4AF37]/40 shadow-xl p-6 sm:p-8 text-white">
+            <div className="absolute top-0 right-0 -mt-10 -mr-10 w-60 h-60 bg-[#D4AF37]/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="relative flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="space-y-2 text-center md:text-left">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D4AF37]/15 border border-[#D4AF37]/30 text-[#F5DE93] text-[10px] font-mono uppercase tracking-[0.2em] font-semibold">
+                  <RotateCw className="w-3 h-3 text-[#D4AF37] animate-spin-slow" />
+                  <span>3D Cloth Physics & 360° Turntable</span>
+                </div>
+                <h3 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-[#FAF7F2]">
+                  Interactive 360° Fabric Atelier Studio
+                </h3>
+                <p className="text-xs sm:text-sm text-[#DDD5C8] max-w-xl leading-relaxed">
+                  Inspect 8 master 4K fabric styles—Organic Cotton, Mulberry Silk, Belgian Linen, Indigo Twill Denim, Plush Velvet, Merino Wool, Jacquard Brocade, and Pique Knit—with genuine 3D cloth physics, draping modes, and 360° rotational camera.
+                </p>
               </div>
-              <h3 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-[#FAF7F2]">
-                Interactive 360° Fabric Atelier Studio
-              </h3>
-              <p className="text-xs sm:text-sm text-[#DDD5C8] max-w-xl leading-relaxed">
-                Inspect 8 master 4K fabric styles—Organic Cotton, Mulberry Silk, Belgian Linen, Indigo Twill Denim, Plush Velvet, Merino Wool, Jacquard Brocade, and Pique Knit—with genuine 3D cloth physics, draping modes, and 360° rotational camera.
-              </p>
-            </div>
 
-            <button
-              type="button"
-              onClick={() => handleOpen360Viewer()}
-              className="group inline-flex items-center gap-3 px-6 py-3.5 text-xs font-mono font-bold uppercase tracking-[0.18em] rounded-full bg-gradient-to-r from-[#D4AF37] via-[#F3E2B8] to-[#D4AF37] text-[#181715] shadow-[0_4px_20px_rgba(212,175,55,0.4)] hover:shadow-[0_6px_28px_rgba(212,175,55,0.6)] transition-all hover:scale-105 active:scale-95 shrink-0 cursor-pointer"
-            >
-              <span>Launch 360° Studio</span>
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-            </button>
-          </div>
-        </section>
+              <button
+                type="button"
+                onClick={() => handleOpen360Viewer()}
+                className="group inline-flex items-center gap-3 px-6 py-3.5 text-xs font-mono font-bold uppercase tracking-[0.18em] rounded-full bg-gradient-to-r from-[#D4AF37] via-[#F3E2B8] to-[#D4AF37] text-[#181715] shadow-[0_4px_20px_rgba(212,175,55,0.4)] hover:shadow-[0_6px_28px_rgba(212,175,55,0.6)] transition-all hover:scale-105 active:scale-95 shrink-0 cursor-pointer"
+              >
+                <span>Launch 360° Studio</span>
+                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+              </button>
+            </div>
+          </section>
+        )}
 
         {/* ========================================================
             4. DYNAMIC MATERIAL DISCOVERY (CIRCULAR SWATCHES)
@@ -322,8 +349,8 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
               <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  onClick={() => setActiveFilter('ALL')}
-                  className="font-mono text-xs uppercase tracking-wider text-[#736F68] hover:text-[#181715] transition-colors"
+                  onClick={() => handleSelectNavFilter('ALL')}
+                  className="font-mono text-xs uppercase tracking-wider text-[#736F68] hover:text-[#181715] transition-colors cursor-pointer"
                 >
                   ALL CATEGORIES
                 </button>

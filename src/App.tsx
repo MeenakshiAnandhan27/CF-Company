@@ -10,7 +10,6 @@ import { AboutSection } from './components/AboutSection.tsx';
 import { ReachUsView } from './components/ReachUsView.tsx';
 import { MaterialRequestForm } from './components/MaterialRequestForm.tsx';
 import { DiamondMotif } from './components/DiamondMotif.tsx';
-import { Chatbot } from './components/Chatbot.tsx';
 import { Footer } from './components/Footer.tsx';
 import { ProductDetailModal } from './components/ProductDetailModal.tsx';
 import { EnquiryModal } from './components/EnquiryModal.tsx';
@@ -48,6 +47,8 @@ export default function App() {
   });
   const [similarProductForRequest, setSimilarProductForRequest] = useState<Product | null>(null);
   const [initialRequestCategory, setInitialRequestCategory] = useState<MaterialRequestCategory | undefined>(undefined);
+  const [is3DStudioOpen, setIs3DStudioOpen] = useState(false);
+  const [active3DFabric, setActive3DFabric] = useState<Product | { id?: string; name?: string; subcategory?: string; productCode?: string; matchedProductId?: string } | null>(null);
 
   // Drawer state for refined interactive collection swatch organizer
   const [isCollectionDrawerOpen, setIsCollectionDrawerOpen] = useState<boolean>(() => {
@@ -337,12 +338,14 @@ export default function App() {
   return (
     <div className="min-h-screen flex flex-col bg-[#FBFBFA] text-[#181715] font-sans antialiased selection:bg-[#181715] selection:text-white">
       {/* Sticky Header */}
-      <Navbar
-        currentTab={currentTab}
-        onNavigate={handleNavigate}
-        collectionCount={collection.length}
-        isCollectionOpen={isCollectionDrawerOpen || currentTab === 'collection'}
-      />
+      {!is3DStudioOpen && currentTab !== '3d-fabric-viewer' && (
+        <Navbar
+          currentTab={currentTab}
+          onNavigate={handleNavigate}
+          collectionCount={collection.length}
+          isCollectionOpen={isCollectionDrawerOpen || currentTab === 'collection'}
+        />
+      )}
 
       {/* Main Content Areas based on currentTab */}
       <main className={`flex-1 pb-12 ${currentTab !== 'home' ? 'pt-20' : ''}`}>
@@ -493,12 +496,7 @@ export default function App() {
           />
         )}
 
-        {currentTab === '3d-fabric-viewer' && (
-          <FireflyFabric3DViewer
-            onBack={() => handleNavigate('catalogue')}
-            onEnquire={handleFireflyEnquire}
-          />
-        )}
+
 
         {currentTab === 'reach-us' && (
           <ReachUsView
@@ -513,10 +511,12 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <Footer
-        onNavigate={handleNavigate}
-        isDarkLuxuryTheme={false}
-      />
+      {!is3DStudioOpen && currentTab !== '3d-fabric-viewer' && (
+        <Footer
+          onNavigate={handleNavigate}
+          isDarkLuxuryTheme={false}
+        />
+      )}
 
       {/* Interactive Personal Swatch Collection Drawer */}
       <CollectionView
@@ -544,6 +544,27 @@ export default function App() {
         }}
       />
 
+      {/* 360 Fabric Studio — Immersive Fullscreen Modal (Matches Image 2, No Navbar/Footer Leakage, No Page Scrolling) */}
+      {(is3DStudioOpen || currentTab === '3d-fabric-viewer') && (
+        <FireflyFabric3DViewer
+          isModal={true}
+          initialMaterial={active3DFabric}
+          initialFabricId={active3DFabric?.id}
+          onBack={() => {
+            setIs3DStudioOpen(false);
+            setActive3DFabric(null);
+            if (currentTab === '3d-fabric-viewer') {
+              handleNavigate('catalogue');
+            }
+          }}
+          onEnquire={(item) => {
+            setIs3DStudioOpen(false);
+            setActive3DFabric(null);
+            handleFireflyEnquire(item);
+          }}
+        />
+      )}
+
       {/* Product Detail Modal */}
       <ProductDetailModal
         product={detailProduct}
@@ -564,9 +585,10 @@ export default function App() {
         }}
         allProducts={allCatalogueProducts}
         onSelectProduct={(p) => setDetailProduct(p)}
-        onOpen360={() => {
+        onOpen360={(p) => {
+          setActive3DFabric(p);
           setDetailProduct(null);
-          handleNavigate('3d-fabric-viewer');
+          setIs3DStudioOpen(true);
         }}
       />
 
@@ -581,14 +603,6 @@ export default function App() {
           setIsCollectionEnquiry(false);
         }}
       />
-
-      {/* Assistant & Quick Navigation Chatbot */}
-      {currentTab !== 'home' && (
-        <Chatbot
-          onNavigate={handleNavigate}
-          isDarkTheme={false}
-        />
-      )}
     </div>
   );
 }

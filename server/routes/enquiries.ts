@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import { query } from '../db/index.ts';
 import { validateEnquiry, validateMaterialRequest } from '../middleware/validation.ts';
 import { authenticateToken, requireRole } from '../middleware/auth.ts';
+import { dispatchAutomatedNotification } from '../services/notificationService.ts';
 
 const router = Router();
 
@@ -90,6 +91,22 @@ router.post('/material-request', validateMaterialRequest, async (req: Request, r
       ]
     );
 
+    // Non-blocking automated notification dispatch to WhatsApp/Email
+    dispatchAutomatedNotification({
+      referenceCode,
+      customerName: data.contactName,
+      companyName: data.companyName,
+      phone: data.phone,
+      email: data.email,
+      cityState: data.cityState,
+      materialName: data.materialName,
+      quantity: data.quantity,
+      unit: data.unit,
+      targetTimeline: data.targetDate,
+      notes: data.additionalNotes,
+      preferredChannel: data.preferredContactMethod,
+    }).catch((err) => console.error('Notification dispatch error:', err));
+
     res.status(201).json({
       success: true,
       message: 'Material request saved successfully',
@@ -169,6 +186,18 @@ router.post('/', validateEnquiry, async (req: Request, res: Response): Promise<v
         );
       }
     }
+
+    // Non-blocking automated notification dispatch to WhatsApp/Email
+    dispatchAutomatedNotification({
+      referenceCode,
+      customerName: name,
+      companyName: companyName,
+      phone: phone,
+      email: email,
+      cityState: cityState,
+      notes: message,
+      preferredChannel: 'whatsapp',
+    }).catch((err) => console.error('Notification dispatch error:', err));
 
     res.status(201).json({
       success: true,

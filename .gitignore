@@ -21,3 +21,6 @@ fabric-images2/
 
 # AI Studio internal directory
 .aistudio/
+
+# Local agent skills cache
+.agents/

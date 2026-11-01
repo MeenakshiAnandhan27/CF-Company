@@ -121,7 +121,7 @@ interface FireflyFabric3DViewerProps {
 export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
   onBack,
   onEnquire,
-  isModal = false,
+  isModal = true,
   initialMaterial,
   initialFabricId,
 }) => {
@@ -142,6 +142,15 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [activeCategoryFilter, setActiveCategoryFilter] = useState<string>('All');
 
+
+  // Lock body scroll when 3D Studio is open to prevent page scrolling to footer
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, []);
   // Surface Geometry Mode for Fabrics
   const [surfaceMode, setSurfaceMode] = useState<'drape' | 'curved-swatch' | 'inspection-bed'>('drape');
 
@@ -159,6 +168,7 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
 
   // References for Three.js state
   const mountRef = useRef<HTMLDivElement>(null);
+  const carouselContainerRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<THREE.Scene | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
@@ -185,6 +195,19 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
   const currentZoomRef = useRef<number>(zoomLevel);
 
   // Refs for animation loop state
+
+  // Auto-scroll the bottom carousel to keep the active fabric visible
+  useEffect(() => {
+    if (carouselContainerRef.current) {
+      const activeId = CATALOGUE_3D_ITEMS[selectedIndex]?.id;
+      if (activeId) {
+        const activeEl = carouselContainerRef.current.querySelector<HTMLElement>(`[data-item-id="${activeId}"]`);
+        if (activeEl) {
+          activeEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+      }
+    }
+  }, [selectedIndex]);
   const isAutoSpinningRef = useRef<boolean>(isAutoSpinning);
   const isBreezeActiveRef = useRef<boolean>(isBreezeActive);
   const surfaceModeRef = useRef<'drape' | 'curved-swatch' | 'inspection-bed'>(surfaceMode);
@@ -682,7 +705,9 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowRight') {
+      if (e.key === 'Escape') {
+        if (onBack) onBack();
+      } else if (e.key === 'ArrowRight') {
         setSelectedIndex((prev) => (prev + 1) % CATALOGUE_3D_ITEMS.length);
       } else if (e.key === 'ArrowLeft') {
         setSelectedIndex((prev) => (prev - 1 + CATALOGUE_3D_ITEMS.length) % CATALOGUE_3D_ITEMS.length);
@@ -775,76 +800,76 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
 
       {/* Main 3D Canvas & Spec Area */}
       <div className="relative flex-1 flex flex-col md:flex-row overflow-hidden min-h-0">
-        {/* Left Control Column: Details & Calibrated PBR Specs (Moved to the left) */}
-        <div className="w-full md:w-80 lg:w-96 border-b md:border-b-0 md:border-r border-[#262420] bg-[#12110F] flex flex-col overflow-y-auto shrink-0 order-2 md:order-1 max-h-[35vh] md:max-h-none">
-          <div className="p-4 sm:p-5 space-y-4 sm:space-y-5">
+        {/* Right Details Column: Compact, Non-Scrolling Full View */}
+        <div className="w-full md:w-80 lg:w-[350px] border-t md:border-t-0 md:border-l border-[#262420] bg-[#12110F] flex flex-col justify-between p-3.5 sm:p-4 overflow-hidden shrink-0 order-2 md:order-2 select-text">
+          <div className="space-y-3 flex-1 flex flex-col justify-between">
             {/* Title & Category Badge */}
-            <div className="space-y-1.5 sm:space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="inline-flex items-center gap-1 text-xs font-mono uppercase tracking-wider text-[#C6A66B]">
+            <div>
+              <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-[#C6A66B]">
+                <span className="inline-flex items-center gap-1.5 font-semibold">
                   <Layers className="w-3 h-3 text-[#E6C687]" />
                   {currentItem.subcategory}
                 </span>
-                <span className="text-xs font-mono text-neutral-400">
+                <span className="text-neutral-400">
                   {selectedIndex + 1} of {CATALOGUE_3D_ITEMS.length}
                 </span>
               </div>
-              <h2 className="font-serif text-lg sm:text-2xl font-bold text-[#F8F5EE] leading-tight">
+              <h2 className="font-serif text-base sm:text-lg font-bold text-[#F8F5EE] leading-snug mt-1">
                 {currentItem.name}
               </h2>
-              <p className="text-xs text-neutral-300 leading-relaxed">
+              <p className="text-[11px] text-neutral-300 leading-snug line-clamp-2 mt-1">
                 {currentItem.description}
               </p>
             </div>
 
             {/* Specifications Card */}
-            <div className="space-y-2 pt-3 border-t border-[#262420]">
-              <h4 className="text-[10px] font-mono uppercase tracking-wider text-neutral-400 font-semibold">
+            <div className="pt-2 border-t border-[#262420]">
+              <h4 className="text-[9px] font-mono uppercase tracking-wider text-neutral-400 font-semibold mb-1.5">
                 Textile Specifications
               </h4>
-              <div className="grid grid-cols-2 gap-2 text-xs">
-                <div className="p-2 rounded-lg bg-[#181715] border border-[#262420]">
-                  <span className="text-[10px] text-neutral-400 block font-mono">Composition</span>
-                  <span className="text-[#FAF7F0] font-medium leading-tight block mt-0.5">
+              <div className="grid grid-cols-2 gap-1.5 text-xs">
+                <div className="p-1.5 rounded-lg bg-[#181715] border border-[#262420]">
+                  <span className="text-[9px] text-neutral-400 block font-mono">Composition</span>
+                  <span className="text-[#FAF7F0] font-medium text-[11px] leading-tight block mt-0.5 truncate" title={currentItem.composition}>
                     {currentItem.composition}
                   </span>
                 </div>
 
-                <div className="p-2 rounded-lg bg-[#181715] border border-[#262420]">
-                  <span className="text-[10px] text-neutral-400 block font-mono">Weave / Construction</span>
-                  <span className="text-[#FAF7F0] font-medium leading-tight block mt-0.5">
+                <div className="p-1.5 rounded-lg bg-[#181715] border border-[#262420]">
+                  <span className="text-[9px] text-neutral-400 block font-mono">Weave / Construction</span>
+                  <span className="text-[#FAF7F0] font-medium text-[11px] leading-tight block mt-0.5 truncate" title={currentItem.weave}>
                     {currentItem.weave || 'Mill Standard'}
                   </span>
                 </div>
 
-                <div className="p-2 rounded-lg bg-[#181715] border border-[#262420]">
-                  <span className="text-[10px] text-neutral-400 block font-mono">Weight / Density</span>
-                  <span className="text-[#FAF7F0] font-medium leading-tight block mt-0.5">
-                    {currentItem.weightGsm || 'Standard Production Weight'}
+                <div className="p-1.5 rounded-lg bg-[#181715] border border-[#262420]">
+                  <span className="text-[9px] text-neutral-400 block font-mono">Weight / Density</span>
+                  <span className="text-[#FAF7F0] font-medium text-[11px] leading-tight block mt-0.5 truncate">
+                    {currentItem.weightGsm || 'Standard Weight'}
                   </span>
                 </div>
 
-                <div className="p-2 rounded-lg bg-[#181715] border border-[#262420]">
-                  <span className="text-[10px] text-neutral-400 block font-mono">Texture Resolution</span>
-                  <span className="text-[#FAF7F0] font-medium leading-tight block mt-0.5 font-mono">
-                    {currentItem.width}×{currentItem.height} {currentItem.format}
+                <div className="p-1.5 rounded-lg bg-[#181715] border border-[#262420]">
+                  <span className="text-[9px] text-neutral-400 block font-mono">Texture Resolution</span>
+                  <span className="text-[#FAF7F0] font-medium text-[11px] leading-tight block mt-0.5 font-mono">
+                    {currentItem.width}×{currentItem.height}
                   </span>
                 </div>
               </div>
             </div>
 
             {/* Physical Shader Configuration */}
-            <div className="space-y-2.5 pt-3 border-t border-[#262420]">
-              <h4 className="text-[10px] font-mono uppercase tracking-wider text-neutral-400 font-semibold">
+            <div className="pt-2 border-t border-[#262420]">
+              <h4 className="text-[9px] font-mono uppercase tracking-wider text-neutral-400 font-semibold mb-1.5">
                 PBR Surface Physics
               </h4>
-              <div className="space-y-2 text-xs font-mono">
+              <div className="space-y-1.5 text-[10px] font-mono">
                 <div>
-                  <div className="flex justify-between text-neutral-400 mb-1">
+                  <div className="flex justify-between text-neutral-400 mb-0.5">
                     <span>Roughness (Matte vs Specular)</span>
                     <span className="text-[#E6C687]">{currentItem.roughness}</span>
                   </div>
-                  <div className="w-full h-1.5 bg-[#201E1A] rounded-full overflow-hidden">
+                  <div className="w-full h-1 bg-[#201E1A] rounded-full overflow-hidden">
                     <div
                       className="h-full bg-gradient-to-r from-[#D4AF37] to-[#B38728]"
                       style={{ width: `${currentItem.roughness * 100}%` }}
@@ -853,11 +878,11 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
                 </div>
 
                 <div>
-                  <div className="flex justify-between text-neutral-400 mb-1">
+                  <div className="flex justify-between text-neutral-400 mb-0.5">
                     <span>Sheen & Grazing Fiber Luster</span>
                     <span className="text-[#E6C687]">{currentItem.sheen ?? 0.2}</span>
                   </div>
-                  <div className="w-full h-1.5 bg-[#201E1A] rounded-full overflow-hidden">
+                  <div className="w-full h-1 bg-[#201E1A] rounded-full overflow-hidden">
                     <div
                       className="h-full bg-gradient-to-r from-[#D4AF37] to-[#B38728]"
                       style={{ width: `${(currentItem.sheen ?? 0.2) * 100}%` }}
@@ -867,11 +892,11 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
 
                 {currentItem.drapeStiffness !== undefined && (
                   <div>
-                    <div className="flex justify-between text-neutral-400 mb-1">
+                    <div className="flex justify-between text-neutral-400 mb-0.5">
                       <span>Drape Structural Stiffness</span>
                       <span className="text-[#E6C687]">{currentItem.drapeStiffness}</span>
                     </div>
-                    <div className="w-full h-1.5 bg-[#201E1A] rounded-full overflow-hidden">
+                    <div className="w-full h-1 bg-[#201E1A] rounded-full overflow-hidden">
                       <div
                         className="h-full bg-gradient-to-r from-[#D4AF37] to-[#B38728]"
                         style={{ width: `${currentItem.drapeStiffness * 100}%` }}
@@ -883,10 +908,10 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
             </div>
 
             {/* Actions */}
-            <div className="pt-3 border-t border-[#262420]">
+            <div className="pt-2 border-t border-[#262420]">
               <button
                 onClick={() => onEnquire && onEnquire(currentItem)}
-                className="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-[#D4AF37] via-[#F2D785] to-[#B38728] text-[#121110] font-semibold text-xs tracking-wider uppercase flex items-center justify-center gap-2 hover:opacity-95 transition-opacity shadow-lg cursor-pointer"
+                className="w-full py-2 px-3 rounded-lg bg-gradient-to-r from-[#D4AF37] via-[#F2D785] to-[#B38728] text-[#121110] font-semibold text-[11px] tracking-wider uppercase flex items-center justify-center gap-1.5 hover:opacity-95 transition-opacity shadow-md cursor-pointer active:scale-[0.99]"
               >
                 <Send className="w-3.5 h-3.5" />
                 <span>Enquire About This Fabric</span>
@@ -896,7 +921,7 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
         </div>
 
         {/* Right Section: Fabric Viewing Area with Full Edge-to-Edge Control Bar */}
-        <div className="relative flex-1 flex flex-col overflow-hidden h-full order-1 md:order-2 min-h-0">
+        <div className="relative flex-1 flex flex-col overflow-hidden h-full order-1 md:order-1 min-h-0">
           {/* Interactive Viewport Area */}
           <div
             onPointerDown={handlePointerDown}
@@ -945,11 +970,9 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
             )}
           </div>
 
-          {/* Fabric Viewer Bar - Full Edge-to-Edge Width Directly Beneath the Fabric Viewer */}
-          <div className="w-full border-t border-[#262420] bg-[#141311]/95 backdrop-blur-md px-3 sm:px-4 py-2 flex flex-wrap items-center justify-between gap-2 shrink-0 z-10">
-            {/* 3D Turntable Angle & Zoom Indicator */}
-            <div className="flex items-center gap-2">
-              <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-[#1A1916] border border-[#332F26] text-xs font-mono text-neutral-300">
+          {/* 3D Turntable Angle & Zoom Floating Badge (Bottom Left) */}
+            <div className="absolute bottom-4 right-4 z-20 pointer-events-none">
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#141311]/85 backdrop-blur-md border border-[#332F26] text-xs font-mono text-neutral-300 shadow-lg">
                 <RotateCw className="w-3 h-3 text-[#D4AF37]" />
                 <span>{Math.round(((rotationY % 360) + 360) % 360)}° Azimuth</span>
                 <span className="text-neutral-500">•</span>
@@ -957,92 +980,92 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
               </div>
             </div>
 
-            {/* Viewport Action Controls */}
-            <div className="flex items-center gap-1 sm:gap-1.5 bg-[#1A1916] p-1 rounded-xl border border-[#332F26]">
+            {/* Vertical Floating Controls Stack — One by One, Top to Bottom (Right Side of Viewport) */}
+            <div className="absolute top-1/2 -translate-y-1/2 left-4 z-20 flex flex-col items-center gap-1 sm:gap-1.5 bg-[#141311]/90 backdrop-blur-md p-1.5 rounded-2xl border border-[#332F26] shadow-[0_8px_32px_rgba(0,0,0,0.6)]">
               {/* Auto-spin Toggle */}
               <button
                 onClick={() => setIsAutoSpinning(!isAutoSpinning)}
-                className={`p-1.5 sm:p-2 rounded-lg transition-all cursor-pointer ${
+                className={`p-2 rounded-xl transition-all cursor-pointer ${
                   isAutoSpinning
-                    ? 'bg-[#D4AF37]/20 text-[#F5DE93] border border-[#D4AF37]/40'
+                    ? 'bg-[#D4AF37]/20 text-[#F5DE93] border border-[#D4AF37]/40 shadow-xs'
                     : 'text-neutral-400 hover:text-white hover:bg-white/10'
                 }`}
                 title={isAutoSpinning ? 'Pause auto-rotation (Space)' : 'Start auto-rotation (Space)'}
               >
-                {isAutoSpinning ? <Pause className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <Play className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
+                {isAutoSpinning ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
               </button>
 
               {/* Quick 180 Flip */}
               <button
                 onClick={handleFlip180}
-                className="p-1.5 sm:p-2 rounded-lg text-neutral-400 hover:text-[#F5DE93] hover:bg-white/10 transition-colors cursor-pointer"
+                className="p-2 rounded-xl text-neutral-400 hover:text-[#F5DE93] hover:bg-white/10 transition-colors cursor-pointer"
                 title="Flip 180° to inspect reverse side (F)"
               >
-                <Repeat className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <Repeat className="w-4 h-4" />
               </button>
 
               {/* Macro View Zoom */}
               <button
                 onClick={handleMacroZoom}
-                className="p-1.5 sm:p-2 rounded-lg text-neutral-400 hover:text-[#F5DE93] hover:bg-white/10 transition-colors cursor-pointer"
+                className="p-2 rounded-xl text-neutral-400 hover:text-[#F5DE93] hover:bg-white/10 transition-colors cursor-pointer"
                 title="Macro close-up inspection"
               >
-                <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <Eye className="w-4 h-4" />
               </button>
 
               {/* Breeze Airflow Toggle (in drape mode) */}
               {surfaceMode === 'drape' && (
                 <button
                   onClick={() => setIsBreezeActive(!isBreezeActive)}
-                  className={`p-1.5 sm:p-2 rounded-lg transition-all cursor-pointer ${
+                  className={`p-2 rounded-xl transition-all cursor-pointer ${
                     isBreezeActive
-                      ? 'bg-[#38BDF8]/20 text-[#7DD3FC] border border-[#38BDF8]/40'
+                      ? 'bg-[#38BDF8]/20 text-[#7DD3FC] border border-[#38BDF8]/40 shadow-xs'
                       : 'text-neutral-400 hover:text-white hover:bg-white/10'
                   }`}
                   title={isBreezeActive ? 'Pause cloth airflow (B)' : 'Activate cloth airflow (B)'}
                 >
-                  <Wind className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                  <Wind className="w-4 h-4" />
                 </button>
               )}
 
               {/* Camera Reset */}
               <button
                 onClick={handleResetCamera}
-                className="p-1.5 sm:p-2 rounded-lg text-neutral-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                className="p-2 rounded-xl text-neutral-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
                 title="Reset camera view (R)"
               >
-                <RotateCcw className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <RotateCcw className="w-4 h-4" />
               </button>
 
-              <div className="w-[1px] h-4 bg-[#332F26] mx-0.5" />
+              {/* Divider between view controls and zoom */}
+              <div className="w-4 h-[1px] bg-[#332F26] my-0.5" />
 
               {/* Zoom In */}
               <button
                 onClick={() => setZoomLevel((prev) => Math.min(3.5, prev + 0.25))}
-                className="p-1.5 sm:p-2 rounded-lg text-neutral-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                className="p-2 rounded-xl text-neutral-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
                 title="Zoom in"
               >
-                <ZoomIn className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <ZoomIn className="w-4 h-4" />
               </button>
 
               {/* Zoom Out */}
               <button
                 onClick={() => setZoomLevel((prev) => Math.max(0.6, prev - 0.25))}
-                className="p-1.5 sm:p-2 rounded-lg text-neutral-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                className="p-2 rounded-xl text-neutral-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
                 title="Zoom out"
               >
-                <ZoomOut className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <ZoomOut className="w-4 h-4" />
               </button>
             </div>
-          </div>
         </div>
       </div>
 
       {/* Bottom Product Selector Drawer (All 24 Fabrics with Textile Filters) */}
-      <div className="border-t border-[#262420] bg-[#141311] px-4 py-2.5 z-20 shrink-0">
-        <div className="max-w-7xl mx-auto space-y-2">
+      <div className="w-full border-t border-[#262420] bg-[#141311] px-3 sm:px-6 py-2.5 z-20 shrink-0">
+        <div className="w-full space-y-2">
           {/* Category Filter Chips & Search Bar */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 w-full">
             <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
               <button
                 data-tab="all"

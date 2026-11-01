@@ -17,7 +17,9 @@ export const FIREFLY_FABRICS: Catalogue3DItem[] = CATALOGUE_3D_ITEMS;
 /**
  * Intelligent query matching for deep-linking
  */
-export function findMatchingFireflyIndex(query?: string | null): number {
+export function findMatchingFireflyIndex(
+  query?: string | { id?: string; name?: string; productCode?: string; matchedProductId?: string; filename?: string } | null
+): number {
   return findMatchingCatalogueIndex(query);
 }
 

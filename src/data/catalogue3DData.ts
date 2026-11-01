@@ -60,117 +60,6 @@ export interface Catalogue3DItem {
 
 export const CATALOGUE_3D_ITEMS: Catalogue3DItem[] = [
   {
-    "id": "cf-chiffon-png",
-    "filename": "chiffon.png",
-    "sourceDirectory": "D:/CF/fabric-images3",
-    "format": "PNG",
-    "width": 848,
-    "height": 1264,
-    "fileSizeBytes": 2037489,
-    "fileSizeFormatted": "1989.7 KB",
-    "name": "Silk Georgette Chiffon",
-    "category": "fabric",
-    "subcategory": "Synthetics & Sheers",
-    "composition": "100% Micro-Filament Polyester Chiffon",
-    "weave": "High-Twist Alternating S/Z Crepe Weave",
-    "weightGsm": "65 GSM",
-    "drapeStiffness": 0.15,
-    "roughness": 0.6,
-    "metalness": 0,
-    "sheen": 0.4,
-    "sheenColor": "#F5ECDF",
-    "description": "Ethereal, semi-transparent sheer crepe with ultra-supple liquid drape, subtle pebble surface texture, and floating airborne movement.",
-    "imageUrl": getCatalogueAssetUrl("chiffon.png"),
-    "textureRepeat": {
-      "x": 2,
-      "y": 2
-    }
-  },
-  {
-    "id": "cf-satin-png",
-    "filename": "satin.png",
-    "sourceDirectory": "D:/CF/fabric-images3",
-    "format": "PNG",
-    "width": 775,
-    "height": 1208,
-    "fileSizeBytes": 2052125,
-    "fileSizeFormatted": "2004.0 KB",
-    "name": "Duchess Bridal Luster Satin",
-    "category": "fabric",
-    "subcategory": "Blends & Luxury",
-    "composition": "Poly-Silk High-Density Filament Blend",
-    "weave": "8-End Warp-Faced Sateen / Satin Float",
-    "weightGsm": "220 GSM",
-    "drapeStiffness": 0.28,
-    "roughness": 0.25,
-    "metalness": 0.05,
-    "sheen": 0.85,
-    "sheenColor": "#FFFFFF",
-    "clearcoat": 0.45,
-    "clearcoatRoughness": 0.15,
-    "description": "High-sheen duchess satin woven with continuous micro-filaments, presenting brilliant directional specular highlights and sumptuous cascading fluid folds.",
-    "imageUrl": getCatalogueAssetUrl("satin.png"),
-    "textureRepeat": {
-      "x": 2,
-      "y": 2
-    }
-  },
-  {
-    "id": "cf-taffeta-png",
-    "filename": "taffeta.png",
-    "sourceDirectory": "D:/CF/fabric-images3",
-    "format": "PNG",
-    "width": 848,
-    "height": 1264,
-    "fileSizeBytes": 2472676,
-    "fileSizeFormatted": "2414.7 KB",
-    "name": "High-Luster Crisp Taffeta",
-    "category": "fabric",
-    "subcategory": "Synthetics & Sheers",
-    "composition": "100% High-Tenacity Polyester Taffeta",
-    "weave": "High-Count 190T Plain Weave",
-    "weightGsm": "95 GSM",
-    "drapeStiffness": 0.52,
-    "roughness": 0.35,
-    "metalness": 0.05,
-    "sheen": 0.65,
-    "sheenColor": "#F8EEFF",
-    "clearcoat": 0.3,
-    "description": "Crisp, smooth woven fabric with a signature whisper hand, lustrous two-tone light interplay, and defined structural pleats.",
-    "imageUrl": getCatalogueAssetUrl("taffeta.png"),
-    "textureRepeat": {
-      "x": 2,
-      "y": 2
-    }
-  },
-  {
-    "id": "cf-velvet-png",
-    "filename": "velvet.png",
-    "sourceDirectory": "D:/CF/fabric-images3",
-    "format": "PNG",
-    "width": 848,
-    "height": 1264,
-    "fileSizeBytes": 2279347,
-    "fileSizeFormatted": "2225.9 KB",
-    "name": "Plush Cut-Pile Velvet",
-    "category": "fabric",
-    "subcategory": "Blends & Luxury",
-    "composition": "80% Viscose Rayon / 20% Silk Ground",
-    "weave": "Woven Double-Cloth Cut Warp Pile",
-    "weightGsm": "320 GSM",
-    "drapeStiffness": 0.4,
-    "roughness": 0.9,
-    "metalness": 0,
-    "sheen": 0.75,
-    "sheenColor": "#FFF3E0",
-    "description": "Ultra-luxurious dense vertical cut pile with intense directional luster, changing luminosity with pile direction and yielding deep, rich drape folds.",
-    "imageUrl": getCatalogueAssetUrl("velvet.png"),
-    "textureRepeat": {
-      "x": 2,
-      "y": 2
-    }
-  },
-  {
     "id": "cf-canvas-gada-png",
     "filename": "canvas gada.png",
     "sourceDirectory": "D:/CF/fabric-images",
@@ -734,6 +623,117 @@ export const CATALOGUE_3D_ITEMS: Catalogue3DItem[] = [
       "x": 2,
       "y": 2
     }
+  },
+  {
+    "id": "cf-chiffon-png",
+    "filename": "chiffon.png",
+    "sourceDirectory": "D:/CF/fabric-images3",
+    "format": "PNG",
+    "width": 848,
+    "height": 1264,
+    "fileSizeBytes": 2037489,
+    "fileSizeFormatted": "1989.7 KB",
+    "name": "Silk Georgette Chiffon",
+    "category": "fabric",
+    "subcategory": "Synthetics & Sheers",
+    "composition": "100% Micro-Filament Polyester Chiffon",
+    "weave": "High-Twist Alternating S/Z Crepe Weave",
+    "weightGsm": "65 GSM",
+    "drapeStiffness": 0.15,
+    "roughness": 0.6,
+    "metalness": 0,
+    "sheen": 0.4,
+    "sheenColor": "#F5ECDF",
+    "description": "Ethereal, semi-transparent sheer crepe with ultra-supple liquid drape, subtle pebble surface texture, and floating airborne movement.",
+    "imageUrl": getCatalogueAssetUrl("chiffon.png"),
+    "textureRepeat": {
+      "x": 2,
+      "y": 2
+    }
+  },
+  {
+    "id": "cf-satin-png",
+    "filename": "satin.png",
+    "sourceDirectory": "D:/CF/fabric-images3",
+    "format": "PNG",
+    "width": 775,
+    "height": 1208,
+    "fileSizeBytes": 2052125,
+    "fileSizeFormatted": "2004.0 KB",
+    "name": "Duchess Bridal Luster Satin",
+    "category": "fabric",
+    "subcategory": "Blends & Luxury",
+    "composition": "Poly-Silk High-Density Filament Blend",
+    "weave": "8-End Warp-Faced Sateen / Satin Float",
+    "weightGsm": "220 GSM",
+    "drapeStiffness": 0.28,
+    "roughness": 0.25,
+    "metalness": 0.05,
+    "sheen": 0.85,
+    "sheenColor": "#FFFFFF",
+    "clearcoat": 0.45,
+    "clearcoatRoughness": 0.15,
+    "description": "High-sheen duchess satin woven with continuous micro-filaments, presenting brilliant directional specular highlights and sumptuous cascading fluid folds.",
+    "imageUrl": getCatalogueAssetUrl("satin.png"),
+    "textureRepeat": {
+      "x": 2,
+      "y": 2
+    }
+  },
+  {
+    "id": "cf-taffeta-png",
+    "filename": "taffeta.png",
+    "sourceDirectory": "D:/CF/fabric-images3",
+    "format": "PNG",
+    "width": 848,
+    "height": 1264,
+    "fileSizeBytes": 2472676,
+    "fileSizeFormatted": "2414.7 KB",
+    "name": "High-Luster Crisp Taffeta",
+    "category": "fabric",
+    "subcategory": "Synthetics & Sheers",
+    "composition": "100% High-Tenacity Polyester Taffeta",
+    "weave": "High-Count 190T Plain Weave",
+    "weightGsm": "95 GSM",
+    "drapeStiffness": 0.52,
+    "roughness": 0.35,
+    "metalness": 0.05,
+    "sheen": 0.65,
+    "sheenColor": "#F8EEFF",
+    "clearcoat": 0.3,
+    "description": "Crisp, smooth woven fabric with a signature whisper hand, lustrous two-tone light interplay, and defined structural pleats.",
+    "imageUrl": getCatalogueAssetUrl("taffeta.png"),
+    "textureRepeat": {
+      "x": 2,
+      "y": 2
+    }
+  },
+  {
+    "id": "cf-velvet-png",
+    "filename": "velvet.png",
+    "sourceDirectory": "D:/CF/fabric-images3",
+    "format": "PNG",
+    "width": 848,
+    "height": 1264,
+    "fileSizeBytes": 2279347,
+    "fileSizeFormatted": "2225.9 KB",
+    "name": "Plush Cut-Pile Velvet",
+    "category": "fabric",
+    "subcategory": "Blends & Luxury",
+    "composition": "80% Viscose Rayon / 20% Silk Ground",
+    "weave": "Woven Double-Cloth Cut Warp Pile",
+    "weightGsm": "320 GSM",
+    "drapeStiffness": 0.4,
+    "roughness": 0.9,
+    "metalness": 0,
+    "sheen": 0.75,
+    "sheenColor": "#FFF3E0",
+    "description": "Ultra-luxurious dense vertical cut pile with intense directional luster, changing luminosity with pile direction and yielding deep, rich drape folds.",
+    "imageUrl": getCatalogueAssetUrl("velvet.png"),
+    "textureRepeat": {
+      "x": 2,
+      "y": 2
+    }
   }
 ];
 
@@ -753,9 +753,25 @@ export function getCatalogueItem(indexOrId: number | string): Catalogue3DItem {
 /**
  * Intelligent query matching for deep-linking
  */
-export function findMatchingCatalogueIndex(query?: string | null): number {
+export function findMatchingCatalogueIndex(
+  query?: string | { id?: string; name?: string; productCode?: string; matchedProductId?: string; filename?: string } | null
+): number {
   if (!query) return 0;
-  const q = query.toLowerCase().trim();
+  let q = '';
+  if (typeof query === 'string') {
+    q = query.toLowerCase().trim();
+  } else if (typeof query === 'object') {
+    if (query.id) {
+      const directIdx = CATALOGUE_3D_ITEMS.findIndex((item) => item.id.toLowerCase() === query.id?.toLowerCase());
+      if (directIdx !== -1) return directIdx;
+    }
+    if (query.filename) {
+      const fileIdx = CATALOGUE_3D_ITEMS.findIndex((item) => item.filename.toLowerCase() === query.filename?.toLowerCase());
+      if (fileIdx !== -1) return fileIdx;
+    }
+    q = `${query.id || ''} ${query.name || ''} ${query.productCode || ''} ${query.matchedProductId || ''}`.toLowerCase().trim();
+  }
+  if (!q) return 0;
 
   // Exact ID or filename
   const exactIndex = CATALOGUE_3D_ITEMS.findIndex(
@@ -763,7 +779,151 @@ export function findMatchingCatalogueIndex(query?: string | null): number {
   );
   if (exactIndex !== -1) return exactIndex;
 
-  // Keyword priority matching
+  // 1. Canvas / Gada
+  if (q.includes('canvas') || q.includes('cf-cnv') || q.includes('mat-canvas') || q.includes('drill-02')) {
+    const idx = CATALOGUE_3D_ITEMS.findIndex((i) => i.id.includes('canvas-gada'));
+    if (idx !== -1) return idx;
+  }
+  if (q.includes('gada') || q.includes('calico')) {
+    const idx = CATALOGUE_3D_ITEMS.findIndex((i) => i.id.includes('canvas-gada') || i.id.includes('gada'));
+    if (idx !== -1) return idx;
+  }
+
+  // 2. Mesh fabrics (Must be checked before generic cotton / polyester)
+  if (q.includes('lycra') || q.includes('cf-lms') || q.includes('mat-lycra')) {
+    const idx = CATALOGUE_3D_ITEMS.findIndex((i) => i.id.includes('lycra'));
+    if (idx !== -1) return idx;
+  }
+  if ((q.includes('poly') && q.includes('mesh')) || q.includes('cf-pms') || q.includes('mat-polyester-mesh')) {
+    const idx = CATALOGUE_3D_ITEMS.findIndex((i) => i.id.includes('polyster-mesh'));
+    if (idx !== -1) return idx;
+  }
+  if ((q.includes('cotton') && q.includes('mesh')) || q.includes('cf-cms') || q.includes('mat-cotton-mesh')) {
+    const idx = CATALOGUE_3D_ITEMS.findIndex((i) => i.id.includes('cotton-mesh'));
+    if (idx !== -1) return idx;
+  }
+
+  // 3. Poly-cotton blend (Must be checked before pure cotton / pure polyester)
+  if (q.includes('poly-cotton') || q.includes('polycotton') || q.includes('cf-pct') || q.includes('mat-poly-cotton') || q.includes('plain-03')) {
+    const idx = CATALOGUE_3D_ITEMS.findIndex((i) => i.id.includes('poly-cotton'));
+    if (idx !== -1) return idx;
+  }
+
+  // 4. Pure Cotton (Must not be mesh or poly-cotton)
+  if ((q.includes('cotton') || q.includes('cf-ctn') || q.includes('mat-cotton')) && !q.includes('mesh') && !q.includes('poly')) {
+    const idx = CATALOGUE_3D_ITEMS.findIndex((i) => i.id === 'cf-cotton-png');
+    if (idx !== -1) return idx;
+  }
+
+  // 5. Pure Polyester / Polyster (Must not be mesh or poly-cotton or satin)
+  if ((q.includes('polyster') || q.includes('polyester') || q.includes('cf-ply') || q.includes('mat-polyester')) && !q.includes('mesh') && !q.includes('cotton') && !q.includes('satin')) {
+    const idx = CATALOGUE_3D_ITEMS.findIndex((i) => i.id === 'cf-polyster-png');
+    if (idx !== -1) return idx;
+  }
+
+  // 6. Twill (Steep chino twill)
+  if ((q.includes('twill') || q.includes('cf-twl') || q.includes('mat-twill') || q.includes('twill-01')) && !q.includes('poly')) {
+    const idx = CATALOGUE_3D_ITEMS.findIndex((i) => i.id === 'cf-twill-jpg');
+    if (idx !== -1) return idx;
+  }
+
+  // 7. Drill
+  if (q.includes('drill') || q.includes('cf-drl') || q.includes('mat-drill') || q.includes('drill-01')) {
+    const idx = CATALOGUE_3D_ITEMS.findIndex((i) => i.id === 'cf-twill-jpg' || i.id.includes('gada'));
+    if (idx !== -1) return idx;
+  }
+
+  // 8. Duck
+  if (q.includes('duck') || q.includes('cf-dck') || q.includes('mat-duck') || q.includes('duck-01')) {
+    const idx = CATALOGUE_3D_ITEMS.findIndex((i) => i.id.includes('duck'));
+    if (idx !== -1) return idx;
+  }
+
+  // 9. Seersucker
+  if (q.includes('seersucker') || q.includes('cf-ssr') || q.includes('mat-seersucker') || q.includes('fabrics-poplin')) {
+    const idx = CATALOGUE_3D_ITEMS.findIndex((i) => i.id.includes('seersucker'));
+    if (idx !== -1) return idx;
+  }
+
+  // 10. Putta
+  if (q.includes('putta') || q.includes('butta') || q.includes('cf-pta') || q.includes('mat-putta')) {
+    const idx = CATALOGUE_3D_ITEMS.findIndex((i) => i.id.includes('putta'));
+    if (idx !== -1) return idx;
+  }
+
+  // 11. Flannel
+  if (q.includes('flannel') || q.includes('cf-fln') || q.includes('mat-flannel') || q.includes('twill-02')) {
+    const idx = CATALOGUE_3D_ITEMS.findIndex((i) => i.id.includes('flannel'));
+    if (idx !== -1) return idx;
+  }
+
+  // 12. Taffeta
+  if (q.includes('taffeta') || q.includes('cf-tft') || q.includes('mat-taffeta') || q.includes('satin-02')) {
+    const idx = CATALOGUE_3D_ITEMS.findIndex((i) => i.id.includes('taffeta'));
+    if (idx !== -1) return idx;
+  }
+
+  // 13. Satin
+  if (q.includes('satin') || q.includes('cf-stn') || q.includes('mat-satin') || q.includes('satin-01')) {
+    const idx = CATALOGUE_3D_ITEMS.findIndex((i) => i.id.includes('satin'));
+    if (idx !== -1) return idx;
+  }
+
+  // 14. Chiffon
+  if (q.includes('chiffon') || q.includes('cf-chf') || q.includes('mat-chiffon')) {
+    const idx = CATALOGUE_3D_ITEMS.findIndex((i) => i.id.includes('chiffon'));
+    if (idx !== -1) return idx;
+  }
+
+  // 15. Velvet
+  if (q.includes('velvet') || q.includes('cf-vlv') || q.includes('mat-velvet')) {
+    const idx = CATALOGUE_3D_ITEMS.findIndex((i) => i.id.includes('velvet'));
+    if (idx !== -1) return idx;
+  }
+
+  // 16. Fur
+  if (q.includes('fur') || q.includes('cf-fur') || q.includes('mat-fur')) {
+    const idx = CATALOGUE_3D_ITEMS.findIndex((i) => i.id.includes('fur'));
+    if (idx !== -1) return idx;
+  }
+
+  // 17. Linen
+  if (q.includes('linen') || q.includes('flax') || q.includes('cf-lnn') || q.includes('mat-linen')) {
+    const idx = CATALOGUE_3D_ITEMS.findIndex((i) => i.id.includes('linen'));
+    if (idx !== -1) return idx;
+  }
+
+  // 18. Plain
+  if (q.includes('plain') || q.includes('cf-pln') || q.includes('mat-plain') || q.includes('plain-01')) {
+    const idx = CATALOGUE_3D_ITEMS.findIndex((i) => i.id.includes('plain'));
+    if (idx !== -1) return idx;
+  }
+
+  // 19. Stripes
+  if (q.includes('stripe') || q.includes('cf-stp') || q.includes('mat-stripes')) {
+    const idx = CATALOGUE_3D_ITEMS.findIndex((i) => i.id.includes('stripes'));
+    if (idx !== -1) return idx;
+  }
+
+  // 20. Checked
+  if (q.includes('check') || q.includes('cf-chk') || q.includes('mat-checked')) {
+    const idx = CATALOGUE_3D_ITEMS.findIndex((i) => i.id.includes('checked'));
+    if (idx !== -1) return idx;
+  }
+
+  // 21. Denim
+  if (q.includes('denim') || q.includes('cf-dnm') || q.includes('mat-denim')) {
+    const idx = CATALOGUE_3D_ITEMS.findIndex((i) => i.id.includes('denim'));
+    if (idx !== -1) return idx;
+  }
+
+  // 22. Chambray
+  if (q.includes('chambray') || q.includes('cf-chm') || q.includes('mat-chambray')) {
+    const idx = CATALOGUE_3D_ITEMS.findIndex((i) => i.id.includes('chambray'));
+    if (idx !== -1) return idx;
+  }
+
+  // 23. Accessories & Buttons
   if (q.includes('glass button') || q.includes('crystal button')) {
     const idx = CATALOGUE_3D_ITEMS.findIndex((i) => i.id.includes('glass-button'));
     if (idx !== -1) return idx;
@@ -792,22 +952,6 @@ export function findMatchingCatalogueIndex(query?: string | null): number {
     const idx = CATALOGUE_3D_ITEMS.findIndex((i) => i.id.includes('plastic-button'));
     if (idx !== -1) return idx;
   }
-  if (q.includes('denim')) {
-    const idx = CATALOGUE_3D_ITEMS.findIndex((i) => i.id.includes('denim'));
-    if (idx !== -1) return idx;
-  }
-  if (q.includes('satin')) {
-    const idx = CATALOGUE_3D_ITEMS.findIndex((i) => i.id.includes('satin'));
-    if (idx !== -1) return idx;
-  }
-  if (q.includes('chiffon')) {
-    const idx = CATALOGUE_3D_ITEMS.findIndex((i) => i.id.includes('chiffon'));
-    if (idx !== -1) return idx;
-  }
-  if (q.includes('chambray')) {
-    const idx = CATALOGUE_3D_ITEMS.findIndex((i) => i.id.includes('chambray'));
-    if (idx !== -1) return idx;
-  }
   if (q.includes('lace')) {
     const idx = CATALOGUE_3D_ITEMS.findIndex((i) => i.category === 'accessory' && i.name.toLowerCase().includes('lace'));
     if (idx !== -1) return idx;
@@ -821,7 +965,16 @@ export function findMatchingCatalogueIndex(query?: string | null): number {
     if (idx !== -1) return idx;
   }
 
-  // Substring match
+  // 24. Word-boundary token fallback
+  const words = q.split(/[\s\-_/,\(\)]+/).filter((w) => w.length > 2);
+  for (const word of words) {
+    const foundIdx = CATALOGUE_3D_ITEMS.findIndex(
+      (item) => item.id.toLowerCase().includes(word) || item.name.toLowerCase().includes(word)
+    );
+    if (foundIdx !== -1) return foundIdx;
+  }
+
+  // 25. Substring match
   const subIdx = CATALOGUE_3D_ITEMS.findIndex(
     (item) => item.name.toLowerCase().includes(q) || q.includes(item.name.toLowerCase())
   );

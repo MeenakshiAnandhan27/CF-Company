@@ -467,6 +467,14 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
     setStep3Error('');
     setIsSubmitting(true);
 
+    // Open placeholder tab synchronously to prevent Chrome/Edge popup blocker
+    let channelWindow: Window | null = null;
+    try {
+      channelWindow = window.open('about:blank', '_blank');
+    } catch {
+      // Browser blocked synchronous popup or running in restricted mode
+    }
+
     try {
       const payload: MaterialRequestData = {
         ...formData,
@@ -486,12 +494,52 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
       };
 
       setSubmissionSuccess(submission);
-      window.scrollTo({ top: 100, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // Automatically dispatch to user's chosen channel (WhatsApp or Google Gmail)
+      const targetUrl =
+        formData.preferredContactMethod === 'email'
+          ? getGmailComposeUrl(submission)
+          : getWhatsAppEnquiryUrl(submission);
+
+      if (channelWindow && !channelWindow.closed) {
+        channelWindow.location.href = targetUrl;
+      } else {
+        window.open(targetUrl, '_blank');
+      }
     } catch (err: any) {
+      if (channelWindow && !channelWindow.closed) {
+        channelWindow.close();
+      }
       setStep3Error(err.message || 'Failed to submit material request to server. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  // Google Gmail Direct Web Compose Link Builder
+  const getGmailComposeUrl = (submission: MaterialRequestSubmission) => {
+    const subject = `Material Request [${submission.referenceCode}]: ${submission.materialName} - ${submission.contactName}`;
+    const lines = [
+      `CLASSIC FASHIONS — MATERIAL BRIEF [${submission.referenceCode}]`,
+      ``,
+      `Selected Material: ${submission.materialName} (${submission.category})`,
+      `Quantity: ${isQuantityUndecided ? 'Sampling First / Undecided' : `${submission.quantity} ${submission.unit}`}`,
+      `Target Timeline: ${submission.targetDate || 'Flexible'}`,
+      `Width & GSM: ${submission.width || 'Standard'} | ${submission.gsmOrWeight || 'Standard'}`,
+      `Composition: ${submission.composition || 'As per sample'}`,
+      `Finish: ${submission.weaveOrFinish || 'Standard'}`,
+      ``,
+      `Contact Name: ${submission.contactName}`,
+      `Company / Brand: ${submission.companyName || 'Not specified'}`,
+      `Phone / WhatsApp: ${submission.phone}`,
+      `Email: ${submission.email}`,
+      `Delivery Location: ${submission.cityState}`,
+      submission.additionalNotes ? `Additional Notes: ${submission.additionalNotes}` : '',
+    ].filter(Boolean);
+
+    const body = lines.join('\n');
+    return `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(VERIFIED_EMAIL)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 
   // WhatsApp Enquiry Link Builder
@@ -566,66 +614,68 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
       {/* ========================================================================= */}
       {/* 1. HERO SECTION — ELEGANT LIGHT LUXURY TEXTILE SHOWCASE                    */}
       {/* ========================================================================= */}
-      <section className="relative pt-8 sm:pt-12 pb-8 sm:pb-10 border-b border-[#ECE7DE]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-            {/* Left Hero Content */}
-            <div className="lg:col-span-6 space-y-4">
-              <div className="space-y-3">
-                <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#181715] leading-[1.12]">
-                  Build Your <br />
-                  Material <span className="text-[#8C6534]">Brief</span>
-                </h1>
-                {/* Elegant Gold Diamond Motif Divider */}
-                <DiamondMotif align="left" maxWidth="max-w-sm" />
+      {!submissionSuccess && (
+        <section className="relative pt-8 sm:pt-12 pb-8 sm:pb-10 border-b border-[#ECE7DE]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+              {/* Left Hero Content */}
+              <div className="lg:col-span-6 space-y-4">
+                <div className="space-y-3">
+                  <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#181715] leading-[1.12]">
+                    Build Your <br />
+                    Material <span className="text-[#8C6534]">Brief</span>
+                  </h1>
+                  {/* Elegant Gold Diamond Motif Divider */}
+                  <DiamondMotif align="left" maxWidth="max-w-sm" />
+                </div>
+
+                <p className="text-sm sm:text-base text-[#6B665E] leading-relaxed max-w-xl">
+                  Tell us what you need. Select materials, add references and our team will help you
+                  build the perfect solution.
+                </p>
               </div>
 
-              <p className="text-sm sm:text-base text-[#6B665E] leading-relaxed max-w-xl">
-                Tell us what you need. Select materials, add references and our team will help you
-                build the perfect solution.
-              </p>
-            </div>
+              {/* Right Hero: High-Definition Textile Installation with Wide Spread Shadow & Soft Blur */}
+              <div
+                ref={heroCardRef}
+                onMouseMove={handleMouseMove}
+                onMouseLeave={handleMouseLeave}
+                className="lg:col-span-6 relative flex justify-center lg:justify-end"
+              >
+                <div className="relative w-full max-w-[540px] group">
+                  {/* Ambient Backlight Spread Glow */}
+                  <div
+                    aria-hidden="true"
+                    className="absolute -inset-4 bg-gradient-to-tr from-[#D4AF37]/25 via-[#C49A55]/20 to-[#8C6534]/15 rounded-3xl blur-3xl opacity-75 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                  />
 
-            {/* Right Hero: High-Definition Textile Installation with Wide Spread Shadow & Soft Blur */}
-            <div
-              ref={heroCardRef}
-              onMouseMove={handleMouseMove}
-              onMouseLeave={handleMouseLeave}
-              className="lg:col-span-6 relative flex justify-center lg:justify-end"
-            >
-              <div className="relative w-full max-w-[540px] group">
-                {/* Ambient Backlight Spread Glow */}
-                <div
-                  aria-hidden="true"
-                  className="absolute -inset-4 bg-gradient-to-tr from-[#D4AF37]/25 via-[#C49A55]/20 to-[#8C6534]/15 rounded-3xl blur-3xl opacity-75 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                />
-
-                {/* HD Image Showcase Container with Soft Diffuse Spread Shadow */}
-                <div
-                  className="relative rounded-3xl overflow-hidden bg-white border border-[#E5E0D8] transition-transform duration-300 ease-out"
-                  style={{
-                    boxShadow:
-                      '0 25px 60px -12px rgba(24, 23, 21, 0.12), 0 10px 25px -5px rgba(24, 23, 21, 0.06), 0 0 35px rgba(212, 175, 55, 0.14)',
-                    transform: `perspective(1000px) rotateY(${mousePos.x * 3}deg) rotateX(${
-                      -mousePos.y * 3
-                    }deg)`,
-                  }}
-                >
-                  <div className="relative aspect-[16/9] w-full overflow-hidden bg-[#ECE7DC]">
-                    <img
-                      src="/assets/materials/fabrics.jpg"
-                      alt="High-Definition Studio Fabric Rolls and Combed Linens"
-                      className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105"
-                    />
-                    {/* Soft gradient blend */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
+                  {/* HD Image Showcase Container with Soft Diffuse Spread Shadow */}
+                  <div
+                    className="relative rounded-3xl overflow-hidden bg-white border border-[#E5E0D8] transition-transform duration-300 ease-out"
+                    style={{
+                      boxShadow:
+                        '0 25px 60px -12px rgba(24, 23, 21, 0.12), 0 10px 25px -5px rgba(24, 23, 21, 0.06), 0 0 35px rgba(212, 175, 55, 0.14)',
+                      transform: `perspective(1000px) rotateY(${mousePos.x * 3}deg) rotateX(${
+                        -mousePos.y * 3
+                      }deg)`,
+                    }}
+                  >
+                    <div className="relative aspect-[16/9] w-full overflow-hidden bg-[#ECE7DC]">
+                      <img
+                        src="/assets/materials/fabrics.jpg"
+                        alt="High-Definition Studio Fabric Rolls and Combed Linens"
+                        className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105"
+                      />
+                      {/* Soft gradient blend */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* ========================================================================= */}
       {/* 2. DYNAMIC PROGRESS CAPSULE (Starts at Step 1, NO auto-ticks!)             */}
@@ -643,7 +693,10 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
               {/* Step 1: Choose Material */}
               <button
                 type="button"
-                onClick={() => setCurrentStep(1)}
+                onClick={() => {
+                  setSubmissionSuccess(null);
+                  setCurrentStep(1);
+                }}
                 className={`flex items-center gap-3 text-left transition-all cursor-pointer ${
                   currentStep === 1
                     ? 'opacity-100'
@@ -685,15 +738,15 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
               <button
                 type="button"
                 onClick={() => {
+                  setSubmissionSuccess(null);
                   if (selectedKit.length > 0) {
                     setCurrentStep(2);
                   } else {
+                    setCurrentStep(1);
                     setStep1Error('Please select a material type to proceed *');
                   }
                 }}
-                className={`flex items-center gap-3 text-left transition-all ${
-                  selectedKit.length > 0 ? 'cursor-pointer' : 'cursor-pointer'
-                } ${
+                className={`flex items-center gap-3 text-left transition-all cursor-pointer ${
                   currentStep === 2
                     ? 'opacity-100'
                     : currentStep > 2
@@ -734,12 +787,17 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
               <button
                 type="button"
                 onClick={() => {
-                  if (selectedKit.length > 0 && formData.materialName) setCurrentStep(3);
+                  setSubmissionSuccess(null);
+                  if (selectedKit.length > 0 && formData.materialName) {
+                    setCurrentStep(3);
+                  } else {
+                    setCurrentStep(1);
+                  }
                 }}
-                className={`flex items-center gap-3 text-left transition-all ${
+                className={`flex items-center gap-3 text-left transition-all cursor-pointer ${
                   currentStep === 3
                     ? 'opacity-100'
-                    : 'opacity-60 cursor-pointer'
+                    : 'opacity-60'
                 }`}
               >
                 <div
@@ -781,54 +839,57 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
               <CheckCircle className="w-8 h-8 text-[#8C6534]" />
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-3">
               <span className="text-xs font-mono uppercase tracking-widest text-[#8C6534] font-semibold flex items-center justify-center gap-1.5">
                 <Check className="w-4 h-4 text-[#25D366]" />
-                MATERIAL BRIEF TRANSMITTED DIRECTLY
+                Request Submitted Successfully!
               </span>
               <h2 className="font-serif text-3xl font-bold text-[#181715]">
-                Thank You, {submissionSuccess.contactName}
+                Thank you, {submissionSuccess.contactName}.
               </h2>
-              <p className="text-sm text-[#6B665E] max-w-lg mx-auto">
-                Your material request for <strong className="text-[#181715]">{submissionSuccess.materialName}</strong> ({isQuantityUndecided ? 'Sampling' : `${submissionSuccess.quantity} ${submissionSuccess.unit}`}) has been sent directly to our Classic Fashions desk (+91 76678 12172). Our textile specialists will review your requirements and respond promptly.
+              <p className="text-sm sm:text-base text-[#6B665E] max-w-lg mx-auto">
+                Your material request has been received successfully. Our team will contact you soon.
               </p>
             </div>
 
-            <div className="inline-block bg-[#FAF8F5] border border-[#DDD7CD] rounded-2xl px-6 py-3 shadow-xs">
-              <span className="text-xs text-[#8C877E] uppercase font-mono block">Enquiry Reference Code</span>
-              <span className="font-mono text-xl font-bold text-[#8C6534] tracking-wider">
-                {submissionSuccess.referenceCode}
-              </span>
-            </div>
-
-            <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 pt-4">
+            <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3.5 pt-4">
               <a
                 href={getWhatsAppEnquiryUrl(submissionSuccess)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-medium text-xs sm:text-sm bg-[#25D366] hover:bg-[#1EBE5D] text-white transition-all shadow-md cursor-pointer"
+                className={`w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl font-medium text-xs sm:text-sm uppercase tracking-wider transition-all shadow-md cursor-pointer ${
+                  submissionSuccess.preferredContactMethod === 'whatsapp'
+                    ? 'bg-[#25D366] hover:bg-[#1EBE5D] text-white ring-2 ring-[#25D366]/40'
+                    : 'bg-white hover:bg-[#FAF8F5] text-[#181715] border border-[#DDD7CD]'
+                }`}
               >
-                <MessageSquare className="w-4 h-4" />
-                <span>Open in WhatsApp</span>
+                <MessageSquare className={`w-4 h-4 ${submissionSuccess.preferredContactMethod === 'whatsapp' ? 'text-white' : 'text-[#25D366]'}`} />
+                <span>Send via WhatsApp</span>
                 <ExternalLink className="w-3.5 h-3.5 opacity-70" />
               </a>
 
               <a
-                href={getEmailEnquiryUrl(submissionSuccess)}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-medium text-xs sm:text-sm bg-[#181715] hover:bg-[#2B2824] text-white transition-all shadow-md cursor-pointer"
+                href={getGmailComposeUrl(submissionSuccess)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl font-medium text-xs sm:text-sm uppercase tracking-wider transition-all shadow-md cursor-pointer ${
+                  submissionSuccess.preferredContactMethod === 'email'
+                    ? 'bg-[#EA4335] hover:bg-[#D93025] text-white ring-2 ring-[#EA4335]/40'
+                    : 'bg-white hover:bg-[#FAF8F5] text-[#181715] border border-[#DDD7CD]'
+                }`}
               >
-                <Mail className="w-4 h-4 text-[#D4AF37]" />
-                <span>Email Sales Desk</span>
+                <Mail className={`w-4 h-4 ${submissionSuccess.preferredContactMethod === 'email' ? 'text-white' : 'text-[#EA4335]'}`} />
+                <span>Send via Google Gmail</span>
                 <ExternalLink className="w-3.5 h-3.5 opacity-70" />
               </a>
 
               <button
                 type="button"
                 onClick={onExploreCatalogue}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#8C6534] hover:bg-[#72522A] text-white font-medium px-5 py-3.5 rounded-xl text-xs sm:text-sm transition-all shadow-md cursor-pointer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#181715] hover:bg-[#2B2824] text-white font-medium px-5 py-3.5 rounded-xl text-xs sm:text-sm uppercase tracking-wider transition-all shadow-md cursor-pointer"
               >
-                <span>Explore Catalogue</span>
-                <ArrowRight className="w-4 h-4" />
+                <span>Back to Catalogue</span>
+                <ArrowRight className="w-4 h-4 text-[#D4AF37]" />
               </button>
 
               <button
@@ -836,10 +897,21 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                 onClick={() => {
                   setSubmissionSuccess(null);
                   setCurrentStep(1);
+                  setSelectedKit([]);
+                  setFormData((prev) => ({
+                    ...prev,
+                    materialName: '',
+                    category: 'fabric',
+                    customMaterialDescription: '',
+                    quantity: '',
+                    additionalNotes: '',
+                    referenceImages: [],
+                  }));
+                  setUploadedFiles([]);
                 }}
-                className="w-full sm:w-auto text-xs font-semibold uppercase tracking-wider text-[#8C877E] hover:text-[#181715] py-2 px-4 transition-colors cursor-pointer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-[#DDD7CD] bg-white hover:bg-[#FAF8F5] text-[#181715] font-medium px-5 py-3.5 rounded-xl text-xs sm:text-sm uppercase tracking-wider transition-all shadow-xs cursor-pointer"
               >
-                Submit Another Brief
+                <span>Submit Another Request</span>
               </button>
             </div>
           </div>
@@ -1489,12 +1561,12 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                           </div>
                           <div className="min-w-0">
                             <span className="font-semibold text-xs sm:text-sm text-[#181715] flex items-center gap-1.5">
-                              Email
+                              Google Gmail
                               {formData.preferredContactMethod === 'email' && (
-                                <span className="text-[9px] font-mono bg-[#8C6534] text-white px-1.5 py-0.5 rounded font-normal">Active</span>
+                                <span className="text-[9px] font-mono bg-[#EA4335] text-white px-1.5 py-0.5 rounded font-normal">Active</span>
                               )}
                             </span>
-                            <span className="text-[10px] text-[#78736B] block truncate">Send via Official Email</span>
+                            <span className="text-[10px] text-[#78736B] block truncate">Direct in Google Gmail Web</span>
                           </div>
                         </button>
                       </div>
@@ -1530,7 +1602,7 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                           <span>Processing Brief...</span>
                         ) : (
                           <>
-                            <span>{formData.preferredContactMethod === 'whatsapp' ? 'Submit & Send via WhatsApp' : 'Submit & Send via Email'}</span>
+                            <span>{formData.preferredContactMethod === 'whatsapp' ? 'Submit & Send via WhatsApp' : 'Submit & Send via Google Gmail'}</span>
                             <ArrowRight className="w-4 h-4 text-[#D4AF37]" />
                           </>
                         )}
@@ -1680,7 +1752,7 @@ export const MaterialRequestForm: React.FC<MaterialRequestFormProps> = ({
                       onClick={handleSubmitEnquiry}
                       className="w-full flex items-center justify-center gap-2 bg-[#181715] hover:bg-[#2B2824] text-white font-bold py-3.5 px-6 rounded-xl text-xs uppercase tracking-wider transition-all shadow-md hover:shadow-lg cursor-pointer"
                     >
-                      <span>{formData.preferredContactMethod === 'whatsapp' ? 'Submit via WhatsApp' : 'Submit via Email'}</span>
+                      <span>{formData.preferredContactMethod === 'whatsapp' ? 'Submit via WhatsApp' : 'Submit via Google Gmail'}</span>
                       <ArrowRight className="w-4 h-4 text-[#D4AF37]" />
                     </button>
                   )}

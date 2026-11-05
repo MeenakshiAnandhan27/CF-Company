@@ -484,6 +484,9 @@ export default function App() {
               setReachUsContext(ctx);
               handleNavigate('reach-us');
             }}
+            onCategoryChange={(newCategory) => {
+              setCatalogueCategory(newCategory);
+            }}
           />
         )}
 

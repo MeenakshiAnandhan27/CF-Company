@@ -11,6 +11,7 @@ interface CatalogueViewProps {
   onViewCollection?: () => void;
   onRequestMaterial?: (category?: ProductCategory, similarProduct?: Product) => void;
   onReachUs?: (materialContext?: string) => void;
+  onCategoryChange?: (category: string) => void;
 }
 
 /**
@@ -33,6 +34,7 @@ export const CatalogueView: React.FC<CatalogueViewProps> = ({
   onViewCollection,
   onRequestMaterial,
   onReachUs,
+  onCategoryChange,
 }) => {
   return (
     <CatalogueLanding
@@ -44,6 +46,7 @@ export const CatalogueView: React.FC<CatalogueViewProps> = ({
       onViewCollection={onViewCollection}
       onRequestMaterial={onRequestMaterial}
       onReachUs={onReachUs}
+      onCategoryChange={onCategoryChange}
     />
   );
 };

@@ -29,6 +29,7 @@ export const CategoryShowcase: React.FC<CategoryShowcaseProps> = ({
               key={panel.id}
               role="button"
               tabIndex={0}
+              aria-label={`Explore ${panel.title} collection`}
               onClick={() => onSelectCategory(panel.id)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
@@ -36,10 +37,10 @@ export const CategoryShowcase: React.FC<CategoryShowcaseProps> = ({
                   onSelectCategory(panel.id);
                 }
               }}
-              className={`group relative overflow-hidden rounded-2xl border transition-all duration-300 text-left cursor-pointer flex flex-col justify-between focus:outline-none focus-visible:ring-2 focus-visible:ring-[#82553E] focus-visible:ring-offset-2 ${
+              className={`group relative overflow-hidden rounded-2xl border transition-all duration-300 text-left cursor-pointer select-none flex flex-col justify-between focus:outline-none focus-visible:ring-2 focus-visible:ring-[#82553E] focus-visible:ring-offset-2 ${
                 isCurrent
-                  ? 'border-[#82553E] bg-[#F3EDE4] shadow-md ring-1 ring-[#82553E]/20'
-                  : 'border-[#DDD6C8] bg-white hover:border-[#82553E]/50 hover:shadow-md'
+                  ? 'border-[#82553E] bg-[#F3EDE4] shadow-md ring-2 ring-[#82553E]/30 scale-[1.01]'
+                  : 'border-[#DDD6C8] bg-white hover:border-[#82553E]/60 hover:shadow-lg hover:-translate-y-0.5'
               }`}
             >
               {/* Image Frame */}
@@ -47,27 +48,27 @@ export const CategoryShowcase: React.FC<CategoryShowcaseProps> = ({
                 <img
                   src={panel.image}
                   alt={`Raw ${panel.title} materials`}
-                  className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+                  className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105 pointer-events-none"
                   loading="lazy"
                 />
                 <div
                   aria-hidden="true"
-                  className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent pointer-events-none"
+                  className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent pointer-events-none"
                 />
 
                 {/* Subtle editorial index number */}
-                <div className="absolute top-3 left-3 text-[11px] font-mono font-medium text-white/90 bg-[#181715]/70 backdrop-blur-xs px-2 py-0.5 rounded tracking-widest">
+                <div className="absolute top-3 left-3 text-[11px] font-mono font-medium text-white/90 bg-[#181715]/70 backdrop-blur-xs px-2 py-0.5 rounded tracking-widest pointer-events-none">
                   {panel.index}
                 </div>
 
                 {/* Subtle variety count */}
-                <div className="absolute top-3 right-3 text-[10px] font-mono text-white/90 bg-[#181715]/70 backdrop-blur-xs px-2 py-0.5 rounded">
+                <div className="absolute top-3 right-3 text-[10px] font-mono text-white/90 bg-[#181715]/70 backdrop-blur-xs px-2 py-0.5 rounded pointer-events-none">
                   {panel.materialCount} Types
                 </div>
               </div>
 
               {/* Text Information */}
-              <div className="p-5 flex-1 flex flex-col justify-between space-y-3">
+              <div className="p-5 flex-1 flex flex-col justify-between space-y-3 pointer-events-none">
                 <div className="space-y-1.5">
                   <h4 className="font-serif text-lg sm:text-xl font-bold text-[#181715] tracking-tight group-hover:text-[#82553E] transition-colors">
                     {panel.title}
@@ -77,7 +78,7 @@ export const CategoryShowcase: React.FC<CategoryShowcaseProps> = ({
                   </p>
                 </div>
 
-                <div className="pt-3 border-t border-[#F2EDE4] flex items-center justify-between text-xs font-semibold text-[#82553E] group-hover:translate-x-0.5 transition-transform">
+                <div className="pt-3 border-t border-[#F2EDE4] flex items-center justify-between text-xs font-semibold text-[#82553E] group-hover:translate-x-1 transition-transform">
                   <span className="uppercase tracking-wider text-[11px] font-mono font-bold">Explore Collection</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </div>

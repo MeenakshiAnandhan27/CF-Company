@@ -26,6 +26,8 @@ import {
   Check,
   X,
   Plus,
+  MessageSquare,
+  ExternalLink,
 } from 'lucide-react';
 
 export interface ReachUsViewProps {
@@ -205,6 +207,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
   const [copiedPhone, setCopiedPhone] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [preferredChannel, setPreferredChannel] = useState<'whatsapp' | 'email'>('whatsapp');
   const [referenceCode, setReferenceCode] = useState('');
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
@@ -303,6 +306,131 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
     return Object.keys(errors).length === 0;
   };
 
+  // Pre-formatted WhatsApp URL
+  const getWhatsAppUrl = (refCode?: string, customMsg?: string) => {
+    if (customMsg) {
+      return `https://wa.me/${VERIFIED_PHONE_RAW}?text=${encodeURIComponent(customMsg)}`;
+    }
+    const code = refCode || referenceCode || 'Direct Sourcing Query';
+
+    let materialsSection = '';
+    if (isCollectionMode && activeMaterials.length > 0) {
+      materialsSection =
+        `\n*SELECTED MATERIAL REQUIREMENTS (${activeMaterials.length}):*\n` +
+        activeMaterials
+          .map((i, idx) => {
+            const p = i.product;
+            const specs = [
+              p.width ? `Width: ${p.width}` : '',
+              p.fabric || p.quality,
+              p.weave || p.fabricWeaveType,
+              p.gsm ? `${p.gsm} GSM` : '',
+              i.selectedColour ? `Colour: ${i.selectedColour}` : '',
+            ]
+              .filter(Boolean)
+              .join(' • ');
+            return `  ${idx + 1}. *${p.name}* (${p.categoryLabel || p.subcategory || p.category})${
+              specs ? `\n     Specs: ${specs}` : ''
+            }`;
+          })
+          .join('\n');
+    }
+
+    const text =
+      `*CLASSIC FASHIONS — SOURCING ENQUIRY*\n` +
+      `• *Reference:* ${code}\n` +
+      `• *Topic:* ${isCollectionMode ? 'Material Requirements' : currentCategory.label}\n` +
+      `• *Name:* ${formData.name.trim() || 'Buyer'}\n` +
+      `• *Phone:* ${formData.phone.trim() || 'Direct'}\n` +
+      (formData.email.trim() ? `• *Email:* ${formData.email.trim()}\n` : '') +
+      (materialsSection ? `${materialsSection}\n` : '') +
+      (formData.message.trim() ? `• *Notes:* ${formData.message.trim()}\n` : '');
+
+    return `https://wa.me/${VERIFIED_PHONE_RAW}?text=${encodeURIComponent(text)}`;
+  };
+
+  // Google Gmail Direct Web Compose URL Builder
+  const getGmailComposeUrl = (refCode?: string) => {
+    const code = refCode || referenceCode || 'Direct Sourcing Query';
+    let materialsSection = '';
+    if (isCollectionMode && activeMaterials.length > 0) {
+      materialsSection =
+        `\nMATERIAL REQUIREMENTS (${activeMaterials.length}):\n` +
+        activeMaterials
+          .map((i, idx) => {
+            const p = i.product;
+            const specs = [
+              p.width ? `Width: ${p.width}` : '',
+              p.fabric || p.quality,
+              p.weave || p.fabricWeaveType,
+              p.gsm ? `${p.gsm} GSM` : '',
+            ]
+              .filter(Boolean)
+              .join(' • ');
+            return `${idx + 1}. ${p.name} (${p.categoryLabel || p.subcategory || p.category})${
+              specs ? ` - ${specs}` : ''
+            }`;
+          })
+          .join('\n');
+    }
+
+    const body =
+      `CLASSIC FASHIONS SOURCING ENQUIRY\n` +
+      `Reference: [${code}]\n\n` +
+      `Customer Name: ${formData.name.trim()}\n` +
+      `Phone/WhatsApp: ${formData.phone.trim()}\n` +
+      (formData.email.trim() ? `Email: ${formData.email.trim()}\n` : '') +
+      (materialsSection ? `${materialsSection}\n` : '') +
+      (formData.message.trim() ? `\nAdditional Message:\n${formData.message.trim()}\n` : '');
+
+    const subject = isCollectionMode
+      ? `Material Requirements Enquiry [${code}]: ${formData.name.trim() || 'Buyer'} (${activeMaterials.length} materials)`
+      : `Sourcing Inquiry [${code}] — ${formData.name.trim() || 'Classic Fashions'}`;
+
+    return `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(VERIFIED_EMAIL)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+
+  // Pre-formatted Email URL (mailto fallback)
+  const getEmailMailtoUrl = (refCode?: string) => {
+    const code = refCode || referenceCode || 'Direct Sourcing Query';
+    let materialsSection = '';
+    if (isCollectionMode && activeMaterials.length > 0) {
+      materialsSection =
+        `\nMATERIAL REQUIREMENTS (${activeMaterials.length}):\n` +
+        activeMaterials
+          .map((i, idx) => {
+            const p = i.product;
+            const specs = [
+              p.width ? `Width: ${p.width}` : '',
+              p.fabric || p.quality,
+              p.weave || p.fabricWeaveType,
+              p.gsm ? `${p.gsm} GSM` : '',
+            ]
+              .filter(Boolean)
+              .join(' • ');
+            return `${idx + 1}. ${p.name} (${p.categoryLabel || p.subcategory || p.category})${
+              specs ? ` - ${specs}` : ''
+            }`;
+          })
+          .join('\n');
+    }
+
+    const body =
+      `CLASSIC FASHIONS SOURCING ENQUIRY\n` +
+      `Reference: ${code}\n\n` +
+      `Customer Name: ${formData.name.trim()}\n` +
+      `Phone/WhatsApp: ${formData.phone.trim()}\n` +
+      (formData.email.trim() ? `Email: ${formData.email.trim()}\n` : '') +
+      (materialsSection ? `${materialsSection}\n` : '') +
+      (formData.message.trim() ? `\nAdditional Message:\n${formData.message.trim()}\n` : '');
+
+    const subject = isCollectionMode
+      ? `Material Requirements Enquiry: ${formData.name.trim() || 'Buyer'} (${activeMaterials.length} materials)`
+      : `Sourcing Inquiry — ${formData.name.trim() || 'Classic Fashions'}`;
+
+    return `mailto:${VERIFIED_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
+
   // Unified Form Submit Handler
   const handleSubmitEnquiry = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -311,6 +439,14 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
       if (!validateCollectionMode()) return;
     } else {
       if (!validateStep1() || !validateStep2()) return;
+    }
+
+    // Open placeholder tab synchronously to prevent Chrome/Edge popup blocker
+    let channelWindow: Window | null = null;
+    try {
+      channelWindow = window.open('about:blank', '_blank');
+    } catch {
+      // Browser blocked synchronous popup
     }
 
     setIsSubmitting(true);
@@ -338,6 +474,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
         email: formData.email.trim() || undefined,
         message: formData.message.trim() || (isCollectionMode ? `Collection enquiry for ${activeMaterials.length} materials` : currentCategory.label),
         enquiryType: isCollectionMode ? 'collection' : 'general',
+        preferredContactMethod: preferredChannel,
         items: itemsPayload,
       });
 
@@ -351,6 +488,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
           name: formData.name.trim(),
           phone: formData.phone.trim(),
           email: formData.email.trim() || undefined,
+          preferredContactMethod: preferredChannel,
           submittedAt: Date.now(),
         };
         const existing = localStorage.getItem(STORAGE_ENQUIRIES_KEY);
@@ -364,7 +502,22 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
 
       setReferenceCode(res.referenceCode);
       setIsSubmitted(true);
+
+      // Automatically dispatch to user's chosen channel (WhatsApp or Google Gmail)
+      const targetUrl =
+        preferredChannel === 'email'
+          ? getGmailComposeUrl(res.referenceCode)
+          : getWhatsAppUrl(res.referenceCode);
+
+      if (channelWindow && !channelWindow.closed) {
+        channelWindow.location.href = targetUrl;
+      } else {
+        window.open(targetUrl, '_blank');
+      }
     } catch (err: any) {
+      if (channelWindow && !channelWindow.closed) {
+        channelWindow.close();
+      }
       setFieldErrors({ form: err.message || 'Unable to submit enquiry to server. Please call or WhatsApp us directly.' });
     } finally {
       setIsSubmitting(false);
@@ -377,90 +530,9 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
     setIsEnquiryExpanded(false);
     setStepperStep(1);
     setFormData({ message: '', name: '', phone: '', email: '' });
+    setPreferredChannel('whatsapp');
     setFieldErrors({});
     setReferenceCode('');
-  };
-
-  // Pre-formatted WhatsApp URL
-  const getWhatsAppUrl = (customMsg?: string) => {
-    if (customMsg) {
-      return `https://wa.me/${VERIFIED_PHONE_RAW}?text=${encodeURIComponent(customMsg)}`;
-    }
-
-    let materialsSection = '';
-    if (isCollectionMode && activeMaterials.length > 0) {
-      materialsSection =
-        `\n*SELECTED MATERIAL REQUIREMENTS (${activeMaterials.length}):*\n` +
-        activeMaterials
-          .map((i, idx) => {
-            const p = i.product;
-            const specs = [
-              p.width ? `Width: ${p.width}` : '',
-              p.fabric || p.quality,
-              p.weave || p.fabricWeaveType,
-              p.gsm ? `${p.gsm} GSM` : '',
-              i.selectedColour ? `Colour: ${i.selectedColour}` : '',
-            ]
-              .filter(Boolean)
-              .join(' • ');
-            return `  ${idx + 1}. *${p.name}* (${p.categoryLabel || p.subcategory || p.category})${
-              specs ? `\n     Specs: ${specs}` : ''
-            }`;
-          })
-          .join('\n');
-    }
-
-    const text =
-      `*CLASSIC FASHIONS — SOURCING ENQUIRY*\n` +
-      `• *Reference:* ${referenceCode || 'Direct Sourcing Query'}\n` +
-      `• *Topic:* ${isCollectionMode ? 'Material Requirements' : currentCategory.label}\n` +
-      `• *Name:* ${formData.name.trim() || 'Buyer'}\n` +
-      `• *Phone:* ${formData.phone.trim() || 'Direct'}\n` +
-      (formData.email.trim() ? `• *Email:* ${formData.email.trim()}\n` : '') +
-      (materialsSection ? `${materialsSection}\n` : '') +
-      (formData.message.trim() ? `• *Notes:* ${formData.message.trim()}\n` : '');
-
-    return `https://wa.me/${VERIFIED_PHONE_RAW}?text=${encodeURIComponent(text)}`;
-  };
-
-  // Pre-formatted Email URL
-  const getEmailMailtoUrl = () => {
-    let materialsSection = '';
-    if (isCollectionMode && activeMaterials.length > 0) {
-      materialsSection =
-        `\nMATERIAL REQUIREMENTS (${activeMaterials.length}):\n` +
-        activeMaterials
-          .map((i, idx) => {
-            const p = i.product;
-            const specs = [
-              p.width ? `Width: ${p.width}` : '',
-              p.fabric || p.quality,
-              p.weave || p.fabricWeaveType,
-              p.gsm ? `${p.gsm} GSM` : '',
-            ]
-              .filter(Boolean)
-              .join(' • ');
-            return `${idx + 1}. ${p.name} (${p.categoryLabel || p.subcategory || p.category})${
-              specs ? ` - ${specs}` : ''
-            }`;
-          })
-          .join('\n');
-    }
-
-    const body =
-      `CLASSIC FASHIONS SOURCING ENQUIRY\n` +
-      `Reference: ${referenceCode || 'Direct Sourcing Query'}\n\n` +
-      `Customer Name: ${formData.name.trim()}\n` +
-      `Phone/WhatsApp: ${formData.phone.trim()}\n` +
-      (formData.email.trim() ? `Email: ${formData.email.trim()}\n` : '') +
-      (materialsSection ? `${materialsSection}\n` : '') +
-      (formData.message.trim() ? `\nAdditional Message:\n${formData.message.trim()}\n` : '');
-
-    const subject = isCollectionMode
-      ? `Material Requirements Enquiry: ${formData.name.trim() || 'Buyer'} (${activeMaterials.length} materials)`
-      : `Sourcing Inquiry — ${formData.name.trim() || 'Classic Fashions'}`;
-
-    return `mailto:${VERIFIED_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 
   return (
@@ -825,21 +897,33 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
 
                     <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
                       <a
-                        href={getWhatsAppUrl()}
+                        href={getWhatsAppUrl(referenceCode)}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#181715] hover:bg-[#2A2621] text-[#FAF7F2] px-6 py-3 rounded-xl text-xs font-mono font-medium tracking-wider transition-all cursor-pointer shadow-xs border border-[#B8934A]/50 hover:shadow-[0_6px_22px_rgba(184,147,74,0.26)] active:scale-[0.99]"
+                        className={`w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-xs font-mono font-medium tracking-wider transition-all cursor-pointer shadow-xs border ${
+                          preferredChannel === 'whatsapp'
+                            ? 'bg-[#25D366] hover:bg-[#1EBE5D] text-white border-[#25D366] ring-2 ring-[#25D366]/40 shadow-md'
+                            : 'bg-white hover:bg-[#FAF8F5] text-[#181715] border-[#DDD6C8]'
+                        }`}
                       >
-                        <span>Share on WhatsApp</span>
-                        <ArrowUpRight className="w-3.5 h-3.5 text-[#B8934A]" />
+                        <MessageSquare className={`w-3.5 h-3.5 ${preferredChannel === 'whatsapp' ? 'text-white' : 'text-[#25D366]'}`} />
+                        <span>Send via WhatsApp</span>
+                        <ArrowUpRight className="w-3.5 h-3.5 opacity-70" />
                       </a>
 
                       <a
-                        href={getEmailMailtoUrl()}
-                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl border border-[#DDD6C8] bg-white text-xs font-mono text-[#55514B] hover:text-[#181715] hover:border-[#B8934A] hover:shadow-[0_4px_16px_rgba(184,147,74,0.12)] transition-all cursor-pointer"
+                        href={getGmailComposeUrl(referenceCode)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-xs font-mono font-medium tracking-wider transition-all cursor-pointer shadow-xs border ${
+                          preferredChannel === 'email'
+                            ? 'bg-[#EA4335] hover:bg-[#D93025] text-white border-[#EA4335] ring-2 ring-[#EA4335]/40 shadow-md'
+                            : 'bg-white hover:bg-[#FAF8F5] text-[#181715] border-[#DDD6C8]'
+                        }`}
                       >
-                        <Mail className="w-3 h-3 text-[#B8934A]" />
-                        <span>Send Direct Email</span>
+                        <Mail className={`w-3.5 h-3.5 ${preferredChannel === 'email' ? 'text-white' : 'text-[#EA4335]'}`} />
+                        <span>Send via Google Gmail</span>
+                        <ArrowUpRight className="w-3.5 h-3.5 opacity-70" />
                       </a>
 
                       <button
@@ -1115,6 +1199,80 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                           />
                         </div>
 
+                        {/* Preferred Channel Option: WhatsApp vs Google Gmail */}
+                        <div className="space-y-2 pt-1">
+                          <label className="block text-[11px] font-mono uppercase tracking-wider text-[#3D3D3A] font-semibold">
+                            SEND ENQUIRY VIA <span className="text-[#B8934A] font-bold">*</span>
+                          </label>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <button
+                              type="button"
+                              onClick={() => setPreferredChannel('whatsapp')}
+                              className={`p-3.5 rounded-xl border flex items-center gap-3 transition-all text-left cursor-pointer ${
+                                preferredChannel === 'whatsapp'
+                                  ? 'border-[#25D366] bg-[#25D366]/8 ring-2 ring-[#25D366]/40'
+                                  : 'border-[#DDD7CD] bg-white hover:border-[#181715]/40'
+                              }`}
+                            >
+                              <div
+                                className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${
+                                  preferredChannel === 'whatsapp'
+                                    ? 'bg-[#25D366] text-white'
+                                    : 'bg-[#F0EDE6] text-[#6B665E]'
+                                }`}
+                              >
+                                <MessageSquare className="w-4 h-4" />
+                              </div>
+                              <div className="min-w-0">
+                                <span className="font-semibold text-xs sm:text-sm text-[#181715] flex items-center gap-1.5">
+                                  WhatsApp
+                                  {preferredChannel === 'whatsapp' && (
+                                    <span className="text-[9px] font-mono bg-[#25D366] text-white px-1.5 py-0.5 rounded font-normal">
+                                      Active
+                                    </span>
+                                  )}
+                                </span>
+                                <span className="text-[10px] text-[#78736B] block truncate">
+                                  Send via WhatsApp Desk
+                                </span>
+                              </div>
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => setPreferredChannel('email')}
+                              className={`p-3.5 rounded-xl border flex items-center gap-3 transition-all text-left cursor-pointer ${
+                                preferredChannel === 'email'
+                                  ? 'border-[#EA4335] bg-[#EA4335]/8 ring-2 ring-[#EA4335]/40'
+                                  : 'border-[#DDD7CD] bg-white hover:border-[#181715]/40'
+                              }`}
+                            >
+                              <div
+                                className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${
+                                  preferredChannel === 'email'
+                                    ? 'bg-[#EA4335] text-white'
+                                    : 'bg-[#F0EDE6] text-[#6B665E]'
+                                }`}
+                              >
+                                <Mail className="w-4 h-4" />
+                              </div>
+                              <div className="min-w-0">
+                                <span className="font-semibold text-xs sm:text-sm text-[#181715] flex items-center gap-1.5">
+                                  Google Gmail
+                                  {preferredChannel === 'email' && (
+                                    <span className="text-[9px] font-mono bg-[#EA4335] text-white px-1.5 py-0.5 rounded font-normal">
+                                      Active
+                                    </span>
+                                  )}
+                                </span>
+                                <span className="text-[10px] text-[#78736B] block truncate">
+                                  Direct in Google Gmail Web
+                                </span>
+                              </div>
+                            </button>
+                          </div>
+                        </div>
+
                         {fieldErrors.form && (
                           <p className="text-xs text-[#A63624] font-mono">{fieldErrors.form}</p>
                         )}
@@ -1131,7 +1289,11 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                             ) : (
                               <>
                                 <Send className="w-3.5 h-3.5 text-[#B8934A]" />
-                                <span>Submit Enquiry</span>
+                                <span>
+                                  {preferredChannel === 'whatsapp'
+                                    ? 'Submit & Send via WhatsApp'
+                                    : 'Submit & Send via Google Gmail'}
+                                </span>
                                 <ArrowRight className="w-3.5 h-3.5 text-[#B8934A] transition-transform group-hover:translate-x-1" />
                               </>
                             )}
@@ -1285,13 +1447,33 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
 
                       <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
                         <a
-                          href={getWhatsAppUrl()}
+                          href={getWhatsAppUrl(referenceCode)}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#181715] hover:bg-[#2A2621] text-[#FAF7F2] px-6 py-3 rounded-xl text-xs font-mono font-medium tracking-wider transition-all cursor-pointer shadow-xs border border-[#B8934A]/50 hover:shadow-[0_6px_22px_rgba(184,147,74,0.26)] active:scale-[0.99]"
+                          className={`w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-xs font-mono font-medium tracking-wider transition-all cursor-pointer shadow-xs border ${
+                            preferredChannel === 'whatsapp'
+                              ? 'bg-[#25D366] hover:bg-[#1EBE5D] text-white border-[#25D366] ring-2 ring-[#25D366]/40 shadow-md'
+                              : 'bg-white hover:bg-[#FAF8F5] text-[#181715] border-[#DDD6C8]'
+                          }`}
                         >
-                          <span>Share on WhatsApp</span>
-                          <ArrowUpRight className="w-3.5 h-3.5 text-[#B8934A]" />
+                          <MessageSquare className={`w-3.5 h-3.5 ${preferredChannel === 'whatsapp' ? 'text-white' : 'text-[#25D366]'}`} />
+                          <span>Send via WhatsApp</span>
+                          <ArrowUpRight className="w-3.5 h-3.5 opacity-70" />
+                        </a>
+
+                        <a
+                          href={getGmailComposeUrl(referenceCode)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-xs font-mono font-medium tracking-wider transition-all cursor-pointer shadow-xs border ${
+                            preferredChannel === 'email'
+                              ? 'bg-[#EA4335] hover:bg-[#D93025] text-white border-[#EA4335] ring-2 ring-[#EA4335]/40 shadow-md'
+                              : 'bg-white hover:bg-[#FAF8F5] text-[#181715] border-[#DDD6C8]'
+                          }`}
+                        >
+                          <Mail className={`w-3.5 h-3.5 ${preferredChannel === 'email' ? 'text-white' : 'text-[#EA4335]'}`} />
+                          <span>Send via Google Gmail</span>
+                          <ArrowUpRight className="w-3.5 h-3.5 opacity-70" />
                         </a>
 
                         <button
@@ -1497,6 +1679,80 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                                 <p className="text-[11px] text-[#A63624] mt-1 font-mono">{fieldErrors.email}</p>
                               )}
                             </div>
+
+                            {/* Preferred Channel Option: WhatsApp vs Google Gmail */}
+                            <div className="space-y-2 pt-1">
+                              <label className="block text-[11px] font-mono uppercase tracking-wider text-[#3D3D3A] font-semibold">
+                                SEND ENQUIRY VIA <span className="text-[#B8934A] font-bold">*</span>
+                              </label>
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <button
+                                  type="button"
+                                  onClick={() => setPreferredChannel('whatsapp')}
+                                  className={`p-3 rounded-xl border flex items-center gap-2.5 transition-all text-left cursor-pointer ${
+                                    preferredChannel === 'whatsapp'
+                                      ? 'border-[#25D366] bg-[#25D366]/8 ring-2 ring-[#25D366]/40'
+                                      : 'border-[#DDD7CD] bg-white hover:border-[#181715]/40'
+                                  }`}
+                                >
+                                  <div
+                                    className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
+                                      preferredChannel === 'whatsapp'
+                                        ? 'bg-[#25D366] text-white'
+                                        : 'bg-[#F0EDE6] text-[#6B665E]'
+                                    }`}
+                                  >
+                                    <MessageSquare className="w-3.5 h-3.5" />
+                                  </div>
+                                  <div className="min-w-0">
+                                    <span className="font-semibold text-xs text-[#181715] flex items-center gap-1.5">
+                                      WhatsApp
+                                      {preferredChannel === 'whatsapp' && (
+                                        <span className="text-[9px] font-mono bg-[#25D366] text-white px-1.5 py-0.5 rounded font-normal">
+                                          Active
+                                        </span>
+                                      )}
+                                    </span>
+                                    <span className="text-[10px] text-[#78736B] block truncate">
+                                      Send via WhatsApp Desk
+                                    </span>
+                                  </div>
+                                </button>
+
+                                <button
+                                  type="button"
+                                  onClick={() => setPreferredChannel('email')}
+                                  className={`p-3 rounded-xl border flex items-center gap-2.5 transition-all text-left cursor-pointer ${
+                                    preferredChannel === 'email'
+                                      ? 'border-[#EA4335] bg-[#EA4335]/8 ring-2 ring-[#EA4335]/40'
+                                      : 'border-[#DDD7CD] bg-white hover:border-[#181715]/40'
+                                  }`}
+                                >
+                                  <div
+                                    className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
+                                      preferredChannel === 'email'
+                                        ? 'bg-[#EA4335] text-white'
+                                        : 'bg-[#F0EDE6] text-[#6B665E]'
+                                    }`}
+                                  >
+                                    <Mail className="w-3.5 h-3.5" />
+                                  </div>
+                                  <div className="min-w-0">
+                                    <span className="font-semibold text-xs text-[#181715] flex items-center gap-1.5">
+                                      Google Gmail
+                                      {preferredChannel === 'email' && (
+                                        <span className="text-[9px] font-mono bg-[#EA4335] text-white px-1.5 py-0.5 rounded font-normal">
+                                          Active
+                                        </span>
+                                      )}
+                                    </span>
+                                    <span className="text-[10px] text-[#78736B] block truncate">
+                                      Direct in Google Gmail Web
+                                    </span>
+                                  </div>
+                                </button>
+                              </div>
+                            </div>
                           </div>
 
                           <div className="flex items-center justify-between pt-3 border-t border-[#F0EBE2]">
@@ -1579,6 +1835,12 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                                   {formData.email && (
                                     <p><strong className="font-semibold text-neutral-800">Email:</strong> {formData.email}</p>
                                   )}
+                                  <p>
+                                    <strong className="font-semibold text-neutral-800">Dispatch Via:</strong>{' '}
+                                    <span className={`inline-flex items-center gap-1 font-semibold ${preferredChannel === 'whatsapp' ? 'text-[#25D366]' : 'text-[#EA4335]'}`}>
+                                      {preferredChannel === 'whatsapp' ? 'WhatsApp' : 'Google Gmail Web'}
+                                    </span>
+                                  </p>
                                 </div>
                               </div>
                               <button
@@ -1608,7 +1870,7 @@ export const ReachUsView: React.FC<ReachUsViewProps> = ({
                               ) : (
                                 <>
                                   <Send className="w-3.5 h-3.5 text-[#B8934A]" />
-                                  <span>Send Enquiry</span>
+                                  <span>{preferredChannel === 'whatsapp' ? 'Send via WhatsApp' : 'Send via Google Gmail'}</span>
                                   <ArrowRight className="w-3.5 h-3.5 text-[#B8934A] transition-transform group-hover:translate-x-1" />
                                 </>
                               )}

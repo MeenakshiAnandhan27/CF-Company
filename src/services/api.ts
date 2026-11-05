@@ -120,6 +120,7 @@ export class ApiService {
     cityState?: string;
     message?: string;
     enquiryType?: string;
+    preferredContactMethod?: string;
     items?: any[];
   }): Promise<SubmissionResponse> {
     const res = await fetch(`${API_BASE_URL}/enquiries`, {

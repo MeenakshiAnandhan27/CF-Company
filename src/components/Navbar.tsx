@@ -171,8 +171,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
         </nav>
 
-        {/* Zone 3: Primary Actions - Right Edge Aligned */}
-        <div className="hidden sm:flex items-center gap-3 shrink-0">
+        {/* Zone 3: Primary Actions - Desktop / Tablet */}
+        <div className="hidden md:flex items-center gap-3 shrink-0">
           {/* Collection Capsule Button */}
           <button
             onClick={() => handleNavClick('collection')}
@@ -211,62 +211,74 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
         </div>
 
-        {/* Mobile Menu Toggle Button */}
-        <div className="flex sm:hidden items-center gap-2">
+        {/* Mobile Menu & Collection Toggle Buttons (Visible on Mobile & Small Tablet < 768px) */}
+        <div className="flex md:hidden items-center gap-2">
           <button
             onClick={() => handleNavClick('collection')}
-            className="p-2 relative rounded-md text-[#2B2824] hover:bg-[#EFECE6]"
+            className="p-2.5 relative rounded-xl text-[#2B2824] bg-[#FAF8F5] border border-[#E5E0D8] hover:bg-[#EFECE6] active:scale-95 transition-all cursor-pointer min-w-[44px] min-h-[44px] flex items-center justify-center"
             aria-label="View collection"
           >
-            <ShoppingBag className="w-5 h-5" />
+            <ShoppingBag className="w-5 h-5 text-[#8C6534]" />
             {collectionCount > 0 && (
-              <span className="absolute -top-1 -right-1 min-w-[16px] h-[16px] bg-[#8C6534] text-white text-[9px] rounded-full flex items-center justify-center font-bold px-0.5">
+              <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-[#8C6534] text-white text-[10px] font-mono rounded-full flex items-center justify-center font-bold px-1 border border-white">
                 {collectionCount}
               </span>
             )}
           </button>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 rounded-md transition-colors text-[#2B2824] hover:bg-[#EFECE6]"
+            className="p-2.5 rounded-xl transition-all text-[#2B2824] bg-[#FAF8F5] border border-[#E5E0D8] hover:bg-[#EFECE6] active:scale-95 cursor-pointer min-w-[44px] min-h-[44px] flex items-center justify-center"
             aria-label="Toggle Navigation Menu"
           >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {mobileMenuOpen ? <X className="w-6 h-6 text-[#181715]" /> : <Menu className="w-6 h-6 text-[#181715]" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Navigation Drawer */}
+      {/* Mobile Navigation Drawer - Native App Style with Touch Ergonomics */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-b px-4 pt-3 pb-6 space-y-2 shadow-lg animate-in slide-in-from-top-2 duration-200 border-[#E8E6E0] bg-[#FBFBFA]">
-          {navLinks.map((link) => (
-            <button
-              key={link.id}
-              onClick={() => handleNavClick(link.id)}
-              className={`w-full text-left py-2.5 px-3 rounded text-sm font-medium ${
-                currentTab === link.id
-                  ? 'bg-[#EFECE6] text-[#181715] font-semibold'
-                  : 'text-[#585550]'
-              }`}
-            >
-              {link.label}
-            </button>
-          ))}
+        <div className="md:hidden border-b px-4 pt-3 pb-6 space-y-2.5 shadow-xl animate-in slide-in-from-top-2 duration-200 border-[#E8E6E0] bg-[#FAF8F5]/98 backdrop-blur-md">
+          <div className="space-y-1">
+            {navLinks.map((link) => {
+              const isActive = currentTab === link.id;
+              return (
+                <button
+                  key={link.id}
+                  onClick={() => handleNavClick(link.id)}
+                  className={`w-full flex items-center justify-between py-3 px-4 rounded-xl text-xs font-mono font-semibold uppercase tracking-wider transition-all cursor-pointer min-h-[44px] ${
+                    isActive
+                      ? 'bg-[#181715] text-[#D4AF37] shadow-sm'
+                      : 'text-[#585550] hover:text-[#181715] hover:bg-[#EFECE6]'
+                  }`}
+                >
+                  <span>{link.label}</span>
+                  {isActive && <div className="w-2 h-2 rounded-full bg-[#D4AF37]" />}
+                </button>
+              );
+            })}
+          </div>
 
-          <div className="pt-3 border-t border-[#E8E6E0] flex flex-col gap-2">
+          <div className="pt-3 border-t border-[#E8E6E0] flex flex-col gap-2.5">
             <button
               onClick={() => handleNavClick('collection')}
-              className="w-full flex items-center justify-center gap-2 py-3 text-xs font-semibold uppercase tracking-wider text-white bg-[#181715] rounded hover:bg-[#302D29]"
+              className="w-full flex items-center justify-between py-3 px-4 text-xs font-mono font-semibold uppercase tracking-wider text-white bg-[#181715] rounded-xl hover:bg-[#2A2620] border border-[#D4AF37]/40 shadow-sm cursor-pointer min-h-[44px]"
             >
-              <ShoppingBag className="w-4 h-4 text-[#E5D7CC]" />
-              <span>View Selected Collection ({collectionCount})</span>
-            </button>
-            <div className="flex items-center justify-between text-xs text-[#736F68] pt-2 px-1">
-              <span className="flex items-center gap-1 font-mono text-[11px]">
-                <Phone className="w-3.5 h-3.5 text-[#82553E]" />
-                {businessConfig.phonePlaceholder}
+              <div className="flex items-center gap-2">
+                <ShoppingBag className="w-4 h-4 text-[#D4AF37]" />
+                <span>Selected Collection</span>
+              </div>
+              <span className="min-w-[20px] h-[20px] rounded-full bg-[#8C6534] text-white text-[10px] flex items-center justify-center font-bold px-1">
+                {collectionCount}
               </span>
-              <span>Wholesale &amp; Retail Supply</span>
-            </div>
+            </button>
+
+            <a
+              href="tel:+917667812172"
+              className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl border border-[#DCD5C8] bg-white text-xs font-mono text-[#585550] hover:text-[#181715] min-h-[40px]"
+            >
+              <Phone className="w-3.5 h-3.5 text-[#8C6534]" />
+              <span>Direct Desk: +91 76678 12172</span>
+            </a>
           </div>
         </div>
       )}

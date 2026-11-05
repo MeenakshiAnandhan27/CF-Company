@@ -60,8 +60,8 @@ export const CollectionView: React.FC<CollectionViewProps> = ({
       />
 
       {/* Slide-over Drawer Panel */}
-      <div className="fixed inset-y-0 right-0 max-w-full flex pl-4 sm:pl-10">
-        <div className="w-screen max-w-md sm:max-w-lg bg-gradient-to-b from-[#FFFDF9] via-[#FAF7F2] to-[#FAF8F5] border-l border-[#E5E0D8] shadow-2xl flex flex-col justify-between overflow-hidden animate-in slide-in-from-right duration-300 select-none">
+      <div className="fixed inset-y-0 right-0 max-w-full flex pl-0 sm:pl-10">
+        <div className="w-screen max-w-full sm:max-w-md md:max-w-lg bg-gradient-to-b from-[#FFFDF9] via-[#FAF7F2] to-[#FAF8F5] border-l border-[#E5E0D8] shadow-2xl flex flex-col justify-between overflow-hidden animate-in slide-in-from-right duration-300 select-none">
           
           {/* ═══════════════════════════════════════════════════════════ */}
           {/* HEADER: Single-Line Diamond Accent, Serif Title & Counter   */}
@@ -110,7 +110,7 @@ export const CollectionView: React.FC<CollectionViewProps> = ({
                   type="button"
                   onClick={onClose}
                   aria-label="Close collection drawer"
-                  className="w-8 h-8 rounded-full bg-white hover:bg-[#F2ECE1] text-[#55514B] hover:text-[#181715] border border-[#DDD5C7] flex items-center justify-center transition-all cursor-pointer shadow-2xs hover:scale-105 shrink-0"
+                  className="w-10 h-10 sm:w-8 sm:h-8 rounded-full bg-white hover:bg-[#F2ECE1] text-[#55514B] hover:text-[#181715] border border-[#DDD5C7] flex items-center justify-center transition-all cursor-pointer shadow-2xs hover:scale-105 active:scale-95 shrink-0"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -260,7 +260,7 @@ export const CollectionView: React.FC<CollectionViewProps> = ({
           {/* FOOTER: Enquire Action & Add More Materials                 */}
           {/* ═══════════════════════════════════════════════════════════ */}
           {collection.length > 0 && (
-            <div className="p-5 sm:p-6 border-t border-[#EAE3D4] bg-[#FFFDF9]/95 backdrop-blur-xs space-y-3 shrink-0">
+            <div className="p-4 sm:p-6 pb-6 pb-safe border-t border-[#EAE3D4] bg-[#FFFDF9]/95 backdrop-blur-xs space-y-3 shrink-0">
               {/* Primary Action: ENQUIRE ABOUT SELECTED MATERIALS */}
               <button
                 type="button"

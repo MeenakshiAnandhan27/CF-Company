@@ -92,22 +92,22 @@ export const BrandIntroSection: React.FC<BrandIntroSectionProps> = ({
       <div className="relative z-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center my-auto py-6">
         {/* Brand Name in Haute-Couture Obsidian & Burnished Gold Metallic Sweep (Big Luxury Scale) */}
         <div className="relative my-2 sm:my-3">
-          <h1 className="text-luxury-onyx-gold font-display font-extrabold text-5xl sm:text-7xl md:text-8xl lg:text-9xl tracking-[0.10em] sm:tracking-[0.16em] uppercase leading-[0.95] text-balance select-none cursor-default">
+          <h1 className="text-luxury-onyx-gold font-display font-extrabold text-3xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-9xl tracking-[0.06em] sm:tracking-[0.12em] md:tracking-[0.16em] uppercase leading-[0.95] text-balance select-none cursor-default">
             CLASSIC FASHIONS
           </h1>
         </div>
 
         {/* Decorative Jeweled Gold Hairline Divider */}
-        <DiamondMotif align="center" maxWidth="max-w-md" className="my-6 sm:my-8" />
+        <DiamondMotif align="center" maxWidth="max-w-md" className="my-4 sm:my-8" />
 
         {/* Slogan in Exact Image Font Family & Size, but Straight Upright (Not-Italic / No Slant) */}
-        <p className="font-serif not-italic text-2xl sm:text-3xl md:text-4xl text-[#181715] font-normal tracking-wide text-center max-w-3xl leading-snug text-balance">
+        <p className="font-serif not-italic text-lg sm:text-2xl md:text-3xl lg:text-4xl text-[#181715] font-normal tracking-wide text-center max-w-3xl leading-snug text-balance px-2">
           Every Garment Begins With the Right Material.
         </p>
 
         {/* Subtitle - SUPPLIER OF GARMENT ACCESSORIES & FABRICS (Without Bling / Ping Dot) */}
-        <div className="mt-6 sm:mt-7 inline-flex items-center px-6 py-2 rounded-full border border-[#D4AF37]/45 bg-white/95 backdrop-blur-md shadow-[0_2px_14px_rgba(212,175,55,0.08)]">
-          <p className="text-xs sm:text-sm font-mono font-semibold tracking-[0.22em] sm:tracking-[0.26em] text-[#8C6534] uppercase text-center leading-relaxed">
+        <div className="mt-4 sm:mt-7 inline-flex items-center px-3 sm:px-6 py-1.5 sm:py-2 rounded-full border border-[#D4AF37]/45 bg-white/95 backdrop-blur-md shadow-[0_2px_14px_rgba(212,175,55,0.08)] max-w-[92vw]">
+          <p className="text-[10px] sm:text-xs md:text-sm font-mono font-semibold tracking-[0.12em] sm:tracking-[0.22em] text-[#8C6534] uppercase text-center leading-relaxed">
             SUPPLIER OF GARMENT ACCESSORIES &amp; FABRICS
           </p>
         </div>

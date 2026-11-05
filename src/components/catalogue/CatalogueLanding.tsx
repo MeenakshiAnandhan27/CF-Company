@@ -25,6 +25,7 @@ interface CatalogueLandingProps {
   onViewCollection?: () => void;
   onRequestMaterial?: (category?: any, similarProduct?: Product) => void;
   onReachUs?: (materialContext?: string) => void;
+  onCategoryChange?: (category: string) => void;
 }
 
 function parseCategoryParam(cat?: string | null): { nav: NavFilter; sub: string } {
@@ -85,6 +86,7 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
   collection = [],
   onRequestMaterial,
   onReachUs,
+  onCategoryChange,
 }) => {
   const initialParsed = useMemo(() => parseCategoryParam(initialCategory), [initialCategory]);
   // Navigation filter state
@@ -181,6 +183,7 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
       const slug = catId === 'GARMENT ACCESSORIES' ? 'accessories' : catId === 'DENIM & CHAMBRAY' ? 'denim' : catId.toLowerCase();
       params.set('category', slug);
       window.history.pushState(null, '', `${window.location.pathname}?${params.toString()}`);
+      onCategoryChange?.(slug);
     }
     // Defer scrolling until React commits DOM layout changes for the selected category
     setTimeout(() => {
@@ -198,9 +201,11 @@ export const CatalogueLanding: React.FC<CatalogueLandingProps> = ({
       params.set('tab', 'catalogue');
       if (filter === 'ALL') {
         params.delete('category');
+        onCategoryChange?.('all');
       } else {
         const slug = filter === 'GARMENT ACCESSORIES' ? 'accessories' : filter === 'DENIM & CHAMBRAY' ? 'denim' : filter.toLowerCase();
         params.set('category', slug);
+        onCategoryChange?.(slug);
       }
       window.history.pushState(null, '', `${window.location.pathname}?${params.toString()}`);
     }

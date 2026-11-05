@@ -44,7 +44,7 @@ export const CatalogueNavigation: React.FC<CatalogueNavigationProps> = ({
                   key={tab.id}
                   type="button"
                   onClick={() => onSelectFilter(tab.id)}
-                  className={`px-3 sm:px-4 py-2 rounded-full text-xs font-medium tracking-wide transition-all whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-[#82553E] cursor-pointer ${
+                  className={`px-3 sm:px-4 py-2 min-h-[40px] inline-flex items-center rounded-full text-xs font-medium tracking-wide transition-all whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-[#82553E] cursor-pointer ${
                     isActive
                       ? 'bg-[#181715] text-white shadow-xs'
                       : 'text-[#6A645A] hover:text-[#181715] hover:bg-[#EFECE5]'
@@ -66,14 +66,14 @@ export const CatalogueNavigation: React.FC<CatalogueNavigationProps> = ({
                 value={searchQuery}
                 onChange={(e) => onSearchChange(e.target.value)}
                 placeholder="Search raw weaves..."
-                className="w-full pl-8 pr-7 py-1.5 text-xs bg-white border border-[#DDD5C7] rounded-full placeholder-[#A39C91] text-[#181715] focus:outline-none focus:border-[#82553E] focus:ring-1 focus:ring-[#82553E] transition-all"
+                className="w-full pl-8 pr-7 py-2 sm:py-1.5 min-h-[40px] text-xs bg-white border border-[#DDD5C7] rounded-full placeholder-[#A39C91] text-[#181715] focus:outline-none focus:border-[#82553E] focus:ring-1 focus:ring-[#82553E] transition-all"
               />
               {searchQuery && (
                 <button
                   type="button"
                   onClick={() => onSearchChange('')}
                   aria-label="Clear search"
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#8C877E] hover:text-[#181715]"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#8C877E] hover:text-[#181715] p-1"
                 >
                   <X className="w-3 h-3" />
                 </button>
@@ -85,7 +85,7 @@ export const CatalogueNavigation: React.FC<CatalogueNavigationProps> = ({
               <button
                 type="button"
                 onClick={onOpen360}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-bold uppercase tracking-wider bg-gradient-to-r from-[#181715] to-[#2E2519] text-[#FAF8F5] border border-[#D4AF37] hover:border-[#F2D785] rounded-full shadow-[0_2px_8px_rgba(212,175,55,0.2)] transition-all shrink-0 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 min-h-[40px] text-xs font-mono font-bold uppercase tracking-wider bg-gradient-to-r from-[#181715] to-[#2E2519] text-[#FAF8F5] border border-[#D4AF37] hover:border-[#F2D785] rounded-full shadow-[0_2px_8px_rgba(212,175,55,0.2)] transition-all shrink-0 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
                 title="Launch 360° 3D Fabric Atelier Studio"
               >
                 <RotateCw className="w-3.5 h-3.5 text-[#D4AF37] animate-spin-slow" />

@@ -800,8 +800,8 @@ export const FireflyFabric3DViewer: React.FC<FireflyFabric3DViewerProps> = ({
 
       {/* Main 3D Canvas & Spec Area */}
       <div className="relative flex-1 flex flex-col md:flex-row overflow-hidden min-h-0">
-        {/* Right Details Column: Compact, Non-Scrolling Full View */}
-        <div className="w-full md:w-80 lg:w-[350px] border-t md:border-t-0 md:border-l border-[#262420] bg-[#12110F] flex flex-col justify-between p-3.5 sm:p-4 overflow-hidden shrink-0 order-2 md:order-2 select-text">
+        {/* Right Details Column: Compact, Non-Scrolling Full View on Desktop, Scrollable with safe area on mobile */}
+        <div className="w-full md:w-80 lg:w-[350px] border-t md:border-t-0 md:border-l border-[#262420] bg-[#12110F] flex flex-col justify-between p-3.5 sm:p-4 overflow-y-auto max-h-[46vh] md:max-h-none shrink-0 order-2 md:order-2 select-text pb-safe">
           <div className="space-y-3 flex-1 flex flex-col justify-between">
             {/* Title & Category Badge */}
             <div>

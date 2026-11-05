@@ -104,7 +104,7 @@ export const Hero: React.FC<HeroProps> = ({
                   {/* Primary: EXPLORE CATALOGUE — Identical in glow, color & circle badge to Header Catalogue Button */}
                   <button
                     onClick={() => onExploreCatalogue()}
-                    className="group relative inline-flex items-center justify-center gap-3 pl-5 pr-1.5 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] rounded-full transition-all duration-300 text-[#FFF8EC] bg-gradient-to-r from-[#181715] via-[#2A2620] to-[#181715] hover:from-[#24211D] hover:to-[#111110] border border-[#D4AF37] hover:border-[#F2D785] shadow-[0_4px_16px_rgba(212,175,55,0.25)] hover:shadow-[0_6px_28px_rgba(212,175,55,0.45)] active:scale-[0.98] cursor-pointer whitespace-nowrap"
+                    className="group relative inline-flex items-center justify-center gap-3 pl-5 pr-1.5 py-1.5 min-h-[44px] text-xs font-semibold uppercase tracking-[0.16em] rounded-full transition-all duration-300 text-[#FFF8EC] bg-gradient-to-r from-[#181715] via-[#2A2620] to-[#181715] hover:from-[#24211D] hover:to-[#111110] border border-[#D4AF37] hover:border-[#F2D785] shadow-[0_4px_16px_rgba(212,175,55,0.25)] hover:shadow-[0_6px_28px_rgba(212,175,55,0.45)] active:scale-[0.98] cursor-pointer whitespace-nowrap"
                   >
                     <span className="font-mono text-[11px] tracking-[0.18em] font-bold">Explore Catalogue</span>
                     <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-[#D4AF37] via-[#F2D785] to-[#B38728] text-[#181715] font-bold flex items-center justify-center transition-all duration-300 shadow-sm group-hover:scale-105 group-hover:translate-x-0.5">
@@ -115,7 +115,7 @@ export const Hero: React.FC<HeroProps> = ({
                   {/* Secondary: REQUEST A MATERIAL */}
                   <button
                     onClick={onRequestMaterial}
-                    className="group inline-flex items-center justify-center gap-2 px-5 py-3.5 sm:py-3 text-xs font-semibold uppercase tracking-wider text-[#68412E] bg-[#FAF6F0] border border-[#D4AF37]/35 hover:border-[#D4AF37] rounded-xl sm:rounded-full hover:bg-white hover:text-[#82553E] shadow-none hover:shadow-xs transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] whitespace-nowrap cursor-pointer"
+                    className="group inline-flex items-center justify-center gap-2 px-5 py-3.5 sm:py-3 min-h-[44px] text-xs font-semibold uppercase tracking-wider text-[#68412E] bg-[#FAF6F0] border border-[#D4AF37]/35 hover:border-[#D4AF37] rounded-xl sm:rounded-full hover:bg-white hover:text-[#82553E] shadow-none hover:shadow-xs transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] whitespace-nowrap cursor-pointer"
                   >
                     <Compass className="w-3.5 h-3.5 transition-transform duration-300 group-hover:rotate-45 text-[#8C6534]" />
                     <span className="font-mono text-[11px] tracking-[0.14em]">Request a Material</span>
@@ -124,7 +124,7 @@ export const Hero: React.FC<HeroProps> = ({
                   {/* Tertiary: REACH US */}
                   <button
                     onClick={onReachUs}
-                    className="group inline-flex items-center justify-center gap-2 px-5 py-3.5 sm:py-3 text-xs font-semibold uppercase tracking-wider text-[#4A4742] bg-transparent hover:bg-[#F4EFEB] rounded-xl sm:rounded-full border border-transparent hover:border-[#DCD5C9] transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] whitespace-nowrap cursor-pointer"
+                    className="group inline-flex items-center justify-center gap-2 px-5 py-3.5 sm:py-3 min-h-[44px] text-xs font-semibold uppercase tracking-wider text-[#4A4742] bg-transparent hover:bg-[#F4EFEB] rounded-xl sm:rounded-full border border-transparent hover:border-[#DCD5C9] transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] whitespace-nowrap cursor-pointer"
                   >
                     <PhoneCall className="w-3.5 h-3.5 transition-transform duration-300 group-hover:scale-110 text-[#8C6534]" />
                     <span className="font-mono text-[11px] tracking-[0.14em]">Reach Us</span>

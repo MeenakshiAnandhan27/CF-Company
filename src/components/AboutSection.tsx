@@ -313,7 +313,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
             </div>
 
             {/* Interactive Filter Pills */}
-            <div className="inline-flex p-1 bg-[#EFE9DF] rounded-full ring-1 ring-black/5 self-start md:self-auto">
+            <div className="inline-flex p-1 bg-[#EFE9DF] rounded-full ring-1 ring-black/5 self-start md:self-auto max-w-full overflow-x-auto no-scrollbar">
               <button
                 onClick={() => setActiveFilter('all')}
                 className={`px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer ${

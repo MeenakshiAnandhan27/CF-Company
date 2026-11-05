@@ -208,18 +208,18 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
       role="dialog"
       aria-modal="true"
       aria-labelledby="full-view-material-title"
-      className="fixed inset-0 z-[60] flex items-center justify-center p-3 sm:p-6 bg-[#121110]/70 backdrop-blur-xs animate-in fade-in duration-200 select-none overflow-y-auto"
+      className="fixed inset-0 z-[60] flex items-center justify-center p-2 sm:p-4 md:p-6 bg-[#121110]/70 backdrop-blur-xs animate-in fade-in duration-200 select-none overflow-y-auto"
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-4xl bg-gradient-to-b from-[#FFFDF9] via-[#FAF7F0] to-[#F7F2E8] rounded-2xl shadow-2xl border border-[#E2D8C3] overflow-hidden flex flex-col md:flex-row max-h-[92vh] md:max-h-[640px] my-auto"
+        className="relative w-full max-w-4xl bg-gradient-to-b from-[#FFFDF9] via-[#FAF7F0] to-[#F7F2E8] rounded-2xl shadow-2xl border border-[#E2D8C3] overflow-hidden flex flex-col md:flex-row max-h-[94vh] md:max-h-[640px] my-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close button (top-right) */}
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-4 right-4 z-30 w-8 h-8 rounded-full bg-white/90 hover:bg-[#EAE2D2] text-[#55514B] hover:text-[#181715] border border-[#DDD5C7] flex items-center justify-center transition-all cursor-pointer shadow-xs"
+          className="absolute top-3 right-3 sm:top-4 sm:right-4 z-30 w-9 h-9 sm:w-8 sm:h-8 rounded-full bg-white/95 hover:bg-[#EAE2D2] text-[#55514B] hover:text-[#181715] border border-[#DDD5C7] flex items-center justify-center transition-all cursor-pointer shadow-xs active:scale-95"
           aria-label="Close modal"
         >
           <X className="w-4 h-4" />
@@ -236,7 +236,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
-          className="w-full md:w-[58%] relative bg-gradient-to-b from-[#FAF6EE] to-[#EFE8DC] min-h-[320px] sm:min-h-[380px] md:min-h-full overflow-hidden group cursor-grab active:cursor-grabbing border-b md:border-b-0 md:border-r border-[#E2D8C3]"
+          className="w-full md:w-[58%] relative bg-gradient-to-b from-[#FAF6EE] to-[#EFE8DC] min-h-[200px] sm:min-h-[280px] md:min-h-full aspect-[16/10] sm:aspect-[4/3] md:aspect-auto overflow-hidden group cursor-grab active:cursor-grabbing border-b md:border-b-0 md:border-r border-[#E2D8C3] shrink-0"
         >
           {/* Subtle Ambient Radial Spotlight behind fabric texture */}
           <div
@@ -318,7 +318,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
         {/* ═══════════════════════════════════════════════════════════ */}
         {/* RIGHT COLUMN (~42%): CLEAN, VISUAL-FIRST INFORMATION        */}
         {/* ═══════════════════════════════════════════════════════════ */}
-        <div className="w-full md:w-[42%] p-6 sm:p-8 flex flex-col justify-between overflow-y-auto bg-gradient-to-b from-[#FFFDF9] to-[#FAF7F0]">
+        <div className="w-full md:w-[42%] p-4 sm:p-6 md:p-8 flex flex-col justify-between overflow-y-auto bg-gradient-to-b from-[#FFFDF9] to-[#FAF7F0]">
           <div className="space-y-4">
             
             {/* 1. Header: Small Category Eyebrow with Single-Line Diamond Accent */}
